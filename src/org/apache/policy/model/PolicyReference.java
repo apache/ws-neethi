@@ -24,47 +24,63 @@ import org.apache.policy.util.PolicyRegistry;
  *
  */
 public class PolicyReference implements Assertion {
-	
-	private String PolicyURIString = null;
-	private Assertion parent = null;
-		
-	public PolicyReference(String policyURIString) {
-		this.PolicyURIString = policyURIString;
-	}
-	
-	public String getPolicyURIString() {
-		return PolicyURIString;
-	}
-	
-	public Assertion intersect(Assertion assertion) {
-		throw new UnsupportedOperationException("intersect is not defined for "
-				+ "PolicyReference");
-	}
-	
-	public Assertion intersect(Assertion assertion, PolicyRegistry reg)
-			throws UnsupportedOperationException {
-		throw new UnsupportedOperationException();
-	}
-	
-	public Assertion merge(Assertion assertion, PolicyRegistry reg)
-			throws UnsupportedOperationException {
-		throw new UnsupportedOperationException();
-	}
-	
-	public Assertion merge(Assertion assertion) {
-		throw new UnsupportedOperationException("merge is not supported  for " +
-				"PolicyReference");
-	}
+    
+    private String PolicyURIString = null;
+    private Assertion parent = null;
+        
+    public PolicyReference(String policyURIString) {
+        this.PolicyURIString = policyURIString;
+    }
+    
+    public String getPolicyURIString() {
+        return PolicyURIString;
+    }
+    
+    public Assertion normalize() {
+        throw new UnsupportedOperationException();
+    }
+    
+    public Assertion normalize(PolicyRegistry reg) {
+        throw new UnsupportedOperationException();
+    }
+    
+    public Assertion intersect(Assertion assertion) {
+        throw new UnsupportedOperationException("intersect is not defined for "
+                + "PolicyReference");
+    }
+    
+    public Assertion intersect(Assertion assertion, PolicyRegistry reg)
+            throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+    
+    public Assertion merge(Assertion assertion, PolicyRegistry reg)
+            throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+    
+    public Assertion merge(Assertion assertion) {
+        throw new UnsupportedOperationException("merge is not supported  for " +
+                "PolicyReference");
+    }
 
-	public boolean hasParent() {
-		return parent != null;
-	}
+    public boolean hasParent() {
+        return parent != null;
+    }
 
-	public Assertion getParent() {
-		return parent;
-	}
+    public Assertion getParent() {
+        return parent;
+    }
 
-	public void setParent(Assertion parent) {
-		this.parent = parent;
-	}
+    public void setParent(Assertion parent) {
+        this.parent = parent;
+    }
+    
+    public boolean isNormalized() {
+        throw new UnsupportedOperationException();
+    }
+    
+    public void setNormalized(boolean flag) {
+        throw new UnsupportedOperationException();
+    }
 }

@@ -22,23 +22,23 @@ package org.apache.policy.parser;
  * 
  */
 public interface WSPConstants {
-	
-	/** */
-	public static final String AND_COMPOSITE_ASSERTION = "All";
-	
-	/** */
-	public static final String XOR_COMPOSITE_ASSERTION = "ExactlyOne";
-	
-	/** */
-	public static final String WS_POLICY = "Policy";
-	
-	/** */
-	public static final String WS_POLICY_REFERENCE = "PolicyReference";
-	
-	/** */
-	public static final String WS_POLICY_NAMESPACE_URI = "http://schemas.xmlsoap.org/ws/2004/09/policy";
-	
-	/** */
-	public static final String WSU_NAMESPACE_URI = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
-	
+    
+    /** */
+    public static final String AND_COMPOSITE_ASSERTION = "All";
+    
+    /** */
+    public static final String XOR_COMPOSITE_ASSERTION = "ExactlyOne";
+    
+    /** */
+    public static final String WS_POLICY = "Policy";
+    
+    /** */
+    public static final String WS_POLICY_REFERENCE = "PolicyReference";
+    
+    /** */
+    public static final String WS_POLICY_NAMESPACE_URI = "http://schemas.xmlsoap.org/ws/2004/09/policy";
+    
+    /** */
+    public static final String WSU_NAMESPACE_URI = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
+    
 }

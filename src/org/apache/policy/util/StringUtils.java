@@ -22,15 +22,15 @@ package org.apache.policy.util;
  */
 public class StringUtils {
 
-	public static String getChars(int noOfChars, char theChar) {
-		if (noOfChars <= 0) {
-			return "";
-		}
-		StringBuffer buf = new StringBuffer();
-		for (int i = 0; i < noOfChars; i++) {
-			buf.append(theChar);
-		}
-		return buf.toString();
-	}
+    public static String getChars(int noOfChars, char theChar) {
+        if (noOfChars <= 0) {
+            return "";
+        }
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < noOfChars; i++) {
+            buf.append(theChar);
+        }
+        return buf.toString();
+    }
 
 }

@@ -27,11 +27,11 @@ import org.apache.policy.util.PolicyRegistry;
  * implicit logic that whether all (or any) of its terms should be statisfied.
  */
 public abstract class CompositeAssertion implements Assertion {
-	
-	/** */
-	protected boolean flag = true;
-	
-	/** */
+    
+    /** */
+    protected boolean flag = true;
+    
+    /** */
     private List list = new ArrayList();
     
     /** */
@@ -43,7 +43,7 @@ public abstract class CompositeAssertion implements Assertion {
      * @param assertion the assertion that should be added as its term
      */
     public void addTerm(Assertion assertion){
-    	assertion.setParent(this);
+        assertion.setParent(this);
         list.add(assertion);
     }
     
@@ -54,21 +54,24 @@ public abstract class CompositeAssertion implements Assertion {
      *        terms
      */
     public void addTerms(List assertions) {
-    	Iterator items = assertions.iterator();
-    	
-    	while (items.hasNext()) {
-    		Object value = items.next();
-    	
-    		if (!(value instanceof Assertion)) {
-    			throw new IllegalArgumentException("argument contains a " +
-    					"non-assertion");
-    		}
-    		addTerm((Assertion) value);
-    	}
+        if (assertions.isEmpty()) {
+            return;
+        }
+        
+        Iterator items = assertions.iterator();
+        while (items.hasNext()) {
+            Object value = items.next();
+        
+            if (!(value instanceof Assertion)) {
+                throw new IllegalArgumentException("argument contains a " +
+                        "non-assertion");
+            }
+            addTerm((Assertion) value);
+        }
     }
     
     public List getTerms() {
-    	return list;
+        return list;
     }
     
     /**
@@ -76,7 +79,7 @@ public abstract class CompositeAssertion implements Assertion {
      * @return true if no terms exist or false otherwise
      */
     public boolean isEmpty() {
-    	return list.size() == 0;
+        return list.size() == 0;
     }
     
     public boolean remove(Assertion assertion) {
@@ -88,46 +91,44 @@ public abstract class CompositeAssertion implements Assertion {
     }
     
     public boolean hasParent() {
-    	return parent != null;
+        return parent != null;
     }
 
     public Assertion getParent() {
-    	return parent;
+        return parent;
     }
     
     public void setParent(Assertion parent) {
-    	this.parent = parent;
+        this.parent = parent;
     }
 
-    protected Assertion normalize() {
-    	return normalize(null);
+    public Assertion normalize() {
+        return normalize(null);
     }
     
-    abstract protected Assertion normalize(PolicyRegistry reg);
-
-	public Assertion intersect(Assertion assertion)
-			throws UnsupportedOperationException {
-		return intersect(assertion, null);
-	}
-	
-	public Assertion merge(Assertion assertion)
-			throws UnsupportedOperationException {
-		return merge(assertion, null);
-	}
-	
-    protected boolean isNormalized() {
-    	return flag;
+    public Assertion intersect(Assertion assertion)
+            throws UnsupportedOperationException {
+        return intersect(assertion, null);
     }
     
-    protected void setNormalize(boolean value) {
-    	Iterator children = getTerms().iterator();
-    	
-    	while (children.hasNext()) {
-    		Object child = children.next();
-    		if (child instanceof CompositeAssertion) {
-    			((CompositeAssertion) child).setNormalize(true);
-    		}
-    	}
-    	flag = value;
+    public Assertion merge(Assertion assertion)
+            throws UnsupportedOperationException {
+        return merge(assertion, null);
+    }
+    
+    public boolean isNormalized() {
+        return flag;
+    }
+    
+    public void setNormalized(boolean value) {
+        Iterator children = getTerms().iterator();
+        
+        while (children.hasNext()) {
+            Object child = children.next();
+            if (child instanceof CompositeAssertion) {
+                ((CompositeAssertion) child).setNormalized(true);
+            }
+        }
+        flag = value;
     }
 }

@@ -23,21 +23,30 @@ import org.apache.policy.util.PolicyRegistry;
  */
 
 public interface Assertion {
-	/** Defines the short value for Primitive Assertions */
-	public static final short PRIMITIVE_TYPE = 0x1;
-	
-	/** Defines the short value for ANDCompositeAssertion */                           
+    /** Defines the short value for Primitive Assertions */
+    public static final short PRIMITIVE_TYPE = 0x1;
+    
+    /** Defines the short value for ANDCompositeAssertion */                           
     public static final short COMPOSITE_AND_TYPE = 0x2;
     
     /** Defines the short value for XORCompositeAssertion*/
     public static final short COMPOSITE_XOR_TYPE = 0x3;
     
-//    /**
-//     * 
-//     * @return
-//     */
-//    public Assertion normalize() throws UnsupportedOperationException;
-//    
+    /**
+     * 
+     * @return
+     */
+    public Assertion normalize() throws UnsupportedOperationException;
+    
+    /**
+     * 
+     * @param reg
+     * @return
+     * @throws UnsupportedOperationException
+     */
+    public Assertion normalize(PolicyRegistry reg) 
+        throws UnsupportedOperationException;
+    
     /**
      * Returns an assertion which is the equivalent of intersect of 
      * self and argument. The rules to construct the equivalent assertion are
@@ -47,7 +56,7 @@ public interface Assertion {
      * @return the equivalent of intersect of self and the argument
      */
     public Assertion intersect(Assertion assertion) 
-    		throws UnsupportedOperationException;
+            throws UnsupportedOperationException;
     
     /**
      * Returns an assertion which is equivalent of intersect of self and 
@@ -61,7 +70,7 @@ public interface Assertion {
      * @throws UnsupportedOperationException if the operation is not meaningful
      */
     public Assertion intersect(Assertion assertion, PolicyRegistry reg) 
-    		throws UnsupportedOperationException;
+            throws UnsupportedOperationException;
             
     /**
      * Returns the equivalent of merge of self and argument. The rules to 
@@ -72,7 +81,7 @@ public interface Assertion {
      * @return the equivalent of the merge of self and argument
      */
     public Assertion merge(Assertion assertion) 
-    		throws UnsupportedOperationException;
+            throws UnsupportedOperationException;
     
     /**
      * Returns the equivalent of merge of self and argument. The rules to 
@@ -87,6 +96,18 @@ public interface Assertion {
      * @throws UnsupportedOperationException if the merge is not meaningful
      */
     public Assertion merge(Assertion assertion, PolicyRegistry reg) throws UnsupportedOperationException;
+    
+    /**
+     * 
+     * @return
+     */
+    public boolean isNormalized();
+    
+    /**
+     * 
+     * @param flag
+     */
+    public void setNormalized(boolean flag);
     
     /**
      * Returns ture if the assertion has a parent

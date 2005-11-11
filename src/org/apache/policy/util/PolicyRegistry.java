@@ -27,45 +27,45 @@ import org.apache.policy.model.Policy;
  * 
  */
 public class PolicyRegistry {
-	HashMap     reg    = new HashMap ();
-	PolicyRegistry parent = null;
-	
-	public PolicyRegistry () {
-	}
-	
-	public PolicyRegistry (PolicyRegistry parent) {
-		this.parent = parent;
-	}
-	
-	public Policy lookup (String policyURI) throws IllegalArgumentException {
-		
-		Policy policy =  (Policy) reg.get (policyURI);
+    HashMap     reg    = new HashMap ();
+    PolicyRegistry parent = null;
+    
+    public PolicyRegistry () {
+    }
+    
+    public PolicyRegistry (PolicyRegistry parent) {
+        this.parent = parent;
+    }
+    
+    public Policy lookup (String policyURI) throws IllegalArgumentException {
+        
+        Policy policy =  (Policy) reg.get (policyURI);
 
-		if (policy == null && parent != null) {
-		  policy = parent.lookup (policyURI);
-		}
+        if (policy == null && parent != null) {
+          policy = parent.lookup (policyURI);
+        }
 
-//		if (policy == null) {
-//		  throw new IllegalArgumentException ("policy '" + policyURI + "' not in registry");
-//		}
+//      if (policy == null) {
+//        throw new IllegalArgumentException ("policy '" + policyURI + "' not in registry");
+//      }
 
-		return policy;
-	  }
-	  // register a policy
-	  public void register (String policyURI, Policy policy) {
-		reg.put (policyURI, policy);
-	  }
-	  
-	  // unregister a policy
-	  public void unregister (String policyURI) {
-		reg.remove (policyURI);
-	  }
-	  
-	  public Iterator keys() {
-	  	return reg.keySet().iterator();
-	  }
-	  
-	  public Iterator values() {
-	  	return reg.values().iterator();
-	  }  	  
+        return policy;
+      }
+      // register a policy
+      public void register (String policyURI, Policy policy) {
+        reg.put (policyURI, policy);
+      }
+      
+      // unregister a policy
+      public void unregister (String policyURI) {
+        reg.remove (policyURI);
+      }
+      
+      public Iterator keys() {
+        return reg.keySet().iterator();
+      }
+      
+      public Iterator values() {
+        return reg.values().iterator();
+      }       
 }
