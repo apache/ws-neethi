@@ -202,7 +202,7 @@ public class WSPolicyParser {
                 Policy policy = WSPolicyParser.getInstance().getPolicy(childElement);
                 result.addTerm(policy);
             } else {
-                PrimitiveAssertion pa = getPrimitiveAssertion(childElement);
+                PrimitiveAssertion pa = WSParserUtil.getPrimitiveAssertion(childElement);
                 result.addTerm(pa);                
             }
         }
@@ -263,6 +263,11 @@ public class WSPolicyParser {
         
         if (children.hasNext()) {
             pw.println(">");
+
+            // text
+            if (primitive.getStrValue() != null) {
+                printText(tab + 4, primitive.getStrValue(), pw);
+            }
             
             do {
                 Object child = children.next();
@@ -273,20 +278,14 @@ public class WSPolicyParser {
                 } else if (child instanceof CompositeAssertion) {
                     printCompositeAssertion(tab + 4, (CompositeAssertion) child, pw);
                     
-                } else if (child instanceof OMText) {
-                    String strValue = ((OMText) child).getText().trim();
-                    
-                    if (strValue.length() != 0) {
-                        pw.println(StringUtils.getChars(tab + 4, ' ') 
-                                + strValue);                    
-                    }
-                    
+                } else {
+                    // TODO exception ?
                 }
                 
             } while (children.hasNext());
             
             pw.print(StringUtils.getChars(tab, ' '));
-            pw.println("<" + primitive.getName().getPrefix() + ":" + primitive.getName().getLocalPart() + "/>");
+            pw.println("</" + primitive.getName().getPrefix() + ":" + primitive.getName().getLocalPart() + ">");
             
         } else {
             pw.println("/>");
@@ -401,6 +400,11 @@ public class WSPolicyParser {
 //          pw.println("/>");
 //      }       
 //  }
+    
+    private void printText(int tab, String value, PrintWriter pw) {
+        pw.print(StringUtils.getChars(tab, ' '));
+        pw.println(value);
+    }
     
     private OMAttribute getAttribute(OMElement target, QName qname) {
         Iterator iterator = target.getAllAttributes();

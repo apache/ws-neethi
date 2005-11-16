@@ -40,6 +40,7 @@ public class PrimitiveAssertion implements Assertion {
     private List terms = new ArrayList();
     private Hashtable attributes = new Hashtable();
     private boolean flag = false;
+    private String strValue = null;
     
     private Object value;
     public PrimitiveAssertion(QName qname) {
@@ -306,6 +307,14 @@ public class PrimitiveAssertion implements Assertion {
             assertion.setNormalized(flag);
         }
         this.flag = flag;        
+    }
+    
+    public String getStrValue() {
+        return strValue;
+    }
+    
+    public void setStrValue(String strValue) {
+        this.strValue = strValue;        
     }
     
     private Policy getSinglePolicy(List policyList, PolicyRegistry reg) {

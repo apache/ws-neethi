@@ -34,6 +34,12 @@ public class WSParserUtil {
         
         PrimitiveAssertion result = new PrimitiveAssertion(qname);
         
+        // setting the text value ..
+        String strValue = element.getText();
+        if (strValue != null && strValue.length() != 0) {
+            result.setStrValue(strValue);            
+        }
+        
         Iterator childElements = element.getChildElements();
         if (!(childElements.hasNext())) {
             result.addTerm(element);
