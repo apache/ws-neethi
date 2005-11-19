@@ -31,7 +31,6 @@ import org.apache.axis2.om.OMAbstractFactory;
 import org.apache.axis2.om.OMAttribute;
 import org.apache.axis2.om.OMElement;
 import org.apache.axis2.om.OMNode;
-import org.apache.axis2.om.OMText;
 import org.apache.axis2.om.OMXMLParserWrapper;
 import org.apache.axis2.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.policy.model.AndCompositeAssertion;
@@ -183,31 +182,8 @@ public class WSPolicyParser {
     public PrimitiveAssertion getPrimitiveAssertion(OMElement value) {
 //      QName qname = new QName(value.getNamespace().getName(), value.getLocalName());
 //      return new PrimitiveAssertion(qname, value);
-        QName qname = value.getQName();
-        
-        PrimitiveAssertion result = new PrimitiveAssertion(qname);
-        result.setAttributes(getAttributes(value));
-        
-        Iterator childElements = value.getChildElements();
-        if (!(childElements.hasNext())) {;
-            return result;
-        }
-        
-        childElements = value.getChildElements();
-        while (childElements.hasNext()) {
-            OMElement childElement = (OMElement) childElements.next();
-            
-            if (childElement.getNamespace().getName().equals(WSPConstants.WS_POLICY_NAMESPACE_URI)
-                    && childElement.getLocalName().equals(WSPConstants.WS_POLICY)) {
-                Policy policy = WSPolicyParser.getInstance().getPolicy(childElement);
-                result.addTerm(policy);
-            } else {
-                PrimitiveAssertion pa = WSParserUtil.getPrimitiveAssertion(childElement);
-                result.addTerm(pa);                
-            }
-        }
-        
-        return result;       
+    	return WSParserUtil.getPrimitiveAssertion(value);
+          
     }
         
     public boolean isCompositeAssertion(OMElement value) {

@@ -349,4 +349,6 @@ public class PrimitiveAssertion implements Assertion {
         return ((AndCompositeAssertion) ((XorCompositeAssertion) policy.getTerms().get(0)).getTerms().get(0)).getTerms();
         
     }
+    
+    
 }

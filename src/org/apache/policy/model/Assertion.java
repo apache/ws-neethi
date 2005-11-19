@@ -96,7 +96,7 @@ public interface Assertion {
      * @throws UnsupportedOperationException if the merge is not meaningful
      */
     public Assertion merge(Assertion assertion, PolicyRegistry reg) throws UnsupportedOperationException;
-    
+        
     /**
      * 
      * @return

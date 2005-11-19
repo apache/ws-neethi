@@ -40,14 +40,14 @@ public class WSParserUtil {
             result.setStrValue(strValue);            
         }
         
-        Iterator childElements = element.getChildElements();
-        if (!(childElements.hasNext())) {
-            result.addTerm(element);
-            return result;
-        }
+//        Iterator childElements = element.getChildElements();
+//        if (!(childElements.hasNext())) {
+//            result.addTerm(element);
+//            return result;
+//        }
                 
         //CHECK ME
-        childElements = element.getChildElements();
+        Iterator childElements = element.getChildElements();
         while (childElements.hasNext()) {
             OMElement childElement = (OMElement) childElements.next();
             

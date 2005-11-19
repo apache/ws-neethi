@@ -33,6 +33,9 @@ public interface WSPConstants {
     public static final String WS_POLICY = "Policy";
     
     /** */
+    public static final String WS_POLICY_PREFIX = "wsp";
+    
+    /** */
     public static final String WS_POLICY_REFERENCE = "PolicyReference";
     
     /** */

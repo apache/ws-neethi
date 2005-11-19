@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.policy.util.PolicyRegistry;
-
 /**
  * CompositeAssertion abstract class implements few method which are common to
  * composite assertions. A composite assertion as some terms (if any) and 
