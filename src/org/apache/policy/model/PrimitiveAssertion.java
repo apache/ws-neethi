@@ -15,7 +15,6 @@
  */
 package org.apache.policy.model;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -23,7 +22,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.policy.parser.WSPolicyParser;
 import org.apache.policy.util.PolicyRegistry;
 import org.apache.policy.util.WSPolicyUtil;
 
@@ -75,9 +73,6 @@ public class PrimitiveAssertion implements Assertion {
               
         PrimitiveAssertion arg = (PrimitiveAssertion) target;
         PrimitiveAssertion self = (PrimitiveAssertion) normalizedMe;
-        WSPolicyParser.getInstance().printAssertion(0, arg, new PrintWriter(System.out, true));
-        WSPolicyParser.getInstance().printAssertion(0, self, new PrintWriter(System.out, true));
-        
         
         if (!self.getName().equals(arg.getName())) {
             return new XorCompositeAssertion(); // no bahaviour is admisible            
