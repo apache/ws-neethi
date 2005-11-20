@@ -30,9 +30,9 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.policy.model.AndCompositeAssertion;
 import org.apache.policy.model.Assertion;
 import org.apache.policy.model.Policy;
+import org.apache.policy.model.PolicyConstants;
 import org.apache.policy.model.PolicyReference;
 import org.apache.policy.model.PrimitiveAssertion;
-import org.apache.policy.model.WSPConstants;
 import org.apache.policy.model.XorCompositeAssertion;
 
 /**
@@ -58,8 +58,8 @@ public class PolicyWriter {
 	}
 	
 	private void writePolicy(Policy policy, XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeStartElement(WSPConstants.WS_POLICY_PREFIX, WSPConstants.WS_POLICY, 
-				WSPConstants.WSU_NAMESPACE_URI);
+		writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX, PolicyConstants.WS_POLICY, 
+				PolicyConstants.WSU_NAMESPACE_URI);
 		
 		Iterator iterator = policy.getTerms().iterator();
 		while (iterator.hasNext()) {
@@ -93,8 +93,8 @@ public class PolicyWriter {
 	
 	private void writeAndCompositeAssertion(AndCompositeAssertion assertion, 
 			XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeStartElement(WSPConstants.WS_POLICY_PREFIX, 
-				WSPConstants.AND_COMPOSITE_ASSERTION, WSPConstants.WS_POLICY_NAMESPACE_URI);
+		writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX, 
+				PolicyConstants.AND_COMPOSITE_ASSERTION, PolicyConstants.WS_POLICY_NAMESPACE_URI);
 		
 		List terms = assertion.getTerms();
 		writeTerms(terms, writer);
@@ -104,8 +104,8 @@ public class PolicyWriter {
 	
 	private void writeXorCompositeAssertion(XorCompositeAssertion assertion,
 			XMLStreamWriter writer) throws XMLStreamException {
-		writer.writeStartElement(WSPConstants.WS_POLICY_PREFIX, 
-				WSPConstants.XOR_COMPOSITE_ASSERTION, WSPConstants.WS_POLICY_NAMESPACE_URI);
+		writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX, 
+				PolicyConstants.XOR_COMPOSITE_ASSERTION, PolicyConstants.WS_POLICY_NAMESPACE_URI);
 		
 		List terms = assertion.getTerms();
 		writeTerms(terms, writer);

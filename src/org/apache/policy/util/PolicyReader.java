@@ -37,7 +37,7 @@ import org.apache.policy.model.Assertion;
 import org.apache.policy.model.Policy;
 import org.apache.policy.model.PolicyReference;
 import org.apache.policy.model.PrimitiveAssertion;
-import org.apache.policy.model.WSPConstants;
+import org.apache.policy.model.PolicyConstants;
 import org.apache.policy.model.XorCompositeAssertion;
 
 /**
@@ -67,20 +67,20 @@ public class PolicyReader {
 		String namespace = element.getNamespace().getName();
 		String localName = element.getLocalName();
 		
-		if (!(namespace.equals(WSPConstants.WSU_NAMESPACE_URI))) {
+		if (!(namespace.equals(PolicyConstants.WSU_NAMESPACE_URI))) {
 			return readPrimitiveAssertion(element);
 		}
 		
-		if (localName.equals(WSPConstants.WS_POLICY)) {
+		if (localName.equals(PolicyConstants.WS_POLICY)) {
 			return readPolicy(element);
 			
-		} else if (localName.equals(WSPConstants.AND_COMPOSITE_ASSERTION)) {
+		} else if (localName.equals(PolicyConstants.AND_COMPOSITE_ASSERTION)) {
 			return readAndComposite(element);
 			
-		} else if (localName.equals(WSPConstants.XOR_COMPOSITE_ASSERTION)) {
+		} else if (localName.equals(PolicyConstants.XOR_COMPOSITE_ASSERTION)) {
 			return readXorComposite(element);
 			
-		} else if (localName.equals(WSPConstants.WS_POLICY_REFERENCE)) {
+		} else if (localName.equals(PolicyConstants.WS_POLICY_REFERENCE)) {
 			return readPolicyReference(element);
 			
 		} else {
@@ -130,8 +130,8 @@ public class PolicyReader {
         while (childElements.hasNext()) {
             OMElement childElement = (OMElement) childElements.next();
             
-            if (childElement.getNamespace().getName().equals(WSPConstants.WS_POLICY_NAMESPACE_URI)
-                    && childElement.getLocalName().equals(WSPConstants.WS_POLICY)) {
+            if (childElement.getNamespace().getName().equals(PolicyConstants.WS_POLICY_NAMESPACE_URI)
+                    && childElement.getLocalName().equals(PolicyConstants.WS_POLICY)) {
                 Policy policy = readPolicy(childElement);
                 result.addTerm(policy);
         

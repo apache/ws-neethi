@@ -20,7 +20,7 @@ package org.apache.policy.model;
  * entier framework.
  * 
  */
-public interface WSPConstants {
+public interface PolicyConstants {
     
     /** */
     public static final String AND_COMPOSITE_ASSERTION = "All";

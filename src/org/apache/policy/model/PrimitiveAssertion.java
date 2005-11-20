@@ -23,7 +23,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.policy.util.PolicyRegistry;
-import org.apache.policy.util.WSPolicyUtil;
+import org.apache.policy.util.PolicyUtil;
 
 /**
  * PrimitiveAssertion wraps an assertion which is indivisible. Such assertion 
@@ -92,7 +92,7 @@ public class PrimitiveAssertion implements Assertion {
         List argChildTerms;
         if (arg.getTerms().get(0) instanceof Policy) {
             argChildTerms 
-                = WSPolicyUtil.getPrimTermsList((Policy) arg.getTerms().get(0));
+                = PolicyUtil.getPrimTermsList((Policy) arg.getTerms().get(0));
         } else {
             argChildTerms = arg.getTerms();
         }
@@ -100,12 +100,12 @@ public class PrimitiveAssertion implements Assertion {
         List selfChildTerms;
         if (self.getTerms().get(0) instanceof Policy) {
             selfChildTerms 
-                = WSPolicyUtil.getPrimTermsList((Policy) self.getTerms().get(0));
+                = PolicyUtil.getPrimTermsList((Policy) self.getTerms().get(0));
         } else {
             selfChildTerms = self.getTerms();
         }
         
-        if (WSPolicyUtil.matchByQName(argChildTerms, selfChildTerms)) {
+        if (PolicyUtil.matchByQName(argChildTerms, selfChildTerms)) {
                  
             AndCompositeAssertion andCompositeAssertion 
                 = new AndCompositeAssertion();
@@ -185,7 +185,7 @@ public class PrimitiveAssertion implements Assertion {
             return primitiveAssertion;           
         }
         
-        Policy policyTerm = WSPolicyUtil.getSinglePolicy(policyTerms, reg);
+        Policy policyTerm = PolicyUtil.getSinglePolicy(policyTerms, reg);
         CompositeAssertion xorTerm = (XorCompositeAssertion) 
                 policyTerm.getTerms().get(0);
         
@@ -225,7 +225,7 @@ public class PrimitiveAssertion implements Assertion {
         
         termsForAnEndAnd.addAll(childNonPolicyTerms);
         termsForAnEndAnd.addAll(((AndCompositeAssertion) iterator2.next()).getTerms());
-        self.addTerm(WSPolicyUtil.getPolicy(termsForAnEndAnd));
+        self.addTerm(PolicyUtil.getPolicy(termsForAnEndAnd));
         anEndAndTerm.addTerm(self);
         endAndTerms.add(anEndAndTerm);
                
@@ -236,7 +236,7 @@ public class PrimitiveAssertion implements Assertion {
             termsForAnEndAnd.clear();
             termsForAnEndAnd.addAll(childNonPolicyTerms);
             termsForAnEndAnd.addAll(((AndCompositeAssertion) iterator2.next()).getTerms());
-            self.addTerm(WSPolicyUtil.getPolicy(termsForAnEndAnd));
+            self.addTerm(PolicyUtil.getPolicy(termsForAnEndAnd));
             
             anEndAndTerm.addTerm(self);
             endAndTerms.add(anEndAndTerm);            

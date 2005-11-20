@@ -33,7 +33,7 @@ import org.apache.axis2.wsdl.WSDLVersionWrapper;
 import org.apache.axis2.wsdl.builder.WOMBuilderFactory;
 import org.apache.policy.model.Assertion;
 import org.apache.policy.model.Policy;
-import org.apache.policy.model.WSPConstants;
+import org.apache.policy.model.PolicyConstants;
 import org.apache.wsdl.Component;
 import org.apache.wsdl.MessageReference;
 import org.apache.wsdl.WSDLBinding;
@@ -57,21 +57,21 @@ import com.ibm.wsdl.util.xml.DOM2Writer;
  * @author Sanka Samaranayake <ssanka@gmail.com>
  *
  */
-public class WSPolicyAttachmentUtil {
+public class PolicyAttachmentUtil {
     
     private WSDLDescription wsdlDescription = null;
     //private HashMap loadedPolicies = new HashMap();
     private PolicyRegistry reg = new PolicyRegistry();
     
-    public WSPolicyAttachmentUtil() {
+    public PolicyAttachmentUtil() {
     }
 
-    public WSPolicyAttachmentUtil(WSDLDescription wsdlDescription) {
+    public PolicyAttachmentUtil(WSDLDescription wsdlDescription) {
         this.wsdlDescription = wsdlDescription;
         populatePolicyRegistry();
     }
     
-    public WSPolicyAttachmentUtil(InputStream wsdlInputStream) {
+    public PolicyAttachmentUtil(InputStream wsdlInputStream) {
         try {
             WSDLVersionWrapper build = WOMBuilderFactory.
                 getBuilder(WSDLConstants.WSDL_1_1).build(wsdlInputStream);
@@ -396,7 +396,7 @@ public class WSPolicyAttachmentUtil {
                 = (WSDLExtensibilityAttribute) iterator.next();
             QName qname = exAttribute.getKey();
             
-            if (qname.getNamespaceURI().equals(WSPConstants.WS_POLICY_NAMESPACE_URI) &&
+            if (qname.getNamespaceURI().equals(PolicyConstants.WS_POLICY_NAMESPACE_URI) &&
                     qname.getLocalPart().equals("PolicyURIs")) {
                 String value = exAttribute.getValue().toString();
                 String[] uriStrings = value.split(" ");
@@ -430,11 +430,11 @@ public class WSPolicyAttachmentUtil {
                     = (DefaultExtensibilityElement) extensibilityElement;
                 Element element = defaultExtensibilityElement.getElement();
                 
-                if (element.getNamespaceURI().equals(WSPConstants.WS_POLICY_NAMESPACE_URI) 
+                if (element.getNamespaceURI().equals(PolicyConstants.WS_POLICY_NAMESPACE_URI) 
                         && element.getLocalName().equals("PolicyReference")) {
                     policies.add(getPolicyFromPolicyRef(element));
                     
-                } else if (element.getNamespaceURI().equals(WSPConstants.WS_POLICY_NAMESPACE_URI) 
+                } else if (element.getNamespaceURI().equals(PolicyConstants.WS_POLICY_NAMESPACE_URI) 
                         && element.getLocalName().equals("Policy")) {
                     policies.add(getPolicyFromElement(element));
                 }
@@ -599,7 +599,7 @@ public class WSPolicyAttachmentUtil {
                     = (DefaultExtensibilityElement) extensibilityElement;
                 Element element = defaultExtensibilityElement.getElement();
                 
-                if (element.getNamespaceURI().equals(WSPConstants.WS_POLICY_NAMESPACE_URI) 
+                if (element.getNamespaceURI().equals(PolicyConstants.WS_POLICY_NAMESPACE_URI) 
                         && element.getLocalName().equals("PolicyReference")) {
                     String uriString = element.getAttribute("URI");
                     
@@ -609,7 +609,7 @@ public class WSPolicyAttachmentUtil {
                 } 
                 
                 String policyID 
-                    = element.getAttributeNS(WSPConstants.WSU_NAMESPACE_URI, "Id");
+                    = element.getAttributeNS(PolicyConstants.WSU_NAMESPACE_URI, "Id");
     
                 if (policyID.length() != 0) {
                     registerPolicyElement(element);
@@ -626,7 +626,7 @@ public class WSPolicyAttachmentUtil {
                 = (WSDLExtensibilityAttribute) iterator.next();
             QName qname = wsdlExtensibilityAttribute.getKey();
             
-            if (qname.getNamespaceURI().equals(WSPConstants.WS_POLICY_NAMESPACE_URI) &&
+            if (qname.getNamespaceURI().equals(PolicyConstants.WS_POLICY_NAMESPACE_URI) &&
                     qname.getLocalPart().equals("PolicyURIs")) {
                 String value = wsdlExtensibilityAttribute.getValue().toString();
                 String[] policyURIs = value.split(" ");
