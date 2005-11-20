@@ -33,8 +33,7 @@ import org.apache.axis2.wsdl.WSDLVersionWrapper;
 import org.apache.axis2.wsdl.builder.WOMBuilderFactory;
 import org.apache.policy.model.Assertion;
 import org.apache.policy.model.Policy;
-import org.apache.policy.parser.WSPConstants;
-import org.apache.policy.parser.WSPolicyParser;
+import org.apache.policy.model.WSPConstants;
 import org.apache.wsdl.Component;
 import org.apache.wsdl.MessageReference;
 import org.apache.wsdl.WSDLBinding;
@@ -63,8 +62,6 @@ public class WSPolicyAttachmentUtil {
     private WSDLDescription wsdlDescription = null;
     //private HashMap loadedPolicies = new HashMap();
     private PolicyRegistry reg = new PolicyRegistry();
-    private WSPolicyParser parser = WSPolicyParser.getInstance();
-
     
     public WSPolicyAttachmentUtil() {
     }
@@ -465,7 +462,8 @@ public class WSPolicyAttachmentUtil {
     
     private Policy getPolicyFromElement(Element element) {
         InputStream policyInputStream = createInputStream(element);
-        return parser.buildPolicyModel(policyInputStream);
+        PolicyReader reader = PolicyFactory.getInstance().getPolicyReader();
+        return reader.readPolicy(policyInputStream);
     }
     
     private InputStream createInputStream(Element element) {
@@ -515,7 +513,8 @@ public class WSPolicyAttachmentUtil {
                 try {
                     URI policyURI = new URI(uriString);
                     URL policyURL = policyURI.toURL();
-                    Policy newPolicy = parser.buildPolicyModel(policyURL.openStream());
+                    PolicyReader reader = PolicyFactory.getInstance().getPolicyReader();
+                    Policy newPolicy = reader.readPolicy(policyURL.openStream());
                     reg.register(uriString, newPolicy);
                     
                 } catch (Exception e) {
@@ -644,7 +643,8 @@ public class WSPolicyAttachmentUtil {
     
     private void registerPolicyElement(Element element) {
         InputStream elementInputStream = createInputStream(element);
-        Policy policy = parser.buildPolicyModel(elementInputStream);
+        PolicyReader reader = PolicyFactory.getInstance().getPolicyReader();
+        Policy policy = reader.readPolicy(elementInputStream);
         reg.register(policy.getPolicyURI(), policy);
     }
 }

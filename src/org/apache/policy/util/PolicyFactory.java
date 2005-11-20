@@ -35,4 +35,8 @@ public class PolicyFactory {
 	public PolicyWriter getPolicyWriter() {
 		return new PolicyWriter();
 	}
+	
+	public PolicyReader getPolicyReader() {
+		return new PolicyReader();
+	}
 }

@@ -16,6 +16,7 @@
 
 package org.apache.policy.util;
 
+
 import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -31,8 +32,8 @@ import org.apache.policy.model.Assertion;
 import org.apache.policy.model.Policy;
 import org.apache.policy.model.PolicyReference;
 import org.apache.policy.model.PrimitiveAssertion;
+import org.apache.policy.model.WSPConstants;
 import org.apache.policy.model.XorCompositeAssertion;
-import org.apache.policy.parser.WSPConstants;
 
 /**
  * @author Sanka Samaranayake (sanka@apache.org)
