@@ -1,23 +1,36 @@
 <project basedir="." default="jar">
-    <property name="src" value="src"></property>
-    <property name="classes" value="classes"></property>
-    <property name="bin" value="bin"></property>
+	<property name="src" value="src">
+	</property>
+	<property name="classes" value="classes">
+	</property>
+	<property name="bin" value="bin">
+	</property>
 
-      <target name="init">
-          <mkdir dir="${classes}"></mkdir>
-          <mkdir dir="${bin}"></mkdir>
-      </target>
+	<target name="init">
+		<mkdir dir="${classes}">
+		</mkdir>
+		<mkdir dir="${bin}">
+		</mkdir>
+	</target>
 
-      <target name="compile" depends="init">
-          <javac srcdir="${src}" destdir="${classes}">
-              <classpath>
-                   <fileset dir="..\lib" includes="*.jar"></fileset>
-              </classpath>
-          </javac>
-      </target>
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${classes}">
+			<classpath>
+				<fileset dir=".\lib" includes="*.jar">
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
 
-      <target name="jar" depends="compile">
-         <jar basedir="${classes}" destfile="${bin}/ws-policy.jar"></jar>
-          <copy file="${bin}/ws-policy.jar" todir="../lib" overwrite="true"></copy>
-      </target>
+	<target name="jar" depends="compile">
+		<jar basedir="${classes}" destfile="${bin}/ws-policySNAPSHOT.jar">
+		</jar>
+		<copy file="${bin}/ws-policySNAPSHOT.jar" todir="." overwrite="true">
+		</copy>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${classes}"/>
+	</target>
+
 </project>
