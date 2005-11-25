@@ -23,9 +23,9 @@
 	</target>
 
 	<target name="jar" depends="compile">
-		<jar basedir="${classes}" destfile="${bin}/ws-policySNAPSHOT.jar">
+		<jar basedir="${classes}" destfile="${bin}/ws-policy-SNAPSHOT.jar">
 		</jar>
-		<copy file="${bin}/ws-policySNAPSHOT.jar" todir="." overwrite="true">
+		<copy file="${bin}/ws-policy-SNAPSHOT.jar" todir="." overwrite="true">
 		</copy>
 	</target>
 	
