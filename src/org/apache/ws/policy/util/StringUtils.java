@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.policy.util;
+package org.apache.ws.policy.util;
 
 /**
  * StringUtils provides few utility functions for other classes in the 

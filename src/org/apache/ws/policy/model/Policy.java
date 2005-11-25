@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.apache.policy.model;
+package org.apache.ws.policy.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.policy.util.PolicyRegistry;
+import org.apache.ws.policy.util.PolicyRegistry;
 
 /**
  * Policy is the access point for policy framework. It the object model that 

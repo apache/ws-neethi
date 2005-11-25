@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.policy.model;
+package org.apache.ws.policy.model;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -22,8 +22,8 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.policy.util.PolicyRegistry;
-import org.apache.policy.util.PolicyUtil;
+import org.apache.ws.policy.util.PolicyRegistry;
+import org.apache.ws.policy.util.PolicyUtil;
 
 /**
  * PrimitiveAssertion wraps an assertion which is indivisible. Such assertion 

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.apache.policy.util;
+package org.apache.ws.policy.util;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.apache.policy.model.Policy;
+import org.apache.ws.policy.model.Policy;
 
 /**
  * PolicyRegistry is contains reference to external policy that are used by the

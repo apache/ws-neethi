@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.policy.util;
+package org.apache.ws.policy.util;
 
 /**
  * @author Sanka Samaranayake (sanka@apache.org)

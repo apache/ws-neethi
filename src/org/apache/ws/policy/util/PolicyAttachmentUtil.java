@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.policy.util;
+package org.apache.ws.policy.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -31,9 +31,9 @@ import javax.xml.namespace.QName;
 import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.axis2.wsdl.WSDLVersionWrapper;
 import org.apache.axis2.wsdl.builder.WOMBuilderFactory;
-import org.apache.policy.model.Assertion;
-import org.apache.policy.model.Policy;
-import org.apache.policy.model.PolicyConstants;
+import org.apache.ws.policy.model.Assertion;
+import org.apache.ws.policy.model.Policy;
+import org.apache.ws.policy.model.PolicyConstants;
 import org.apache.wsdl.Component;
 import org.apache.wsdl.MessageReference;
 import org.apache.wsdl.WSDLBinding;

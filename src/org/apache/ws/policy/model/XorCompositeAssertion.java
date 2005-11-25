@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.apache.policy.model;
+package org.apache.ws.policy.model;
 
 import java.util.Iterator;
 
-import org.apache.policy.util.PolicyRegistry;
+import org.apache.ws.policy.util.PolicyRegistry;
 
 /**
  * XORCompositeAssertion represents a bunch of policy alternatives. It requires

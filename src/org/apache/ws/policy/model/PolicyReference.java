@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.apache.policy.model;
+package org.apache.ws.policy.model;
 
-import org.apache.policy.util.PolicyRegistry;
+import org.apache.ws.policy.util.PolicyRegistry;
 
 /**
  * PolicyReference class has implicit reference to a external policy. It acts 

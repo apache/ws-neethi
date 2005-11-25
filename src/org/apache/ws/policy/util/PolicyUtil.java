@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package org.apache.policy.util;
+package org.apache.ws.policy.util;
 
 import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.policy.model.AndCompositeAssertion;
-import org.apache.policy.model.Policy;
-import org.apache.policy.model.PrimitiveAssertion;
-import org.apache.policy.model.XorCompositeAssertion;
+import org.apache.ws.policy.model.AndCompositeAssertion;
+import org.apache.ws.policy.model.Policy;
+import org.apache.ws.policy.model.PrimitiveAssertion;
+import org.apache.ws.policy.model.XorCompositeAssertion;
 
 /**
  * WSPolicyUtil contains several utility methods for policy manipulations.

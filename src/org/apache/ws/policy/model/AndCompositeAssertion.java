@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.policy.model;
+package org.apache.ws.policy.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.policy.util.PolicyRegistry;
+import org.apache.ws.policy.util.PolicyRegistry;
 
 /**
  * AndCompositeAssertion represents either policy or a single policy 
