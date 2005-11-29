@@ -67,7 +67,7 @@ public class PolicyReader {
 		String namespace = element.getNamespace().getName();
 		String localName = element.getLocalName();
 		
-		if (!(namespace.equals(PolicyConstants.WSU_NAMESPACE_URI))) {
+		if (!(namespace.equals(PolicyConstants.WS_POLICY_NAMESPACE_URI))) {
 			return readPrimitiveAssertion(element);
 		}
 		
