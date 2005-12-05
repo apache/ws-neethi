@@ -16,16 +16,19 @@
 
 package org.apache.ws.policy.interop;
 
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URL;
 
+import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamException;
 
 import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Call;
+import org.apache.axis2.client.Options;
 import org.apache.axis2.om.OMAbstractFactory;
 import org.apache.axis2.om.OMElement;
 import org.apache.axis2.om.OMXMLParserWrapper;
@@ -33,50 +36,77 @@ import org.apache.axis2.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.axis2.soap.SOAPEnvelope;
 
 /**
+ * How to run ----------
+ * 
+ * (1) Normalize: user@localhost$java -cp <jar files> SimplePolicyClient -N <URL
+ * of policy1>
+ * 
+ * (2) Merge: user@localhost$java -cp <jar files> SimplePolicyClient -M <URL of
+ * policy1> <URL of policy2>
+ * 
+ * (3) Intersection user@localhost$java -cp <jar files> SimplePolicyClient -I
+ * <URL of policy1> <URL of policy2>
+ * 
  * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class SimplePolicyClient {
+
+    private static String normalizeActionString = "http://example.com/ws/2004/09/policy/Normalize/Request";
+
+    private static String mergeActionString = "http://example.com/ws/2004/09/policy/Merge/Request";
+
+    private static String intersectActionString = "http://example.com/ws/2004/09/policy/Intersect/Request";
+
+    private static String targetEPR = "http://wsi.alphaworks.ibm.com:8080/wspolicy/services/policyService";
+
     public static void main(String[] args) throws Exception {
         Call call = new Call();
-        call.setWsaAction("http://schemas.xmlsoap.org/ws/2004/09/mex/GetMetadata/Request");
-        call.setTo(new EndpointReference("http://localhost:8080/axis2/services/PolicyService")); 
-        
-        call.setTransportInfo(Constants.TRANSPORT_HTTP,
-                Constants.TRANSPORT_HTTP, false);
+        Options options = new Options();
+        call.setClientOptions(options);
 
-        FileInputStream fis = new FileInputStream(
-                "/home/sanka/policy-docs/primitive.xml");
-        XMLStreamReader xmlr = XMLInputFactory.newInstance()
-                .createXMLStreamReader(fis);
-        OMXMLParserWrapper builder = OMXMLBuilderFactory.createStAXOMBuilder(
-                OMAbstractFactory.getOMFactory(), xmlr);
+        options.setTo(new EndpointReference(targetEPR));
+        options.setListenerTransportProtocol(Constants.TRANSPORT_HTTP);
 
-        OMElement arg = builder.getDocumentElement();
+        if (args[0].equals("-N")) {
+            options.setAction(normalizeActionString);
+
+        } else if (args[0].equals("-M")) {
+            options.setAction(mergeActionString);
+
+        } else if (args[0].equals("-I")) {
+            options.setAction(intersectActionString);
+        }
 
         SOAPEnvelope env = OMAbstractFactory.getSOAP11Factory()
                 .getDefaultEnvelope();
 
-        // adding arg1
-        env.getBody().addChild(arg);
-        
-        //env.serialize(XMLOutputFactory.newInstance().createXMLStreamWriter(System.out));
+        // adding args[1]
+        env.getBody().addChild(getOMElementFromURL(args[1]));
 
-//        fis = new FileInputStream("/home/sanka/policy-docs/policy2.xml");
-//        xmlr = XMLInputFactory.newInstance().createXMLStreamReader(fis);
-//        builder = OMXMLBuilderFactory.createStAXOMBuilder(OMAbstractFactory
-//                .getOMFactory(), xmlr);
-//        arg = builder.getDocumentElement();
-//
-//         adding arg2
-//        env.getBody().addChild(arg);
+        if (!args[0].equals("-N")) {
+            env.getBody().addChild(getOMElementFromURL(args[2]));
+        }
 
-        OMElement resutl = call.invokeBlocking("foo", env);
+        SOAPEnvelope response = (SOAPEnvelope) call.invokeBlocking("foo", env);
+
         StringWriter sw = new StringWriter();
-        resutl.serialize(XMLOutputFactory.newInstance().createXMLStreamWriter(
-                System.out));
+        OMElement result = response.getBody().getFirstElement();
+
+        System.out.println("Output");
+        result.serialize(XMLOutputFactory.newInstance().createXMLStreamWriter(
+                sw));
         sw.flush();
         System.out.println(sw.toString());
-        
+    }
+
+    private static OMElement getOMElementFromURL(String urlString)
+            throws XMLStreamException, FactoryConfigurationError, IOException {
+        URL targetURL = new URL(urlString);
+        OMXMLParserWrapper wrapper = OMXMLBuilderFactory.createStAXOMBuilder(
+                OMAbstractFactory.getOMFactory(), XMLInputFactory.newInstance()
+                        .createXMLStreamReader(targetURL.openStream()));
+        return wrapper.getDocumentElement();
+
     }
 
 }
