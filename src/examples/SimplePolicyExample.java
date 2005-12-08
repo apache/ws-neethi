@@ -51,7 +51,8 @@ public class SimplePolicyExample {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         pwrt.writePolicy(norm, baos);
 
-		System.out.println(baos.toString());
+        System.out.println(baos.toString());
+        System.out.println("-----\n");
 
 		fis.close();
         /*
