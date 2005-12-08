@@ -36,6 +36,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.NamedNodeMap;
 import org.xml.sax.SAXException;
 
+import org.apache.axis2.om.OMAttribute;
 import org.apache.ws.policy.model.AndCompositeAssertion;
 import org.apache.ws.policy.model.Assertion;
 import org.apache.ws.policy.model.Policy;
@@ -116,6 +117,17 @@ public class PolicyReaderDOM {
 	
 	private Policy readPolicy(Element element) {
 		Policy policy = new Policy();
+        Attr attri;
+        attri = element.getAttributeNodeNS(PolicyConstants.WSU_NAMESPACE_URI, "Id");
+        if (attri != null) {
+            policy.setId(attri.getValue());
+        }
+
+    	attri = element.getAttributeNodeNS(PolicyConstants.XML_NAMESPACE_URI, "base");
+        if (attri != null) {
+            policy.setBase(attri.getValue());
+        }
+		
 		policy.addTerms(readTerms(element));
 		return policy;
 	}
@@ -142,16 +154,12 @@ public class PolicyReaderDOM {
         PrimitiveAssertion result = new PrimitiveAssertion(qname);
         
         result.setAttributes(getAttributes(element));
-        
-        // setting the text value ..
-//        String strValue = element.getTextContent();
-//     
-//        if (strValue != null && strValue.length() != 0) {
-//        	System.out.println("Seen a text content at " + element.getLocalName() +
-//        			", value: " + strValue);
-//            result.setStrValue(strValue);            
-//        }
-        
+        String isOptional = result.getAttribute(new QName(
+                PolicyConstants.WS_POLICY_NAMESPACE_URI, "Optional"));
+        if (isOptional != null && Boolean.getBoolean(isOptional)) {
+            result.setOptional(true);
+        }        
+                
         //CHECK ME
 		NodeList list = element.getChildNodes();
 		int length = list.getLength();

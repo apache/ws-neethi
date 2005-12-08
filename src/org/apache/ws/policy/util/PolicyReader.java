@@ -96,9 +96,10 @@ public class PolicyReader {
         if (attri != null) {
             policy.setId(attri.getAttributeValue());
         }
-
-        attri = element.getAttribute(new QName("base", "", "xml"));
+        System.out.println("Searching base attribute");
+        attri = element.getAttribute(new QName(PolicyConstants.XML_NAMESPACE_URI, "base"));
         if (attri != null) {
+        	System.out.println("found base attribute: " + attri.getAttributeValue());        	
             policy.setBase(attri.getAttributeValue());
         }
 

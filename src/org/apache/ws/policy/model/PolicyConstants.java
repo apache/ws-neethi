@@ -42,5 +42,8 @@ public interface PolicyConstants {
     
     /** */
     public static final String WSU_NAMESPACE_URI = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
+ 
+    /** */
+    public static final String XML_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
     
 }
