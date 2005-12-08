@@ -36,7 +36,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.NamedNodeMap;
 import org.xml.sax.SAXException;
 
-import org.apache.axis2.om.OMAttribute;
 import org.apache.ws.policy.model.AndCompositeAssertion;
 import org.apache.ws.policy.model.Assertion;
 import org.apache.ws.policy.model.Policy;
@@ -73,21 +72,6 @@ public class PolicyReaderDOM {
 			e.printStackTrace();
 			throw new RuntimeException("error : " + e.getMessage());
 		}
-
-		
-//		try {
-//			XMLStreamReader reader = XMLInputFactory.newInstance()
-//					.createXMLStreamReader(in);
-//			OMXMLParserWrapper builder = OMXMLBuilderFactory
-//					.createStAXOMBuilder(OMAbstractFactory.getOMFactory(),
-//							reader);
-//
-//			OMElement element = builder.getDocumentElement();
-//			return readPolicy(element);
-//
-//		} catch (XMLStreamException ex) {
-//			throw new RuntimeException("error : " + ex.getMessage());
-//		}
 	}
 	
 	private Assertion readAssertion(Element element) {
