@@ -16,12 +16,14 @@
 
 package examples;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 
 import org.apache.ws.policy.model.Policy;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
+import org.apache.ws.policy.util.PolicyReaderDOM;
 import org.apache.ws.policy.util.PolicyWriter;
 
 /**
@@ -50,6 +52,28 @@ public class SimplePolicyExample {
         pwrt.writePolicy(norm, baos);
 
 		System.out.println(baos.toString());
+
+		fis.close();
+        /*
+         * Use standard Parser, w3c DOM
+         */
+		if (args.length > 0) {
+			fis = new FileInputStream(args[0]);			
+		}
+		else {
+			fis = new FileInputStream("policy/src/examples/policy2.xml");
+		}
+        PolicyReaderDOM readerDom = PolicyFactory.getInstance().getPolicyReaderDOM();
+        Policy pDom = readerDom.readPolicy(fis);
+	    Policy normDom  = (Policy)pDom.normalize();
+	    
+        baos = new ByteArrayOutputStream();
+        pwrt.writePolicy(normDom, baos);
+
+		System.out.println(baos.toString());
+
+		fis.close();
+	
 	}
 }
 

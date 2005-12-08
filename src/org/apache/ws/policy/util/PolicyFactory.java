@@ -39,4 +39,9 @@ public class PolicyFactory {
 	public PolicyReader getPolicyReader() {
 		return new PolicyReader();
 	}
+	
+	public PolicyReaderDOM getPolicyReaderDOM() {
+		return new PolicyReaderDOM();
+	}
+
 }
