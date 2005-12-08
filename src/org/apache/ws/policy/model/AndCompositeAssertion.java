@@ -229,17 +229,26 @@ public class AndCompositeAssertion extends CompositeAssertion implements
         ArrayList andTerms = new ArrayList();
         ArrayList xorTerms = new ArrayList();
 
+        if (isEmpty()) {
+            AND.setNormalized(true);
+            return AND;
+        }
+
         Iterator terms = getTerms().iterator();
 
         while (terms.hasNext()) {
             Assertion term = (Assertion) terms.next();
-            term = term.normalize(reg);
+            term = (term instanceof Policy) ? term : term.normalize(reg);
 
             if (term instanceof Policy) {
-                xorTerms.add(((Policy) term).getTerms().get(0));
+                Assertion wrapper = new AndCompositeAssertion();
+                ((AndCompositeAssertion) wrapper).addTerms(((Policy) term)
+                        .getTerms());
+                term = wrapper.normalize(reg);
+            }
 
-            } else if (term instanceof XorCompositeAssertion) {
-
+            if (term instanceof XorCompositeAssertion) {
+                
                 if (((XorCompositeAssertion) term).isEmpty()) {
 
                     /*  */
@@ -248,17 +257,16 @@ public class AndCompositeAssertion extends CompositeAssertion implements
                     return anXorTerm;
                 }
                 xorTerms.add(term);
+                break;
 
-            } else if (term instanceof AndCompositeAssertion) {
-
-                if (!((AndCompositeAssertion) term).isEmpty()) {
-                    AND.addTerms(((AndCompositeAssertion) term)
-                            .getTerms());
-                }
-
-            } else {
-                AND.addTerm(term);
             }
+            
+            if (term instanceof AndCompositeAssertion) {
+                AND.addTerms(((AndCompositeAssertion) term).getTerms());
+                break;
+            }
+            
+            AND.addTerm(term);
         }
 
         // processing child-XORCompositeAssertions
@@ -267,30 +275,29 @@ public class AndCompositeAssertion extends CompositeAssertion implements
             XorCompositeAssertion xorTermA, xorTermB;
 
             for (int i = 0; i < xorTerms.size(); i++) {
-                
+
                 for (int j = i; j < xorTerms.size(); j++) {
-         
+
                     if (i != j) {
-                        xorTermA = (XorCompositeAssertion) xorTerms
-                                .get(i);
-                        xorTermB = (XorCompositeAssertion) xorTerms
-                                .get(j);
+                        xorTermA = (XorCompositeAssertion) xorTerms.get(i);
+                        xorTermB = (XorCompositeAssertion) xorTerms.get(j);
 
                         Iterator interatorA = xorTermA.getTerms().iterator();
 
                         CompositeAssertion andTermA;
                         Iterator iteratorB;
-                        
+
                         while (interatorA.hasNext()) {
                             andTermA = (CompositeAssertion) interatorA.next();
                             iteratorB = xorTermB.getTerms().iterator();
 
                             CompositeAssertion andTermB;
                             AndCompositeAssertion anAndTerm;
-                            
+
                             while (iteratorB.hasNext()) {
 
-                                andTermB = (CompositeAssertion) iteratorB.next();
+                                andTermB = (CompositeAssertion) iteratorB
+                                        .next();
                                 anAndTerm = new AndCompositeAssertion();
                                 anAndTerm.addTerms(andTermA.getTerms());
                                 anAndTerm.addTerms(andTermB.getTerms());
@@ -303,16 +310,15 @@ public class AndCompositeAssertion extends CompositeAssertion implements
             }
 
         } else if (xorTerms.size() == 1) {
-            CompositeAssertion XORterm = (CompositeAssertion) xorTerms
-                    .get(0);
+            CompositeAssertion XORterm = (CompositeAssertion) xorTerms.get(0);
             XOR.addTerms(XORterm.getTerms());
         }
-        
+
         if (AND.isEmpty()) {
             XOR.setNormalized(true);
             return XOR;
         }
-        
+
         List primTerms = AND.getTerms();
         Iterator interator = XOR.getTerms().iterator();
 

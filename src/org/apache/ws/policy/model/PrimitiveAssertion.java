@@ -38,9 +38,11 @@ public class PrimitiveAssertion implements Assertion {
     private List terms = new ArrayList();
     private Hashtable attributes = new Hashtable();
     private boolean flag = false;
+    private boolean isOptional = false;
     private String strValue = null;
     
     private Object value;
+    
     public PrimitiveAssertion(QName qname) {
         this.qname = qname;
     }
@@ -150,6 +152,25 @@ public class PrimitiveAssertion implements Assertion {
     }
         
     public Assertion normalize(PolicyRegistry reg) {
+        String isOptional;
+          
+        if (isOptional()) {
+            
+            XorCompositeAssertion xorCompositeAssertion = new XorCompositeAssertion();
+            AndCompositeAssertion andCompositeAssertion = new AndCompositeAssertion();
+                        
+            PrimitiveAssertion assertion = getSelfWithoutTerms();
+            assertion.removeAttribute(new QName(PolicyConstants.WS_POLICY_NAMESPACE_URI, "Optional"));
+            assertion.setOptional(false);
+            assertion.setTerms(getTerms());
+            
+            andCompositeAssertion.addTerm(assertion);
+            xorCompositeAssertion.addTerm(andCompositeAssertion);
+            xorCompositeAssertion.addTerm(new AndCompositeAssertion());
+            
+            return xorCompositeAssertion.normalize(reg);
+        }
+        
         if (getTerms().isEmpty()) {
             PrimitiveAssertion primitiveAssertion = getSelfWithoutTerms();
             primitiveAssertion.setNormalized(true);
@@ -248,6 +269,7 @@ public class PrimitiveAssertion implements Assertion {
     private PrimitiveAssertion getSelfWithoutTerms() {
         PrimitiveAssertion self = new PrimitiveAssertion(getName());
         self.setAttributes(getAttributes());
+        self.setStrValue(getStrValue());
         return self;
     }
         
@@ -273,6 +295,10 @@ public class PrimitiveAssertion implements Assertion {
     
     public String getAttribute(QName qname) {
         return (String) attributes.get(qname);
+    }
+    
+    public void removeAttribute(QName qname) {
+        attributes.remove(qname);
     }
     
     public void setParent(Assertion parent) {
@@ -312,6 +338,14 @@ public class PrimitiveAssertion implements Assertion {
         this.strValue = strValue;        
     }
     
+    public boolean isOptional() {
+        return isOptional;
+    }
+    
+    public void setOptional(boolean isOptional) {
+        this.isOptional = isOptional;
+    }
+    
     private Policy getSinglePolicy(List policyList, PolicyRegistry reg) {
         Policy result = null;
         Iterator iterator = policyList.iterator();
@@ -342,8 +376,6 @@ public class PrimitiveAssertion implements Assertion {
     
     private List getTerms(Policy policy) {
         return ((AndCompositeAssertion) ((XorCompositeAssertion) policy.getTerms().get(0)).getTerms().get(0)).getTerms();
-        
-    }
-    
+    }    
     
 }
