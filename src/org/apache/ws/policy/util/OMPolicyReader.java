@@ -96,10 +96,8 @@ public class OMPolicyReader implements PolicyReader {
         if (attri != null) {
             policy.setId(attri.getAttributeValue());
         }
-        System.out.println("Searching base attribute");
         attri = element.getAttribute(new QName(PolicyConstants.XML_NAMESPACE_URI, "base"));
         if (attri != null) {
-        	System.out.println("found base attribute: " + attri.getAttributeValue());        	
             policy.setBase(attri.getAttributeValue());
         }
 
