@@ -27,18 +27,46 @@ public class PolicyFactory {
     
     
     public static PolicyReader getPolicyReader(int type) {
+    	String name = null;
         switch (type) {
         case DOM_POLICY_READER:
-            return new DOMPolicyReader();
+        	name = "org.apache.ws.policy.util.DOMPolicyReader";
+        	break;
         case OM_POLICY_READER:
-            return new OMPolicyReader();
+        	name = "org.apache.ws.policy.util.OMPolicyReader";
+        	break;
         default: 
-            throw new IllegalArgumentException("Unknow PolicyReader type ..");
+            throw new IllegalArgumentException("Unknown PolicyReader type ..");
         }
+        try {
+			return (PolicyReader)Loader.loadClass(name).newInstance();
+		} catch (InstantiationException e) {
+            throw new IllegalArgumentException("Cannot load PolicyReader type ..");
+		} catch (IllegalAccessException e) {
+            throw new IllegalArgumentException("Cannot load PolicyReader type ..");
+		} catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Cannot load PolicyReader type ..");
+		}
     }
     
-    public static PolicyWriter getPolicyWriter() {
-        return new StAXPolicyWriter();
+    public static PolicyWriter getPolicyWriter(int type) {
+    	String name = null;
+        switch (type) {
+        case StAX_POLICY_WRITER:
+        	name = "org.apache.ws.policy.util.StAXPolicyWriter";
+        	break;
+        default: 
+            throw new IllegalArgumentException("Unknown PolicyWriter type ..");
+        }
+        try {
+			return (PolicyWriter)Loader.loadClass(name).newInstance();
+		} catch (InstantiationException e) {
+            throw new IllegalArgumentException("Cannot load PolicyWriter type ..");
+		} catch (IllegalAccessException e) {
+            throw new IllegalArgumentException("Cannot load PolicyWriter type ..");
+		} catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Cannot load PolicyWriter type ..");
+		}
     }
     
 }
