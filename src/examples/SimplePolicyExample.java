@@ -20,10 +20,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 
 import org.apache.ws.policy.model.Policy;
-import org.apache.ws.policy.util.DOMPolicyReader;
-import org.apache.ws.policy.util.OMPolicyReader;
+import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyFactory;
-import org.apache.ws.policy.util.StAXPolicyWriter;
+import org.apache.ws.policy.util.PolicyWriter;
 
 /**
  * @author Werner Dittmann (werner@apache.org)
@@ -40,10 +39,10 @@ public class SimplePolicyExample {
             fis = new FileInputStream("policy/src/examples/policy2.xml");
         }
 
-        OMPolicyReader prdr = (OMPolicyReader) PolicyFactory
-                .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
-        StAXPolicyWriter pwrt = (StAXPolicyWriter) PolicyFactory
-                .getPolicyWriter();
+        PolicyReader prdr = PolicyFactory
+                .getPolicyReader(PolicyFactory.OM_POLICY_READER);
+        PolicyWriter pwrt = PolicyFactory
+                .getPolicyWriter(PolicyFactory.StAX_POLICY_WRITER);
 
         Policy argOne = prdr.readPolicy(fis);
         Policy norm = (Policy) argOne.normalize();
@@ -51,6 +50,8 @@ public class SimplePolicyExample {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         pwrt.writePolicy(norm, baos);
 
+        System.out.println("Policy Id: " + norm.getId());
+        System.out.println("Policy base: " + norm.getBase());
         System.out.println(baos.toString());
         System.out.println("-----\n");
 
@@ -63,15 +64,17 @@ public class SimplePolicyExample {
         } else {
             fis = new FileInputStream("policy/src/examples/policy2.xml");
         }
-        DOMPolicyReader readerDom = (DOMPolicyReader) PolicyFactory
+        prdr = PolicyFactory
                 .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
 
-        Policy pDom = readerDom.readPolicy(fis);
-        Policy normDom = (Policy) pDom.normalize();
+        argOne = prdr.readPolicy(fis);
+        norm = (Policy) argOne.normalize();
 
         baos = new ByteArrayOutputStream();
-        pwrt.writePolicy(normDom, baos);
+        pwrt.writePolicy(norm, baos);
 
+        System.out.println("Policy Id: " + norm.getId());
+        System.out.println("Policy base: " + norm.getBase());
         System.out.println(baos.toString());
 
         fis.close();

@@ -1,5 +1,6 @@
-<wsp:Policy xml:base="uri:thisBase" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
-            xmlns:sec="http://schemas.xmlsoap.org/ws/2002/12/secext" >
+<wsp:Policy xml:base="uri:thisBase" wsu:Id="myPolicy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+            xmlns:sec="http://schemas.xmlsoap.org/ws/2002/12/secext"
+            xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" >
   <!-- 2 -->
   <sec:SecurityToken>
     <sec:TokenType>sec:X509v3</sec:TokenType>
