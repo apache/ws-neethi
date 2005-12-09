@@ -16,15 +16,14 @@
 
 package examples;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 
 import org.apache.ws.policy.model.Policy;
+import org.apache.ws.policy.util.DOMPolicyReader;
+import org.apache.ws.policy.util.OMPolicyReader;
 import org.apache.ws.policy.util.PolicyFactory;
-import org.apache.ws.policy.util.PolicyReader;
-import org.apache.ws.policy.util.PolicyReaderDOM;
-import org.apache.ws.policy.util.PolicyWriter;
+import org.apache.ws.policy.util.StAXPolicyWriter;
 
 /**
  * @author Werner Dittmann (werner@apache.org)
@@ -32,49 +31,50 @@ import org.apache.ws.policy.util.PolicyWriter;
 
 public class SimplePolicyExample {
 
-	public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 
-		FileInputStream fis = null;
-		if (args.length > 0) {
-			fis = new FileInputStream(args[0]);			
-		}
-		else {
-			fis = new FileInputStream("policy/src/examples/policy2.xml");
-		}
+        FileInputStream fis = null;
+        if (args.length > 0) {
+            fis = new FileInputStream(args[0]);
+        } else {
+            fis = new FileInputStream("policy/src/examples/policy2.xml");
+        }
 
-		PolicyReader prdr = PolicyFactory.getInstance().getPolicyReader();
-	    PolicyWriter pwrt = PolicyFactory.getInstance().getPolicyWriter();
-	    
-	    Policy argOne = prdr.readPolicy(fis);
-	    Policy norm  = (Policy)argOne.normalize();
-	    
+        OMPolicyReader prdr = (OMPolicyReader) PolicyFactory
+                .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
+        StAXPolicyWriter pwrt = (StAXPolicyWriter) PolicyFactory
+                .getPolicyWriter();
+
+        Policy argOne = prdr.readPolicy(fis);
+        Policy norm = (Policy) argOne.normalize();
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         pwrt.writePolicy(norm, baos);
 
         System.out.println(baos.toString());
         System.out.println("-----\n");
 
-		fis.close();
+        fis.close();
         /*
          * Use standard Parser, w3c DOM
          */
-		if (args.length > 0) {
-			fis = new FileInputStream(args[0]);			
-		}
-		else {
-			fis = new FileInputStream("policy/src/examples/policy2.xml");
-		}
-        PolicyReaderDOM readerDom = PolicyFactory.getInstance().getPolicyReaderDOM();
+        if (args.length > 0) {
+            fis = new FileInputStream(args[0]);
+        } else {
+            fis = new FileInputStream("policy/src/examples/policy2.xml");
+        }
+        DOMPolicyReader readerDom = (DOMPolicyReader) PolicyFactory
+                .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
+
         Policy pDom = readerDom.readPolicy(fis);
-	    Policy normDom  = (Policy)pDom.normalize();
-	    
+        Policy normDom = (Policy) pDom.normalize();
+
         baos = new ByteArrayOutputStream();
         pwrt.writePolicy(normDom, baos);
 
-		System.out.println(baos.toString());
+        System.out.println(baos.toString());
 
-		fis.close();
-	
-	}
+        fis.close();
+
+    }
 }
-

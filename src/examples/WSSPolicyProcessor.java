@@ -25,9 +25,9 @@ import org.apache.ws.policy.model.AndCompositeAssertion;
 import org.apache.ws.policy.model.Policy;
 import org.apache.ws.policy.model.PrimitiveAssertion;
 import org.apache.ws.policy.model.XorCompositeAssertion;
+import org.apache.ws.policy.util.DOMPolicyReader;
+import org.apache.ws.policy.util.OMPolicyReader;
 import org.apache.ws.policy.util.PolicyFactory;
-import org.apache.ws.policy.util.PolicyReader;
-import org.apache.ws.policy.util.PolicyReaderDOM;
 
 /**
  * @author Sanka Samaranayake (sanka@apache.org)
@@ -60,15 +60,15 @@ public class WSSPolicyProcessor {
         /*
          * Use the Stream based parser, Axis2 OM  
          */
-        PolicyReader reader = PolicyFactory.getInstance().getPolicyReader();
-        Policy p = reader
+        OMPolicyReader readerOm = (OMPolicyReader) PolicyFactory.getPolicyReader(PolicyFactory.OM_POLICY_READER);
+        Policy p = readerOm
                 .readPolicy(new ByteArrayInputStream(policy.getBytes()));
         process.processPolicy((Policy) p.normalize());
         
         /*
          * Use standard Parser, w3c DOM
          */
-        PolicyReaderDOM readerDom = PolicyFactory.getInstance().getPolicyReaderDOM();
+        DOMPolicyReader readerDom = (DOMPolicyReader) PolicyFactory.getPolicyReader(PolicyFactory.DOM_POLICY_READER);
         Policy pDom = readerDom
                 .readPolicy(new ByteArrayInputStream(policy.getBytes()));
         process.processPolicy((Policy) pDom.normalize());

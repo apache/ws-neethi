@@ -38,7 +38,6 @@ import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyWriter;
 
-
 /**
  * @author Sanka Samaranayake (sanka@apache.org)
  */
@@ -101,11 +100,11 @@ public class SimplePolicyService {
     }
 
     private PolicyReader getReader() {
-        return PolicyFactory.getInstance().getPolicyReader();
+        return PolicyFactory.getPolicyReader(PolicyFactory.OM_POLICY_READER);
     }
 
     private PolicyWriter getWriter() {
-        return PolicyFactory.getInstance().getPolicyWriter();
+        return PolicyFactory.getPolicyWriter();
     }
 
     private OMElement getWholeElement(OMElement element) {
