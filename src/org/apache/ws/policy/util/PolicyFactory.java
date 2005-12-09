@@ -20,28 +20,25 @@ package org.apache.ws.policy.util;
  * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class PolicyFactory {
-	private static PolicyFactory singleton = null;
-	
-	private PolicyFactory() {
-	}
-	
-	public static PolicyFactory getInstance() {
-		if (singleton == null) {
-			singleton = new PolicyFactory();
-		}
-		return singleton;
-	}
-	
-	public PolicyWriter getPolicyWriter() {
-		return new PolicyWriter();
-	}
-	
-	public PolicyReader getPolicyReader() {
-		return new PolicyReader();
-	}
-	
-	public PolicyReaderDOM getPolicyReaderDOM() {
-		return new PolicyReaderDOM();
-	}
-
+    public static final int OM_POLICY_READER = 1;
+    public static final int StAX_POLICY_WRITER = 2;
+    
+    public static final int DOM_POLICY_READER = 3;
+    
+    
+    public static PolicyReader getPolicyReader(int type) {
+        switch (type) {
+        case DOM_POLICY_READER:
+            return new DOMPolicyReader();
+        case OM_POLICY_READER:
+            return new OMPolicyReader();
+        default: 
+            throw new IllegalArgumentException("Unknow PolicyReader type ..");
+        }
+    }
+    
+    public static PolicyWriter getPolicyWriter() {
+        return new StAXPolicyWriter();
+    }
+    
 }

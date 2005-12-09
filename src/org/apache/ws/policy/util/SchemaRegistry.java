@@ -16,13 +16,25 @@
 
 package org.apache.ws.policy.util;
 
-import java.io.InputStream;
+import java.util.HashMap;
 
-import org.apache.ws.policy.model.Policy;
+import org.w3c.dom.Element;
 
 /**
  * @author Sanka Samaranayake (sanka@apache.org)
  */
-public interface PolicyReader {
-    public Policy readPolicy(InputStream inputStream) throws RuntimeException;
+public class SchemaRegistry {
+    private HashMap reg = new HashMap();
+    
+    Element lookup(String uri) {
+        return (Element) reg.get(uri);
+    }
+    
+    public void register(String uri, Element schemaElement) {
+        reg.put(uri, schemaElement);
+    }
+    
+    public void unregister(String uri) {
+        reg.remove(uri);        
+    }
 }

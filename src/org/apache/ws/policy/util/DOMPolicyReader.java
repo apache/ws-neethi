@@ -45,10 +45,11 @@ import org.apache.ws.policy.model.PolicyConstants;
 import org.apache.ws.policy.model.XorCompositeAssertion;
 
 /**
+ * @author Werner Dittmann (werner@apache.org)
  * @author Sanka Samaranayake (sanka@apache.org)
  */
-public class PolicyReaderDOM {
-	PolicyReaderDOM() {
+public class DOMPolicyReader implements PolicyReader {
+	DOMPolicyReader() {
 	}
 
 	public Policy readPolicy(InputStream in) {

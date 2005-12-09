@@ -84,7 +84,7 @@ public class PolicyAttachmentUtil {
             WSDLVersionWrapper build = WOMBuilderFactory.getBuilder(
                     WSDLConstants.WSDL_1_1).build(wsdlInputStream);
             wsdlDescription = build.getDescription();
-            
+
             populatePolicyRegistry();
             populateSchemaRegistry();
 
@@ -96,7 +96,7 @@ public class PolicyAttachmentUtil {
     public void setWSDLDescription(WSDLDescription wsdlDescription) {
         this.wsdlDescription = wsdlDescription;
         reg = new PolicyRegistry();
-        
+
         populatePolicyRegistry();
         populateSchemaRegistry();
     }
@@ -356,11 +356,11 @@ public class PolicyAttachmentUtil {
             QName fault) {
         throw new UnsupportedOperationException();
     }
-    
+
     public PolicyRegistry getPolicyRegistry() {
         return reg;
     }
-    
+
     public Element getSchemaElement(String uri) {
         return schemaRegistry.lookup(uri);
     }
@@ -484,7 +484,8 @@ public class PolicyAttachmentUtil {
 
     private Policy getPolicyFromElement(Element element) {
         InputStream policyInputStream = createInputStream(element);
-        PolicyReader reader = PolicyFactory.getInstance().getPolicyReader();
+        PolicyReader reader = PolicyFactory
+                .getPolicyReader(PolicyFactory.OM_POLICY_READER);
         return reader.readPolicy(policyInputStream);
     }
 
@@ -550,8 +551,8 @@ public class PolicyAttachmentUtil {
                 try {
                     URI policyURI = new URI(uriString);
                     URL policyURL = policyURI.toURL();
-                    PolicyReader reader = PolicyFactory.getInstance()
-                            .getPolicyReader();
+                    PolicyReader reader = PolicyFactory
+                            .getPolicyReader(PolicyFactory.OM_POLICY_READER);
                     Policy newPolicy = reader
                             .readPolicy(policyURL.openStream());
                     reg.register(uriString, newPolicy);
@@ -689,7 +690,8 @@ public class PolicyAttachmentUtil {
 
     private void registerPolicyElement(Element element) {
         InputStream elementInputStream = createInputStream(element);
-        PolicyReader reader = PolicyFactory.getInstance().getPolicyReader();
+        PolicyReader reader = PolicyFactory
+                .getPolicyReader(PolicyFactory.OM_POLICY_READER);
         Policy policy = reader.readPolicy(elementInputStream);
         reg.register(policy.getPolicyURI(), policy);
     }
