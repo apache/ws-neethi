@@ -28,7 +28,6 @@ import java.util.List;
 import javax.wsdl.WSDLException;
 import javax.xml.namespace.QName;
 
-import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.axis2.wsdl.WSDLVersionWrapper;
 import org.apache.axis2.wsdl.builder.WOMBuilderFactory;
 import org.apache.ws.policy.model.Assertion;
@@ -39,6 +38,7 @@ import org.apache.wsdl.MessageReference;
 import org.apache.wsdl.WSDLBinding;
 import org.apache.wsdl.WSDLBindingMessageReference;
 import org.apache.wsdl.WSDLBindingOperation;
+import org.apache.wsdl.WSDLConstants;
 import org.apache.wsdl.WSDLDescription;
 import org.apache.wsdl.WSDLEndpoint;
 import org.apache.wsdl.WSDLExtensibilityAttribute;
@@ -51,6 +51,7 @@ import org.apache.wsdl.extensions.Schema;
 import org.w3c.dom.Element;
 
 import com.ibm.wsdl.util.xml.DOM2Writer;
+
 
 /**
  * This util class which implements WSPolicyAttachment sepcification (September
