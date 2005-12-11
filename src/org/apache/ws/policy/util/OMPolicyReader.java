@@ -130,9 +130,7 @@ public class OMPolicyReader implements PolicyReader {
 
         String isOptional = result.getAttribute(new QName(
                 PolicyConstants.WS_POLICY_NAMESPACE_URI, "Optional"));
-        if (isOptional != null && Boolean.getBoolean(isOptional)) {
-            result.setOptional(true);
-        }
+        result.setOptional(new Boolean(isOptional).booleanValue());
 
         // setting the text value ..
         String strValue = element.getText();
