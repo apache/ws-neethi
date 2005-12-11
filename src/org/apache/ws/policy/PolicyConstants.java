@@ -1,4 +1,4 @@
-package org.apache.ws.policy.model;
+package org.apache.ws.policy;
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  * 

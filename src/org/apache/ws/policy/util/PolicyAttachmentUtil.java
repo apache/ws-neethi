@@ -30,9 +30,9 @@ import javax.xml.namespace.QName;
 
 import org.apache.axis2.wsdl.WSDLVersionWrapper;
 import org.apache.axis2.wsdl.builder.WOMBuilderFactory;
-import org.apache.ws.policy.model.Assertion;
-import org.apache.ws.policy.model.Policy;
-import org.apache.ws.policy.model.PolicyConstants;
+import org.apache.ws.policy.Assertion;
+import org.apache.ws.policy.Policy;
+import org.apache.ws.policy.PolicyConstants;
 import org.apache.wsdl.Component;
 import org.apache.wsdl.MessageReference;
 import org.apache.wsdl.WSDLBinding;

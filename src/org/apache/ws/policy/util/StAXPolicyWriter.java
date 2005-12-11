@@ -26,13 +26,13 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.apache.ws.policy.model.AndCompositeAssertion;
-import org.apache.ws.policy.model.Assertion;
-import org.apache.ws.policy.model.Policy;
-import org.apache.ws.policy.model.PolicyConstants;
-import org.apache.ws.policy.model.PolicyReference;
-import org.apache.ws.policy.model.PrimitiveAssertion;
-import org.apache.ws.policy.model.XorCompositeAssertion;
+import org.apache.ws.policy.AndCompositeAssertion;
+import org.apache.ws.policy.Assertion;
+import org.apache.ws.policy.Policy;
+import org.apache.ws.policy.PolicyConstants;
+import org.apache.ws.policy.PolicyReference;
+import org.apache.ws.policy.PrimitiveAssertion;
+import org.apache.ws.policy.XorCompositeAssertion;
 
 /**
  * @author Sanka Samaranayake (sanka@apache.org)

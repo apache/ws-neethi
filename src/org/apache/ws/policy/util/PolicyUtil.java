@@ -21,10 +21,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.ws.policy.model.AndCompositeAssertion;
-import org.apache.ws.policy.model.Policy;
-import org.apache.ws.policy.model.PrimitiveAssertion;
-import org.apache.ws.policy.model.XorCompositeAssertion;
+import org.apache.ws.policy.AndCompositeAssertion;
+import org.apache.ws.policy.Policy;
+import org.apache.ws.policy.PrimitiveAssertion;
+import org.apache.ws.policy.XorCompositeAssertion;
 
 /**
  * WSPolicyUtil contains several utility methods for policy manipulations.

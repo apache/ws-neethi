@@ -19,7 +19,7 @@ package examples;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 
-import org.apache.ws.policy.model.Policy;
+import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyWriter;

@@ -36,13 +36,13 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.NamedNodeMap;
 import org.xml.sax.SAXException;
 
-import org.apache.ws.policy.model.AndCompositeAssertion;
-import org.apache.ws.policy.model.Assertion;
-import org.apache.ws.policy.model.Policy;
-import org.apache.ws.policy.model.PolicyReference;
-import org.apache.ws.policy.model.PrimitiveAssertion;
-import org.apache.ws.policy.model.PolicyConstants;
-import org.apache.ws.policy.model.XorCompositeAssertion;
+import org.apache.ws.policy.AndCompositeAssertion;
+import org.apache.ws.policy.Assertion;
+import org.apache.ws.policy.Policy;
+import org.apache.ws.policy.PolicyReference;
+import org.apache.ws.policy.PrimitiveAssertion;
+import org.apache.ws.policy.PolicyConstants;
+import org.apache.ws.policy.XorCompositeAssertion;
 
 /**
  * @author Werner Dittmann (werner@apache.org)

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.apache.ws.policy.model;
+package org.apache.ws.policy;
 
 import java.util.Iterator;
 

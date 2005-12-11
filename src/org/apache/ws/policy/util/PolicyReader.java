@@ -18,7 +18,7 @@ package org.apache.ws.policy.util;
 
 import java.io.InputStream;
 
-import org.apache.ws.policy.model.Policy;
+import org.apache.ws.policy.Policy;
 
 /**
  * @author Sanka Samaranayake (sanka@apache.org)

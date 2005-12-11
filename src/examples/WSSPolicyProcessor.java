@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.ws.policy.model.AndCompositeAssertion;
-import org.apache.ws.policy.model.Policy;
-import org.apache.ws.policy.model.PrimitiveAssertion;
-import org.apache.ws.policy.model.XorCompositeAssertion;
+import org.apache.ws.policy.AndCompositeAssertion;
+import org.apache.ws.policy.Policy;
+import org.apache.ws.policy.PrimitiveAssertion;
+import org.apache.ws.policy.XorCompositeAssertion;
 import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyFactory;
 
