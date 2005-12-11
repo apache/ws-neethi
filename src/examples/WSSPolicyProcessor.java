@@ -33,7 +33,7 @@ import org.apache.ws.policy.util.PolicyFactory;
  */
 public class WSSPolicyProcessor {
     private static String policy = "<wsp:Policy xmlns:wsp=\"http://schemas.xmlsoap.org/ws/2004/09/policy\" xmlns:wsrm=\"http://schemas.xmlsoap.org/ws/2005/02/rm/policy\" "
-            + "xmlns:sec=\"http://schemas.xmlsoap.org/ws/2002/12/secext\">"
+            + "xmlns:sec=\"http://schemas.xmlsoap.org/ws/2005/07/securitypolicy\">"
             + "<wsp:ExactlyOne>"
             + "<wsp:All>"
             + "<sec:SecurityToken>"
@@ -115,7 +115,7 @@ public class WSSPolicyProcessor {
              */
 
             if (primitiveAssertion.getName().getNamespaceURI().equals(
-                    "http://schemas.xmlsoap.org/ws/2002/12/secext")) {
+                    "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy")) {
                 listOfWSSPrimitiveAssertions.add(primitiveAssertion);
             }
         }
