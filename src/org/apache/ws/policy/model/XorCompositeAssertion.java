@@ -18,6 +18,9 @@ package org.apache.ws.policy.model;
 
 import java.util.Iterator;
 
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+
 import org.apache.ws.policy.util.PolicyRegistry;
 
 /**
@@ -27,6 +30,9 @@ import org.apache.ws.policy.util.PolicyRegistry;
  */
 public class XorCompositeAssertion extends CompositeAssertion implements
         Assertion {
+    
+    private Log log =
+        LogFactory.getLog(this.getClass().getName());
 
     public XorCompositeAssertion() {
     }
@@ -40,6 +46,8 @@ public class XorCompositeAssertion extends CompositeAssertion implements
     }
 
     public Assertion normalize(PolicyRegistry reg) {
+        log.debug("Enter: XorCompositeAssertion::normalize");
+        
         XorCompositeAssertion XOR = new XorCompositeAssertion();
         
         if (isEmpty()) {
@@ -90,6 +98,8 @@ public class XorCompositeAssertion extends CompositeAssertion implements
     }
 
     public Assertion intersect(Assertion assertion, PolicyRegistry reg) {
+        log.debug("Enter: XorCompositeAssertion::intersect");
+        
         CompositeAssertion normalizedMe = (CompositeAssertion) ((isNormalized()) ? this
                 : normalize(reg));
 
@@ -150,6 +160,8 @@ public class XorCompositeAssertion extends CompositeAssertion implements
     }
 
     public Assertion merge(Assertion assertion, PolicyRegistry reg) {
+        log.debug("Enter: XorCompositeAssertion::merge");
+        
         CompositeAssertion normalizedMe = (CompositeAssertion) ((isNormalized()) ? this
                 : normalize(reg));
 

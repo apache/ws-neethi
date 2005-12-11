@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.ws.policy.util.PolicyRegistry;
 import org.apache.ws.policy.util.PolicyUtil;
 
@@ -33,6 +35,9 @@ import org.apache.ws.policy.util.PolicyUtil;
  * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class PrimitiveAssertion implements Assertion {
+    private Log log =
+        LogFactory.getLog(this.getClass().getName());    
+    
     private Assertion owner = null;
     private QName qname;
     private List terms = new ArrayList();
@@ -59,6 +64,7 @@ public class PrimitiveAssertion implements Assertion {
     }
        
     public Assertion intersect(Assertion assertion, PolicyRegistry reg) {
+        log.debug("Enter: PrimitveAssertion:intersect");
         
         Assertion normalizedMe = normalize(reg);
         Assertion target = assertion.normalize(reg);
@@ -125,6 +131,8 @@ public class PrimitiveAssertion implements Assertion {
     }
     
     public Assertion merge(Assertion assertion, PolicyRegistry reg) {
+        log.debug("Enter: PrimitveAssertion:merge");
+        
         Assertion normalizedMe = normalize(reg);
         Assertion target = assertion.normalize(reg);
         
@@ -152,10 +160,10 @@ public class PrimitiveAssertion implements Assertion {
     }
         
     public Assertion normalize(PolicyRegistry reg) {
-        String isOptional;
-          
+        log.debug("Enter: PrimitveAssertion:normalize");
+        
         if (isOptional()) {
-            
+            System.out.println("PA is optional");
             XorCompositeAssertion xorCompositeAssertion = new XorCompositeAssertion();
             AndCompositeAssertion andCompositeAssertion = new AndCompositeAssertion();
                         

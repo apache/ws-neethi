@@ -22,6 +22,8 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.ws.policy.util.PolicyRegistry;
 
 /**
@@ -30,6 +32,9 @@ import org.apache.ws.policy.util.PolicyRegistry;
  */
 public class AndCompositeAssertion extends CompositeAssertion implements
         Assertion {
+
+    private Log log =
+        LogFactory.getLog(this.getClass().getName());    
 
     public AndCompositeAssertion() {
     }
@@ -59,6 +64,7 @@ public class AndCompositeAssertion extends CompositeAssertion implements
      *         between self and the argument
      */
     public Assertion intersect(Assertion assertion, PolicyRegistry reg) {
+        log.debug("Enter: AndCompositeAssertion::intersect");
 
         CompositeAssertion normalizedMe = (CompositeAssertion) ((isNormalized()) ? this
                 : normalize(reg));
@@ -165,7 +171,8 @@ public class AndCompositeAssertion extends CompositeAssertion implements
      *         self and argument
      */
     public Assertion merge(Assertion assertion, PolicyRegistry reg) {
-
+        log.debug("Enter: AndCompositeAssertion::merge");
+        
         CompositeAssertion normalizedMe = (CompositeAssertion) ((isNormalized()) ? this
                 : normalize(reg));
 
@@ -223,6 +230,8 @@ public class AndCompositeAssertion extends CompositeAssertion implements
      * @return an Assertion which is the normalized form of self
      */
     public Assertion normalize(PolicyRegistry reg) {
+        log.debug("Enter: AndCompositeAssertion::normalize");
+        
         AndCompositeAssertion AND = new AndCompositeAssertion();
         XorCompositeAssertion XOR = new XorCompositeAssertion();
 

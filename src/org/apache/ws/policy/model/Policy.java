@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
 import org.apache.ws.policy.util.PolicyRegistry;
 
 
@@ -29,6 +31,9 @@ import org.apache.ws.policy.util.PolicyRegistry;
  *  
  */
 public class Policy extends AndCompositeAssertion implements Assertion {
+    private Log log =
+        LogFactory.getLog(this.getClass().getName());
+    
     private String policyURI = null;
 
     private String xmlBase = null;
@@ -75,7 +80,7 @@ public class Policy extends AndCompositeAssertion implements Assertion {
     }
 
     public Assertion normalize(PolicyRegistry reg) {
-       
+        log.debug("Enter: Policy::normalize");
 
         String xmlBase = getBase();
         String id = getId();
@@ -192,7 +197,8 @@ public class Policy extends AndCompositeAssertion implements Assertion {
     }
 
     public Assertion intersect(Assertion assertion, PolicyRegistry reg) {
-
+        log.debug("Enter: Policy::intersect");
+        
         Policy result = new Policy(getBase(), getId());
         Policy normalizedMe = (Policy) ((isNormalized()) ? this
                 : normalize(reg));
@@ -222,6 +228,8 @@ public class Policy extends AndCompositeAssertion implements Assertion {
     }
 
     public Assertion merge(Assertion assertion, PolicyRegistry reg) {
+        log.debug("Enter: Policy::merge");
+        
         Policy result = new Policy(getBase(), getId());
         Policy normalizedMe = (Policy) ((isNormalized()) ? this
                 : normalize(reg));
