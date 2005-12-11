@@ -28,34 +28,44 @@ import org.apache.ws.policy.util.PolicyWriter;
  * @author Werner Dittmann (werner@apache.org)
  */
 
-public class SimplePolicyExample {
+public class PolicyExampleBindMsg {
 
     public static void main(String[] args) throws Exception {
 
-        FileInputStream fis = null;
+        FileInputStream fisBinding = null;
         if (args.length > 0) {
-            fis = new FileInputStream(args[0]);
+            fisBinding = new FileInputStream(args[0]);
         } else {
-            fis = new FileInputStream("policy/src/examples/policy2.xml");
+            fisBinding = new FileInputStream("policy/src/examples/SecurityPolicyBindings.xml");
         }
 
+        FileInputStream fisMsg = null;
+        if (args.length > 1) {
+            fisMsg = new FileInputStream(args[1]);
+        } else {
+            fisMsg = new FileInputStream("policy/src/examples/SecurityPolicyMsg.xml");
+        }
         PolicyReader prdr = PolicyFactory
                 .getPolicyReader(PolicyFactory.OM_POLICY_READER);
         PolicyWriter pwrt = PolicyFactory
                 .getPolicyWriter(PolicyFactory.StAX_POLICY_WRITER);
 
-        Policy argOne = prdr.readPolicy(fis);
-        Policy norm = (Policy) argOne.normalize();
+        Policy binding = prdr.readPolicy(fisBinding);
+        binding = (Policy) binding.normalize();
 
+        Policy msg = prdr.readPolicy(fisMsg);
+        msg = (Policy) msg.normalize();
+        
+        Policy merged = (Policy) binding.merge(msg);
+        
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        pwrt.writePolicy(norm, baos);
+        pwrt.writePolicy(merged, baos);
 
-        System.out.println("Policy Id: " + norm.getId());
-        System.out.println("Policy base: " + norm.getBase());
         System.out.println(baos.toString());
         System.out.println("-----\n");
 
-        fis.close();
+        fisBinding.close();
+        fisMsg.close();
         /*
          * Use standard Parser, w3c DOM
          */
