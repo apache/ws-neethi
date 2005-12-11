@@ -266,13 +266,13 @@ public class AndCompositeAssertion extends CompositeAssertion implements
                     return anXorTerm;
                 }
                 xorTerms.add(term);
-                break;
+                continue;
 
             }
             
             if (term instanceof AndCompositeAssertion) {
                 AND.addTerms(((AndCompositeAssertion) term).getTerms());
-                break;
+                continue;
             }
             
             AND.addTerm(term);
@@ -322,11 +322,17 @@ public class AndCompositeAssertion extends CompositeAssertion implements
             CompositeAssertion XORterm = (CompositeAssertion) xorTerms.get(0);
             XOR.addTerms(XORterm.getTerms());
         }
+        
+        if (XOR.isEmpty()) {
+        	AND.setNormalized(true);
+        	return AND;
+        }
 
         if (AND.isEmpty()) {
             XOR.setNormalized(true);
             return XOR;
         }
+        
 
         List primTerms = AND.getTerms();
         Iterator interator = XOR.getTerms().iterator();

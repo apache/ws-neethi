@@ -93,16 +93,18 @@ public class Policy extends AndCompositeAssertion implements Assertion {
         ArrayList childXorTermList = new ArrayList();
 
         Iterator terms = getTerms().iterator();
+        Assertion term;
 
         while (terms.hasNext()) {
-            Assertion term = (Assertion) terms.next();
-            term = (term instanceof Policy) ? term.normalize(reg) : term;
+
+            term = (Assertion) terms.next();
+            term = (term instanceof Policy) ? term : term.normalize(reg);
             
             if (term instanceof Policy) {
                 Assertion wrapper = new AndCompositeAssertion();
                 ((AndCompositeAssertion) wrapper).addTerms(((Policy) term).getTerms());
                 term = wrapper.normalize(reg);                    
-                break;
+                continue;
             }
             if (term instanceof XorCompositeAssertion) {
                 if (((XorCompositeAssertion) term).isEmpty()) {
@@ -116,7 +118,7 @@ public class Policy extends AndCompositeAssertion implements Assertion {
                 }
                 
                 childXorTermList.add(term);
-                break;
+                continue;
             }
             
             if (term instanceof AndCompositeAssertion) {
@@ -128,7 +130,7 @@ public class Policy extends AndCompositeAssertion implements Assertion {
                 } else {
                     AND.addTerms(((AndCompositeAssertion) term).getTerms());
                 }
-                break;
+                continue;
             }
             AND.addTerm((Assertion) term);
         }

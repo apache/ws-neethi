@@ -73,19 +73,19 @@ public class XorCompositeAssertion extends CompositeAssertion implements
                 } else {
                     XOR.addTerms(((XorCompositeAssertion) wrapper).getTerms());
                 }
-                break;
+                continue;
             }
 
             if (term instanceof PrimitiveAssertion) {
                 AndCompositeAssertion wrapper = new AndCompositeAssertion();
                 wrapper.addTerm(term);
                 XOR.addTerm(wrapper);
-                break;
+                continue;
             }
 
             if (term instanceof XorCompositeAssertion) {
                 XOR.addTerms(((XorCompositeAssertion) term).getTerms());
-                break;
+                continue;
             }
 
             if (term instanceof AndCompositeAssertion) {
