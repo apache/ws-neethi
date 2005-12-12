@@ -60,11 +60,23 @@ public class StAXPolicyWriter implements PolicyWriter {
 
     private void writePolicy(Policy policy, XMLStreamWriter writer)
             throws XMLStreamException {
-        writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
-                PolicyConstants.WS_POLICY,
-                PolicyConstants.WS_POLICY_NAMESPACE_URI);
-        writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
-                PolicyConstants.WS_POLICY_NAMESPACE_URI);
+        String writerPerfix = writer
+                .getPrefix(PolicyConstants.WS_POLICY_NAMESPACE_URI);
+
+        if (writerPerfix != null) {
+            writer.writeStartElement(PolicyConstants.WS_POLICY_NAMESPACE_URI,
+                    PolicyConstants.WS_POLICY);
+
+        } else {
+            writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
+                    PolicyConstants.WS_POLICY,
+                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+            writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
+                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+            writer.setPrefix(PolicyConstants.WS_POLICY_PREFIX,
+                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+
+        }
 
         if (policy.getId() != null) {
             writer.writeAttribute("wsu", PolicyConstants.WSU_NAMESPACE_URI,
@@ -85,10 +97,6 @@ public class StAXPolicyWriter implements PolicyWriter {
         if (assertion instanceof PrimitiveAssertion) {
             writePrimitiveAssertion((PrimitiveAssertion) assertion, writer);
 
-        } else if (assertion instanceof AndCompositeAssertion) {
-            writeAndCompositeAssertion((AndCompositeAssertion) assertion,
-                    writer);
-
         } else if (assertion instanceof XorCompositeAssertion) {
             writeXorCompositeAssertion((XorCompositeAssertion) assertion,
                     writer);
@@ -98,6 +106,10 @@ public class StAXPolicyWriter implements PolicyWriter {
 
         } else if (assertion instanceof Policy) {
             writePolicy((Policy) assertion, writer);
+        } else if (assertion instanceof AndCompositeAssertion) {
+            writeAndCompositeAssertion((AndCompositeAssertion) assertion,
+                    writer);
+
         } else {
             throw new RuntimeException("unknown element type");
         }
@@ -105,9 +117,23 @@ public class StAXPolicyWriter implements PolicyWriter {
 
     private void writeAndCompositeAssertion(AndCompositeAssertion assertion,
             XMLStreamWriter writer) throws XMLStreamException {
-        writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
-                PolicyConstants.AND_COMPOSITE_ASSERTION,
-                PolicyConstants.WS_POLICY_NAMESPACE_URI);
+
+        String writerPrefix = writer
+                .getPrefix(PolicyConstants.WS_POLICY_NAMESPACE_URI);
+
+        if (writerPrefix == null) {
+            writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
+                    PolicyConstants.AND_COMPOSITE_ASSERTION,
+                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+            writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
+                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+            writer.setPrefix(PolicyConstants.WS_POLICY_PREFIX,
+                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+
+        } else {
+            writer.writeStartElement(PolicyConstants.WS_POLICY_NAMESPACE_URI,
+                    PolicyConstants.AND_COMPOSITE_ASSERTION);
+        }
 
         List terms = assertion.getTerms();
         writeTerms(terms, writer);
@@ -117,9 +143,22 @@ public class StAXPolicyWriter implements PolicyWriter {
 
     private void writeXorCompositeAssertion(XorCompositeAssertion assertion,
             XMLStreamWriter writer) throws XMLStreamException {
-        writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
-                PolicyConstants.XOR_COMPOSITE_ASSERTION,
-                PolicyConstants.WS_POLICY_NAMESPACE_URI);
+        String writerPrefix = writer
+                .getPrefix(PolicyConstants.WS_POLICY_NAMESPACE_URI);
+
+        if (writerPrefix == null) {
+            writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
+                    PolicyConstants.XOR_COMPOSITE_ASSERTION,
+                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+            writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
+                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+            writer.setPrefix(PolicyConstants.WS_POLICY_PREFIX,
+                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+
+        } else {
+            writer.writeStartElement(PolicyConstants.WS_POLICY_NAMESPACE_URI,
+                    PolicyConstants.XOR_COMPOSITE_ASSERTION);
+        }
 
         List terms = assertion.getTerms();
         writeTerms(terms, writer);
@@ -131,16 +170,18 @@ public class StAXPolicyWriter implements PolicyWriter {
             XMLStreamWriter writer) throws XMLStreamException {
         QName qname = assertion.getName();
 
-        String prefix = qname.getPrefix();
-        if (prefix != null) {
-            writer.writeStartElement(qname.getPrefix(), qname.getLocalPart(),
-                    qname.getNamespaceURI());
-            writer.writeNamespace(qname.getPrefix(), qname.getNamespaceURI());
-
+        String writerPrefix = writer.getPrefix(qname.getNamespaceURI());
+        if (writerPrefix != null) {
+            writer.writeStartElement(qname.getNamespaceURI(), qname
+                    .getLocalPart());
         } else {
-            writer.writeStartElement(qname.getLocalPart(), qname
+            String prefix = (qname.getPrefix() != null) ? qname.getPrefix()
+                    : generateNamespace();
+            writer.writeStartElement(prefix, qname.getLocalPart(), qname
                     .getNamespaceURI());
-            writer.writeNamespace(generateNamespace(), qname.getNamespaceURI());
+            writer.writeNamespace(prefix, qname.getNamespaceURI());
+            writer.setPrefix(prefix, qname.getNamespaceURI());
+
         }
 
         Hashtable attributes = assertion.getAttributes();
@@ -159,6 +200,7 @@ public class StAXPolicyWriter implements PolicyWriter {
 
     private void writePolicyReference(PolicyReference assertion,
             XMLStreamWriter writer) throws XMLStreamException {
+        throw new UnsupportedOperationException();
     }
 
     private void writeTerms(List terms, XMLStreamWriter writer)
