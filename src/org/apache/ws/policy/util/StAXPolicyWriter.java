@@ -61,7 +61,8 @@ public class StAXPolicyWriter implements PolicyWriter {
     private void writePolicy(Policy policy, XMLStreamWriter writer)
             throws XMLStreamException {
         writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
-                PolicyConstants.WS_POLICY);
+                PolicyConstants.WS_POLICY,
+                PolicyConstants.WS_POLICY_NAMESPACE_URI);
         writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
                 PolicyConstants.WS_POLICY_NAMESPACE_URI);
 
@@ -132,7 +133,8 @@ public class StAXPolicyWriter implements PolicyWriter {
 
         String prefix = qname.getPrefix();
         if (prefix != null) {
-            writer.writeStartElement(qname.getPrefix(), qname.getLocalPart());
+            writer.writeStartElement(qname.getPrefix(), qname.getLocalPart(),
+                    qname.getNamespaceURI());
             writer.writeNamespace(qname.getPrefix(), qname.getNamespaceURI());
 
         } else {

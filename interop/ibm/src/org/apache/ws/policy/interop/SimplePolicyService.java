@@ -33,7 +33,7 @@ import org.apache.axis2.om.OMElement;
 import org.apache.axis2.om.OMXMLParserWrapper;
 import org.apache.axis2.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.axis2.soap.SOAPBody;
-import org.apache.ws.policy.model.Policy;
+import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyWriter;
@@ -104,7 +104,7 @@ public class SimplePolicyService {
     }
 
     private PolicyWriter getWriter() {
-        return PolicyFactory.getPolicyWriter();
+        return PolicyFactory.getPolicyWriter(PolicyFactory.StAX_POLICY_WRITER);
     }
 
     private OMElement getWholeElement(OMElement element) {

@@ -81,6 +81,8 @@ public class Policy extends AndCompositeAssertion implements Assertion {
 
     public Assertion normalize(PolicyRegistry reg) {
         log.debug("Enter: Policy::normalize");
+        
+        if (isNormalized()) { return this;}
 
         String xmlBase = getBase();
         String id = getId();
@@ -103,9 +105,9 @@ public class Policy extends AndCompositeAssertion implements Assertion {
             if (term instanceof Policy) {
                 Assertion wrapper = new AndCompositeAssertion();
                 ((AndCompositeAssertion) wrapper).addTerms(((Policy) term).getTerms());
-                term = wrapper.normalize(reg);                    
-                continue;
+                term = wrapper.normalize(reg);     
             }
+            
             if (term instanceof XorCompositeAssertion) {
                 if (((XorCompositeAssertion) term).isEmpty()) {
                     XorCompositeAssertion emptyXor = new XorCompositeAssertion();

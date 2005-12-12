@@ -103,7 +103,7 @@ public abstract class CompositeAssertion implements Assertion {
     public Assertion normalize() {
         return normalize(null);
     }
-    
+        
     public Assertion intersect(Assertion assertion)
             throws UnsupportedOperationException {
         return intersect(assertion, null);

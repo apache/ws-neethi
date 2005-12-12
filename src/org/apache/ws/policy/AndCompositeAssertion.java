@@ -232,6 +232,8 @@ public class AndCompositeAssertion extends CompositeAssertion implements
     public Assertion normalize(PolicyRegistry reg) {
         log.debug("Enter: AndCompositeAssertion::normalize");
         
+        if (isNormalized()) { return this; }
+        
         AndCompositeAssertion AND = new AndCompositeAssertion();
         XorCompositeAssertion XOR = new XorCompositeAssertion();
 

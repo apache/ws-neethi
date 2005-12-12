@@ -94,6 +94,9 @@ public class PolicyUtil {
                     ? policyTerm2 : (Policy) policyTerm.merge(policyTerm2, reg);
         }
         
+        if (!policyTerm.isNormalized()) {
+            policyTerm = (Policy) policyTerm.normalize();
+        }
         return policyTerm;
     }
     

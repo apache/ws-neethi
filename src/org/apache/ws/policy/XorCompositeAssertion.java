@@ -48,6 +48,8 @@ public class XorCompositeAssertion extends CompositeAssertion implements
     public Assertion normalize(PolicyRegistry reg) {
         log.debug("Enter: XorCompositeAssertion::normalize");
         
+        if (isNormalized()) { return this;}
+        
         XorCompositeAssertion XOR = new XorCompositeAssertion();
         
         if (isEmpty()) {

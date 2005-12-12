@@ -162,116 +162,162 @@ public class PrimitiveAssertion implements Assertion {
     public Assertion normalize(PolicyRegistry reg) {
         log.debug("Enter: PrimitveAssertion:normalize");
         
+        if (isNormalized()) { return this; }
+        
         if (isOptional()) {
-            System.out.println("PA is optional");
-            XorCompositeAssertion xorCompositeAssertion = new XorCompositeAssertion();
-            AndCompositeAssertion andCompositeAssertion = new AndCompositeAssertion();
+            XorCompositeAssertion XOR = new XorCompositeAssertion();
+            AndCompositeAssertion AND = new AndCompositeAssertion();
                         
-            PrimitiveAssertion assertion = getSelfWithoutTerms();
-            assertion.removeAttribute(new QName(PolicyConstants.WS_POLICY_NAMESPACE_URI, "Optional"));
-            assertion.setOptional(false);
-            assertion.setTerms(getTerms());
+            PrimitiveAssertion PRIM = getSelfWithoutTerms();
+            PRIM.removeAttribute(new QName(PolicyConstants.WS_POLICY_NAMESPACE_URI, "Optional"));
+            PRIM.setOptional(false);
+            PRIM.setTerms(getTerms());
             
-            andCompositeAssertion.addTerm(assertion);
-            xorCompositeAssertion.addTerm(andCompositeAssertion);
-            xorCompositeAssertion.addTerm(new AndCompositeAssertion());
+            AND.addTerm(PRIM);
+            XOR.addTerm(AND);
+            XOR.addTerm(new AndCompositeAssertion());
             
-            return xorCompositeAssertion.normalize(reg);
+            return XOR.normalize(reg);
         }
         
         if (getTerms().isEmpty()) {
-            PrimitiveAssertion primitiveAssertion = getSelfWithoutTerms();
-            primitiveAssertion.setNormalized(true);
-            return primitiveAssertion;
+            PrimitiveAssertion PRIM = getSelfWithoutTerms();
+            PRIM.setNormalized(true);
+            return PRIM;
         }
         
         ArrayList policyTerms = new ArrayList();
-        ArrayList childNonPolicyTerms = new ArrayList();
+        ArrayList nonPolicyTerms = new ArrayList();
         
         Iterator iterator = getTerms().iterator();
         
         while (iterator.hasNext()) {
             Assertion term = (Assertion) iterator.next();
-            if (!(term.isNormalized())) {
-                term = term.normalize();
-            }
+//            if (!(term.isNormalized())) {
+//                term = term.normalize();
+//            }
             
             if (term instanceof Policy) {
                 policyTerms.add(term);
                 
             } else if (term instanceof PrimitiveAssertion) {
-                childNonPolicyTerms.add(term);
+                nonPolicyTerms.add(term);
                 
             } else {
+                throw new RuntimeException();
                 //TODO should I throw an exception ..
             }
         }
                
         if (policyTerms.isEmpty()) {
-            PrimitiveAssertion primitiveAssertion = getSelfWithoutTerms();
-            primitiveAssertion.setTerms(getTerms());
-            primitiveAssertion.setNormalized(true);
-            return primitiveAssertion;           
+            PrimitiveAssertion PRIM = getSelfWithoutTerms();
+            PRIM.setTerms(getTerms());
+            PRIM.setNormalized(true);
+            return PRIM;           
         }
         
         Policy policyTerm = PolicyUtil.getSinglePolicy(policyTerms, reg);
         CompositeAssertion xorTerm = (XorCompositeAssertion) 
                 policyTerm.getTerms().get(0);
         
-        Iterator iterator2 = xorTerm.getTerms().iterator();
+        List ANDs =  xorTerm.getTerms();
+        
+        if (ANDs.size() == 0) {
+            return new XorCompositeAssertion();
+        }
+        
+        if (ANDs.size() == 1) {
+            ((AndCompositeAssertion) ANDs.get(0)).addTerms(nonPolicyTerms);
+            PrimitiveAssertion PRIM = getSelfWithoutTerms();
+            PRIM.addTerm(policyTerm);
+            return PRIM;
+        }
+        
+        
+        Policy nPOLICY = new Policy();
+        XorCompositeAssertion nXOR = new XorCompositeAssertion();
+        nPOLICY.addTerm(nXOR);
+        
+        PrimitiveAssertion nPRIM;
+        Iterator iterator2 = ANDs.iterator();
+        
+        ArrayList list;
+        
+        while (iterator2.hasNext()) {
+            nPRIM = getSelfWithoutTerms();
+            
+            list = new ArrayList();
+            list.addAll(((AndCompositeAssertion) iterator2.next()).getTerms());
+            
+            if (!nonPolicyTerms.isEmpty()) {
+                list.addAll(nonPolicyTerms);                
+            }
+            nPRIM.addTerm(getSinglePolicy(list));
+            AndCompositeAssertion AND = new AndCompositeAssertion();
+            AND.addTerm(nPRIM);
+            nXOR.addTerm(AND);            
+        }
+        nPOLICY.setNormalized(true);
+        return nPOLICY;
+        
+        
+        
  //       AndCompositeAssertion andTerm = (AndCompositeAssertion) iterator2.next();
                 
-        if (!(iterator2.hasNext())) { //policy with no alternatives
-            // two scenarios ..
-            
-            /* no leaves */
-            if (childNonPolicyTerms.isEmpty()) {
-                PrimitiveAssertion primTerm = getSelfWithoutTerms();
-                primTerm.addTerm(policyTerm);
-                return primTerm;                
-            }
-                        
-            /* (2) some leaves*/           
-            ArrayList allTerms = new ArrayList();
-            allTerms.addAll(childNonPolicyTerms);
-            allTerms.addAll(((AndCompositeAssertion) iterator2.next()).getTerms());
-            PrimitiveAssertion primTerm = getSelfWithoutTerms();
-            primTerm.addTerm(getSinglePolicy(allTerms));
-            return primTerm;        
-        } 
-        
-        /* Policy with many terms */
-        Policy endPolicyTerm = new Policy();
-        XorCompositeAssertion endXorTerm = new XorCompositeAssertion();
-        endPolicyTerm.addTerm(endXorTerm);        
-        
-        ArrayList endAndTerms = new ArrayList();
-        AndCompositeAssertion anEndAndTerm = new AndCompositeAssertion();
-        PrimitiveAssertion self;
-        
-        ArrayList termsForAnEndAnd = new ArrayList();
-        self = getSelfWithoutTerms();
-        
-        termsForAnEndAnd.addAll(childNonPolicyTerms);
-        termsForAnEndAnd.addAll(((AndCompositeAssertion) iterator2.next()).getTerms());
-        self.addTerm(PolicyUtil.getPolicy(termsForAnEndAnd));
-        anEndAndTerm.addTerm(self);
-        endAndTerms.add(anEndAndTerm);
-               
-        while (iterator2.hasNext()) {
-            anEndAndTerm = new AndCompositeAssertion();     
-            self = getSelfWithoutTerms();
-                        
-            termsForAnEndAnd.clear();
-            termsForAnEndAnd.addAll(childNonPolicyTerms);
-            termsForAnEndAnd.addAll(((AndCompositeAssertion) iterator2.next()).getTerms());
-            self.addTerm(PolicyUtil.getPolicy(termsForAnEndAnd));
-            
-            anEndAndTerm.addTerm(self);
-            endAndTerms.add(anEndAndTerm);            
-        }
-        endXorTerm.addTerms(endAndTerms);
-        return endPolicyTerm;
+//        if (!(iterator2.hasNext())) { //policy with no alternatives
+//            // two scenarios ..
+//            
+//            /* no leaves */
+//            if (nonPolicyTerms.isEmpty()) {
+//                PrimitiveAssertion primTerm = getSelfWithoutTerms();
+//                primTerm.addTerm(policyTerm);
+//                primTerm.setNormalized(true);
+//                return primTerm;                
+//            }
+//                        
+//            /* (2) some leaves*/           
+//            ArrayList allTerms = new ArrayList();
+//            allTerms.addAll(nonPolicyTerms);
+//            allTerms.addAll(((AndCompositeAssertion) iterator2.next()).getTerms());
+//            PrimitiveAssertion primTerm = getSelfWithoutTerms();
+//            primTerm.addTerm(getSinglePolicy(allTerms));
+//            primTerm.setNormalized(true);
+//            return primTerm;        
+//        } 
+//        
+//        /* Policy with many terms */
+//        Policy endPolicyTerm = new Policy();
+//        XorCompositeAssertion endXorTerm = new XorCompositeAssertion();
+//        endPolicyTerm.addTerm(endXorTerm);        
+//        
+//        ArrayList endAndTerms = new ArrayList();
+//        AndCompositeAssertion anEndAndTerm = new AndCompositeAssertion();
+//        PrimitiveAssertion self;
+//        
+//        ArrayList termsForAnEndAnd = new ArrayList();
+//        self = getSelfWithoutTerms();
+//        
+//        termsForAnEndAnd.addAll(nonPolicyTerms);
+//        termsForAnEndAnd.addAll(((AndCompositeAssertion) iterator2.next()).getTerms());
+//        self.addTerm(PolicyUtil.getPolicy(termsForAnEndAnd));
+//        anEndAndTerm.addTerm(self);
+//        endAndTerms.add(anEndAndTerm);
+//               
+//        while (iterator2.hasNext()) {
+//            anEndAndTerm = new AndCompositeAssertion();     
+//            self = getSelfWithoutTerms();
+//                        
+//            termsForAnEndAnd.clear();
+//            termsForAnEndAnd.addAll(nonPolicyTerms);
+//            termsForAnEndAnd.addAll(((AndCompositeAssertion) iterator2.next()).getTerms());
+//            self.addTerm(PolicyUtil.getPolicy(termsForAnEndAnd));
+//            
+//            anEndAndTerm.addTerm(self);
+//            endAndTerms.add(anEndAndTerm);            
+//        }
+//        endXorTerm.addTerms(endAndTerms);
+//        endXorTerm.setNormalized(true);
+//        return endPolicyTerm;
     }
     
     private PrimitiveAssertion getSelfWithoutTerms() {
