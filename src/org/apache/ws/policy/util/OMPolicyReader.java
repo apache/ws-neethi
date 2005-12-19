@@ -87,7 +87,7 @@ public class OMPolicyReader implements PolicyReader {
         }
     }
 
-    private Policy readPolicy(OMElement element) {
+    public Policy readPolicy(OMElement element) {
         Policy policy = new Policy();
 
         OMAttribute attri;
@@ -117,7 +117,7 @@ public class OMPolicyReader implements PolicyReader {
         return xorCompositeAssertion;
     }
 
-    private PolicyReference readPolicyReference(OMElement element) {
+    public PolicyReference readPolicyReference(OMElement element) {
         OMAttribute attribute = element.getAttribute(new QName("URI"));
         return new PolicyReference(attribute.getAttributeValue());
     }
