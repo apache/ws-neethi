@@ -1,0 +1,26 @@
+<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" wsu:Id="myPolicy">
+  <wsp:ExactlyOne>
+    <wsp:All>
+      <sec:SecurityHeader xmlns:sec="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" MustManifestEncryption="true" MustPrepend="true">
+      </sec:SecurityHeader>
+      <sec:SecurityToken xmlns:sec="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+	    <sec:TokenType>sec:X509v3</sec:TokenType>
+	  </sec:SecurityToken>
+	  <sec:Integrity xmlns:sec="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" wsp:Optional="false">
+	    <sec:MessageParts Dialect="http://schemas.xmlsoap.org/ws/2002/12/wsse#soap">
+           wsp:Body()
+    	</sec:MessageParts>
+      </sec:Integrity>
+    </wsp:All>
+    <wsp:All>
+      <sec:SecurityToken xmlns:sec="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">    
+        <sec:TokenType>sec:X509v3</sec:TokenType>
+      </sec:SecurityToken>
+      <sec:Integrity xmlns:sec="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" wsp:Optional="false">
+  		<sec:MessageParts Dialect="http://schemas.xmlsoap.org/ws/2002/12/wsse#soap">
+      	  wsp:Body()
+    	</sec:MessageParts>
+      </sec:Integrity>
+    </wsp:All>
+  </wsp:ExactlyOne>
+</wsp:Policy>
