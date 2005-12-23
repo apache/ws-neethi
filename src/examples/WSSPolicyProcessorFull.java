@@ -94,39 +94,55 @@ public class WSSPolicyProcessorFull {
 		processPolicy(merged);
 	}
 
-	/*
-	 * This method takes a policy object which contains policy alternatives.
-	 * WSS4J framework should configure it self in accordance with
-	 * WSSecurityPolicy policy assertions if there is any in that policy
-	 * alternative. If that alternative contains any WSSecurityPolicy policy
-	 * assertion which WSS4J cannot support, it should throw an exception and
-	 * notify ..
+	/**
+	 * This method takes a normalized policy object, processes it and returns
+	 * true if all assertion can be fulfilled.
 	 * 
+	 * Each policy must be nromalized accordig to the WS Policy framework
+	 * specification. Therefore a policy has one child (wsp:ExactlyOne) that is
+	 * a XorCompositeAssertion. This child may contain one or more other terms
+	 * (alternatives). To match the policy one of these terms (alternatives)
+	 * must match. If none of the contained terms match this policy cannot be
+	 * enforced.
+	 * 
+	 * @param policy
+	 *            The policy to process
+	 * @return True if this policy can be enforced by the policy enforcement
+	 *         implmentation
 	 */
-
-	public void processPolicy(Policy policy) {
+	public boolean processPolicy(Policy policy) {
 
 		if (!policy.isNormalized()) {
 			throw new RuntimeException("Policy is not in normalized format");
 		}
 
+		/*
+		 * 
+		 */
 		XorCompositeAssertion xor = (XorCompositeAssertion) policy.getTerms()
 				.get(0);
 		List listOfPolicyAlternatives = xor.getTerms();
 
+		boolean success = false;
 		int numberOfAlternatives = listOfPolicyAlternatives.size();
 
-		for (int i = 0; i < numberOfAlternatives; i++) {
+		for (int i = 0; !success && i < numberOfAlternatives; i++) {
 			AndCompositeAssertion aPolicyAlternative = (AndCompositeAssertion) listOfPolicyAlternatives
 					.get(i);
 
 			List listOfAssertions = aPolicyAlternative.getTerms();
 
 			Iterator iterator = listOfAssertions.iterator();
-			while (iterator.hasNext()) {
+			/*
+			 * Loop over all assertions in this alternative. If all assertions
+			 * can be fulfilled then we choose this alternative and signal a
+			 * success.
+			 */
+			boolean all = true;
+			while (all && iterator.hasNext()) {
 				Assertion assertion = (Assertion) iterator.next();
 				if (assertion instanceof Policy) {
-					processPolicy((Policy) assertion);
+					all = processPolicy((Policy) assertion);
 					continue;
 				}
 				if (!(assertion instanceof PrimitiveAssertion)) {
@@ -134,39 +150,53 @@ public class WSSPolicyProcessorFull {
 							+ assertion.getClass().getName());
 					continue;
 				}
-				processPrimitiveAssertion((PrimitiveAssertion) assertion);
+				all = processPrimitiveAssertion((PrimitiveAssertion) assertion);
 			}
+			/*
+			 * copy the status of assertion processing. If all is true the this
+			 * alternative is "success"ful
+			 */
+			success = all;
 		}
+		return success;
 	}
 
-	void processPrimitiveAssertion(PrimitiveAssertion pa) {
+	boolean processPrimitiveAssertion(PrimitiveAssertion pa) {
 		/*
 		 * We need to pick only the primitive assertions which conatain a
 		 * WSSecurityPolicy policy assertion. For that we'll check the namespace
 		 * of the primitive assertion
 		 */
+		boolean commit = true;
+
 		if (pa.getName().getNamespaceURI().equals(
 				"http://schemas.xmlsoap.org/ws/2005/07/securitypolicy")) {
-			loadConfigurations(pa);
+			commit = startPolicyTransaction(pa);
 		}
 
 		List terms = pa.getTerms();
 		if (terms.size() > 0) {
-			for (int i = 0; i < terms.size(); i++) {
+			for (int i = 0; commit && i < terms.size(); i++) {
 				level++;
 				Assertion assertion = (Assertion) pa.getTerms().get(i);
 				if (assertion instanceof Policy) {
 					assertion = assertion.normalize();
-					processPolicy((Policy) assertion);
+					commit = processPolicy((Policy) assertion);
 				} else if (assertion instanceof PrimitiveAssertion) {
-					processPrimitiveAssertion((PrimitiveAssertion) assertion);
+					commit = processPrimitiveAssertion((PrimitiveAssertion) assertion);
 				}
 				level--;
 			}
 		}
+		if (commit) {
+			commitPolicyTransaction(pa);
+		} else {
+			abortPolicyTransaction(pa);
+		}
+		return commit;
 	}
 
-	public void loadConfigurations(PrimitiveAssertion prim) {
+	public boolean startPolicyTransaction(PrimitiveAssertion prim) {
 
 		/*
 		 * May be I should be setting the configuration options in
@@ -177,7 +207,24 @@ public class WSSPolicyProcessorFull {
 			indent.append("  ");
 		}
 		System.out.println(new String(indent) + prim.getName().getLocalPart());
-
+		String text = prim.getStrValue();
+		if (text != null) {
+			text = text.trim();
+			System.out
+					.println(new String(indent) + "Value: " + text.toString());
+		}
+		if (prim.getName().getLocalPart().equals("SecurityHeader"))
+			return false;
+		return true;
 	}
 
+	public void abortPolicyTransaction(PrimitiveAssertion prim) {
+		System.out.println("Aborting Policy transaction "
+				+ prim.getName().getLocalPart());
+	}
+
+	public void commitPolicyTransaction(PrimitiveAssertion prim) {
+		System.out.println("Commit Policy transaction "
+				+ prim.getName().getLocalPart());
+	}
 }
