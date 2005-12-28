@@ -37,6 +37,7 @@ public class SimplePolicyExample {
             fis = new FileInputStream(args[0]);
         } else {
             fis = new FileInputStream("policy/src/examples/policy2.xml");
+//            fis = new FileInputStream("policy/src/examples/SecurityPolicyMsg.xml");
         }
 
         PolicyReader prdr = PolicyFactory
@@ -46,6 +47,9 @@ public class SimplePolicyExample {
 
         Policy argOne = prdr.readPolicy(fis);
         Policy norm = (Policy) argOne.normalize();
+        if (!norm.isNormalized()) {
+            throw new RuntimeException("norm is not in normalized format");
+        }
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         pwrt.writePolicy(norm, baos);
