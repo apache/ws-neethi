@@ -24,16 +24,14 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 import org.apache.ws.policy.util.PolicyRegistry;
 
-
 /**
  * Policy is the access point for policy framework. It the object model that
  * represents a policy at runtime.
  *  
  */
 public class Policy extends AndCompositeAssertion implements Assertion {
-    private Log log =
-        LogFactory.getLog(this.getClass().getName());
-    
+    private Log log = LogFactory.getLog(this.getClass().getName());
+
     private String policyURI = null;
 
     private String xmlBase = null;
@@ -41,7 +39,6 @@ public class Policy extends AndCompositeAssertion implements Assertion {
     private String id = null;
 
     public Policy() {
-        setNormalized(false);
     }
 
     public Policy(String id) {
@@ -81,8 +78,10 @@ public class Policy extends AndCompositeAssertion implements Assertion {
 
     public Assertion normalize(PolicyRegistry reg) {
         log.debug("Enter: Policy::normalize");
-        
-        if (isNormalized()) { return this;}
+
+        if (isNormalized()) {
+            return this;
+        }
 
         String xmlBase = getBase();
         String id = getId();
@@ -98,37 +97,46 @@ public class Policy extends AndCompositeAssertion implements Assertion {
         Assertion term;
 
         while (terms.hasNext()) {
-
             term = (Assertion) terms.next();
-            term = (term instanceof Policy) ? term : term.normalize(reg);
-            
+            term = term.normalize(reg);
+
             if (term instanceof Policy) {
-                Assertion wrapper = new AndCompositeAssertion();
-                ((AndCompositeAssertion) wrapper).addTerms(((Policy) term).getTerms());
-                term = wrapper.normalize(reg);     
+                XorCompositeAssertion Xor = (XorCompositeAssertion) ((Policy) term)
+                        .getTerms().get(0);
+                
+                if (Xor.size() != 1) {
+                    term = Xor;
+
+                } else {
+                    AND
+                            .addTerms(((AndCompositeAssertion) Xor.getTerms()
+                                    .get(0)).getTerms());
+                    continue;
+                }
             }
-            
+
             if (term instanceof XorCompositeAssertion) {
+                
                 if (((XorCompositeAssertion) term).isEmpty()) {
                     XorCompositeAssertion emptyXor = new XorCompositeAssertion();
                     emptyXor.setNormalized(true);
-                    
+
                     policy.addTerm(emptyXor);
                     policy.setNormalized(true);
-                    
+
                     return policy;
                 }
-                
+
                 childXorTermList.add(term);
                 continue;
             }
-            
+
             if (term instanceof AndCompositeAssertion) {
-                
+
                 if (((AndCompositeAssertion) term).isEmpty()) {
                     AndCompositeAssertion emptyAnd = new AndCompositeAssertion();
                     XOR.addTerm(emptyAnd);
-                    
+
                 } else {
                     AND.addTerms(((AndCompositeAssertion) term).getTerms());
                 }
@@ -143,7 +151,7 @@ public class Policy extends AndCompositeAssertion implements Assertion {
             for (int i = 0; i < childXorTermList.size(); i++) {
                 
                 for (int j = i; j < childXorTermList.size(); j++) {
-                
+
                     if (i != j) {
                         XorCompositeAssertion xorTermA = (XorCompositeAssertion) childXorTermList
                                 .get(i);
@@ -155,9 +163,9 @@ public class Policy extends AndCompositeAssertion implements Assertion {
                         while (iterA.hasNext()) {
                             CompositeAssertion andTermA = (CompositeAssertion) iterA
                                     .next();
-                            
+
                             Iterator iterB = xorTermB.getTerms().iterator();
-                            
+
                             while (iterB.hasNext()) {
                                 CompositeAssertion andTermB = (CompositeAssertion) iterB
                                         .next();
@@ -179,9 +187,10 @@ public class Policy extends AndCompositeAssertion implements Assertion {
 
         if (childXorTermList.isEmpty()) {
             XorCompositeAssertion xor = new XorCompositeAssertion();
-            
+
             xor.addTerm(AND);
             policy.addTerm(xor);
+            policy.setNormalized(true);
             return policy;
         }
 
@@ -189,20 +198,18 @@ public class Policy extends AndCompositeAssertion implements Assertion {
         Iterator andTerms = XOR.getTerms().iterator();
 
         while (andTerms.hasNext()) {
-            CompositeAssertion anAndTerm = (CompositeAssertion) andTerms
-                    .next();
+            CompositeAssertion anAndTerm = (CompositeAssertion) andTerms.next();
             anAndTerm.addTerms(primTerms);
         }
-        
+
         policy.addTerm(XOR);
         policy.setNormalized(true);
         return policy;
-
     }
 
     public Assertion intersect(Assertion assertion, PolicyRegistry reg) {
         log.debug("Enter: Policy::intersect");
-        
+
         Policy result = new Policy(getBase(), getId());
         Policy normalizedMe = (Policy) ((isNormalized()) ? this
                 : normalize(reg));
@@ -233,7 +240,7 @@ public class Policy extends AndCompositeAssertion implements Assertion {
 
     public Assertion merge(Assertion assertion, PolicyRegistry reg) {
         log.debug("Enter: Policy::merge");
-        
+
         Policy result = new Policy(getBase(), getId());
         Policy normalizedMe = (Policy) ((isNormalized()) ? this
                 : normalize(reg));

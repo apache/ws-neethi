@@ -36,8 +36,8 @@ public class SimplePolicyExample {
         if (args.length > 0) {
             fis = new FileInputStream(args[0]);
         } else {
-            fis = new FileInputStream("policy/src/examples/policy2.xml");
-//            fis = new FileInputStream("policy/src/examples/SecurityPolicyMsg.xml");
+//            fis = new FileInputStream("policy/src/examples/policy2.xml");
+            fis = new FileInputStream("policy/src/examples/SecurityPolicyMsg.xml");
         }
 
         PolicyReader prdr = PolicyFactory

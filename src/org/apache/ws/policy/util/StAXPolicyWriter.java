@@ -200,7 +200,26 @@ public class StAXPolicyWriter implements PolicyWriter {
 
     private void writePolicyReference(PolicyReference assertion,
             XMLStreamWriter writer) throws XMLStreamException {
-        throw new UnsupportedOperationException();
+
+        String writerPrefix = writer
+                .getPrefix(PolicyConstants.WS_POLICY_NAMESPACE_URI);
+        if (writerPrefix != null) {
+            writer.writeStartElement(PolicyConstants.WS_POLICY_NAMESPACE_URI,
+                    PolicyConstants.WS_POLICY_REFERENCE);
+        } else {
+
+            writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
+                    PolicyConstants.WS_POLICY_REFERENCE,
+                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+            writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
+                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+            writer.setPrefix(PolicyConstants.WS_POLICY_PREFIX,
+                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+
+        }
+        writer.writeAttribute("URI", assertion.getPolicyURIString());
+        
+        writer.writeEndElement();
     }
 
     private void writeTerms(List terms, XMLStreamWriter writer)

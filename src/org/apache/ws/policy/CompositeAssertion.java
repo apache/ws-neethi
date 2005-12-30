@@ -27,7 +27,7 @@ import java.util.List;
 public abstract class CompositeAssertion implements Assertion {
     
     /** */
-    protected boolean flag = true;
+    protected boolean flag = false;
     
     /** */
     private List list = new ArrayList();
@@ -124,7 +124,7 @@ public abstract class CompositeAssertion implements Assertion {
         while (children.hasNext()) {
             Object child = children.next();
             if (child instanceof CompositeAssertion) {
-                ((CompositeAssertion) child).setNormalized(true);
+                ((CompositeAssertion) child).setNormalized(value);
             }
         }
         flag = value;
