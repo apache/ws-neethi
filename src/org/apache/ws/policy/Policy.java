@@ -241,7 +241,7 @@ public class Policy extends AndCompositeAssertion implements Assertion {
     public Assertion merge(Assertion assertion, PolicyRegistry reg) {
         log.debug("Enter: Policy::merge");
 
-        Policy result = new Policy(getBase(), getId());
+        Policy result = new Policy();
         Policy normalizedMe = (Policy) ((isNormalized()) ? this
                 : normalize(reg));
         XorCompositeAssertion alters = (XorCompositeAssertion) normalizedMe
