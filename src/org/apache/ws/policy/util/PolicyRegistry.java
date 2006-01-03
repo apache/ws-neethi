@@ -37,6 +37,14 @@ public class PolicyRegistry {
         this.parent = parent;
     }
     
+    public void setParent(PolicyRegistry parent) {
+        this.parent = parent;
+    }
+    
+    public PolicyRegistry getParent() {
+        return parent;        
+    }
+    
     public Policy lookup (String policyURI) throws IllegalArgumentException {
         
         Policy policy =  (Policy) reg.get (policyURI);
