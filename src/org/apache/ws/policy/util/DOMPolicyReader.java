@@ -100,7 +100,7 @@ public class DOMPolicyReader implements PolicyReader {
 		}		
 	}
 	
-	private Policy readPolicy(Element element) {
+	public Policy readPolicy(Element element) {
 		Policy policy = new Policy();
         Attr attri;
         attri = element.getAttributeNodeNS(PolicyConstants.WSU_NAMESPACE_URI, "Id");
@@ -129,7 +129,7 @@ public class DOMPolicyReader implements PolicyReader {
 		return xorCompositeAssertion;
 	}
 	
-	private PolicyReference readPolicyReference(Element element) {
+	public PolicyReference readPolicyReference(Element element) {
 		Attr attribute = element.getAttributeNode("URI");
 		return new PolicyReference(attribute.getValue());
 	}
