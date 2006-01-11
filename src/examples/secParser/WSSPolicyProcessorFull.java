@@ -16,6 +16,9 @@
 
 package examples.secParser;
 
+import examples.secParser.processors.SignedPartsElementsProcessor;
+import examples.secParser.processors.EncryptedPartsElementsProcessor;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -46,8 +49,6 @@ public class WSSPolicyProcessorFull {
 	SecurityPolicyToken topLevel = new SecurityPolicyToken("_TopLevel_",
 			SecurityPolicyToken.COMPLEX_TOKEN, null);
 
-	SecurityPolicy secPolicy = null;
-
 	SecurityProcessorContext secProcessorContext = null;
 
 	public static void main(String[] args) throws Exception {
@@ -66,36 +67,29 @@ public class WSSPolicyProcessorFull {
 	boolean setup() throws NoSuchMethodException {
 		prdr = PolicyFactory.getPolicyReader(PolicyFactory.OM_POLICY_READER);
 
-		secPolicy = new SecurityPolicy();
-
 		/*
 		 * Initialize the top level security policy token.
 		 */
 		SecurityPolicyToken spt = null;
 
 		SignedPartsElementsProcessor spep = new SignedPartsElementsProcessor();
-		spt = secPolicy.signedParts.copy();
+		spt = SecurityPolicy.signedParts.copy();
 		spt.setProcessTokenMethod(spep);
 		topLevel.setChildToken(spt);
 		
-		spt = secPolicy.signedElements.copy();
+		spt = SecurityPolicy.signedElements.copy();
 		spt.setProcessTokenMethod(spep);		
 		topLevel.setChildToken(spt);
 
 		EncryptedPartsElementsProcessor epep = new EncryptedPartsElementsProcessor();
-		spt = secPolicy.encryptedParts.copy();
+		spt = SecurityPolicy.encryptedParts.copy();
 		spt.setProcessTokenMethod(epep);
 		topLevel.setChildToken(spt);
 		
-		spt = secPolicy.encryptedElements.copy();
+		spt = SecurityPolicy.encryptedElements.copy();
 		spt.setProcessTokenMethod(epep);
 		topLevel.setChildToken(spt);
 		
-//		X509TokenProcessor x509t = new X509TokenProcessor();
-//		spt = secPolicy.x509Token.copy();
-//		spt.setProcessTokenMethod(x509t);
-//		topLevel.setChildToken(spt);
-//
 //		UsernameTokenProcessor unt = new UsernameTokenProcessor();
 //		spt = secPolicy.usernameToken.copy();
 //		spt.setProcessTokenMethod(unt);
@@ -282,8 +276,8 @@ public class WSSPolicyProcessorFull {
 	}
 
 	public void abortPolicyTransaction(PrimitiveAssertion prim) {
-		System.out.println("Aborting Policy transaction "
-				+ prim.getName().getLocalPart());
+//		System.out.println("Aborting Policy transaction "
+//				+ prim.getName().getLocalPart());
 		secProcessorContext.setAction(SecurityProcessorContext.ABORT);
 		SecurityPolicyToken currentToken = secProcessorContext
 				.readCurrentSecurityToken();

@@ -13,7 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package examples.secParser;
+package examples.secParser.processors;
+
+import org.apache.ws.policy.PrimitiveAssertion;
+
+import examples.secParser.SecurityPolicy;
+import examples.secParser.SecurityPolicyToken;
+import examples.secParser.SecurityProcessorContext;
 
 /**
  * @author Werner Dittmann (werner@apache.org)
@@ -21,8 +27,6 @@ package examples.secParser;
 public class UsernameTokenProcessor {
 
 	private boolean initializedUsernameToken = false;
-
-	private SecurityPolicy secPol = new SecurityPolicy();
 
 	/**
 	 * Intialize the UsernameToken complex token.
@@ -44,13 +48,57 @@ public class UsernameTokenProcessor {
 		// SecurityPolicyToken spt = secPol.usernameToken.copy();
 		// spt.setProcessTokenMethod(handler);
 
-		SecurityPolicyToken tmpSpt = secPol.wssUsernameToken10.copy();
+		SecurityPolicyToken tmpSpt = SecurityPolicy.wssUsernameToken10.copy();
 		tmpSpt.setProcessTokenMethod(this);
 		spt.setChildToken(tmpSpt);
 
-		tmpSpt = secPol.wssUsernameToken11.copy();
+		tmpSpt = SecurityPolicy.wssUsernameToken11.copy();
 		tmpSpt.setProcessTokenMethod(this);
 		spt.setChildToken(tmpSpt);
+	}
+
+	public Object doUsernameToken(SecurityProcessorContext spc) {
+		System.out.println("Processing "
+				+ spc.readCurrentSecurityToken().getTokenName() + ": "
+				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
+
+		SecurityPolicyToken spt = spc.readCurrentSecurityToken();
+		switch (spc.getAction()) {
+
+		case SecurityProcessorContext.START:
+			if (!initializedUsernameToken) {
+				try {
+					initializeUsernameToken(spt);
+					initializedUsernameToken = true;
+				} catch (NoSuchMethodException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return new Boolean(false);
+				}
+			}
+			System.out.println(spt.getTokenName());
+			PrimitiveAssertion pa = spc.getAssertion();
+			String text = pa.getStrValue();
+			if (text != null) {
+				text = text.trim();
+				System.out.println("Value: '" + text.toString() + "'");
+			}
+		case SecurityProcessorContext.COMMIT:
+			break;
+		case SecurityProcessorContext.ABORT:
+			break;
+		}
+		return new Boolean(true);
+	}
+
+	public Object doWssUsernameToken10(SecurityProcessorContext spc) {
+		System.out.println("Processing wssUsernameToken10");
+		return new Boolean(true);
+	}
+
+	public Object doWssUsernameToken11(SecurityProcessorContext spc) {
+		System.out.println("Processing wssUsernameToken11");
+		return new Boolean(true);
 	}
 
 }

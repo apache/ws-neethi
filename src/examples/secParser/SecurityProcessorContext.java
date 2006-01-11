@@ -51,10 +51,10 @@ public class SecurityProcessorContext {
 	/**
 	 * Sets to action to perform in the processing method.
 	 * 
-	 * @param action The actio to set. Either NONE, START, COMMIT, or ABORT
+	 * @param act The actio to set. Either NONE, START, COMMIT, or ABORT
 	 */
-	public void setAction(int action) {
-		this.action = action;
+	public void setAction(int act) {
+		this.action = act;
 	}
 	/**
 	 * Get the current assertion that is being processed.
@@ -72,10 +72,10 @@ public class SecurityProcessorContext {
 	 * 
 	 * This is always a primitive assertion.
 	 * 
-	 * @param assertion The assertion to set
+	 * @param asrt The assertion to set
 	 */
-	public void setAssertion(PrimitiveAssertion assertion) {
-		this.assertion = assertion;
+	public void setAssertion(PrimitiveAssertion asrt) {
+		this.assertion = asrt;
 	}
 
 	/**

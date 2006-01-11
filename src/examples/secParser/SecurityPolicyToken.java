@@ -200,6 +200,23 @@ public class SecurityPolicyToken {
 	}
 
 	/**
+	 * Remove a named child token,
+	 * 
+	 * @param sptName
+	 *            The token name to remove
+	 */
+	public void removeChildToken(String sptName) {
+		Iterator it = childTokens.iterator();
+		while (it.hasNext()) {
+			SecurityPolicyToken tmpSpt = (SecurityPolicyToken) it.next();
+			if (sptName.equals(tmpSpt.getTokenName())) {
+				childTokens.remove(tmpSpt);
+				return;
+			}
+		}
+	}
+
+	/**
 	 * Copy this SecurityPolicyToken and return the copy.
 	 * 
 	 * Produce a copy of this SPT. The imutable fields (token name, token type,
