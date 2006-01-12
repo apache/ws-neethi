@@ -23,10 +23,10 @@ import examples.secParser.SecurityProcessorContext;
  * @author Werner Dittmann (werner@apache.org)
  * 
  */
-public class InitiatorReceipientTokenProcessor {
+public class InitiatorRecipientTokenProcessor {
 	private boolean initializedInitiatorToken = false;
 
-	private boolean initializedReceipientToken = false;
+	private boolean initializedRecipientToken = false;
 
 
 	/**
@@ -51,20 +51,20 @@ public class InitiatorReceipientTokenProcessor {
 	}
 
 	/**
-	 * Intialize the ReceipientToken complex token.
+	 * Intialize the RecipientToken complex token.
 	 * 
-	 * This method creates a copy of the ReceipientToken token and sets the
+	 * This method creates a copy of the RecipientToken token and sets the
 	 * handler object to the copy. Then it creates copies of the child tokens
-	 * that are allowed for ReceipientToken. These tokens are:
+	 * that are allowed for RecipientToken. These tokens are:
 	 * 
 	 * These copies are also initialized with the handler object and then set as
-	 * child tokens of ReceipientToken.
+	 * child tokens of RecipientToken.
 	 * 
 	 * @param spt
 	 *            The token that will hold the child tokens.
 	 * @throws NoSuchMethodException
 	 */
-	private void initializeReceipientToken(SecurityPolicyToken spt)
+	private void initializeRecipientToken(SecurityPolicyToken spt)
 			throws NoSuchMethodException {
 		SecurityPolicyToken tmpSpt = SecurityPolicy.x509Token.copy();
 		tmpSpt.setProcessTokenMethod(new X509TokenProcessor());
@@ -100,7 +100,7 @@ public class InitiatorReceipientTokenProcessor {
 		return new Boolean(true);
 	}
 
-	public Object doReceipientToken(SecurityProcessorContext spc) {
+	public Object doRecipientToken(SecurityProcessorContext spc) {
 		System.out.println("Processing "
 				+ spc.readCurrentSecurityToken().getTokenName() + ": "
 				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
@@ -108,10 +108,10 @@ public class InitiatorReceipientTokenProcessor {
 		switch (spc.getAction()) {
 
 		case SecurityProcessorContext.START:
-			if (!initializedReceipientToken) {
+			if (!initializedRecipientToken) {
 				try {
-					initializeReceipientToken(spt);
-					initializedReceipientToken = true;
+					initializeRecipientToken(spt);
+					initializedRecipientToken = true;
 				} catch (NoSuchMethodException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

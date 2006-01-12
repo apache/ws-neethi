@@ -60,9 +60,6 @@ public class SecurityPolicyToken {
 	 * @param type
 	 *            Type of the token. Either complex or simple. Can have a flag
 	 *            if the token containes some data.
-	 * @param sup
-	 *            If true the processor supports this token and the enforcer can
-	 *            work with it,
 	 * @param attribs
 	 *            The names of allowed attributes on this token
 	 * @param h
@@ -88,9 +85,6 @@ public class SecurityPolicyToken {
 	 * @param type
 	 *            Type of the token. Either complex or simple. Can have a flag
 	 *            if the token containes some data.
-	 * @param sup
-	 *            If true the processor supports this token and the enforcer can
-	 *            work with it,
 	 * @param attribs
 	 *            The names of allowed attributes on this token processing
 	 *            method is constructed by prepending a "do" to the token name
@@ -220,9 +214,9 @@ public class SecurityPolicyToken {
 	 * Copy this SecurityPolicyToken and return the copy.
 	 * 
 	 * Produce a copy of this SPT. The imutable fields (token name, token type,
-	 * supported, and attributes) are copied by reference. The child tokens are
-	 * copied by value thus they can be modified. The handler object and the
-	 * associated processing method are not copied and must be intialized.
+	 * and attributes) are copied by reference. The child tokens are copied by
+	 * value thus they can be modified. The handler object and the associated
+	 * processing method are not copied and must be intialized.
 	 * 
 	 * @return A new SecurityPolicyToken
 	 */

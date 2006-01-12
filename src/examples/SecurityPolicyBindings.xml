@@ -7,11 +7,11 @@
  <wsp:Policy>
  <sp:RecipientToken>
  <wsp:Policy>
- <sp:X509V3Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always" />
+ <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always" />
  </wsp:Policy> </sp:RecipientToken>
  <sp:InitiatorToken>
  <wsp:Policy>
- <sp:X509V3Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always" />
+ <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always" />
  </wsp:Policy>
  </sp:InitiatorToken>
  <sp:AlgorithmSuite>
@@ -35,7 +35,7 @@
  </sp:SignedSupportingTokens>
  <sp:SignedEndorsingSupportingTokens>
  <wsp:Policy>
- <sp:X509V3Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Once" />
+ <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Once" />
  </wsp:Policy>
  </sp:SignedEndorsingSupportingTokens>
  </wsp:Policy> 

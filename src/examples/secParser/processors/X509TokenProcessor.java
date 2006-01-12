@@ -166,7 +166,7 @@ public class X509TokenProcessor {
 		return new Boolean(true);
 	}
 
-	public Object dowssX509V3Token10(SecurityProcessorContext spc) {
+	public Object doWssX509V3Token10(SecurityProcessorContext spc) {
 		System.out.println("Processing "
 				+ spc.readCurrentSecurityToken().getTokenName() + ": "
 				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);

@@ -18,6 +18,10 @@ package examples.secParser;
 
 import examples.secParser.processors.SignedPartsElementsProcessor;
 import examples.secParser.processors.EncryptedPartsElementsProcessor;
+import examples.secParser.processors.AsymmetricBindingProcessor;
+import examples.secParser.processors.SymmetricBindingProcessor;
+import examples.secParser.processors.Wss10Processor;
+import examples.secParser.processors.Wss11Processor;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -76,25 +80,35 @@ public class WSSPolicyProcessorFull {
 		spt = SecurityPolicy.signedParts.copy();
 		spt.setProcessTokenMethod(spep);
 		topLevel.setChildToken(spt);
-		
+
 		spt = SecurityPolicy.signedElements.copy();
-		spt.setProcessTokenMethod(spep);		
+		spt.setProcessTokenMethod(spep);
 		topLevel.setChildToken(spt);
 
 		EncryptedPartsElementsProcessor epep = new EncryptedPartsElementsProcessor();
 		spt = SecurityPolicy.encryptedParts.copy();
 		spt.setProcessTokenMethod(epep);
 		topLevel.setChildToken(spt);
-		
+
 		spt = SecurityPolicy.encryptedElements.copy();
 		spt.setProcessTokenMethod(epep);
 		topLevel.setChildToken(spt);
-		
-//		UsernameTokenProcessor unt = new UsernameTokenProcessor();
-//		spt = secPolicy.usernameToken.copy();
-//		spt.setProcessTokenMethod(unt);
-//		topLevel.setChildToken(spt);
 
+		spt = SecurityPolicy.asymmetricBinding.copy();
+		spt.setProcessTokenMethod(new AsymmetricBindingProcessor());
+		topLevel.setChildToken(spt);
+
+		spt = SecurityPolicy.symmetricBinding.copy();
+		spt.setProcessTokenMethod(new SymmetricBindingProcessor());
+		topLevel.setChildToken(spt);
+
+		spt = SecurityPolicy.wss10.copy();
+		spt.setProcessTokenMethod(new Wss10Processor());
+		topLevel.setChildToken(spt);
+
+		spt = SecurityPolicy.wss11.copy();
+		spt.setProcessTokenMethod(new Wss11Processor());
+		topLevel.setChildToken(spt);
 		/*
 		 * Now get a context and push the top level token onto the token stack.
 		 * The top level token is a special token that acts as anchor to start
@@ -132,7 +146,11 @@ public class WSSPolicyProcessorFull {
 				e.printStackTrace();
 			}
 		}
-		processPolicy(merged);
+		if (processPolicy(merged)) {
+			System.out.println("Security Policy sucessfully parsed");
+		} else {
+			System.out.println("Security Policy not sucessfully parsed");
+		}
 	}
 
 	/**
@@ -249,82 +267,95 @@ public class WSSPolicyProcessorFull {
 		 */
 		SecurityPolicyToken currentToken = secProcessorContext
 				.readCurrentSecurityToken();
-		if (currentToken != null) {
-			spt = currentToken.getChildToken(tokenName);
+		if (currentToken == null) {
+			System.out
+					.println("Internal error on token stack - No current token");
+			System.exit(1);
 		}
+		spt = currentToken.getChildToken(tokenName);
 		secProcessorContext.pushSecurityToken(spt);
 		secProcessorContext.setAssertion(pa);
 		secProcessorContext.setAction(SecurityProcessorContext.START);
-		boolean ret = true;		// initi to flase if all tokens a ready and intialized
-		if (spt != null) {
-			try {
-				ret = spt.invokeProcessTokenMethod(secProcessorContext);
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				secProcessorContext.setAction(SecurityProcessorContext.NONE);
-			}
+		if (spt == null) {
+			System.out
+					.println("Security token: '" + tokenName
+							+ "' unknown in context of '"
+							+ currentToken.getTokenName());
+			return false;
+		}
+		boolean ret = false;
+
+		try {
+			ret = spt.invokeProcessTokenMethod(secProcessorContext);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			secProcessorContext.setAction(SecurityProcessorContext.NONE);
 		}
 		return ret;
 	}
 
-	public void abortPolicyTransaction(PrimitiveAssertion prim) {
-//		System.out.println("Aborting Policy transaction "
-//				+ prim.getName().getLocalPart());
-		secProcessorContext.setAction(SecurityProcessorContext.ABORT);
+	public void abortPolicyTransaction(PrimitiveAssertion pa) {
 		SecurityPolicyToken currentToken = secProcessorContext
 				.readCurrentSecurityToken();
-		if (currentToken != null) {
-			try {
-				currentToken.invokeProcessTokenMethod(secProcessorContext);
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				secProcessorContext.setAction(SecurityProcessorContext.NONE);
-			}
-			secProcessorContext.setAction(SecurityProcessorContext.NONE); // only in finally block if all tokens are ready
-			secProcessorContext.popSecurityToken(); // put this in finally block if all tokens are ready
+		if (currentToken == null) {
+			secProcessorContext.popSecurityToken();
+			System.out.println("Abort transaction because of unknown token: '"
+					+ pa.getName().getLocalPart() + "'");
+			return;
+		}
+		secProcessorContext.setAssertion(pa);
+		secProcessorContext.setAction(SecurityProcessorContext.ABORT);
+		try {
+			currentToken.invokeProcessTokenMethod(secProcessorContext);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			secProcessorContext.setAction(SecurityProcessorContext.NONE);
+			secProcessorContext.popSecurityToken();
+
 		}
 	}
 
-	public void commitPolicyTransaction(PrimitiveAssertion prim) {
-		System.out.println("Commit Policy transaction "
-				+ prim.getName().getLocalPart());
-		secProcessorContext.setAction(SecurityProcessorContext.COMMIT);
+	public void commitPolicyTransaction(PrimitiveAssertion pa) {
 		SecurityPolicyToken currentToken = secProcessorContext
 				.readCurrentSecurityToken();
-		if (currentToken != null) {
-			try {
-				currentToken.invokeProcessTokenMethod(secProcessorContext);
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				secProcessorContext.setAction(SecurityProcessorContext.NONE);
-			}
+		if (currentToken == null) {
+			System.out
+					.println("Internal error on token stack - Commiting an unknown token: "
+							+ pa.getName().getLocalPart() + "'");
+			System.exit(1);
 		}
-		secProcessorContext.setAction(SecurityProcessorContext.NONE); // only in finally block if all tokens are ready
-		secProcessorContext.popSecurityToken(); // put this in finally block if all tokens are ready
-		
+		secProcessorContext.setAssertion(pa);
+		secProcessorContext.setAction(SecurityProcessorContext.COMMIT);
+		try {
+			currentToken.invokeProcessTokenMethod(secProcessorContext);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			secProcessorContext.setAction(SecurityProcessorContext.NONE);
+			secProcessorContext.popSecurityToken();
+		}
 	}
 }

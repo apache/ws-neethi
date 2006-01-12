@@ -91,7 +91,7 @@ public class SecurityPolicy {
 			null);
 
 	public static final SecurityPolicyToken requireEmbeddedTokenReference = new SecurityPolicyToken(
-			"RequiredEmbeddedTokenReference", SecurityPolicyToken.SIMPLE_TOKEN,
+			"RequireEmbeddedTokenReference", SecurityPolicyToken.SIMPLE_TOKEN,
 			null);
 
 	public static final SecurityPolicyToken requireThumbprintReference = new SecurityPolicyToken(
@@ -202,11 +202,11 @@ public class SecurityPolicy {
 	public static final SecurityPolicyToken wssRelV20Token11 = new SecurityPolicyToken(
 			"WssRelV20Token11", SecurityPolicyToken.SIMPLE_TOKEN, null);
 
-	public static final SecurityPolicyToken httpsToken = new SecurityPolicyToken("RelToken",
+	public static final SecurityPolicyToken httpsToken = new SecurityPolicyToken("HttpsToken",
 			SecurityPolicyToken.COMPLEX_TOKEN,
 			new String[] { "RequireClientCertificate" });
 
-	public static final SecurityPolicyToken algorithmSuite = new SecurityPolicyToken("RelToken",
+	public static final SecurityPolicyToken algorithmSuite = new SecurityPolicyToken("AlgorithmSuite",
 			SecurityPolicyToken.COMPLEX_TOKEN, null);
 
 	public static final SecurityPolicyToken basic256 = new SecurityPolicyToken("Basic256",
@@ -330,8 +330,8 @@ public class SecurityPolicy {
 	public static final SecurityPolicyToken initiatorToken = new SecurityPolicyToken(
 			"InitiatorToken", SecurityPolicyToken.COMPLEX_TOKEN, null);
 
-	public static final SecurityPolicyToken receipientToken = new SecurityPolicyToken(
-			"ReceipientToken", SecurityPolicyToken.COMPLEX_TOKEN, null);
+	public static final SecurityPolicyToken recipientToken = new SecurityPolicyToken(
+			"RecipientToken", SecurityPolicyToken.COMPLEX_TOKEN, null);
 
 	// all other tokens for asymmetric already defined above
 
@@ -349,7 +349,7 @@ public class SecurityPolicy {
 			"SignedEndorsingSupportingTokens",
 			SecurityPolicyToken.COMPLEX_TOKEN, null);
 
-	public static final SecurityPolicyToken wss10 = new SecurityPolicyToken("wss10",
+	public static final SecurityPolicyToken wss10 = new SecurityPolicyToken("Wss10",
 			SecurityPolicyToken.COMPLEX_TOKEN, null);
 
 	public static final SecurityPolicyToken mustSupportRefKeyIdentifier = new SecurityPolicyToken(
@@ -361,47 +361,47 @@ public class SecurityPolicy {
 			null);
 
 	public static final SecurityPolicyToken mustSupportRefExternalUri = new SecurityPolicyToken(
-			"MustSupportRefExternalUri", SecurityPolicyToken.SIMPLE_TOKEN, null);
+			"MustSupportRefExternalURI", SecurityPolicyToken.SIMPLE_TOKEN, null);
 
 	public static final SecurityPolicyToken mustSupportRefEmbeddedToken = new SecurityPolicyToken(
 			"MustSupportRefEmbeddedToken", SecurityPolicyToken.SIMPLE_TOKEN,
 			null);
 
-	public static final SecurityPolicyToken wss11 = new SecurityPolicyToken("wss11",
+	public static final SecurityPolicyToken wss11 = new SecurityPolicyToken("Wss11",
 			SecurityPolicyToken.COMPLEX_TOKEN, null);
 
 	// all from wss10
-	public static final SecurityPolicyToken mustSupportRefKeyThumbprint = new SecurityPolicyToken(
-			"mustSupportRefKeyThumbprint", SecurityPolicyToken.SIMPLE_TOKEN,
+	public static final SecurityPolicyToken mustSupportRefThumbprint = new SecurityPolicyToken(
+			"MustSupportRefThumbprint", SecurityPolicyToken.SIMPLE_TOKEN,
 			null);
 
-	public static final SecurityPolicyToken mustSupportRefKeyEncryptedKey = new SecurityPolicyToken(
-			"mustSupportRefKeyEncryptedKey", SecurityPolicyToken.SIMPLE_TOKEN,
+	public static final SecurityPolicyToken mustSupportRefEncryptedKey = new SecurityPolicyToken(
+			"MustSupportRefEncryptedKey", SecurityPolicyToken.SIMPLE_TOKEN,
 			null);
 
 	public static final SecurityPolicyToken requireSignatureConfirmation = new SecurityPolicyToken(
-			"requireSignatureConfirmation", SecurityPolicyToken.SIMPLE_TOKEN,
+			"RequireSignatureConfirmation", SecurityPolicyToken.SIMPLE_TOKEN,
 			null);
 
-	public static final SecurityPolicyToken trust10 = new SecurityPolicyToken("trust10",
+	public static final SecurityPolicyToken trust10 = new SecurityPolicyToken("Trust10",
 			SecurityPolicyToken.COMPLEX_TOKEN, null);
 
 	public static final SecurityPolicyToken mustSupportClientChallenge = new SecurityPolicyToken(
-			"mustSupportClientChallenge", SecurityPolicyToken.SIMPLE_TOKEN,
+			"MustSupportClientChallenge", SecurityPolicyToken.SIMPLE_TOKEN,
 			null);
 
 	public static final SecurityPolicyToken mustSupportServerChallenge = new SecurityPolicyToken(
-			"mustSupportServerChallenge", SecurityPolicyToken.SIMPLE_TOKEN,
+			"MustSupportServerChallenge", SecurityPolicyToken.SIMPLE_TOKEN,
 			null);
 
 	public static final SecurityPolicyToken requireClientEntropy = new SecurityPolicyToken(
-			"requireClientEntropy", SecurityPolicyToken.SIMPLE_TOKEN, null);
+			"RequireClientEntropy", SecurityPolicyToken.SIMPLE_TOKEN, null);
 
 	public static final SecurityPolicyToken requireServerEntropy = new SecurityPolicyToken(
-			"requireServerEntropy", SecurityPolicyToken.SIMPLE_TOKEN, null);
+			"RequireServerEntropy", SecurityPolicyToken.SIMPLE_TOKEN, null);
 
 	public static final SecurityPolicyToken mustSupportIssuedTokens = new SecurityPolicyToken(
-			"mustSupportIssuedTokens", SecurityPolicyToken.SIMPLE_TOKEN, null);
+			"MustSupportIssuedTokens", SecurityPolicyToken.SIMPLE_TOKEN, null);
 
 	public static final String includeNever = "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never";
 
