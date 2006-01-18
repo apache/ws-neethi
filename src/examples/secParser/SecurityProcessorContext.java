@@ -32,7 +32,11 @@ public class SecurityProcessorContext {
 
 	private int tokenStackPointer = 0;
 	
-	private PrimitiveAssertion assertion = null;
+    private ArrayList pedStack = new ArrayList();
+
+    private int pedStackPointer = 0;
+
+    private PrimitiveAssertion assertion = null;
 	
 	private int action = NONE;
 
@@ -128,4 +132,77 @@ public class SecurityProcessorContext {
 		}
 	}
 
+    /**
+     * Push a PolicyEngineData onto the PED stack.
+     * 
+     * The pushed PED becomes the current PED. The current PED is the
+     * starting point for further processing.
+     * 
+     * @param ped
+     *            The PolicyEngineData to push on the stack
+     */
+    public void pushPolicyEngineData(PolicyEngineData ped) {
+        pedStack.add(pedStackPointer, ped);
+        pedStackPointer++;
+    }
+
+    /**
+     * Pop a PolicyEngineData from the PED stack.
+     * 
+     * If the stack contains at least one PolicyEngineData the method pops the topmost
+     * PolicyEngineData from the stack and returns it. If the stack is empty the method
+     * returns a <code>null</code>.
+     * 
+     * @return The topmost PolicyEngineData or null if the stack is empty.
+     */
+    public PolicyEngineData popPolicyEngineData() {
+        if (pedStackPointer > 0) {
+            pedStackPointer--;
+            return (PolicyEngineData) pedStack.get(pedStackPointer);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Reads and returns the current PolicyEngineData.
+     * 
+     * If the stack contains at least one PolicyEngineData the method reads the topmost
+     * PolicyEngineData from the stack and returns it. If the stack is empty the method
+     * returns a <code>null</code>. The method does not remove the PolicyEngineData from
+     * the stack.
+     * 
+     * @return The topmost PolicyEngineData or null if the stack is empty.
+     */
+    public PolicyEngineData readCurrentPolicyEngineData() {
+        if (pedStackPointer > 0) {
+            return (PolicyEngineData) pedStack.get(pedStackPointer - 1);
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * Commit PolicyEngineData on the PED stack.
+     * 
+     * If the stack contains at least two PolicyEngineData the method pops the topmost
+     * PolicyEngineData from the stack. The method the overwrites the new topmost entry
+     * with the popped data. Thus the popped data becomes the new topmost entry. This
+     * effectivley commits the new PolicyEngineData. If the stack has less then 2
+     * entries the method  returns a <code>null</code>.
+     * 
+     * @return The new topmost PolicyEngineData or null if the stack is empty.
+     */
+    public PolicyEngineData commitPolicyEngineData() {
+        if (pedStackPointer > 1) {
+            pedStackPointer--;
+            PolicyEngineData ped = (PolicyEngineData) pedStack.get(pedStackPointer);
+            pedStackPointer--;
+            pedStack.add(pedStackPointer, ped);
+            pedStackPointer++;
+            return ped;
+        } else {
+            return null;
+        }
+    }
 }

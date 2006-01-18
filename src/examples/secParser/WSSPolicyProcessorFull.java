@@ -109,6 +109,14 @@ public class WSSPolicyProcessorFull {
 		spt = SecurityPolicy.wss11.copy();
 		spt.setProcessTokenMethod(new Wss11Processor());
 		topLevel.setChildToken(spt);
+        
+        /*
+         * Now get the initial PolicyEngineData, initialize it and put it onto
+         * the PED stack.
+         */
+        PolicyEngineData ped = new PolicyEngineData();
+        ped.initializeWithDefaults();
+        
 		/*
 		 * Now get a context and push the top level token onto the token stack.
 		 * The top level token is a special token that acts as anchor to start
@@ -116,6 +124,7 @@ public class WSSPolicyProcessorFull {
 		 */
 		secProcessorContext = new SecurityProcessorContext();
 		secProcessorContext.pushSecurityToken(topLevel);
+        secProcessorContext.pushPolicyEngineData(ped);
 
 		return true;
 	}
@@ -276,6 +285,15 @@ public class WSSPolicyProcessorFull {
 		secProcessorContext.pushSecurityToken(spt);
 		secProcessorContext.setAssertion(pa);
 		secProcessorContext.setAction(SecurityProcessorContext.START);
+        
+        /*
+         * Get the current state of the PolicyEngineData, make a copy of it
+         * and push the copy onto the PED stack. The token method works on this
+         * copy, adding its data.
+         */
+        PolicyEngineData ped = secProcessorContext.readCurrentPolicyEngineData();
+        ped = ped.copy();
+        secProcessorContext.pushPolicyEngineData(ped);
 		if (spt == null) {
 			System.out
 					.println("Security token: '" + tokenName
@@ -327,6 +345,7 @@ public class WSSPolicyProcessorFull {
 		} finally {
 			secProcessorContext.setAction(SecurityProcessorContext.NONE);
 			secProcessorContext.popSecurityToken();
+            secProcessorContext.popPolicyEngineData();
 
 		}
 	}
@@ -355,7 +374,8 @@ public class WSSPolicyProcessorFull {
 			e.printStackTrace();
 		} finally {
 			secProcessorContext.setAction(SecurityProcessorContext.NONE);
-			secProcessorContext.popSecurityToken();
+            secProcessorContext.popSecurityToken();
+            secProcessorContext.commitPolicyEngineData();
 		}
 	}
 }
