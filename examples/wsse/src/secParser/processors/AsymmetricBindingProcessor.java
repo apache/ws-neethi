@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package examples.secParser.processors;
+package secParser.processors;
 
-import examples.secParser.SecurityPolicy;
-import examples.secParser.SecurityPolicyToken;
-import examples.secParser.SecurityProcessorContext;
+import secParser.SecurityPolicy;
+import secParser.SecurityPolicyToken;
+import secParser.SecurityProcessorContext;
 
 /**
  * @author Werner Dittmann (werner@apache.org)
  * 
  */
-public class SymmetricBindingProcessor {
-	private boolean initializedSymmetricBinding = false;
+public class AsymmetricBindingProcessor {
+	private boolean initializedAsymmetricBinding = false;
 
 	/**
 	 * Intialize the SymmetricBinding complex token.
@@ -40,20 +40,16 @@ public class SymmetricBindingProcessor {
 	 *            The token that will hold the child tokens.
 	 * @throws NoSuchMethodException
 	 */
-	private void initializeSymmetricBinding(SecurityPolicyToken spt)
+	private void initializeAsymmetricBinding(SecurityPolicyToken spt)
 			throws NoSuchMethodException {
 
-		SignEncProtectTokenProcessor sept = new SignEncProtectTokenProcessor();
-		SecurityPolicyToken tmpSpt = SecurityPolicy.encryptionToken.copy();
-		tmpSpt.setProcessTokenMethod(sept);
+		InitiatorRecipientTokenProcessor irt = new InitiatorRecipientTokenProcessor();
+		SecurityPolicyToken tmpSpt = SecurityPolicy.initiatorToken.copy();
+		tmpSpt.setProcessTokenMethod(irt);
 		spt.setChildToken(tmpSpt);
 
-		tmpSpt = SecurityPolicy.signatureToken.copy();
-		tmpSpt.setProcessTokenMethod(sept);
-		spt.setChildToken(tmpSpt);
-
-		tmpSpt = SecurityPolicy.protectionToken.copy();
-		tmpSpt.setProcessTokenMethod(sept);
+		tmpSpt = SecurityPolicy.recipientToken.copy();
+		tmpSpt.setProcessTokenMethod(irt);
 		spt.setChildToken(tmpSpt);
 
 		tmpSpt = SecurityPolicy.algorithmSuite.copy();
@@ -102,7 +98,7 @@ public class SymmetricBindingProcessor {
 
 	}
 
-	public Object doSymmetricBinding(SecurityProcessorContext spc) {
+	public Object doAsymmetricBinding(SecurityProcessorContext spc) {
 		System.out.println("Processing "
 				+ spc.readCurrentSecurityToken().getTokenName() + ": "
 				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
@@ -111,10 +107,10 @@ public class SymmetricBindingProcessor {
 		switch (spc.getAction()) {
 
 		case SecurityProcessorContext.START:
-			if (!initializedSymmetricBinding) {
+			if (!initializedAsymmetricBinding) {
 				try {
-					initializeSymmetricBinding(spt);
-					initializedSymmetricBinding = true;
+					initializeAsymmetricBinding(spt);
+					initializedAsymmetricBinding = true;
 				} catch (NoSuchMethodException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

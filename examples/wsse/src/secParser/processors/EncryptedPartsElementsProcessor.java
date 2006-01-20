@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package examples.secParser.processors;
+package secParser.processors;
 
-import examples.secParser.SecurityPolicy;
-import examples.secParser.SecurityPolicyToken;
-import examples.secParser.SecurityProcessorContext;
+import secParser.SecurityPolicy;
+import secParser.SecurityPolicyToken;
+import secParser.SecurityProcessorContext;
 
 import org.apache.ws.policy.PrimitiveAssertion;
 

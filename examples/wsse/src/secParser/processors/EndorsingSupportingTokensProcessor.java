@@ -13,34 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package examples.secParser.processors;
+package secParser.processors;
 
-import examples.secParser.SecurityPolicy;
-import examples.secParser.SecurityPolicyToken;
-import examples.secParser.SecurityProcessorContext;
+import secParser.SecurityPolicy;
+import secParser.SecurityPolicyToken;
+import secParser.SecurityProcessorContext;
 
 /**
  * @author Werner Dittmann (werner@apache.org)
  * 
  */
-public class SupportingTokensProcessor {
-	private boolean initializedSupportingTokens = false;
+public class EndorsingSupportingTokensProcessor {
+	private boolean initializedEndorsingSupportingTokens = false;
 
 	/**
-	 * Intialize the SupportingTokens complex token.
+	 * Intialize the EndorsingSupportingTokens complex token.
 	 * 
-	 * This method creates a copy of the SupportingTokens token and sets the
+	 * This method creates a copy of the EndorsingSupportingTokens token and sets the
 	 * handler object to the copy. Then it creates copies of the child tokens
-	 * that are allowed for SupportingTokens. These tokens are:
+	 * that are allowed for EndorsingSupportingTokens. These tokens are:
 	 * 
 	 * These copies are also initialized with the handler object and then set as
-	 * child tokens of SupportingTokens.
+	 * child tokens of EndorsingSupportingTokens.
 	 * 
 	 * @param spt
 	 *            The token that will hold the child tokens.
 	 * @throws NoSuchMethodException
 	 */
-	private void initializeSupportingTokens(SecurityPolicyToken spt)
+	private void initializeEndorsingSupportingTokens(SecurityPolicyToken spt)
 			throws NoSuchMethodException {
 		SecurityPolicyToken tmpSpt = SecurityPolicy.x509Token.copy();
 		tmpSpt.setProcessTokenMethod(new X509TokenProcessor());
@@ -74,7 +74,7 @@ public class SupportingTokensProcessor {
 
 	}
 
-	public Object doSupportingTokens(SecurityProcessorContext spc) {
+	public Object doEndorsingSupportingTokens(SecurityProcessorContext spc) {
 		System.out.println("Processing "
 				+ spc.readCurrentSecurityToken().getTokenName() + ": "
 				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
@@ -83,10 +83,10 @@ public class SupportingTokensProcessor {
 		switch (spc.getAction()) {
 
 		case SecurityProcessorContext.START:
-			if (!initializedSupportingTokens) {
+			if (!initializedEndorsingSupportingTokens) {
 				try {
-					initializeSupportingTokens(spt);
-					initializedSupportingTokens = true;
+					initializeEndorsingSupportingTokens(spt);
+					initializedEndorsingSupportingTokens = true;
 				} catch (NoSuchMethodException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

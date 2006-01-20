@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package examples.secParser.processors;
+package secParser.processors;
 
 import org.apache.ws.policy.PrimitiveAssertion;
 
-import examples.secParser.SecurityPolicy;
-import examples.secParser.SecurityPolicyToken;
-import examples.secParser.SecurityProcessorContext;
+import secParser.SecurityPolicy;
+import secParser.SecurityPolicyToken;
+import secParser.SecurityProcessorContext;
 
 /**
  * @author Werner Dittmann (werner@apache.org)

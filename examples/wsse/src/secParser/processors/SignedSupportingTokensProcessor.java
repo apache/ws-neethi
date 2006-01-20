@@ -13,39 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package examples.secParser.processors;
+package secParser.processors;
 
-import examples.secParser.SecurityPolicy;
-import examples.secParser.SecurityPolicyToken;
-import examples.secParser.SecurityProcessorContext;
+import java.lang.reflect.InvocationTargetException;
+
+import secParser.SecurityPolicy;
+import secParser.SecurityPolicyToken;
+import secParser.SecurityProcessorContext;
 
 /**
  * @author Werner Dittmann (werner@apache.org)
  * 
  */
-public class SignedEndorsingSupportingTokensProcessor {
-	private boolean initializedSignedEndorsingSupportingTokens = false;
+public class SignedSupportingTokensProcessor {
+	private boolean initializedSignedSupportingTokens = false;
 
 	/**
-	 * Intialize the SignedEndorsingSupportingTokens complex token.
+	 * Intialize the SignedSupportingTokens complex token.
 	 * 
-	 * This method creates a copy of the SignedEndorsingSupportingTokens token and sets the
+	 * This method creates a copy of the SignedSupportingTokens token and sets the
 	 * handler object to the copy. Then it creates copies of the child tokens
-	 * that are allowed for SignedEndorsingSupportingTokens. These tokens are:
+	 * that are allowed for SignedSupportingTokens. These tokens are:
 	 * 
 	 * These copies are also initialized with the handler object and then set as
-	 * child tokens of SignedEndorsingSupportingTokens.
+	 * child tokens of SignedSupportingTokens.
 	 * 
 	 * @param spt
 	 *            The token that will hold the child tokens.
 	 * @throws NoSuchMethodException
 	 */
-	private void initializeSignedEndorsingSupportingTokens(SecurityPolicyToken spt)
+	private void initializeSignedSupportingTokens(SecurityPolicyToken spt)
 			throws NoSuchMethodException {
 		SecurityPolicyToken tmpSpt = SecurityPolicy.x509Token.copy();
 		tmpSpt.setProcessTokenMethod(new X509TokenProcessor());
 		spt.setChildToken(tmpSpt);
-		
+
 		tmpSpt = SecurityPolicy.usernameToken.copy();
 		tmpSpt.setProcessTokenMethod(new UsernameTokenProcessor());
 		spt.setChildToken(tmpSpt);
@@ -58,23 +60,23 @@ public class SignedEndorsingSupportingTokensProcessor {
 		tmpSpt = SecurityPolicy.signedParts.copy();
 		tmpSpt.setProcessTokenMethod(spep);
 		spt.setChildToken(tmpSpt);
-		
+
 		tmpSpt = SecurityPolicy.signedElements.copy();
-		tmpSpt.setProcessTokenMethod(spep);		
+		tmpSpt.setProcessTokenMethod(spep);
 		spt.setChildToken(tmpSpt);
 
 		EncryptedPartsElementsProcessor epep = new EncryptedPartsElementsProcessor();
 		tmpSpt = SecurityPolicy.encryptedParts.copy();
 		tmpSpt.setProcessTokenMethod(epep);
 		spt.setChildToken(tmpSpt);
-		
+
 		tmpSpt = SecurityPolicy.encryptedElements.copy();
 		tmpSpt.setProcessTokenMethod(epep);
 		spt.setChildToken(tmpSpt);
 
 	}
 
-	public Object doSignedEndorsingSupportingTokens(SecurityProcessorContext spc) {
+	public Object doSignedSupportingTokens(SecurityProcessorContext spc) {
 		System.out.println("Processing "
 				+ spc.readCurrentSecurityToken().getTokenName() + ": "
 				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
@@ -83,10 +85,10 @@ public class SignedEndorsingSupportingTokensProcessor {
 		switch (spc.getAction()) {
 
 		case SecurityProcessorContext.START:
-			if (!initializedSignedEndorsingSupportingTokens) {
+			if (!initializedSignedSupportingTokens) {
 				try {
-					initializeSignedEndorsingSupportingTokens(spt);
-					initializedSignedEndorsingSupportingTokens = true;
+					initializeSignedSupportingTokens(spt);
+					initializedSignedSupportingTokens = true;
 				} catch (NoSuchMethodException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -101,5 +103,4 @@ public class SignedEndorsingSupportingTokensProcessor {
 		}
 		return new Boolean(true);
 	}
-
 }

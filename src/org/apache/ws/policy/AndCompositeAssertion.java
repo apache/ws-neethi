@@ -236,8 +236,7 @@ public class AndCompositeAssertion extends CompositeAssertion implements
         
         AndCompositeAssertion AND = new AndCompositeAssertion();
         XorCompositeAssertion XOR = new XorCompositeAssertion();
-
-        ArrayList andTerms = new ArrayList();
+        
         ArrayList xorTerms = new ArrayList();
 
         if (isEmpty()) {

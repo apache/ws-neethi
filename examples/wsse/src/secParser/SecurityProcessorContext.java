@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package examples.secParser;
+package secParser;
 
 import java.util.ArrayList;
 
 import org.apache.ws.policy.PrimitiveAssertion;
+
+import secParser.PolicyEngineData;
 
 public class SecurityProcessorContext {
 	

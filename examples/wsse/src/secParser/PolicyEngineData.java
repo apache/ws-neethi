@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package examples.secParser;
+package secParser;
 
 /**
  * @author werner Dittmann (werner@apache.org)

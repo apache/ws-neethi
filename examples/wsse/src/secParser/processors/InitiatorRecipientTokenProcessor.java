@@ -13,38 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package examples.secParser.processors;
+package secParser.processors;
 
-import examples.secParser.SecurityPolicy;
-import examples.secParser.SecurityPolicyToken;
-import examples.secParser.SecurityProcessorContext;
+import secParser.SecurityPolicy;
+import secParser.SecurityPolicyToken;
+import secParser.SecurityProcessorContext;
 
 /**
  * @author Werner Dittmann (werner@apache.org)
  * 
  */
-public class SignEncProtectTokenProcessor {
-	private boolean initializedSignatureToken = false;
+public class InitiatorRecipientTokenProcessor {
+	private boolean initializedInitiatorToken = false;
 
-	private boolean initializedEncryptionToken = false;
+	private boolean initializedRecipientToken = false;
 
-	private boolean initializedProtectionToken = false;
 
 	/**
-	 * Intialize the SignatureToken complex token.
+	 * Intialize the InitiatorToken complex token.
 	 * 
-	 * This method creates a copy of the SignatureToken token and sets the
+	 * This method creates a copy of the InitiatorToken token and sets the
 	 * handler object to the copy. Then it creates copies of the child tokens
-	 * that are allowed for SignatureToken. These tokens are:
+	 * that are allowed for InitiatorToken. These tokens are:
 	 * 
 	 * These copies are also initialized with the handler object and then set as
-	 * child tokens of SignatureToken.
+	 * child tokens of InitiatorToken.
 	 * 
 	 * @param spt
 	 *            The token that will hold the child tokens.
 	 * @throws NoSuchMethodException
 	 */
-	private void initializeSignatureToken(SecurityPolicyToken spt)
+	private void initializeInitiatorToken(SecurityPolicyToken spt)
 			throws NoSuchMethodException {
 		SecurityPolicyToken tmpSpt = SecurityPolicy.x509Token.copy();
 		tmpSpt.setProcessTokenMethod(new X509TokenProcessor());
@@ -52,48 +51,28 @@ public class SignEncProtectTokenProcessor {
 	}
 
 	/**
-	 * Intialize the EncryptionToken complex token.
+	 * Intialize the RecipientToken complex token.
 	 * 
-	 * This method creates a copy of the EncryptionToken token and sets the
+	 * This method creates a copy of the RecipientToken token and sets the
 	 * handler object to the copy. Then it creates copies of the child tokens
-	 * that are allowed for EncryptionToken. These tokens are:
+	 * that are allowed for RecipientToken. These tokens are:
 	 * 
 	 * These copies are also initialized with the handler object and then set as
-	 * child tokens of SignatureToken.
+	 * child tokens of RecipientToken.
 	 * 
 	 * @param spt
 	 *            The token that will hold the child tokens.
 	 * @throws NoSuchMethodException
 	 */
-	private void initializeEncryptionToken(SecurityPolicyToken spt)
+	private void initializeRecipientToken(SecurityPolicyToken spt)
 			throws NoSuchMethodException {
 		SecurityPolicyToken tmpSpt = SecurityPolicy.x509Token.copy();
 		tmpSpt.setProcessTokenMethod(new X509TokenProcessor());
 		spt.setChildToken(tmpSpt);
 	}
 
-	/**
-	 * Intialize the ProtectionToken complex token.
-	 * 
-	 * This method creates a copy of the ProtectionToken token and sets the
-	 * handler object to the copy. Then it creates copies of the child tokens
-	 * that are allowed for ProtectionToken. These tokens are:
-	 * 
-	 * These copies are also initialized with the handler object and then set as
-	 * child tokens of ProtectionToken.
-	 * 
-	 * @param spt
-	 *            The token that will hold the child tokens.
-	 * @throws NoSuchMethodException
-	 */
-	private void initializeProtectionToken(SecurityPolicyToken spt)
-			throws NoSuchMethodException {
-		SecurityPolicyToken tmpSpt = SecurityPolicy.x509Token.copy();
-		tmpSpt.setProcessTokenMethod(new X509TokenProcessor());
-		spt.setChildToken(tmpSpt);
-	}
 
-	public Object doSignatureToken(SecurityProcessorContext spc) {
+	public Object doInitiatorToken(SecurityProcessorContext spc) {
 		System.out.println("Processing "
 				+ spc.readCurrentSecurityToken().getTokenName() + ": "
 				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
@@ -102,10 +81,10 @@ public class SignEncProtectTokenProcessor {
 		switch (spc.getAction()) {
 
 		case SecurityProcessorContext.START:
-			if (!initializedSignatureToken) {
+			if (!initializedInitiatorToken) {
 				try {
-					initializeSignatureToken(spt);
-					initializedSignatureToken = true;
+					initializeInitiatorToken(spt);
+					initializedInitiatorToken = true;
 				} catch (NoSuchMethodException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -121,7 +100,7 @@ public class SignEncProtectTokenProcessor {
 		return new Boolean(true);
 	}
 
-	public Object doEncryptionToken(SecurityProcessorContext spc) {
+	public Object doRecipientToken(SecurityProcessorContext spc) {
 		System.out.println("Processing "
 				+ spc.readCurrentSecurityToken().getTokenName() + ": "
 				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
@@ -129,37 +108,10 @@ public class SignEncProtectTokenProcessor {
 		switch (spc.getAction()) {
 
 		case SecurityProcessorContext.START:
-			if (!initializedEncryptionToken) {
+			if (!initializedRecipientToken) {
 				try {
-					initializeEncryptionToken(spt);
-					initializedEncryptionToken = true;
-				} catch (NoSuchMethodException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return new Boolean(false);
-				}
-			}
-			break;
-		case SecurityProcessorContext.COMMIT:
-			break;
-		case SecurityProcessorContext.ABORT:
-			break;
-		}
-		return new Boolean(true);
-	}
-
-	public Object doProtectionToken(SecurityProcessorContext spc) {
-		System.out.println("Processing "
-				+ spc.readCurrentSecurityToken().getTokenName() + ": "
-				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
-		SecurityPolicyToken spt = spc.readCurrentSecurityToken();
-		switch (spc.getAction()) {
-
-		case SecurityProcessorContext.START:
-			if (!initializedProtectionToken) {
-				try {
-					initializeProtectionToken(spt);
-					initializedProtectionToken = true;
+					initializeRecipientToken(spt);
+					initializedRecipientToken = true;
 				} catch (NoSuchMethodException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

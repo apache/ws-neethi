@@ -13,97 +13,115 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package examples.secParser.processors;
+package secParser.processors;
 
-import org.apache.ws.policy.PrimitiveAssertion;
-
-import examples.secParser.SecurityPolicy;
-import examples.secParser.SecurityPolicyToken;
-import examples.secParser.SecurityProcessorContext;
+import secParser.SecurityPolicy;
+import secParser.SecurityPolicyToken;
+import secParser.SecurityProcessorContext;
 
 /**
  * @author Werner Dittmann (werner@apache.org)
  * 
  */
-public class Wss11Processor {
-
-	private boolean initializedWss11 = false;
+public class SymmetricBindingProcessor {
+	private boolean initializedSymmetricBinding = false;
 
 	/**
-	 * Intialize the Wss11 complex token.
+	 * Intialize the SymmetricBinding complex token.
 	 * 
-	 * This method creates a copy of the Wss11 token and sets the handler object
-	 * to the copy. Then it creates copies of the child tokens that are allowed
-	 * for Wss10. These tokens are:
+	 * This method creates a copy of the SymmetricBinding token and sets the
+	 * handler object to the copy. Then it creates copies of the child tokens
+	 * that are allowed for SymmetricBinding. These tokens are:
 	 * 
 	 * These copies are also initialized with the handler object and then set as
-	 * child tokens of Wss11.
-	 * 
-	 * <p/> The handler object that must contain the methods
-	 * <code>doWss10</code>.
+	 * child tokens of SymmetricBinding.
 	 * 
 	 * @param spt
 	 *            The token that will hold the child tokens.
 	 * @throws NoSuchMethodException
 	 */
-	public void initializeWss11(SecurityPolicyToken spt)
+	private void initializeSymmetricBinding(SecurityPolicyToken spt)
 			throws NoSuchMethodException {
-		SecurityPolicyToken tmpSpt = SecurityPolicy.mustSupportRefKeyIdentifier
-				.copy();
+
+		SignEncProtectTokenProcessor sept = new SignEncProtectTokenProcessor();
+		SecurityPolicyToken tmpSpt = SecurityPolicy.encryptionToken.copy();
+		tmpSpt.setProcessTokenMethod(sept);
+		spt.setChildToken(tmpSpt);
+
+		tmpSpt = SecurityPolicy.signatureToken.copy();
+		tmpSpt.setProcessTokenMethod(sept);
+		spt.setChildToken(tmpSpt);
+
+		tmpSpt = SecurityPolicy.protectionToken.copy();
+		tmpSpt.setProcessTokenMethod(sept);
+		spt.setChildToken(tmpSpt);
+
+		tmpSpt = SecurityPolicy.algorithmSuite.copy();
+		tmpSpt.setProcessTokenMethod(new AlgorithmSuiteProcessor());
+		spt.setChildToken(tmpSpt);
+
+		tmpSpt = SecurityPolicy.layout.copy();
+		tmpSpt.setProcessTokenMethod(new LayoutProcessor());
+		spt.setChildToken(tmpSpt);
+
+		tmpSpt = SecurityPolicy.supportingTokens.copy();
+		tmpSpt.setProcessTokenMethod(new SupportingTokensProcessor());
+		spt.setChildToken(tmpSpt);
+
+		tmpSpt = SecurityPolicy.signedSupportingTokens.copy();
+		tmpSpt.setProcessTokenMethod(new SignedSupportingTokensProcessor());
+		spt.setChildToken(tmpSpt);
+
+		tmpSpt = SecurityPolicy.endorsingSupportingTokens.copy();
+		tmpSpt.setProcessTokenMethod(new EndorsingSupportingTokensProcessor());
+		spt.setChildToken(tmpSpt);
+
+		tmpSpt = SecurityPolicy.signedEndorsingSupportingTokens.copy();
+		tmpSpt.setProcessTokenMethod(new SignedEndorsingSupportingTokensProcessor());
+		spt.setChildToken(tmpSpt);
+
+		tmpSpt = SecurityPolicy.includeTimestamp.copy();
 		tmpSpt.setProcessTokenMethod(this);
 		spt.setChildToken(tmpSpt);
 
-		tmpSpt = SecurityPolicy.mustSupportRefIssuerSerial.copy();
+		tmpSpt = SecurityPolicy.encryptBeforeSigning.copy();
 		tmpSpt.setProcessTokenMethod(this);
 		spt.setChildToken(tmpSpt);
 
-		tmpSpt = SecurityPolicy.mustSupportRefExternalUri.copy();
+		tmpSpt = SecurityPolicy.encryptSignature.copy();
 		tmpSpt.setProcessTokenMethod(this);
 		spt.setChildToken(tmpSpt);
 
-		tmpSpt = SecurityPolicy.mustSupportRefEmbeddedToken.copy();
+		tmpSpt = SecurityPolicy.protectTokens.copy();
 		tmpSpt.setProcessTokenMethod(this);
 		spt.setChildToken(tmpSpt);
 
-		tmpSpt = SecurityPolicy.mustSupportRefThumbprint.copy();
+		tmpSpt = SecurityPolicy.onlySignEntireHeadersAndBody.copy();
 		tmpSpt.setProcessTokenMethod(this);
 		spt.setChildToken(tmpSpt);
 
-		tmpSpt = SecurityPolicy.mustSupportRefEncryptedKey.copy();
-		tmpSpt.setProcessTokenMethod(this);
-		spt.setChildToken(tmpSpt);
-
-		tmpSpt = SecurityPolicy.requireSignatureConfirmation.copy();
-		tmpSpt.setProcessTokenMethod(this);
-		spt.setChildToken(tmpSpt);
 	}
 
-	public Object doWss11(SecurityProcessorContext spc) {
+	public Object doSymmetricBinding(SecurityProcessorContext spc) {
 		System.out.println("Processing "
 				+ spc.readCurrentSecurityToken().getTokenName() + ": "
 				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
-
 		SecurityPolicyToken spt = spc.readCurrentSecurityToken();
 
 		switch (spc.getAction()) {
 
 		case SecurityProcessorContext.START:
-			if (!initializedWss11) {
+			if (!initializedSymmetricBinding) {
 				try {
-					initializeWss11(spt);
-					initializedWss11 = true;
+					initializeSymmetricBinding(spt);
+					initializedSymmetricBinding = true;
 				} catch (NoSuchMethodException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return new Boolean(false);
 				}
 			}
-			PrimitiveAssertion pa = spc.getAssertion();
-			String text = pa.getStrValue();
-			if (text != null) {
-				text = text.trim();
-				System.out.println("Value: '" + text.toString() + "'");
-			}
+			break;
 		case SecurityProcessorContext.COMMIT:
 			break;
 		case SecurityProcessorContext.ABORT:
@@ -111,50 +129,36 @@ public class Wss11Processor {
 		}
 		return new Boolean(true);
 	}
-	
-	public Object doMustSupportRefKeyIdentifier(SecurityProcessorContext spc) {
+
+	public Object doIncludeTimestamp(SecurityProcessorContext spc) {
 		System.out.println("Processing "
 				+ spc.readCurrentSecurityToken().getTokenName() + ": "
 				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
 		return new Boolean(true);
 	}
 
-	public Object doMustSupportRefIssuerSerial(SecurityProcessorContext spc) {
+	public Object doEncryptBeforeSigning(SecurityProcessorContext spc) {
 		System.out.println("Processing "
 				+ spc.readCurrentSecurityToken().getTokenName() + ": "
 				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
 		return new Boolean(true);
 	}
 
-	public Object doMustSupportRefExternalURI(SecurityProcessorContext spc) {
+	public Object doEncryptSignature(SecurityProcessorContext spc) {
 		System.out.println("Processing "
 				+ spc.readCurrentSecurityToken().getTokenName() + ": "
 				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
 		return new Boolean(true);
 	}
 
-	public Object doMustSupportRefEmbeddedToken(SecurityProcessorContext spc) {
+	public Object doProtectTokens(SecurityProcessorContext spc) {
 		System.out.println("Processing "
 				+ spc.readCurrentSecurityToken().getTokenName() + ": "
 				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
 		return new Boolean(true);
 	}
 
-	public Object doMustSupportRefThumbprint(SecurityProcessorContext spc) {
-		System.out.println("Processing "
-				+ spc.readCurrentSecurityToken().getTokenName() + ": "
-				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
-		return new Boolean(true);
-	}
-
-	public Object doMustSupportRefEncryptedKey(SecurityProcessorContext spc) {
-		System.out.println("Processing "
-				+ spc.readCurrentSecurityToken().getTokenName() + ": "
-				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);
-		return new Boolean(true);
-	}
-
-	public Object doRequireSignatureConfirmation(SecurityProcessorContext spc) {
+	public Object doOnlySignEntireHeadersAndBody(SecurityProcessorContext spc) {
 		System.out.println("Processing "
 				+ spc.readCurrentSecurityToken().getTokenName() + ": "
 				+ SecurityProcessorContext.ACTION_NAMES[spc.getAction()]);

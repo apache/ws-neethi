@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package examples.secParser;
+package secParser;
 
-import examples.secParser.processors.SignedPartsElementsProcessor;
-import examples.secParser.processors.EncryptedPartsElementsProcessor;
-import examples.secParser.processors.AsymmetricBindingProcessor;
-import examples.secParser.processors.SymmetricBindingProcessor;
-import examples.secParser.processors.Wss10Processor;
-import examples.secParser.processors.Wss11Processor;
+import secParser.processors.SignedPartsElementsProcessor;
+import secParser.processors.EncryptedPartsElementsProcessor;
+import secParser.processors.AsymmetricBindingProcessor;
+import secParser.processors.SymmetricBindingProcessor;
+import secParser.processors.Wss10Processor;
+import secParser.processors.Wss11Processor;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -42,7 +43,7 @@ import org.apache.ws.policy.util.PolicyFactory;
  * @author Werner Dittmann (werner@apache.org)
  */
 
-public class WSSPolicyProcessorFull {
+public class WSSPolicyProcessor {
 
 	FileInputStream fis = null;
 
@@ -57,14 +58,14 @@ public class WSSPolicyProcessorFull {
 
 	public static void main(String[] args) throws Exception {
 
-		WSSPolicyProcessorFull processor = new WSSPolicyProcessorFull();
+		WSSPolicyProcessor processor = new WSSPolicyProcessor();
 		if (!processor.setup()) {
 			return;
 		}
 		String[] files = new String[1];
 		files = new String[2];
-		files[0] = "policy/src/examples/SecurityPolicyBindings.xml";
-		files[1] = "policy/src/examples/SecurityPolicyMsg.xml";
+		files[0] = "policy/examples/wsse/resources/SecurityPolicyBindings.xml";
+		files[1] = "policy/examples/wsse/resources/SecurityPolicyMsg.xml";
 		processor.go(files);
 	}
 
@@ -134,6 +135,7 @@ public class WSSPolicyProcessorFull {
 		merged = null;
 		for (int i = 0; i < args.length; i++) {
 			try {
+				System.out.println(new File("").getAbsolutePath());
 				fis = new FileInputStream(args[i]);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
