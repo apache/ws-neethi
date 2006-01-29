@@ -81,9 +81,9 @@ public class Loader {
      * Try to get the resource with the specified class loader
      * <p/>
      *
-     * @param cl
-     * @param clazz
-     * @return Class
+     * @param loader The classloader to use
+     * @param resource The resources' path
+     * @return The URL of the resource
      * @throws ClassNotFoundException
      */
     static public URL getResource(ClassLoader loader, String resource) throws ClassNotFoundException {
@@ -118,7 +118,7 @@ public class Loader {
      * Try the specified classloader and then fall back to the loadClass
      * <p/>
      *
-     * @param cl
+     * @param loader
      * @param clazz
      * @return Class
      * @throws ClassNotFoundException
