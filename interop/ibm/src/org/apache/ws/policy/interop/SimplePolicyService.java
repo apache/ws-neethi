@@ -28,11 +28,11 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.om.OMAbstractFactory;
-import org.apache.axis2.om.OMElement;
-import org.apache.axis2.om.OMXMLParserWrapper;
-import org.apache.axis2.om.impl.llom.factory.OMXMLBuilderFactory;
-import org.apache.axis2.soap.SOAPBody;
+import org.apache.ws.commons.om.OMAbstractFactory;
+import org.apache.ws.commons.om.OMElement;
+import org.apache.ws.commons.om.OMXMLParserWrapper;
+import org.apache.ws.commons.om.impl.llom.factory.OMXMLBuilderFactory;
+import org.apache.ws.commons.soap.SOAPBody;
 import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;

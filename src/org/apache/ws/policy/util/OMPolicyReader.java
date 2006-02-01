@@ -26,11 +26,11 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.apache.axis2.om.OMAbstractFactory;
-import org.apache.axis2.om.OMAttribute;
-import org.apache.axis2.om.OMElement;
-import org.apache.axis2.om.OMXMLParserWrapper;
-import org.apache.axis2.om.impl.llom.factory.OMXMLBuilderFactory;
+import org.apache.ws.commons.om.OMAbstractFactory;
+import org.apache.ws.commons.om.OMAttribute;
+import org.apache.ws.commons.om.OMElement;
+import org.apache.ws.commons.om.OMXMLParserWrapper;
+import org.apache.ws.commons.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.ws.policy.AndCompositeAssertion;
 import org.apache.ws.policy.Assertion;
 import org.apache.ws.policy.Policy;

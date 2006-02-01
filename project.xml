@@ -56,13 +56,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>axis2</groupId>
-            <artifactId>axis2-xml</artifactId>
-            <version>${axis2.version}</version>
+            <groupId>ws-commons</groupId>
+            <artifactId>axiom</artifactId>
+            <version>${axiom.version}</version>
         </dependency>
         <dependency>
             <groupId>axis2</groupId>
             <artifactId>axis2-wsdl</artifactId>
+            <version>${axis2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>axis2</groupId>
+            <artifactId>axis2-core</artifactId>
             <version>${axis2.version}</version>
         </dependency>
         <dependency>

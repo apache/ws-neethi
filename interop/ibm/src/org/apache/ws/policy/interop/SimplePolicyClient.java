@@ -29,11 +29,11 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Call;
 import org.apache.axis2.client.Options;
-import org.apache.axis2.om.OMAbstractFactory;
-import org.apache.axis2.om.OMElement;
-import org.apache.axis2.om.OMXMLParserWrapper;
-import org.apache.axis2.om.impl.llom.factory.OMXMLBuilderFactory;
-import org.apache.axis2.soap.SOAPEnvelope;
+import org.apache.ws.commons.om.OMAbstractFactory;
+import org.apache.ws.commons.om.OMElement;
+import org.apache.ws.commons.om.OMXMLParserWrapper;
+import org.apache.ws.commons.om.impl.llom.factory.OMXMLBuilderFactory;
+import org.apache.ws.commons.soap.SOAPEnvelope;
 
 /**
  * How to run ----------
@@ -65,7 +65,6 @@ public class SimplePolicyClient {
         call.setClientOptions(options);
 
         options.setTo(new EndpointReference(targetEPR));
-        options.setListenerTransportProtocol(Constants.TRANSPORT_HTTP);
 
         if (args[0].equals("-N")) {
             options.setAction(normalizeActionString);
