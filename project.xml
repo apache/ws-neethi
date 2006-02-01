@@ -87,8 +87,53 @@
     </dependencies>
   <!-- build information for the project -->
 
-  <build>
-    <nagEmailAddress>general@ws.apache.org</nagEmailAddress>
-    <sourceDirectory>src</sourceDirectory>
-  </build>
+    <build>
+        <nagEmailAddress>commons-dev@ws.apache.org</nagEmailAddress>
+        <sourceDirectory>src</sourceDirectory>
+        <unitTestSourceDirectory>test</unitTestSourceDirectory>
+
+        <unitTest>
+            <excludes>
+                <exclude>**/PolicyTestCase.java</exclude>
+            </excludes>
+            <includes>
+                <include>**/*Test*.java</include>
+            </includes>
+
+            <resources>
+                <resource>
+                    <directory>${basedir}/test-resources</directory>
+                </resource>
+                <resource>
+                    <directory>conf</directory>
+                    <includes>
+                        <include>**/*.properties</include>
+                    </includes>
+                </resource>
+                <resource>
+                    <directory>src</directory>
+                    <includes>
+                        <include>**/*.properties</include>
+                        <include>**/*.xml</include>
+                    </includes>
+                </resource>
+            </resources>
+        </unitTest>
+
+        <resources>
+            <resource>
+                <directory>conf</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>
