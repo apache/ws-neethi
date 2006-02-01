@@ -25,7 +25,7 @@
   <!-- a unique name for this project -->
 
   <name>Web Services Commons : WS-Policy implemenation</name>
-  <id>ws-policy</id>
+  <id>policy</id>
   <groupId>ws-commons</groupId>
   
   <!-- a short but descriptive name for the project -->
@@ -34,7 +34,7 @@
   <!-- The version of the project under development, e.g.
        1.1, 1.2, 2.0-SNAPSHOT -->
 
-  <currentVersion>1.0</currentVersion>
+  <currentVersion>${policy.version}</currentVersion>
   <!-- details about the organization that 'owns' the project -->
 
   <organization>
@@ -61,16 +61,6 @@
             <version>${axiom.version}</version>
         </dependency>
         <dependency>
-            <groupId>axis2</groupId>
-            <artifactId>axis2-wsdl</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>axis2</groupId>
-            <artifactId>axis2-core</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-        <dependency>
             <groupId>${stax.impl.groupid}</groupId>
             <artifactId>${stax.impl.artifactid}</artifactId>
             <version>${stax.impl.version}</version>
@@ -84,14 +74,6 @@
             <version>${stax.api.version}</version>
             <properties>
                 <module>true</module>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>axis</groupId>
-            <artifactId>axis-wsdl4j</artifactId>
-            <version>${axis.wsdl4j.version}</version>
-            <properties>
-               <module>true</module>
             </properties>
         </dependency>
         <dependency>
