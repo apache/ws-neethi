@@ -35,6 +35,9 @@ public interface PolicyConstants {
     public static final String WS_POLICY_PREFIX = "wsp";
     
     /** */
+    public static final String WSU_NAMESPACE_PREFIX = "wsu";
+    
+    /** */
     public static final String WS_POLICY_REFERENCE = "PolicyReference";
     
     /** */

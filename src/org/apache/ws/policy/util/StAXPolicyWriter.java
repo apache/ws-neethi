@@ -79,6 +79,13 @@ public class StAXPolicyWriter implements PolicyWriter {
         }
 
         if (policy.getId() != null) {
+        	
+        	
+        	writer.writeNamespace(PolicyConstants.WSU_NAMESPACE_PREFIX,
+                    PolicyConstants.WSU_NAMESPACE_URI);
+            writer.setPrefix(PolicyConstants.WSU_NAMESPACE_PREFIX,
+                    PolicyConstants.WSU_NAMESPACE_URI);
+        	
             writer.writeAttribute("wsu", PolicyConstants.WSU_NAMESPACE_URI,
                     "Id", policy.getId());
         }

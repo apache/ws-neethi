@@ -69,7 +69,13 @@ public class Policy extends AndCompositeAssertion implements Assertion {
     }
 
     public String getPolicyURI() {
-        return (xmlBase != null) ? xmlBase + "#" + id : "#" + id;
+    	if (id != null) {
+    		if (xmlBase != null) {
+    			return xmlBase + "#" + id;
+    		}
+    		return "#" + id;
+    	}
+    	return null;
     }
 
     public Assertion normalize() {
