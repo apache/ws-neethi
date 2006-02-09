@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 public class SchemaRegistry {
     private HashMap reg = new HashMap();
     
-    Element lookup(String uri) {
+    public Element lookup(String uri) {
         return (Element) reg.get(uri);
     }
     

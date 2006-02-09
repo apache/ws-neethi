@@ -32,8 +32,6 @@ import org.apache.ws.policy.util.PolicyRegistry;
 public class Policy extends AndCompositeAssertion implements Assertion {
     private Log log = LogFactory.getLog(this.getClass().getName());
 
-    private String policyURI = null;
-
     private String xmlBase = null;
 
     private String id = null;
