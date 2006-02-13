@@ -16,9 +16,9 @@
 
 package org.apache.ws.policy.util;
 
-import java.util.HashMap;
-
 import org.w3c.dom.Element;
+
+import java.util.HashMap;
 
 /**
  * @author Sanka Samaranayake (sanka@apache.org)
