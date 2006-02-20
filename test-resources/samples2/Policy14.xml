@@ -1,0 +1,6 @@
+<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" >
+  <!-- Policy14 -->
+  <wsp:ExactlyOne>
+    <wsp:All />
+  </wsp:ExactlyOne>
+</wsp:Policy>

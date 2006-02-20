@@ -1,0 +1,10 @@
+﻿<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" 
+            xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy" >
+  <!-- Policy19 -->
+  <wsrm:RMAssertion wsp:Optional="false">
+    <wsrm:InactivityTimeout Milliseconds="9000"/>
+    <wsrm:BaseRetransmissionInterval Milliseconds="1000"/>
+    <wsrm:ExponentialBackoff/>
+    <wsrm:AcknowledgementInterval Milliseconds="1000"/>
+  </wsrm:RMAssertion>
+</wsp:Policy>
