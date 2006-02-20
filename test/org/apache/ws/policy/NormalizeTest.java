@@ -39,7 +39,7 @@ public class NormalizeTest extends PolicyTestCase {
 		for (int i = 1; i < 25; i++) {
 
 			r1 = "samples" + File.separator + "test" + i + ".xml";
-			r2 = "normalize" + File.separator + "test" + i + ".xml";
+			r2 = "normalized" + File.separator + "test" + i + ".xml";
 
 			p1 = reader.readPolicy(getResource(r1));
 			p1 = (Policy) p1.normalize();
