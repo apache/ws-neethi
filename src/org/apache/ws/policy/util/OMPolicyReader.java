@@ -136,7 +136,7 @@ public class OMPolicyReader implements PolicyReader {
         String strValue = element.getText();
 
         if (strValue != null && strValue.length() != 0) {
-            result.setStrValue(strValue);
+            result.setStrValue(strValue.trim());
         }
 
         //CHECK ME

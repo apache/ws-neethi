@@ -16,6 +16,8 @@
 
 package org.apache.ws.policy;
 
+import java.util.List;
+
 import org.apache.ws.policy.util.PolicyRegistry;
 
 /**
@@ -92,4 +94,32 @@ public class PolicyReference implements Assertion {
     public void setNormalized(boolean flag) {
         throw new UnsupportedOperationException();
     }
+    
+	public void addTerm(Assertion assertion) {
+		throw new UnsupportedOperationException();
+	}
+	
+	public void addTerms(List assertions) {
+		throw new UnsupportedOperationException();
+	}
+	
+	public List getTerms() {
+		throw new UnsupportedOperationException();
+	}
+	
+	public boolean isEmpty() {
+		throw new UnsupportedOperationException();
+	}
+	
+	public boolean remove(Assertion assertion) {
+		throw new UnsupportedOperationException();
+	}
+	
+	public int size() {
+		throw new UnsupportedOperationException();
+	}
+	
+	public final short getType() {
+		return Assertion.POLIY_REFERCE_TYPE;
+	}
 }

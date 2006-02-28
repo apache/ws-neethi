@@ -15,6 +15,8 @@
  */
 package org.apache.ws.policy;
 
+import java.util.List;
+
 import org.apache.ws.policy.util.PolicyRegistry;
 
 /**
@@ -29,8 +31,14 @@ public interface Assertion {
     /** Defines the short value for ANDCompositeAssertion */                           
     public static final short COMPOSITE_AND_TYPE = 0x2;
     
-    /** Defines the short value for XORCompositeAssertion*/
+    /** Defines the short value for XORCompositeAssertion */
     public static final short COMPOSITE_XOR_TYPE = 0x3;
+    
+    /** Defines the short value for Policy Assertion */
+    public static final short COMPOSITE_POLICY_TYPE = 0x4;
+    
+    /** Defines the short value for PolicyReferece Assertion */
+    public static final short POLIY_REFERCE_TYPE = 0x5;
     
     /**
      * 
@@ -128,4 +136,44 @@ public interface Assertion {
      * @param parent the parent that should be parent of self 
      */
     public void setParent(Assertion parent);
+    
+    /**
+     * 
+     * @param assertion
+     */
+    public void addTerm(Assertion assertion);
+    
+    /**
+     * 
+     * @param assertions
+     */
+    public void addTerms(List assertions);
+    
+    /**
+     * 
+     * @return
+     */
+    public List getTerms();
+    
+    /**
+     * 
+     * @return
+     */
+    public boolean isEmpty();
+    
+    /**
+     * 
+     * @param assertion
+     * @return
+     */
+    public boolean remove(Assertion assertion) ;
+    
+    /**
+     * 
+     * @return
+     */
+    public int size();
+    
+    public short getType();
+    
 }

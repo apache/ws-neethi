@@ -100,7 +100,7 @@ public class WSSPolicyPrinter {
         prettyPrint(baos);
     }
 
-    void prettyPrint(ByteArrayOutputStream baos) {
+    public void prettyPrint(ByteArrayOutputStream baos) {
 
         ByteArrayInputStream stream = new ByteArrayInputStream(baos
                 .toByteArray());
