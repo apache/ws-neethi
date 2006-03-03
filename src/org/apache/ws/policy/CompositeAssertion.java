@@ -15,12 +15,11 @@
  */
 package org.apache.ws.policy;
 
-
 /**
- * CompositeAssertion interface is a marker interface for indecating which 
- * Assertions are CompositeAssertion type. 
+ * CompositeAssertion interface is a marker interface for indecating which
+ * Assertions are CompositeAssertion type.
  * 
  * @author Sanka Samaranayake (sanka@apache.org)
  */
-public interface CompositeAssertion extends Assertion {		
+public interface CompositeAssertion extends Assertion {
 }

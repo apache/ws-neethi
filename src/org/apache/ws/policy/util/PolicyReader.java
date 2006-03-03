@@ -21,8 +21,21 @@ import java.io.InputStream;
 import org.apache.ws.policy.Policy;
 
 /**
+ * PolicyReader is an interface which every PolicyReader must implement. It
+ * contains a single method to create a Policy object from an InputStream.
+ * 
  * @author Sanka Samaranayake (sanka@apache.org)
  */
 public interface PolicyReader {
-    public Policy readPolicy(InputStream inputStream) throws RuntimeException;
+
+	/**
+	 * Creates a Policy object from an InputStream.
+	 * 
+	 * @param inputStream
+	 *            the inputStream of the source file
+	 * @return a policy object constructed from the InputStream
+	 * @throws RuntimeException
+	 *             if an error occurs while constructing the Policy object
+	 */
+	public Policy readPolicy(InputStream inputStream) throws RuntimeException;
 }

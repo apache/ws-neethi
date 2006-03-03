@@ -27,8 +27,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.ws.policy.util.PolicyRegistry;
 
 /**
- * AndCompositeAssertion represents either policy or a single policy
- * alternative. It requires that all its terms are satisfied.
+ * AndCompositeAssertion requires that all of its terms are met.
+ * 
+ * Sanka Samaranayake (sanka@apache.org)
  */
 public class AndCompositeAssertion extends AbstractAssertion implements
 		CompositeAssertion {

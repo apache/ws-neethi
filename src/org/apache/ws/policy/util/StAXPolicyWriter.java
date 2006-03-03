@@ -35,230 +35,233 @@ import org.apache.ws.policy.PrimitiveAssertion;
 import org.apache.ws.policy.XorCompositeAssertion;
 
 /**
+ * StAXPolicyWriter implements PolicyWriter and provides different methods to
+ * create a Policy object. It uses StAX as its underlying mechanism to create
+ * XML elements.
+ * 
  * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class StAXPolicyWriter implements PolicyWriter {
 
-    private int num = 1;
+	private int num = 1;
 
-    StAXPolicyWriter() {
-    }
+	StAXPolicyWriter() {
+	}
 
-    public void writePolicy(Policy policy, OutputStream output) {
-        XMLStreamWriter writer = null;
-        try {
-            writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
-                    output);
-            writePolicy(policy, writer);
+	public void writePolicy(Policy policy, OutputStream output) {
+		XMLStreamWriter writer = null;
+		try {
+			writer = XMLOutputFactory.newInstance().createXMLStreamWriter(
+					output);
+			writePolicy(policy, writer);
 
-            writer.flush();
+			writer.flush();
 
-        } catch (XMLStreamException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+		} catch (XMLStreamException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 
-    public void writePolicy(Policy policy, XMLStreamWriter writer)
-            throws XMLStreamException {
-        String writerPerfix = writer
-                .getPrefix(PolicyConstants.WS_POLICY_NAMESPACE_URI);
+	public void writePolicy(Policy policy, XMLStreamWriter writer)
+			throws XMLStreamException {
+		String writerPerfix = writer
+				.getPrefix(PolicyConstants.WS_POLICY_NAMESPACE_URI);
 
-        if (writerPerfix != null) {
-            writer.writeStartElement(PolicyConstants.WS_POLICY_NAMESPACE_URI,
-                    PolicyConstants.WS_POLICY);
+		if (writerPerfix != null) {
+			writer.writeStartElement(PolicyConstants.WS_POLICY_NAMESPACE_URI,
+					PolicyConstants.WS_POLICY);
 
-        } else {
-            writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
-                    PolicyConstants.WS_POLICY,
-                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
-            writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
-                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
-            writer.setPrefix(PolicyConstants.WS_POLICY_PREFIX,
-                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+		} else {
+			writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
+					PolicyConstants.WS_POLICY,
+					PolicyConstants.WS_POLICY_NAMESPACE_URI);
+			writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
+					PolicyConstants.WS_POLICY_NAMESPACE_URI);
+			writer.setPrefix(PolicyConstants.WS_POLICY_PREFIX,
+					PolicyConstants.WS_POLICY_NAMESPACE_URI);
 
-        }
+		}
 
-        if (policy.getId() != null) {
-        	
-        	
-        	writer.writeNamespace(PolicyConstants.WSU_NAMESPACE_PREFIX,
-                    PolicyConstants.WSU_NAMESPACE_URI);
-            writer.setPrefix(PolicyConstants.WSU_NAMESPACE_PREFIX,
-                    PolicyConstants.WSU_NAMESPACE_URI);
-        	
-            writer.writeAttribute("wsu", PolicyConstants.WSU_NAMESPACE_URI,
-                    "Id", policy.getId());
-        }
+		if (policy.getId() != null) {
 
-        Iterator iterator = policy.getTerms().iterator();
-        while (iterator.hasNext()) {
-            Assertion term = (Assertion) iterator.next();
-            writeAssertion(term, writer);
-        }
+			writer.writeNamespace(PolicyConstants.WSU_NAMESPACE_PREFIX,
+					PolicyConstants.WSU_NAMESPACE_URI);
+			writer.setPrefix(PolicyConstants.WSU_NAMESPACE_PREFIX,
+					PolicyConstants.WSU_NAMESPACE_URI);
 
-        writer.writeEndElement();
-    }
+			writer.writeAttribute("wsu", PolicyConstants.WSU_NAMESPACE_URI,
+					"Id", policy.getId());
+		}
 
-    private void writeAssertion(Assertion assertion, XMLStreamWriter writer)
-            throws XMLStreamException {
-        if (assertion instanceof PrimitiveAssertion) {
-            writePrimitiveAssertion((PrimitiveAssertion) assertion, writer);
+		Iterator iterator = policy.getTerms().iterator();
+		while (iterator.hasNext()) {
+			Assertion term = (Assertion) iterator.next();
+			writeAssertion(term, writer);
+		}
 
-        } else if (assertion instanceof XorCompositeAssertion) {
-            writeXorCompositeAssertion((XorCompositeAssertion) assertion,
-                    writer);
+		writer.writeEndElement();
+	}
 
-        } else if (assertion instanceof PolicyReference) {
-            writePolicyReference((PolicyReference) assertion, writer);
+	private void writeAssertion(Assertion assertion, XMLStreamWriter writer)
+			throws XMLStreamException {
+		if (assertion instanceof PrimitiveAssertion) {
+			writePrimitiveAssertion((PrimitiveAssertion) assertion, writer);
 
-        } else if (assertion instanceof Policy) {
-            writePolicy((Policy) assertion, writer);
-        } else if (assertion instanceof AndCompositeAssertion) {
-            writeAndCompositeAssertion((AndCompositeAssertion) assertion,
-                    writer);
+		} else if (assertion instanceof XorCompositeAssertion) {
+			writeXorCompositeAssertion((XorCompositeAssertion) assertion,
+					writer);
 
-        } else {
-            throw new RuntimeException("unknown element type");
-        }
-    }
+		} else if (assertion instanceof PolicyReference) {
+			writePolicyReference((PolicyReference) assertion, writer);
 
-    private void writeAndCompositeAssertion(AndCompositeAssertion assertion,
-            XMLStreamWriter writer) throws XMLStreamException {
+		} else if (assertion instanceof Policy) {
+			writePolicy((Policy) assertion, writer);
+		} else if (assertion instanceof AndCompositeAssertion) {
+			writeAndCompositeAssertion((AndCompositeAssertion) assertion,
+					writer);
 
-        String writerPrefix = writer
-                .getPrefix(PolicyConstants.WS_POLICY_NAMESPACE_URI);
+		} else {
+			throw new RuntimeException("unknown element type");
+		}
+	}
 
-        if (writerPrefix == null) {
-            writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
-                    PolicyConstants.AND_COMPOSITE_ASSERTION,
-                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
-            writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
-                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
-            writer.setPrefix(PolicyConstants.WS_POLICY_PREFIX,
-                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+	private void writeAndCompositeAssertion(AndCompositeAssertion assertion,
+			XMLStreamWriter writer) throws XMLStreamException {
 
-        } else {
-            writer.writeStartElement(PolicyConstants.WS_POLICY_NAMESPACE_URI,
-                    PolicyConstants.AND_COMPOSITE_ASSERTION);
-        }
+		String writerPrefix = writer
+				.getPrefix(PolicyConstants.WS_POLICY_NAMESPACE_URI);
 
-        List terms = assertion.getTerms();
-        writeTerms(terms, writer);
+		if (writerPrefix == null) {
+			writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
+					PolicyConstants.AND_COMPOSITE_ASSERTION,
+					PolicyConstants.WS_POLICY_NAMESPACE_URI);
+			writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
+					PolicyConstants.WS_POLICY_NAMESPACE_URI);
+			writer.setPrefix(PolicyConstants.WS_POLICY_PREFIX,
+					PolicyConstants.WS_POLICY_NAMESPACE_URI);
 
-        writer.writeEndElement();
-    }
+		} else {
+			writer.writeStartElement(PolicyConstants.WS_POLICY_NAMESPACE_URI,
+					PolicyConstants.AND_COMPOSITE_ASSERTION);
+		}
 
-    private void writeXorCompositeAssertion(XorCompositeAssertion assertion,
-            XMLStreamWriter writer) throws XMLStreamException {
-        String writerPrefix = writer
-                .getPrefix(PolicyConstants.WS_POLICY_NAMESPACE_URI);
+		List terms = assertion.getTerms();
+		writeTerms(terms, writer);
 
-        if (writerPrefix == null) {
-            writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
-                    PolicyConstants.XOR_COMPOSITE_ASSERTION,
-                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
-            writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
-                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
-            writer.setPrefix(PolicyConstants.WS_POLICY_PREFIX,
-                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+		writer.writeEndElement();
+	}
 
-        } else {
-            writer.writeStartElement(PolicyConstants.WS_POLICY_NAMESPACE_URI,
-                    PolicyConstants.XOR_COMPOSITE_ASSERTION);
-        }
+	private void writeXorCompositeAssertion(XorCompositeAssertion assertion,
+			XMLStreamWriter writer) throws XMLStreamException {
+		String writerPrefix = writer
+				.getPrefix(PolicyConstants.WS_POLICY_NAMESPACE_URI);
 
-        List terms = assertion.getTerms();
-        writeTerms(terms, writer);
+		if (writerPrefix == null) {
+			writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
+					PolicyConstants.XOR_COMPOSITE_ASSERTION,
+					PolicyConstants.WS_POLICY_NAMESPACE_URI);
+			writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
+					PolicyConstants.WS_POLICY_NAMESPACE_URI);
+			writer.setPrefix(PolicyConstants.WS_POLICY_PREFIX,
+					PolicyConstants.WS_POLICY_NAMESPACE_URI);
 
-        writer.writeEndElement();
-    }
+		} else {
+			writer.writeStartElement(PolicyConstants.WS_POLICY_NAMESPACE_URI,
+					PolicyConstants.XOR_COMPOSITE_ASSERTION);
+		}
 
-    private void writePrimitiveAssertion(PrimitiveAssertion assertion,
-            XMLStreamWriter writer) throws XMLStreamException {
-        QName qname = assertion.getName();
+		List terms = assertion.getTerms();
+		writeTerms(terms, writer);
 
-        String writerPrefix = writer.getPrefix(qname.getNamespaceURI());
-        if (writerPrefix != null) {
-            writer.writeStartElement(qname.getNamespaceURI(), qname
-                    .getLocalPart());
-        } else {
-            String prefix = (qname.getPrefix() != null) ? qname.getPrefix()
-                    : generateNamespace();
-            writer.writeStartElement(prefix, qname.getLocalPart(), qname
-                    .getNamespaceURI());
-            writer.writeNamespace(prefix, qname.getNamespaceURI());
-            writer.setPrefix(prefix, qname.getNamespaceURI());
+		writer.writeEndElement();
+	}
 
-        }
+	private void writePrimitiveAssertion(PrimitiveAssertion assertion,
+			XMLStreamWriter writer) throws XMLStreamException {
+		QName qname = assertion.getName();
 
-        Hashtable attributes = assertion.getAttributes();
-        writeAttributes(attributes, writer);
+		String writerPrefix = writer.getPrefix(qname.getNamespaceURI());
+		if (writerPrefix != null) {
+			writer.writeStartElement(qname.getNamespaceURI(), qname
+					.getLocalPart());
+		} else {
+			String prefix = (qname.getPrefix() != null) ? qname.getPrefix()
+					: generateNamespace();
+			writer.writeStartElement(prefix, qname.getLocalPart(), qname
+					.getNamespaceURI());
+			writer.writeNamespace(prefix, qname.getNamespaceURI());
+			writer.setPrefix(prefix, qname.getNamespaceURI());
 
-        String text = (String) assertion.getStrValue();
-        if (text != null) {
-            writer.writeCharacters(text);
-        }
+		}
 
-        List terms = assertion.getTerms();
-        writeTerms(terms, writer);
+		Hashtable attributes = assertion.getAttributes();
+		writeAttributes(attributes, writer);
 
-        writer.writeEndElement();
-    }
+		String text = (String) assertion.getStrValue();
+		if (text != null) {
+			writer.writeCharacters(text);
+		}
 
-    public void writePolicyReference(PolicyReference assertion,
-            XMLStreamWriter writer) throws XMLStreamException {
+		List terms = assertion.getTerms();
+		writeTerms(terms, writer);
 
-        String writerPrefix = writer
-                .getPrefix(PolicyConstants.WS_POLICY_NAMESPACE_URI);
-        if (writerPrefix != null) {
-            writer.writeStartElement(PolicyConstants.WS_POLICY_NAMESPACE_URI,
-                    PolicyConstants.WS_POLICY_REFERENCE);
-        } else {
+		writer.writeEndElement();
+	}
 
-            writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
-                    PolicyConstants.WS_POLICY_REFERENCE,
-                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
-            writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
-                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
-            writer.setPrefix(PolicyConstants.WS_POLICY_PREFIX,
-                    PolicyConstants.WS_POLICY_NAMESPACE_URI);
+	public void writePolicyReference(PolicyReference assertion,
+			XMLStreamWriter writer) throws XMLStreamException {
 
-        }
-        writer.writeAttribute("URI", assertion.getPolicyURIString());
-        
-        writer.writeEndElement();
-    }
+		String writerPrefix = writer
+				.getPrefix(PolicyConstants.WS_POLICY_NAMESPACE_URI);
+		if (writerPrefix != null) {
+			writer.writeStartElement(PolicyConstants.WS_POLICY_NAMESPACE_URI,
+					PolicyConstants.WS_POLICY_REFERENCE);
+		} else {
 
-    private void writeTerms(List terms, XMLStreamWriter writer)
-            throws XMLStreamException {
+			writer.writeStartElement(PolicyConstants.WS_POLICY_PREFIX,
+					PolicyConstants.WS_POLICY_REFERENCE,
+					PolicyConstants.WS_POLICY_NAMESPACE_URI);
+			writer.writeNamespace(PolicyConstants.WS_POLICY_PREFIX,
+					PolicyConstants.WS_POLICY_NAMESPACE_URI);
+			writer.setPrefix(PolicyConstants.WS_POLICY_PREFIX,
+					PolicyConstants.WS_POLICY_NAMESPACE_URI);
 
-        Iterator iterator = terms.iterator();
-        while (iterator.hasNext()) {
-            Assertion assertion = (Assertion) iterator.next();
-            writeAssertion(assertion, writer);
-        }
-    }
+		}
+		writer.writeAttribute("URI", assertion.getPolicyURIString());
 
-    private void writeAttributes(Hashtable attributes, XMLStreamWriter writer)
-            throws XMLStreamException {
+		writer.writeEndElement();
+	}
 
-        Iterator iterator = attributes.keySet().iterator();
-        while (iterator.hasNext()) {
-            QName qname = (QName) iterator.next();
-            String value = (String) attributes.get(qname);
+	private void writeTerms(List terms, XMLStreamWriter writer)
+			throws XMLStreamException {
 
-            String prefix = qname.getPrefix();
-            if (prefix != null) {
-                writer.writeAttribute(prefix, qname.getNamespaceURI(), qname
-                        .getLocalPart(), value);
-            } else {
-                writer.writeAttribute(qname.getNamespaceURI(), qname
-                        .getLocalPart(), value);
-            }
-        }
-    }
+		Iterator iterator = terms.iterator();
+		while (iterator.hasNext()) {
+			Assertion assertion = (Assertion) iterator.next();
+			writeAssertion(assertion, writer);
+		}
+	}
 
-    private String generateNamespace() {
-        return "ns" + num++;
-    }
+	private void writeAttributes(Hashtable attributes, XMLStreamWriter writer)
+			throws XMLStreamException {
+
+		Iterator iterator = attributes.keySet().iterator();
+		while (iterator.hasNext()) {
+			QName qname = (QName) iterator.next();
+			String value = (String) attributes.get(qname);
+
+			String prefix = qname.getPrefix();
+			if (prefix != null) {
+				writer.writeAttribute(prefix, qname.getNamespaceURI(), qname
+						.getLocalPart(), value);
+			} else {
+				writer.writeAttribute(qname.getNamespaceURI(), qname
+						.getLocalPart(), value);
+			}
+		}
+	}
+
+	private String generateNamespace() {
+		return "ns" + num++;
+	}
 }

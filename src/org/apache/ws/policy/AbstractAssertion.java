@@ -21,21 +21,21 @@ import java.util.List;
 
 /**
  * AbstractAssertion provides the default implementation of some basic functions
- * definded in Assertion interface.  
- *  
+ * definded in Assertion interface.
+ * 
  * @author Sanka Samaranayake (sanka@apache.org)
  */
 public abstract class AbstractAssertion implements Assertion {
-	
+
 	/** Flag to mark whether this assertion is in normalize format */
 	protected boolean flag = false;
-	
+
 	/** To store terms of this assertion */
 	protected ArrayList childTerms = new ArrayList();
-	
+
 	/** To refer to the parent of this assertion */
 	protected Assertion parent = null;
-	
+
 	/**
 	 * 
 	 * Default implementation of normalize() operation.
@@ -45,37 +45,39 @@ public abstract class AbstractAssertion implements Assertion {
 	public Assertion normalize() throws UnsupportedOperationException {
 		return normalize(null);
 	}
-	
+
 	/**
 	 * Default implementation of intersect(Assertion) operation.
 	 * 
-	 * @param assertion the assertion to intersect with this object.
-	 * @return an assertion which is equivalent to the intersect of this 
+	 * @param assertion
+	 *            the assertion to intersect with this object.
+	 * @return an assertion which is equivalent to the intersect of this
 	 *         assertion and the argument.
-	 * 
+	 *  
 	 */
 	public Assertion intersect(Assertion assertion)
 			throws UnsupportedOperationException {
 		return intersect(assertion, null);
 	}
-	
+
 	/**
 	 * Default implementation of merge(Assertion) operation.
 	 * 
-	 * @param assertion the assertion to merge with this object.
-	 * @return an assertion which is equivalent to the merge of this assertion 
+	 * @param assertion
+	 *            the assertion to merge with this object.
+	 * @return an assertion which is equivalent to the merge of this assertion
 	 *         and the argument.
 	 */
 	public Assertion merge(Assertion assertion)
 			throws UnsupportedOperationException {
 		return merge(assertion, null);
 	}
-	
+
 	/**
 	 * Returns true if this assertion is in normalzied format.
 	 * 
-	 * @return true if this assertion is in normalized format. 
-	 */	
+	 * @return true if this assertion is in normalized format.
+	 */
 	public boolean isNormalized() {
 		return flag;
 	}
@@ -83,20 +85,21 @@ public abstract class AbstractAssertion implements Assertion {
 	/**
 	 * Marks this assertion as it is in normalized format.
 	 * 
-	 * @param flag which marks this object as in its normalized format or not. 
+	 * @param flag
+	 *            which marks this object as in its normalized format or not.
 	 */
 	public void setNormalized(boolean flag) {
 		this.flag = flag;
-		
+
 		for (Iterator iterator = getTerms().iterator(); iterator.hasNext();) {
-			((Assertion) iterator.next()).setNormalized(flag);			
+			((Assertion) iterator.next()).setNormalized(flag);
 		}
 	}
-	
+
 	/**
 	 * Returns true if this assertion object has a parent.
 	 * 
-	 * @return returns true if this has a parent. 
+	 * @return returns true if this has a parent.
 	 */
 	public boolean hasParent() {
 		return (parent != null);
@@ -114,7 +117,8 @@ public abstract class AbstractAssertion implements Assertion {
 	/**
 	 * Sets the parent of this assertion.
 	 * 
-	 * @param parent of this assertion.
+	 * @param parent
+	 *            of this assertion.
 	 */
 	public void setParent(Assertion parent) {
 		this.parent = parent;
@@ -123,16 +127,18 @@ public abstract class AbstractAssertion implements Assertion {
 	/**
 	 * Adds an assertion as a term of this assertion.
 	 * 
-	 * @param assertion the term to add
+	 * @param assertion
+	 *            the term to add
 	 */
 	public void addTerm(Assertion assertion) {
 		childTerms.add(assertion);
 	}
-	
+
 	/**
 	 * Adds a list of assertions as terms of this assertion.
 	 * 
-	 * @param assertions list of terms to add
+	 * @param assertions
+	 *            list of terms to add
 	 */
 	public void addTerms(List assertions) {
 		childTerms.addAll(assertions);
@@ -141,7 +147,8 @@ public abstract class AbstractAssertion implements Assertion {
 	/**
 	 * Returns the list of terms of this assertion.
 	 * 
-	 * @param a list of terms of this assertion.
+	 * @param a
+	 *            list of terms of this assertion.
 	 */
 	public List getTerms() {
 		return childTerms;
@@ -151,16 +158,17 @@ public abstract class AbstractAssertion implements Assertion {
 	 * Returns true if this assertion has no terms.
 	 * 
 	 * @return if this assertion has no terms.
-	 * 
+	 *  
 	 */
 	public boolean isEmpty() {
 		return childTerms.isEmpty();
 	}
-	
+
 	/**
 	 * Remove the geven term from the set of terms of this assertion.
 	 * 
-	 * @param returns true if the assertion is removed.
+	 * @param returns
+	 *            true if the assertion is removed.
 	 */
 	public boolean remove(Assertion assertion) {
 		return childTerms.remove(assertion);

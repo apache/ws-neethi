@@ -17,20 +17,20 @@
 package org.apache.ws.policy.util;
 
 /**
- * StringUtils provides few utility functions for other classes in the 
+ * StringUtils provides few utility functions for other classes in the
  * framework.
  */
 public class StringUtils {
 
-    public static String getChars(int noOfChars, char theChar) {
-        if (noOfChars <= 0) {
-            return "";
-        }
-        StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < noOfChars; i++) {
-            buf.append(theChar);
-        }
-        return buf.toString();
-    }
+	public static String getChars(int noOfChars, char theChar) {
+		if (noOfChars <= 0) {
+			return "";
+		}
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < noOfChars; i++) {
+			buf.append(theChar);
+		}
+		return buf.toString();
+	}
 
 }

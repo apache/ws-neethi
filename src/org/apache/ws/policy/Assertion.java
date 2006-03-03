@@ -22,6 +22,8 @@ import org.apache.ws.policy.util.PolicyRegistry;
 /**
  * Assertion is an interface which all constructs of policy must implement. It
  * defines three policy operations that all policy constructs must support.
+ * 
+ * Sanka Samaranayake (sanka@apache.org)
  */
 
 public interface Assertion {
@@ -121,13 +123,14 @@ public interface Assertion {
 
 	/**
 	 * Returns true if the assertion is in normalized form.
-	 *  
+	 * 
 	 * @return true if the assertion is in normalized form.
 	 */
 	public boolean isNormalized();
 
 	/**
 	 * Marks this assertion as in normalized form.
+	 * 
 	 * @param flag
 	 */
 	public void setNormalized(boolean flag);
@@ -157,21 +160,23 @@ public interface Assertion {
 	/**
 	 * Adds an assertion as a term of this assertion.
 	 * 
-	 * @param assertion the assertion to add as a term
+	 * @param assertion
+	 *            the assertion to add as a term
 	 */
 	public void addTerm(Assertion assertion);
 
 	/**
 	 * Adds a list of assertions as terms of this assertion.
 	 * 
-	 * @param assertions the list of assertions to add as terms
+	 * @param assertions
+	 *            the list of assertions to add as terms
 	 */
 	public void addTerms(List assertions);
 
 	/**
 	 * Returns the list of terms of this assertion.
 	 * 
-	 * @return list of terms 
+	 * @return list of terms
 	 */
 	public List getTerms();
 
@@ -185,7 +190,8 @@ public interface Assertion {
 	/**
 	 * Removes the specified assertion from the terms list.
 	 * 
-	 * @param assertion the assertion to remove from the terms list.
+	 * @param assertion
+	 *            the assertion to remove from the terms list.
 	 * @return true if it is removed from the child list.
 	 */
 	public boolean remove(Assertion assertion);
@@ -199,15 +205,15 @@ public interface Assertion {
 
 	/**
 	 * Returns a short type which describes the type of the assertion.
-	 *  
+	 * 
 	 * @return a short value of one of following values:
 	 * 
-	 *			PRIMITIVE_TYPE     : if the assertion is a PrimitiveAssertion
-	 * 			COMPOSITE_AND_TYPE : if the assertion is a AndCompositeAssertion
-	 *          COMPOSITE_XOR_TYPE : if the assertion is a XorCompositeAssertion
-	 * 			COMPOSITE_POLICY_TYPE : if the assertion is a Policy
-	 * 			POLICY_REFERENCE_TYPE : if the assertion is a PolicyReferece 			    
+	 * PRIMITIVE_TYPE : if the assertion is a PrimitiveAssertion
+	 * COMPOSITE_AND_TYPE : if the assertion is a AndCompositeAssertion
+	 * COMPOSITE_XOR_TYPE : if the assertion is a XorCompositeAssertion
+	 * COMPOSITE_POLICY_TYPE : if the assertion is a Policy
+	 * POLICY_REFERENCE_TYPE : if the assertion is a PolicyReferece
 	 */
 	public short getType();
-	
+
 }

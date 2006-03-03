@@ -28,14 +28,16 @@ import org.apache.ws.policy.util.PolicyRegistry;
 import org.apache.ws.policy.util.PolicyUtil;
 
 /**
- * PrimitiveAssertion wraps an assertion which is indivisible. Such assertion
- * require domain specific knowledge for further processing. Hence this class
- * seperates that domain specific knowledge from generic framework.
+ * PrimitiveAssertion wraps an assertion which contain domain specific
+ * knowledge. This type of an assertion should only be evaluated by a component
+ * which contains the required knowledge. For instance a PrimitiveAssertion
+ * which contains a WSSecurity policy assertionshould be processed only by the
+ * security module.
  * 
  * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
-	
+
 	private Log log = LogFactory.getLog(this.getClass().getName());
 
 	private Assertion owner = null;
@@ -75,13 +77,14 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 		log.debug("Enter: PrimitveAssertion:intersect");
 
 		Assertion normalizedMe = (isNormalized()) ? this : normalize(reg);
-		
-		if (! (normalizedMe instanceof PrimitiveAssertion)) {
+
+		if (!(normalizedMe instanceof PrimitiveAssertion)) {
 			return normalizedMe.intersect(assertion, reg);
 		}
-		
-		Assertion target = (assertion.isNormalized()) ? assertion : assertion.normalize(reg);
-		
+
+		Assertion target = (assertion.isNormalized()) ? assertion : assertion
+				.normalize(reg);
+
 		// Am not a primitive assertion anymore ..
 		if (!(assertion instanceof PrimitiveAssertion)) {
 			return normalizedMe.intersect(assertion, reg);
@@ -128,10 +131,10 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 
 		///////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////
-		
+
 		PrimitiveAssertion PRIMITIVE_A, PRIMITIVE_B = null;
 		List primListA, primListB;
-		
+
 		if (selfChildTerms.size() > argChildTerms.size()) {
 			primListA = selfChildTerms;
 			primListB = argChildTerms;
@@ -139,14 +142,14 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 			primListA = argChildTerms;
 			primListB = selfChildTerms;
 		}
-		
+
 		boolean isIntersect = false;
-		
+
 		for (Iterator iterator = primListA.iterator(); iterator.hasNext();) {
 			PRIMITIVE_A = (PrimitiveAssertion) iterator.next();
-			
+
 			boolean found = false;
-			
+
 			for (Iterator iterator2 = primListB.iterator(); iterator2.hasNext();) {
 				PRIMITIVE_B = (PrimitiveAssertion) iterator2.next();
 				if (PRIMITIVE_A.getName().equals(PRIMITIVE_B.getName())) {
@@ -154,34 +157,20 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 					break;
 				}
 			}
-			
+
 			if (!found) {
 				return new XorCompositeAssertion();
 			}
-			
+
 			if (PRIMITIVE_A.intersect(PRIMITIVE_B) instanceof XorCompositeAssertion) {
 				return new XorCompositeAssertion();
 			}
 		}
-		
 
 		AndCompositeAssertion andCompositeAssertion = new AndCompositeAssertion();
 		andCompositeAssertion.addTerm(arg);
 		andCompositeAssertion.addTerm(self);
 		return andCompositeAssertion;
-
-		
-		///////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////
-//		if (PolicyUtil.matchByQName(argChildTerms, selfChildTerms)) {
-//
-//			AndCompositeAssertion andCompositeAssertion = new AndCompositeAssertion();
-//			andCompositeAssertion.addTerm(arg);
-//			andCompositeAssertion.addTerm(self);
-//			return andCompositeAssertion;
-//		}
-//
-//		return new XorCompositeAssertion();
 	}
 
 	public Assertion intersect(Assertion assertion)
@@ -281,8 +270,8 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 		}
 
 		Policy policyTerm = PolicyUtil.getSinglePolicy(policyTerms, reg);
-		Assertion xorTerm = (XorCompositeAssertion) policyTerm
-				.getTerms().get(0);
+		Assertion xorTerm = (XorCompositeAssertion) policyTerm.getTerms()
+				.get(0);
 
 		List ANDs = xorTerm.getTerms();
 
@@ -374,9 +363,9 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 	public void addTerm(Assertion term) {
 		terms.add(term);
 	}
-	
+
 	public void addTerms(List terms) {
-		terms.addAll(terms);		
+		terms.addAll(terms);
 	}
 
 	public boolean isNormalized() {
@@ -430,7 +419,7 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 	public int size() {
 		return terms.size();
 	}
-	
+
 	private Policy getSinglePolicy(List childTerms) {
 		Policy policy = new Policy();
 		XorCompositeAssertion xor = new XorCompositeAssertion();
@@ -451,7 +440,7 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 		return ((AndCompositeAssertion) ((XorCompositeAssertion) policy
 				.getTerms().get(0)).getTerms().get(0)).getTerms();
 	}
-	
+
 	public final short getType() {
 		return Assertion.PRIMITIVE_TYPE;
 	}

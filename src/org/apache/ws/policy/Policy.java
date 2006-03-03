@@ -26,8 +26,8 @@ import org.apache.ws.policy.util.PolicyRegistry;
 
 /**
  * Policy class is the runtime representation of a policy. It provides a
- * convenient model to store process any policy. Policy object requires that all 
- * its terms are met.   
+ * convenient model to store process any policy. Policy object requires that all
+ * its terms are met.
  */
 public class Policy extends AbstractAssertion implements CompositeAssertion {
 	private Log log = LogFactory.getLog(this.getClass().getName());
@@ -42,12 +42,12 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
 	 */
 	public Policy() {
 	}
-	
-	
+
 	/**
 	 * Creates a policy object with the specified Id
 	 * 
-	 * @param id a string as the id
+	 * @param id
+	 *            a string as the id
 	 */
 	public Policy(String id) {
 		this(null, id);
@@ -55,10 +55,12 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
 	}
 
 	/**
-	 * Creates a policy object with the specified xml-base and id. 
+	 * Creates a policy object with the specified xml-base and id.
 	 * 
-	 * @param xmlBase the xml-base
-	 * @param id a string as the id 
+	 * @param xmlBase
+	 *            the xml-base
+	 * @param id
+	 *            a string as the id
 	 */
 	public Policy(String xmlBase, String id) {
 		this.xmlBase = xmlBase;
@@ -69,15 +71,16 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
 	/**
 	 * Set the xml-base of the policy object
 	 * 
-	 * @param xmlBase the xml base of the policy object
+	 * @param xmlBase
+	 *            the xml base of the policy object
 	 */
 	public void setBase(String xmlBase) {
 		this.xmlBase = xmlBase;
 	}
 
 	/**
-	 * Returns the xml-base of the policy object. Returns null if
-	 * no xml-base is set.
+	 * Returns the xml-base of the policy object. Returns null if no xml-base is
+	 * set.
 	 * 
 	 * @return xml base of the policy object
 	 */
@@ -104,9 +107,9 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
 	}
 
 	/**
-	 * Returns a String which uniquely identify the policy object. It has the format of
-	 * {$xmlBase}#{$id}. If the xmlBase is null it will return #{$id} as the URI String.
-	 * If the Id is null, this will return.
+	 * Returns a String which uniquely identify the policy object. It has the
+	 * format of {$xmlBase}#{$id}. If the xmlBase is null it will return #{$id}
+	 * as the URI String. If the Id is null, this will return.
 	 * 
 	 * @return a String which uniquely identify the policy object.
 	 */
@@ -350,7 +353,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
 	}
 
 	/**
-	 * Returns a short value which indicates this is a Policy.  
+	 * Returns a short value which indicates this is a Policy.
 	 */
 	public final short getType() {
 		return Assertion.COMPOSITE_POLICY_TYPE;

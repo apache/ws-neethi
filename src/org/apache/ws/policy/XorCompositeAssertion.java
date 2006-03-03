@@ -24,9 +24,9 @@ import org.apache.commons.logging.Log;
 import org.apache.ws.policy.util.PolicyRegistry;
 
 /**
- * XORCompositeAssertion represents a bunch of policy alternatives. It requires
- * that exactly one of its terms (policy alternative) is statisfied.
- *  
+ * XorCompositeAssertion requires that exactly one of its terms are met.
+ * 
+ * Sanka Samaranayake (sanka@apache.org)
  */
 public class XorCompositeAssertion extends AbstractAssertion implements
 		CompositeAssertion {
@@ -114,119 +114,77 @@ public class XorCompositeAssertion extends AbstractAssertion implements
 		short type = target.getType();
 
 		switch (type) {
-		
+
 		case Assertion.COMPOSITE_POLICY_TYPE: {
 			Policy nPOLICY = new Policy();
 			nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms()
 					.get(0)).intersect(target));
 			return nPOLICY;
 		}
-		
+
 		case Assertion.COMPOSITE_XOR_TYPE: {
 			XorCompositeAssertion nXOR = new XorCompositeAssertion();
 
 			Assertion asser;
 			AndCompositeAssertion AND;
-			
-			for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator.hasNext(); ) {
+
+			for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator
+					.hasNext();) {
 				AND = (AndCompositeAssertion) iterator.next();
-				
-				for (Iterator iterator2 = target.getTerms().iterator(); iterator2.hasNext(); ) {
-					asser = AND.intersect((AndCompositeAssertion) iterator2.next());
-					
+
+				for (Iterator iterator2 = target.getTerms().iterator(); iterator2
+						.hasNext();) {
+					asser = AND.intersect((AndCompositeAssertion) iterator2
+							.next());
+
 					if (asser instanceof AndCompositeAssertion) {
 						nXOR.addTerm(asser);
 					}
 				}
 			}
-			
+
 			return nXOR;
 		}
-		
-		case Assertion.COMPOSITE_AND_TYPE : {
+
+		case Assertion.COMPOSITE_AND_TYPE: {
 			XorCompositeAssertion nXOR = new XorCompositeAssertion();
 			Assertion asser;
-			
-			for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator.hasNext();) {
-				asser = ((AndCompositeAssertion) iterator.next()).intersect(target);
-				
+
+			for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator
+					.hasNext();) {
+				asser = ((AndCompositeAssertion) iterator.next())
+						.intersect(target);
+
 				if (asser instanceof AndCompositeAssertion) {
 					nXOR.addTerm(asser);
 				}
 			}
 			return nXOR;
 		}
-		
+
 		case Assertion.PRIMITIVE_TYPE: {
 			XorCompositeAssertion nXOR = new XorCompositeAssertion();
-			
+
 			Assertion asser;
-			
-			for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator.hasNext(); ) {
-				asser = ((AndCompositeAssertion) iterator.next()).intersect(target);
-				
+
+			for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator
+					.hasNext();) {
+				asser = ((AndCompositeAssertion) iterator.next())
+						.intersect(target);
+
 				if (asser instanceof AndCompositeAssertion) {
 					nXOR.addTerm(asser);
 				}
 			}
 			return nXOR;
 		}
-		
+
 		default: {
-			throw new IllegalArgumentException("intersect for assertion type " + target.getClass().getName() + " not defined");
+			throw new IllegalArgumentException("intersect for assertion type "
+					+ target.getClass().getName() + " not defined");
 		}
-		
+
 		}
-		
-		
-//
-//		XorCompositeAssertion result = new XorCompositeAssertion();
-//
-//		if (assertion instanceof PrimitiveAssertion) {
-//
-//			Iterator iterator = normalizedMe.getTerms().iterator();
-//
-//			while (iterator.hasNext()) {
-//				AndCompositeAssertion andTerm = (AndCompositeAssertion) iterator
-//						.next();
-//				Assertion value = andTerm.intersect(assertion);
-//				if (value instanceof AndCompositeAssertion) {
-//					result.addTerm(value);
-//				}
-//			}
-//
-//		} else {
-//
-//			Iterator iterator = normalizedMe.getTerms().iterator();
-//			while (iterator.hasNext()) {
-//				AndCompositeAssertion andTerm = (AndCompositeAssertion) iterator
-//						.next();
-//
-//				if (target instanceof AndCompositeAssertion) {
-//					Assertion value = andTerm.intersect(target);
-//
-//					if (value instanceof AndCompositeAssertion) {
-//						result.addTerm(value);
-//					}
-//
-//				} else if (target instanceof XorCompositeAssertion) {
-//
-//					Iterator andTerms = target.getTerms().iterator();
-//
-//					while (andTerms.hasNext()) {
-//						AndCompositeAssertion tAndTerm = (AndCompositeAssertion) andTerms
-//								.next();
-//						Assertion value = andTerm.intersect(tAndTerm);
-//
-//						if (value instanceof AndCompositeAssertion) {
-//							result.addTerm(value);
-//						}
-//					}
-//				}
-//			}
-//		}
-//
-//		return result;
 	}
 
 	public Assertion merge(Assertion assertion, PolicyRegistry reg) {
@@ -268,7 +226,7 @@ public class XorCompositeAssertion extends AbstractAssertion implements
 				}
 
 				if (target.isEmpty() && AND.isEmpty()) { // FIXME is this a
-														 // hack?
+					// hack?
 					/*
 					 * " <wsp:ExactlyOne> <wsp:All/>
 					 * </wsp:ExactlyOne>".intersect(" <wsp:ExactlyOne/>")
