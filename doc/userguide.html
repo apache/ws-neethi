@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+       "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WS Policy User's Guide</title>
+  <meta name="generator" content="amaya 9.2.1, see http://www.w3.org/Amaya/"
+  />
+</head>
+
+<body xml:lang="en">
+<h1>Apache Web Services Policy User's Guide:</h1>
+
+<h4>- Version 0.90 Release</h4>
+
+<p>This document will instruct you how to use WS-Policy model, taking you
+step by step through the process using a simple sample.</p>
+
+<p>Send your feedback to: <a
+href="mailto:commons-dev@ws.apache.org">commons-dev@ws.apache.org</a> (Prefix
+the subject with [Policy])</p>
+<p>To subscribe to developer mailing list see <a href="index.html#mailing">here</a></p>
+
+<h2>Content</h2>
+<ol>
+  <li><a href="#create">Create a policy object</a>
+    <ul>
+      <li><a href="#policydoc">Create a policy object by reading a policy document</a>
+        <ul>
+          <li><a href="#policyreader">How to create a PolicyReader</a></li>
+          <li><a href="#feedpolicydoc">Feed the policy document to PolicyReader as an
+            inputStream</a></li>
+        </ul>
+      </li>
+      <li><a href="#program">Create a policy object programmatically.</a></li>
+    </ul>
+  </li>
+  <li><a href="#write">Write a policy object</a></li>
+  <li><a href="#normalize">Normalization</a></li>
+  <li><a href="#merge">Merge policy objects</a></li>
+  <li><a href="#intersect">Intersect policy objects</a></li>
+</ol>
+<a name="create"></a>
+<h2>Create a policy object</h2>
+
+<p>You can create a policy obejct using one of the following two methods</p>
+<ol>
+  <li><a href="#policydoc">Create a policy object by redaing a policy document</a></li>
+  <li><a href="#program">Create a policy object programmatically</a></li>
+</ol>
+<a name="policydoc"></a>
+<h3>Create a policy object by reading a policy document</h3>
+
+<p>The following steps need to be taken to create a policy object from a
+policy document</p>
+<ol>
+  <li><a href="#policyreader">Create a PolicyReader</a> - This is the class that creates a policy object
+    using an InputStream.</li>
+  <li><a href="#feedpolicydoc">Feed the policy document to PolicyReader as an InputStream</a>-This will
+    return a policy object</li>
+</ol>
+<a name="policyreader"></a>
+<h4>1. How to create a PolicyReader</h4>
+<p>PolicyReader is the class that creates a policy object using an
+InputStream.</p>
+<pre>PolicyReader reader =
+PolicyFactory.getPolicyReader(PolicyFactory.OM_POLICY_READER);
+
+// or
+
+PolicyReader reader =
+PolicyFactory.getPolicyReader(PolicyFactory.DOM_POLICY_READER);</pre>
+<a name="feedpolicydoc"></a>
+<h4>2. Feed the policy document to PolicyReader as an InputStream.</h4>
+
+<p>This step will return a policy object.</p>
+<pre>String pathToPolicyFile = " /home/ ../Policy1.xml";
+
+FileInputStream fis = new FileInputStream(pathToPolicyFile);
+
+Policy policy = reader.readPolicy(fis);</pre>
+<a name="program"></a>
+<h3>Create a policy object programmatically.</h3>
+<a name="policy"></a>
+<p>Lets consider the sample policy below.</p>
+<pre>&lt;wsp:Policy&gt;
+   &lt;wsp:ExactlyOne&gt; // Corresponds to XorCompositeAssertion
+   &lt;wsp:All&gt; // Corresponds to AndCompositeAssertion
+     &lt;ns1:TestAssertion&gt;
+     TestAssertion1
+     &lt;/ns:TestAssertion&gt;
+   &lt;/wsp:All&gt;
+   &lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;</pre>
+
+<p>Now lets create programmatically the policy object which represents the
+above policy</p>
+<pre>Policy p = new Policy(); // will give you the following element
+
+&lt;wsp:Policy&gt; &lt;/wsp:Policy&gt;
+
+XorCompositeAssertion x1 = new XorCompositeAssertion();
+p.addTerm(x1); //will give you XorCompositeAssertion as seen below
+
+&lt;wsp:Policy&gt;
+&lt;wsp:ExactlyOne&gt;....&lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;
+
+AndCompositeAssertion a1 = new AndCompositeAssertion();
+x1.addTerm(a1);// will give you AndCompositeAssertion as seen below
+
+&lt;wsp:Policy&gt;
+&lt;wsp:ExactlyOne&gt;
+&lt;wsp:All&gt;...&lt;/wsp:All&gt;
+&lt;/wsp:ExactlyOne&gt;
+&lt;/wsp:Policy&gt;
+
+QName name = new QName("Test", "http://tests.org/tests", "ns1");
+PrimitiveAssertion prim1 = new PrimitiveAssertion(name);
+prim1.setStrValue("MyTestAssertion");
+a1.addTerm(prim1); //will give you the <a href="#policy">complete policy</a></pre>
+<a name="write"></a>
+<h2>Write a policy object</h2>
+<p>The following code will achieve this task</p>
+<pre>String pathToOutFile = "/home/... /Policy2.xml";
+
+FileOutputStream fos = new FileOutputStream(pathToOutFile);
+
+PolicyWriter writer =
+PolicyFactory.getPolicyWriter(PolicyFactory.StAX_POLICY_WRITER);
+
+writer.writePolicy(policy, fos );</pre>
+<a name="normalize"></a>
+<h2>Normalization</h2>
+<p>The following code will achieve policy normalization</p>
+<pre>Policy policy1 = reader.readPolicy(...);
+
+Policy normalized = (Policy) policy1.normalize();</pre>
+<a name="merge"></a>
+<h2>Merge policy objects</h2>
+<p>The following code will merge two policy objects</p>
+<pre>Policy policy1 = reader.readPolicy(...);
+
+Policy policy2 = reader.readPolicy(...);
+
+Policy merged = (Policy) policy1.merge(policy2);</pre>
+<a name="intersect"></a>
+<h2>Intersect policy objects</h2>
+<p>The following code will intersect two policy objects</p>
+<pre>Policy policy1 = reader.readPolicy(..)
+
+Policy policy2 = reader.readPolicy(..)
+
+Policy intersected = (Policy) policy1.intersect(policy2);</pre>
+</body>
+</html>
