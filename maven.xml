@@ -28,6 +28,9 @@
     xmlns:velocity="jelly:velocity"
     >
 
+    <j:set var="dist.name" value="${pom.artifactId}-${pom.currentVersion}"/>
+    <ant:property name="build.dist.dir" value="${maven.build.dir}/dist"/>
+    
     <!-- ==================== -->
     <!-- Default Global Goals -->
     <!-- ==================== -->
@@ -44,5 +47,37 @@
         <attainGoal name="clean"/>
         <attainGoal name="build"/>
     </goal>
-
+    
+    <!-- ================================================================ -->
+    <!--- Create the Source Distribution -->
+    <!-- ================================================================ -->
+    
+    <goal name="dist-src">
+        <ant:property name="dist.src.tmp.dir" value="${build.dist.dir}/tmp"/>
+	
+	<mkdir dir="${build.dist.dir}" />
+	
+	<ant:copy todir="${dist.src.tmp.dir}">
+		<ant:fileset dir=".">
+			<ant:include name="**"/>
+			<ant:exclude name="**/target/**"/>
+			<ant:exclude name="**/.svn/**"/>
+			<ant:exclude name="**/bin/**"/>
+			<ant:exclude name=".*"/>
+			<!-- <ant:exclude name="**/*.license"/> -->
+		</ant:fileset>
+        </ant:copy>
+	
+	<ant:zip file="${build.dist.dir}/${dist.name}-src.zip" basedir="${dist.src.tmp.dir}"/>
+	
+	<ant:tar tarfile="${build.dist.dir}/${dist.name}-src.tar" basedir="${dist.src.tmp.dir}"/>
+		
+	<ant:gzip src="${build.dist.dir}/${dist.name}-src.tar" zipfile="${build.dist.dir}/${dist.name}-src.tar.gz"/>
+	 
+	<ant:delete dir = "${dist.src.tmp.dir}"/>
+	
+	<ant:delete file="${build.dist.dir}/${dist.name}-src.tar"/>
+	
+     </goal>
+ 
 </project>
