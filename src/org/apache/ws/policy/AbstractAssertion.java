@@ -121,7 +121,7 @@ public abstract class AbstractAssertion implements Assertion {
 	}
 
 	/**
-	 * Adds a terms to this assertion.
+	 * Adds an assertion as a term of this assertion.
 	 * 
 	 * @param assertion the term to add
 	 */
@@ -130,7 +130,7 @@ public abstract class AbstractAssertion implements Assertion {
 	}
 	
 	/**
-	 * Adds a list of terms to this assertion.
+	 * Adds a list of assertions as terms of this assertion.
 	 * 
 	 * @param assertions list of terms to add
 	 */

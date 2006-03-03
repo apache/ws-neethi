@@ -26,8 +26,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ws.policy.util.PolicyRegistry;
 
-import sun.awt.print.resources.printcontrol;
-
 /**
  * AndCompositeAssertion represents either policy or a single policy
  * alternative. It requires that all its terms are satisfied.
@@ -78,110 +76,112 @@ public class AndCompositeAssertion extends AbstractAssertion implements
 		short type = target.getType();
 
 		switch (type) {
-		
-			case Assertion.COMPOSITE_POLICY_TYPE: {
-				Policy nPOLICY = new Policy();
-				nPOLICY
-						.addTerm(normalizedMe
-								.intersect((XorCompositeAssertion) target
-										.getTerms().get(0)));
-				return nPOLICY;
-			}
-	
-			case Assertion.COMPOSITE_XOR_TYPE: {
-				XorCompositeAssertion nXOR = new XorCompositeAssertion();
-	
-				for (Iterator iterator = target.getTerms().iterator(); iterator
-						.hasNext();) {
-					Assertion asser = normalizedMe
-							.intersect((AndCompositeAssertion) iterator.next());
-	
-					//					Assertion asser = ((AndCompositeAssertion)
-					// iterator.next()).intersect(normalizedMe);
-	
-					if (Assertion.COMPOSITE_AND_TYPE == asser.getType()) {
-						nXOR.addTerm(asser);
-					}
+
+		case Assertion.COMPOSITE_POLICY_TYPE: {
+			Policy nPOLICY = new Policy();
+			nPOLICY
+					.addTerm(normalizedMe
+							.intersect((XorCompositeAssertion) target
+									.getTerms().get(0)));
+			return nPOLICY;
+		}
+
+		case Assertion.COMPOSITE_XOR_TYPE: {
+			XorCompositeAssertion nXOR = new XorCompositeAssertion();
+
+			for (Iterator iterator = target.getTerms().iterator(); iterator
+					.hasNext();) {
+				Assertion asser = normalizedMe
+						.intersect((AndCompositeAssertion) iterator.next());
+
+				//					Assertion asser = ((AndCompositeAssertion)
+				// iterator.next()).intersect(normalizedMe);
+
+				if (Assertion.COMPOSITE_AND_TYPE == asser.getType()) {
+					nXOR.addTerm(asser);
 				}
-				return nXOR;
 			}
-	
-			case Assertion.COMPOSITE_AND_TYPE: {
-				List PRIMITIVES_A = ((normalizedMe.size() > target.size()) ? normalizedMe
-						.getTerms() : target.getTerms());
-				List PRIMTIVES_B = ((normalizedMe.size() > target.size()) ? target.getTerms()
-						: normalizedMe.getTerms());
-	
-				boolean isMatch = true;
-				PrimitiveAssertion PRIMITIVE_A, PRIMTIVE_B = null;
-//				QName name_A, name_B;
-	
-				for (int i = 0; i < PRIMITIVES_A.size(); i++) {
-					PRIMITIVE_A = (PrimitiveAssertion) PRIMITIVES_A.get(i);
-//					name_A = PRIMITIVE_A.getName();
-	
-					boolean flag = false;
-	
-					for (int j = 0; j < PRIMTIVES_B.size(); j++) {
-						PRIMTIVE_B = (PrimitiveAssertion) PRIMTIVES_B.get(j);
-//						name_B = PRIMTIVE_B.getName();
-						
-						if (PRIMITIVE_A.getName().equals(PRIMTIVE_B.getName())) {
-							flag = true;
-							break;
-						}
-							
-//						if (name_A.getNamespaceURI().equals(
-//								name_B.getNamespaceURI())) {
-//							flag = true;
-//							break;
-//						}
-					}
-	
-					if (!flag) {
-						return new XorCompositeAssertion();
-					}
-					
-					Assertion a = PRIMITIVE_A.intersect(PRIMTIVE_B) ;
-					
-					if (a instanceof XorCompositeAssertion) {
-						return new XorCompositeAssertion();
-					}
-				}
-					AndCompositeAssertion result = new AndCompositeAssertion();
-					result.addTerms(PRIMITIVES_A);
-					result.addTerms(PRIMTIVES_B);
-					return result;
-			}
-	
-			case Assertion.PRIMITIVE_TYPE: {
-				QName name = ((PrimitiveAssertion) target).getName();
-				boolean isMatch = false;
-	
-				QName targetName;
-				for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator
-						.hasNext();) {
-					targetName = ((PrimitiveAssertion) iterator.next()).getName();
-	
-					if (name.getNamespaceURI().equals(targetName.getNamespaceURI())) {
-						isMatch = true;
+			return nXOR;
+		}
+
+		case Assertion.COMPOSITE_AND_TYPE: {
+			List PRIMITIVES_A = ((normalizedMe.size() > target.size()) ? normalizedMe
+					.getTerms()
+					: target.getTerms());
+			List PRIMTIVES_B = ((normalizedMe.size() > target.size()) ? target
+					.getTerms() : normalizedMe.getTerms());
+
+			boolean isMatch = true;
+			PrimitiveAssertion PRIMITIVE_A, PRIMTIVE_B = null;
+			//				QName name_A, name_B;
+
+			for (int i = 0; i < PRIMITIVES_A.size(); i++) {
+				PRIMITIVE_A = (PrimitiveAssertion) PRIMITIVES_A.get(i);
+				//					name_A = PRIMITIVE_A.getName();
+
+				boolean flag = false;
+
+				for (int j = 0; j < PRIMTIVES_B.size(); j++) {
+					PRIMTIVE_B = (PrimitiveAssertion) PRIMTIVES_B.get(j);
+					//						name_B = PRIMTIVE_B.getName();
+
+					if (PRIMITIVE_A.getName().equals(PRIMTIVE_B.getName())) {
+						flag = true;
 						break;
 					}
+
+					//						if (name_A.getNamespaceURI().equals(
+					//								name_B.getNamespaceURI())) {
+					//							flag = true;
+					//							break;
+					//						}
 				}
-	
-				if (isMatch) {
-					AndCompositeAssertion nAND = new AndCompositeAssertion();
-					nAND.addTerms(normalizedMe.getTerms());
-					nAND.addTerm(target);
-					return nAND;
+
+				if (!flag) {
+					return new XorCompositeAssertion();
 				}
-	
-				return new XorCompositeAssertion();
+
+				Assertion a = PRIMITIVE_A.intersect(PRIMTIVE_B);
+
+				if (a instanceof XorCompositeAssertion) {
+					return new XorCompositeAssertion();
+				}
 			}
-			
-			default: {
-				throw new IllegalArgumentException("intersect is not defined for " + target.getClass().getName() + "type assertions");
+			AndCompositeAssertion result = new AndCompositeAssertion();
+			result.addTerms(PRIMITIVES_A);
+			result.addTerms(PRIMTIVES_B);
+			return result;
+		}
+
+		case Assertion.PRIMITIVE_TYPE: {
+			QName name = ((PrimitiveAssertion) target).getName();
+			boolean isMatch = false;
+
+			QName targetName;
+			for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator
+					.hasNext();) {
+				targetName = ((PrimitiveAssertion) iterator.next()).getName();
+
+				if (name.getNamespaceURI().equals(targetName.getNamespaceURI())) {
+					isMatch = true;
+					break;
+				}
 			}
+
+			if (isMatch) {
+				AndCompositeAssertion nAND = new AndCompositeAssertion();
+				nAND.addTerms(normalizedMe.getTerms());
+				nAND.addTerm(target);
+				return nAND;
+			}
+
+			return new XorCompositeAssertion();
+		}
+
+		default: {
+			throw new IllegalArgumentException("intersect is not defined for "
+					+ target.getClass().getName() + "type assertions");
+		}
 
 		}
 
@@ -206,69 +206,69 @@ public class AndCompositeAssertion extends AbstractAssertion implements
 		//		target = (CompositeAssertion) ((target.isNormalized()) ? target
 		//				: target.normalize(reg));
 
-//		if (target instanceof Policy) {
-//			XorCompositeAssertion alters = (XorCompositeAssertion) target
-//					.getTerms().get(0);
-//			return normalizedMe.intersect(alters);
-//
-//		} else if (target instanceof XorCompositeAssertion) {
-//			XorCompositeAssertion result = new XorCompositeAssertion();
-//			Iterator iterator = target.getTerms().iterator();
-//
-//			while (iterator.hasNext()) {
-//				AndCompositeAssertion andTerm = (AndCompositeAssertion) iterator
-//						.next();
-//				Assertion value = normalizedMe.intersect(andTerm);
-//				if (value instanceof AndCompositeAssertion) {
-//					result.addTerm(value);
-//				}
-//			}
-//			return result;
-//		}
-//
-//		if (normalizedMe.isEmpty()) {
-//			return target;
-//		}
-//		if (target.isEmpty()) {
-//			return normalizedMe;
-//		}
-//
-//		List primTermsA = ((size() > target.size()) ? normalizedMe.getTerms()
-//				: target.getTerms());
-//		List primTermsB = ((size() > target.size()) ? target.getTerms()
-//				: normalizedMe.getTerms());
-//
-//		boolean isMatch = true;
-//		PrimitiveAssertion primTermA, primTermB;
-//		QName qnameA, qnameB;
-//
-//		for (int i = 0; i < primTermsA.size(); i++) {
-//			primTermA = (PrimitiveAssertion) primTermsA.get(i);
-//			qnameA = primTermA.getName();
-//			boolean flag = false;
-//
-//			for (int j = 0; j < primTermsB.size(); j++) {
-//				primTermB = (PrimitiveAssertion) primTermsB.get(j);
-//				qnameB = primTermB.getName();
-//				if (qnameA.equals(qnameB)) {
-//					flag = true;
-//					break;
-//				}
-//			}
-//			if (!flag) {
-//				isMatch = false;
-//				break;
-//			}
-//		}
-//
-//		if (isMatch) { // vocabulary matches
-//			AndCompositeAssertion result = new AndCompositeAssertion();
-//			result.addTerms(primTermsA);
-//			result.addTerms(primTermsB);
-//			return result;
-//		}
-//
-//		return new XorCompositeAssertion(); // no behaviour is admisible
+		//		if (target instanceof Policy) {
+		//			XorCompositeAssertion alters = (XorCompositeAssertion) target
+		//					.getTerms().get(0);
+		//			return normalizedMe.intersect(alters);
+		//
+		//		} else if (target instanceof XorCompositeAssertion) {
+		//			XorCompositeAssertion result = new XorCompositeAssertion();
+		//			Iterator iterator = target.getTerms().iterator();
+		//
+		//			while (iterator.hasNext()) {
+		//				AndCompositeAssertion andTerm = (AndCompositeAssertion) iterator
+		//						.next();
+		//				Assertion value = normalizedMe.intersect(andTerm);
+		//				if (value instanceof AndCompositeAssertion) {
+		//					result.addTerm(value);
+		//				}
+		//			}
+		//			return result;
+		//		}
+		//
+		//		if (normalizedMe.isEmpty()) {
+		//			return target;
+		//		}
+		//		if (target.isEmpty()) {
+		//			return normalizedMe;
+		//		}
+		//
+		//		List primTermsA = ((size() > target.size()) ? normalizedMe.getTerms()
+		//				: target.getTerms());
+		//		List primTermsB = ((size() > target.size()) ? target.getTerms()
+		//				: normalizedMe.getTerms());
+		//
+		//		boolean isMatch = true;
+		//		PrimitiveAssertion primTermA, primTermB;
+		//		QName qnameA, qnameB;
+		//
+		//		for (int i = 0; i < primTermsA.size(); i++) {
+		//			primTermA = (PrimitiveAssertion) primTermsA.get(i);
+		//			qnameA = primTermA.getName();
+		//			boolean flag = false;
+		//
+		//			for (int j = 0; j < primTermsB.size(); j++) {
+		//				primTermB = (PrimitiveAssertion) primTermsB.get(j);
+		//				qnameB = primTermB.getName();
+		//				if (qnameA.equals(qnameB)) {
+		//					flag = true;
+		//					break;
+		//				}
+		//			}
+		//			if (!flag) {
+		//				isMatch = false;
+		//				break;
+		//			}
+		//		}
+		//
+		//		if (isMatch) { // vocabulary matches
+		//			AndCompositeAssertion result = new AndCompositeAssertion();
+		//			result.addTerms(primTermsA);
+		//			result.addTerms(primTermsB);
+		//			return result;
+		//		}
+		//
+		//		return new XorCompositeAssertion(); // no behaviour is admisible
 	}
 
 	/**

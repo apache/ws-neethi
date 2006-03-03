@@ -17,6 +17,8 @@
 package org.apache.ws.policy.util;
 
 /**
+ * PolicyFactory is used to create PolicyReader / PolicyWriter objects of different types.
+ *  
  * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class PolicyFactory {
@@ -25,7 +27,16 @@ public class PolicyFactory {
     
     public static final int DOM_POLICY_READER = 3;
     
-    
+    /**
+     * Creates a specified type of PolicyReader object
+     * 
+     * DOM_POLICY_READER : Uses DOM as its underlying mechanism to process XML.
+     * 
+     * OM_POLICY_READER : Uses AXIOM as its underlying mechanism to process XML.
+     * 
+     * @param type of the PolicyReader to create
+     * @return an instance of a PolicyReader 
+     */
     public static PolicyReader getPolicyReader(int type) {
     	String name = null;
         switch (type) {
@@ -49,6 +60,14 @@ public class PolicyFactory {
 		}
     }
     
+    /**
+     * Create a specified type of PolicyWriter object
+     * 
+     * STAX_POLICY_WRITER: Uses StAX as its underlying mechanism to create XML elements.
+     * 
+     * @param type of the RolicyWriter to create
+     * @return an instance of PolicyWriter
+     */
     public static PolicyWriter getPolicyWriter(int type) {
     	String name = null;
         switch (type) {

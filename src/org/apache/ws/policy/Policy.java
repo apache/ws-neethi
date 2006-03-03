@@ -20,54 +20,96 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.ws.policy.util.PolicyRegistry;
 
-import sun.java2d.loops.XORComposite;
-
 /**
- * Policy is the access point for policy framework. It the object model that
- * represents a policy at runtime.
- *  
+ * Policy class is the runtime representation of a policy. It provides a
+ * convenient model to store process any policy. Policy object requires that all 
+ * its terms are met.   
  */
 public class Policy extends AbstractAssertion implements CompositeAssertion {
 	private Log log = LogFactory.getLog(this.getClass().getName());
 
 	private String xmlBase = null;
 
+	/** Stores the Id of the policy */
 	private String id = null;
 
+	/**
+	 * Creates a policy object
+	 */
 	public Policy() {
 	}
-
+	
+	
+	/**
+	 * Creates a policy object with the specified Id
+	 * 
+	 * @param id a string as the id
+	 */
 	public Policy(String id) {
 		this(null, id);
 		setNormalized(false);
 	}
 
+	/**
+	 * Creates a policy object with the specified xml-base and id. 
+	 * 
+	 * @param xmlBase the xml-base
+	 * @param id a string as the id 
+	 */
 	public Policy(String xmlBase, String id) {
 		this.xmlBase = xmlBase;
 		this.id = id;
 		setNormalized(false);
 	}
 
+	/**
+	 * Set the xml-base of the policy object
+	 * 
+	 * @param xmlBase the xml base of the policy object
+	 */
 	public void setBase(String xmlBase) {
 		this.xmlBase = xmlBase;
 	}
 
+	/**
+	 * Returns the xml-base of the policy object. Returns null if
+	 * no xml-base is set.
+	 * 
+	 * @return xml base of the policy object
+	 */
 	public String getBase() {
 		return xmlBase;
 	}
 
+	/**
+	 * Sets the id of the Policy object
+	 * 
+	 * @param id
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
+	/**
+	 * Returns the Id of the Policy object. Returns null if no Id is set.
+	 * 
+	 * @return the Id of the policy object.
+	 */
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * Returns a String which uniquely identify the policy object. It has the format of
+	 * {$xmlBase}#{$id}. If the xmlBase is null it will return #{$id} as the URI String.
+	 * If the Id is null, this will return.
+	 * 
+	 * @return a String which uniquely identify the policy object.
+	 */
 	public String getPolicyURI() {
 		if (id != null) {
 			if (xmlBase != null) {
@@ -232,52 +274,29 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
 		}
 		case Assertion.COMPOSITE_XOR_TYPE: {
 			Policy nPOLICY = new Policy();
-			nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms().get(0)).intersect(target));
+			nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms()
+					.get(0)).intersect(target));
 			return nPOLICY;
 		}
 		case Assertion.COMPOSITE_AND_TYPE: {
 			Policy nPOLICY = new Policy();
-			nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms().get(0)).intersect(target));
+			nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms()
+					.get(0)).intersect(target));
 			return nPOLICY;
 		}
 		case Assertion.PRIMITIVE_TYPE: {
 			Policy nPOLICY = new Policy();
-			nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms().get(0)).intersect(target));
+			nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms()
+					.get(0)).intersect(target));
 			return nPOLICY;
 		}
-		
+
 		default: {
-			throw new IllegalArgumentException("intersect is not defined for " + target.getClass().getName() +" type") ;			
+			throw new IllegalArgumentException("intersect is not defined for "
+					+ target.getClass().getName() + " type");
 		}
 
 		}
-
-//		Policy result = new Policy(getBase(), getId());
-//		Policy normalizedMe = (Policy) ((isNormalized()) ? this
-//				: normalize(reg));
-//
-//		XorCompositeAssertion alters = (XorCompositeAssertion) normalizedMe
-//				.getTerms().get(0);
-//
-//		if (assertion instanceof PrimitiveAssertion) {
-//			result.addTerm(alters.intersect(assertion, reg));
-//			return result;
-//
-//		} else {
-//			Assertion target = (assertion.isNormalized()) ? assertion
-//					: assertion.normalize(reg);
-//			;
-//
-//			if (target instanceof Policy) {
-//				XorCompositeAssertion alters2 = (XorCompositeAssertion) target
-//						.getTerms().get(0);
-//				result.addTerm(alters.intersect(alters2));
-//				return result;
-//			} else {
-//				result.addTerm(alters.intersect(target));
-//				return result;
-//			}
-//		}
 	}
 
 	public Assertion merge(Assertion assertion, PolicyRegistry reg) {
@@ -330,6 +349,9 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
 		}
 	}
 
+	/**
+	 * Returns a short value which indicates this is a Policy.  
+	 */
 	public final short getType() {
 		return Assertion.COMPOSITE_POLICY_TYPE;
 	}
