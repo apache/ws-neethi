@@ -15,8 +15,6 @@
  */
 package secParser.processors;
 
-import java.lang.reflect.InvocationTargetException;
-
 import secParser.SecurityPolicy;
 import secParser.SecurityPolicyToken;
 import secParser.SecurityProcessorContext;

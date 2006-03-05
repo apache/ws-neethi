@@ -16,23 +16,27 @@
 
 package secParser;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.ws.policy.Policy;
+import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyWriter;
-import org.apache.ws.policy.util.PolicyFactory;
-
-import java.math.*;
-import org.w3c.dom.*;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
-import javax.xml.parsers.*;
-import org.apache.xml.serialize.*;
 
 /**
  * @author Werner Dittmann (werner@apache.org)
