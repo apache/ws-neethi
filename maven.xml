@@ -53,11 +53,15 @@
     <!-- ================================================================ -->
     
     <goal name="dist-src">
-        <ant:property name="dist.src.tmp.dir" value="${build.dist.dir}/tmp"/>
+        <ant:property name="dist.src.root.file" value="${build.dist.dir}/tmp"/>
 	
-	<mkdir dir="${build.dist.dir}" />
+	<ant:property name="dist.src.file" value="${dist.src.root.file}/${dist.name}-src" />
 	
-	<ant:copy todir="${dist.src.tmp.dir}">
+	<!-- <mkdir dir="${build.dist.dir}"/> -->
+	
+	<mkdir dir="${dist.src.file}" />
+	
+	<ant:copy todir="${dist.src.file}">
 		<ant:fileset dir=".">
 			<ant:include name="**"/>
 			<ant:exclude name="**/target/**"/>
@@ -68,16 +72,100 @@
 		</ant:fileset>
         </ant:copy>
 	
-	<ant:zip file="${build.dist.dir}/${dist.name}-src.zip" basedir="${dist.src.tmp.dir}"/>
+	<ant:zip destfile="${build.dist.dir}/${dist.name}-src.zip" basedir="${dist.src.root.file}"/>
 	
-	<ant:tar tarfile="${build.dist.dir}/${dist.name}-src.tar" basedir="${dist.src.tmp.dir}"/>
+	<ant:tar tarfile="${build.dist.dir}/${dist.name}-src.tar" basedir="${dist.src.root.file}"/>
 		
 	<ant:gzip src="${build.dist.dir}/${dist.name}-src.tar" zipfile="${build.dist.dir}/${dist.name}-src.tar.gz"/>
 	 
-	<ant:delete dir = "${dist.src.tmp.dir}"/>
-	
 	<ant:delete file="${build.dist.dir}/${dist.name}-src.tar"/>
 	
+	<ant:delete dir = "${dist.src.root.file}"/>
+	
      </goal>
+     
+     <!-- ================================================================ -->
+     <!--- Create the Binary Distribution -->
+     <!-- ================================================================ -->
+     
+     <goal name="dist-bin" prereqs="default,javadoc">
+	     
+        <property name="dist.bin.tmp.dir" value="${build.dist.dir}/tmp" />
+	
+	<mkdir dir="${build.dist.dir}" />
+	
+	
+	<property name="dir.temp.dist.bin" value="${build.temp.dir}/dist-bin/${dist.name}-bin" />
+	     
+	     <ant:mkdir dir="${dir.temp.dist.bin}"/>
+	     <ant:mkdir dir="${dir.temp.dist.bin}/docs"/>
+	     <ant:mkdir dir="${dir.temp.dist.bin}/samples"/>
+	     <ant:mkdir dir="${dir.temp.dist.bin}/samples/clients"/>
+	     <ant:mkdir dir="${dir.temp.dist.bin}/samples/clients/services"/>
+	     <ant:mkdir dir="${dir.temp.dist.bin}/samples/clients/modules"/>
+	     <ant:mkdir dir="${dir.temp.dist.bin}/samples/clients/lib"/>
+	     <ant:mkdir dir="${dir.temp.dist.bin}/samples/services"/>
+	     <ant:mkdir dir="${dir.temp.dist.bin}/docs/api"/>
+	     -->
+	     
+	     <ant:copy file="${dir.config}/axis2.xml" todir="${dir.temp.dist.bin}/samples/clients" />
+	     
+	     <ant:copy todir="${dir.temp.dist.bin}/docs/api">
+		     <ant:fileset dir="target/docs/apidocs/">
+			     <ant:include name="**"/>
+		     </ant:fileset>
+	     </ant:copy>
+	     
+	     <ant:copy todir="${dir.temp.dist.bin}/docs/api">
+		     <ant:fileset dir="target/docs/apidocs/">
+			     <ant:include name="**"/>
+		     </ant:fileset>
+	     </ant:copy>
+	     
+	     <ant:copy todir="${dir.temp.dist.bin}/docs">
+		     <ant:fileset dir="xdocs">
+			     <ant:include name="**"/>
+		     </ant:fileset>
+	     </ant:copy>
+	     
+	     <!--  <ant:copy todir="${dir.temp.dist.bin}/lib" flatten="true">
+		     <ant:fileset dir="target/lib">
+			     <ant:include name="*.jar"/>
+		     </ant:fileset>
+	     </ant:copy> -->
+	     
+	     <ant:copy file="target/${jar.name}" todir="${dir.temp.dist.bin}" />
+	     <ant:copy file="target/${mar.name}" todir="${dir.temp.dist.bin}" />
+	     <ant:copy file="${dir.config}/sandesha2.properties" todir="${dir.temp.dist.bin}" />
+	     <ant:copy file="${apache.license.file}" todir="${dir.temp.dist.bin}" />
+	     <ant:copy file="${release.notes.file}" todir="${dir.temp.dist.bin}" />
+	     <ant:copy file="${readme.file}" todir="${dir.temp.dist.bin}" />
+	     
+	     <ant:copy todir="${dir.temp.dist.bin}/samples">
+		     <ant:fileset dir="${build.samples.dir}">
+			     <ant:include name="classes/**/*.class" />
+			     <ant:include name="clients/*.jar" />
+			     <ant:include name="clients/*.bat"/>
+			     <ant:include name="clients/*.sh"/>
+			     <ant:include name="clients/*.xml"/>
+		     </ant:fileset>
+	     </ant:copy>
+	     
+	     <ant:copy todir="${dir.temp.dist.bin}/samples/services">
+		     <ant:fileset dir="${build.repo.dir}/server/services">
+			     <ant:include name="*.aar" />
+		     </ant:fileset>
+	     </ant:copy>
+	     
+	     
+	     <mkdir dir="${build.dist.dir}" />
+	     
+	     <ant:zip file="${build.dist.dir}/${dist.name}-bin.zip" basedir="${dir.temp.dist.bin.parent}" />
+	     <ant:tar tarfile="${build.dist.dir}/${dist.name}-bin.tar" basedir="${dir.temp.dist.bin.parent}" />
+	     <gzip src="${build.dist.dir}/${dist.name}-bin.tar" zipfile="${build.dist.dir}/${dist.name}-bin.tar.gz" />
+	     
+	     <ant:delete file="${build.dist.dir}/${dist.name}-bin.tar" />
+	     
+    </goal>
  
 </project>
