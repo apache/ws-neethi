@@ -44,7 +44,7 @@
   <!-- the year the project started -->
 
   <inceptionYear>2002</inceptionYear>
-  <package>org.apache.policy</package>
+  <package>org.apache.ws.policy</package>
 
   <!-- any mailing lists for the project -->
 
