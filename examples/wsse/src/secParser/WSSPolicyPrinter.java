@@ -58,11 +58,15 @@ public class WSSPolicyPrinter {
         if (!processor.setup()) {
             return;
         }
-        String[] files = new String[1];
-        files = new String[2];
-        files[0] = "policy/examples/wsse/resources/SecurityPolicyBindingsAsymmTest.xml";
-        files[1] = "policy/examples/wsse/resources/SecurityPolicyMsg.xml";
-        processor.go(files);
+        if (args.length == 0) {
+            String[] files = new String[2];
+            files[0] = "policy/examples/wsse/resources/SecurityPolicyBindingsAsymmTest.xml";
+            files[1] = "policy/examples/wsse/resources/SecurityPolicyMsg.xml";
+            processor.go(files);            
+        }
+        else {
+            processor.go(args);
+        }
     }
 
     boolean setup() throws NoSuchMethodException {
