@@ -1,0 +1,21 @@
+<project name="WS-Policy">
+	<title>Web Services Commons : WS-Policy implemenation</title>
+	<body>
+		<menu name="WS-Policy">
+			<item name="Home" href="index.html"/>
+			<item nane="Downloads">
+				<item name="Releases" href="download.cgi"/>
+				<item name="Source Code" href="http://svn.apache.org/repos/asf/webservices/commons/modules/policy"/>
+			</item>
+			<item>
+				<item name="User Guide" href="userGuide.html"/>
+				<item name="Javadocs" href="apidocs/index.html"/>
+			</item>
+			<item name="Project Information">
+				<item name="Mailing Lists"/>
+				<item name="Project Team"/>
+			</item>
+		</menu>
+	</body>
+	
+</project>

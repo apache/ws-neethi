@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<document>
+	<properties>
+		<title>Welcome to WS Policy</title>
+	</properties>
+	
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+		<meta content="text/html; charset=iso-8859-1" />
+		<meta name="generator" content="amaya 9.2.1, see http://www.w3.org/Amaya/" />
+	</head>
+	
+	<body>
+	
+	<section>
+
+	<h1>Welcome to Apache Web Services (WS) Policy</h1>
+
+<h4>- Version 0.90 Release</h4>
+
+<h2>Introduction</h2>
+
+<p>WS-Commons/Policy provides an implementation of WS-Policy specification.
+It provides a convenient model to process any policy information at runtime.
+In other words, it allows you to convert any policy to an object (which is
+its runtime representation) and play with it as you like. You could normalize
+it and then print it if you want to convert your original policy into a
+standard format. Else you could merge or intersect that policy object with
+another policy object and print it to see how the merge / or intersect looks
+like.</p>
+
+<p><strong>WS-Policy specification</strong> define <a
+href="#operations">policy operations</a> to manipulate policies.
+WS-Commons/Policy framework support all these operations which are extremely
+useful when trying to do complex policy manipulations</p>
+
+<h3>What is WS-Policy?</h3>
+
+<p>A <strong>WS-policy</strong> is a set of requirements that have to be met
+in order to consume a web service.</p>
+
+<p>A requirement can be domain specific. For instance, if your policy demands
+that you need security token type, then its a primitive requirement.
+<strong>PrimtiveAssertion</strong> class represents such requirements in
+<strong>Commons/Policy framework</strong>.</p>
+
+<p>Another requirement would be to meet several assertions in a certain way.
+For instance, an assertion would require all its child assertions be met
+while another assertion may require exactly one of its child assertions be
+met. Such assertions are known as <strong>CompositeAssertions</strong>. If
+assertion implements CompositeAssertion marker-interface, it's an indication
+that this assertion is of CompositeAssertion type. For instance
+AndCompositeAssertion, XorCompositeAssertion and Policy are of
+CompositeAssertion type.</p>
+
+<p>If you consider the <strong>AndCompositeAssertion</strong> it requires all
+its child terms be met. If its <strong>XorCompositeAssertion</strong> type,
+it requires that exactly one of its child terms be met. Both Policy and
+AndCompositeAssertion requires same behavior except that in
+<strong>Policy</strong>, policy object is the outer most element.</p>
+<a name="operations"></a>
+<h3>Policy Operations</h3>
+
+<p>The object model in WS-Commons/Policy becomes very handy when it comes to
+<strong>policy operation</strong>s. For instance you could invoke normalize()
+method on a policy object which will return a new policy object which has the
+same implication, but in a standard format.</p>
+
+<p>If you merge a policy object with another policy object it will return a
+new policy object which represents the merged policies of those two objects.
+If you could satisfy any policy alternative available in the resultant
+object, it is guaranteed that at least one policy alternative of both policy
+objects could be met.</p>
+
+<p>One interesting application of policies would be to identify which policy
+alternatives that both parties can agree upon. The simple solution is to
+intersect the two policy objects and get the resultant policy object. It
+would contain all possible policy alternatives that both parties agree
+upon.</p>
+
+<p>Commons/Policy framework is now reaching its maturity. It is used in other
+web services projects like Axis2, Sandehsa2 and WSS4J to process any policy
+information they require. Recently it passed all the WS Policy Interop Round1
+which is aimed to test the correctness of object model. And it seems safe to
+say that bright future is ahead.</p>
+
+<p>You can learn how to use Apache WS-Policy by checking out our <a href="userguide.html" target="_blank">User's Guide</a>
+</p>
+
+<h2>Key Features</h2>
+<ol>
+  <li>Fully compliant with latest WS-Policy Specification</li>
+  <li>Passes WS-Policy Interop ROUND1 Test Suite</li>
+</ol>
+
+<h2>Resources</h2>
+<ul>
+  <li><a
+    href="https://svn.apache.org/repos/asf/webservices/commons/modules/policy/" target="_blank">ws-commons/policy</a></li>
+  <li><a href="http://specs.xmlsoap.org/ws/2004/09/policy/ws-policy.pdf" target="_blank">Web
+    Services Policy Framework (WS-Policy)</a></li>
+  <li>Samaranayake, Sanka. January 2006. <a
+    href="http://www.wso2.net/2006/01/web_services_policy_why_what_how" target="_blank">Web
+    services Policy - Why, What &amp; How.</a></li>
+</ul>
+<!--Remove when docs are published on site-->
+<a name="mailing"></a>
+<h2>Mailing List</h2>
+
+<p>Developer List- <a
+href="mailto:commons-dev-subscribe@ws.apache.org?subject=subscribe">Subscribe</a>
+| <a
+href="mailto:commons-dev-unsubscribe@ws.apache.org?subject=unsubscribe">Unsubscribe</a></p>
+
+<p>Once subscribed to the developer mailing list you can send your feedback
+to : <a href="mailto:commons-dev@ws.apache.org?subject=[WS-Policy]">commons-dev@ws.apache.org</a>
+(Prefix the subject with [Policy])</p>
+	
+	</section>
+	
+	</body>
+</document>

@@ -20,120 +20,154 @@
 
 <project>
   <!-- the version of maven's project object model -->
-
-  <pomVersion>3</pomVersion>
+	
+	<pomVersion>3</pomVersion>
   <!-- a unique name for this project -->
-
-  <name>Web Services Commons : WS-Policy implemenation</name>
-  <id>policy</id>
-  <groupId>ws-commons</groupId>
+	
+	<name>Web Services Commons : WS-Policy implemenation</name>
+	<id>policy</id>
+	<groupId>ws-commons</groupId>
   
   <!-- a short but descriptive name for the project -->
-
-  <name>WS-Policy Implementation</name>
+	
+	<name>WS-Policy Implementation</name>
   <!-- The version of the project under development, e.g.
        1.1, 1.2, 2.0-SNAPSHOT -->
-
-  <currentVersion>${policy.version}</currentVersion>
+	
+	<currentVersion>${policy.version}</currentVersion>
   <!-- details about the organization that 'owns' the project -->
-
-  <organization>
-    <name>Apache Software Foundation</name>
-    <url>http://www.apache.org/</url>
-  </organization>
+	
+	<organization>
+		<name>Apache Software Foundation</name>
+		<url>http://www.apache.org/</url>
+	</organization>
   <!-- the year the project started -->
-
-  <inceptionYear>2002</inceptionYear>
-  <package>org.apache.ws.policy</package>
+	
+	<inceptionYear>2002</inceptionYear>
+	<package>org.apache.ws.policy</package>
 
   <!-- any mailing lists for the project -->
-
-  <mailingLists/>
+	<mailingLists>
+		<mailingList>
+			<name>WS-Policy Developer List</name>
+			<subscribe>commons-dev-subscribe@ws.apache.org</subscribe>
+			<unsubscribe>commons-dev-unsubscribe@ws.apache.org</unsubscribe>
+			<archive href="http://mail-archives.apache.org/mod_mbox/ws-commons-dev/" />
+		</mailingList>
+	</mailingLists>
+	
   <!-- who the developers are for the project -->
-
-  <developers/>
+	
+	<developers>
+		<developer>
+			<name>Sanjiva Weerawarana</name>
+			<id>sanjiva</id>
+			<email>sanjiva@opensource.lk</email>
+		</developer>
+		<developer>
+			<name>Davanum Srinivas</name>
+			<id>dims</id>
+			<email>dims@yahoo.com</email>
+		</developer>
+		<developer>
+			<name>Dittmann, Werner</name>
+			<id>werner</id>
+			<email></email>
+		</developer>
+	</developers>
   <!-- jar files the project is dependent on -->
+	
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<distribution>repo</distribution>
+		
+		</license>
+	</licenses>
 
-    <dependencies>
-        <dependency>
-            <groupId>ws-commons</groupId>
-            <artifactId>axiom</artifactId>
-            <version>${axiom.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${stax.impl.groupid}</groupId>
-            <artifactId>${stax.impl.artifactid}</artifactId>
-            <version>${stax.impl.version}</version>
-            <properties>
-                <module>true</module>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>stax</groupId>
-            <artifactId>stax-api</artifactId>
-            <version>${stax.api.version}</version>
-            <properties>
-                <module>true</module>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>${commons.logging.version}</version>
-            <properties>
-                <module>true</module>
-            </properties>
-        </dependency>
-    </dependencies>
+	
+	
+	<dependencies>
+		<dependency>
+			<groupId>ws-commons</groupId>
+			<artifactId>axiom</artifactId>
+			<version>${axiom.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${stax.impl.groupid}</groupId>
+			<artifactId>${stax.impl.artifactid}</artifactId>
+			<version>${stax.impl.version}</version>
+			<properties>
+				<module>true</module>
+			</properties>
+		</dependency>
+		<dependency>
+			<groupId>stax</groupId>
+			<artifactId>stax-api</artifactId>
+			<version>${stax.api.version}</version>
+			<properties>
+				<module>true</module>
+			</properties>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>${commons.logging.version}</version>
+			<properties>
+				<module>true</module>
+			</properties>
+		</dependency>
+	</dependencies>
   <!-- build information for the project -->
-
-    <build>
-        <nagEmailAddress>commons-dev@ws.apache.org</nagEmailAddress>
-        <sourceDirectory>src</sourceDirectory>
-        <unitTestSourceDirectory>test</unitTestSourceDirectory>
-
-        <unitTest>
-            <excludes>
-                <exclude>**/PolicyTestCase.java</exclude>
-            </excludes>
-            <includes>
-                <include>**/*Test*.java</include>
-            </includes>
-
-            <resources>
-                <resource>
-                    <directory>${basedir}/test-resources</directory>
-                </resource>
-                <resource>
-                    <directory>conf</directory>
-                    <includes>
-                        <include>**/*.properties</include>
-                    </includes>
-                </resource>
-                <resource>
-                    <directory>src</directory>
-                    <includes>
-                        <include>**/*.properties</include>
-                        <include>**/*.xml</include>
-                    </includes>
-                </resource>
-            </resources>
-        </unitTest>
-
-        <resources>
-            <resource>
-                <directory>conf</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
+	
+	<build>
+		<nagEmailAddress>commons-dev@ws.apache.org</nagEmailAddress>
+		<sourceDirectory>src</sourceDirectory>
+		<unitTestSourceDirectory>test</unitTestSourceDirectory>
+		
+		<unitTest>
+			<excludes>
+				<exclude>**/PolicyTestCase.java</exclude>
+			</excludes>
+			<includes>
+				<include>**/*Test*.java</include>
+			</includes>
+			
+			<resources>
+				<resource>
+					<directory>${basedir}/test-resources</directory>
+				</resource>
+				<resource>
+					<directory>conf</directory>
+					<includes>
+						<include>**/*.properties</include>
+					</includes>
+				</resource>
+				<resource>
+					<directory>src</directory>
+					<includes>
+						<include>**/*.properties</include>
+						<include>**/*.xml</include>
+					</includes>
+				</resource>
+			</resources>
+		</unitTest>
+		
+		<resources>
+			<resource>
+				<directory>conf</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
 </project>
