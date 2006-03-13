@@ -4,7 +4,7 @@
 		<menu name="WS-Policy">
 			<item name="Home" href="index.html"/>
 			<item nane="Downloads">
-				<item name="Releases" href="download.cgi"/>
+				<item name="Releases" href="/download.cgi"/>
 				<item name="Source Code" href="http://svn.apache.org/repos/asf/webservices/commons/modules/policy"/>
 			</item>
 			<item name="Documentation">
