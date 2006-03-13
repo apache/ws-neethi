@@ -19,10 +19,8 @@
 
 
 <project>
-  <!-- the version of maven's project object model -->
 	
 	<pomVersion>3</pomVersion>
-  <!-- a unique name for this project -->
 	
 	<name>Web Services Commons : WS-Policy implemenation</name>
 	<id>policy</id>
@@ -44,9 +42,9 @@
   <!-- the year the project started -->
 	
 	<inceptionYear>2002</inceptionYear>
+	
 	<package>org.apache.ws.policy</package>
 
-  <!-- any mailing lists for the project -->
 	<mailingLists>
 		<mailingList>
 			<name>WS-Policy Developer List</name>
@@ -56,26 +54,39 @@
 		</mailingList>
 	</mailingLists>
 	
-  <!-- who the developers are for the project -->
-	
 	<developers>
 		<developer>
 			<name>Sanjiva Weerawarana</name>
 			<id>sanjiva</id>
+			<organization>WSO2 Inc.</organization>
 			<email>sanjiva@opensource.lk</email>
 		</developer>
 		<developer>
 			<name>Davanum Srinivas</name>
 			<id>dims</id>
+			<organization>WSO2 Inc.</organization>
 			<email>dims@yahoo.com</email>
 		</developer>
 		<developer>
 			<name>Dittmann, Werner</name>
 			<id>werner</id>
-			<email></email>
+			<organization></organization>
+			<email>werner.dittmann@siemens.com</email>
+		</developer>
+		<developer>
+			<name>Sanka Samaranayake</name>
+			<id>sanka</id>
+			<organization>WSO2 Inc.</organization>
+			<email>sanka@apahce.org</email>
+		</developer>
+		<developer>
+			<!-- Documentation -->
+			<name>Chatra Nakkawita</name>
+			<id>chatra</id>
+			<organization>WSO2 Inc.</organization>
+			<email>chatra@gmail.com</email>			
 		</developer>
 	</developers>
-  <!-- jar files the project is dependent on -->
 	
 	<licenses>
 		<license>
@@ -84,9 +95,7 @@
 			<distribution>repo</distribution>
 		
 		</license>
-	</licenses>
-
-	
+	</licenses>	
 	
 	<dependencies>
 		<dependency>

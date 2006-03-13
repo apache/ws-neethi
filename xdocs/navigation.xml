@@ -7,13 +7,13 @@
 				<item name="Releases" href="download.cgi"/>
 				<item name="Source Code" href="http://svn.apache.org/repos/asf/webservices/commons/modules/policy"/>
 			</item>
-			<item>
-				<item name="User Guide" href="userGuide.html"/>
-				<item name="Javadocs" href="apidocs/index.html"/>
+			<item name="Documentation">
+				<item name="User's Guide" href="/userguide.html"/>
+				<item name="Javadocs" href="/apidocs/index.html"/>
 			</item>
 			<item name="Project Information">
-				<item name="Mailing Lists"/>
-				<item name="Project Team"/>
+				<item name="Mailing Lists" href="/mail-lists.html"/>
+				<item name="Project Team" href="/team-list.html"/>
 			</item>
 		</menu>
 	</body>
