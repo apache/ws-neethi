@@ -50,7 +50,7 @@
 			<name>WS-Policy Developer List</name>
 			<subscribe>commons-dev-subscribe@ws.apache.org</subscribe>
 			<unsubscribe>commons-dev-unsubscribe@ws.apache.org</unsubscribe>
-			<archive href="http://mail-archives.apache.org/mod_mbox/ws-commons-dev/" />
+			<archive>http://mail-archives.apache.org/mod_mbox/ws-commons-dev/</archive>
 		</mailingList>
 	</mailingLists>
 	
