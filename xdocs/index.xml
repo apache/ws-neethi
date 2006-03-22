@@ -15,11 +15,11 @@
 	
 	<section>
 
-	<h1>Welcome to Apache Web Services (WS) Policy</h1>
+	<h1>Welcome to Apache WS-Commons Policy</h1>
 
 <h2>Introduction</h2>
 
-<p>WS-Commons/Policy provides an implementation of WS-Policy specification.
+<p>Web Services (WS)-Commons/Policy provides an implementation of WS-Policy specification.
 It provides a convenient model to process any policy information at runtime.
 In other words, it allows you to convert any policy to an object (which is
 its runtime representation) and play with it as you like. You could normalize
@@ -86,7 +86,14 @@ say that bright future is ahead.</p>
 <p>You can learn how to use Apache WS-Policy by checking out our <a href="userguide.html" target="_blank">User's Guide</a>
 </p>
 
-<h2>Key Features</h2>
+<h2>Background and Motivation</h2>
+<p>Web services is an emerging technology with enormous promise. The biggest advantage of web services is its cross platform capability. In other words, Web services allow applications to communicate in a platform independent manner. However, communication between non trivial Web services is not that straight forward. For instance, if WS-Security is enabled, the client must determine if WS-Security is optional or madatory for this service. If it is mandatory then client must determine the security token type the server understands or it prefers. After which client must determine whether to sign the messages and which parts to sign. Finally client must determine whether to encrypt the message and if so what algorithm to use. Without such information, integrating two Web services would be a next to impractical.</p> 
+
+<p>So far there was no standard way to convey this information except documentation or emails from developer to developer. WS-Policy addresses this issue and provides a standard framework to express these additional details. However, it is left to the authors of other specifications to extend this framework to convey any specific details that fall within the scope of those specifications.</p>
+
+<h2>Latest Release</h2>
+<h3>5th March 2006 -Apache WS-Commons Policy version 0.90 Released!</h3>
+<h4>Key Features in this Release</h4>
 <ol>
   <li>Fully compliant with latest WS-Policy Specification</li>
   <li>Passes WS-Policy Interop ROUND1 Test Suite</li>
@@ -102,19 +109,6 @@ say that bright future is ahead.</p>
     href="http://www.wso2.net/2006/01/web_services_policy_why_what_how" target="_blank">Web
     services Policy - Why, What &amp; How.</a></li>
 </ul>
-<!--Remove when docs are published on site-->
-<a name="mailing"></a>
-<h2>Mailing List</h2>
-
-<p>Developer List- <a
-href="mailto:commons-dev-subscribe@ws.apache.org?subject=subscribe">Subscribe</a>
-| <a
-href="mailto:commons-dev-unsubscribe@ws.apache.org?subject=unsubscribe">Unsubscribe</a></p>
-
-<p>Once subscribed to the developer mailing list you can send your feedback
-to : <a href="mailto:commons-dev@ws.apache.org?subject=[WS-Policy]">commons-dev@ws.apache.org</a>
-(Prefix the subject with [Policy])</p>
-	
 	</section>
 	
 	</body>
