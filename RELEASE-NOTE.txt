@@ -3,6 +3,6 @@ Apache Commons Policy 1.0 Release Note:
 
 Feature List:
 
-Full compliant with the WS Policy Specification (September 2004)
+Fully compliant with the WS Policy Specification (September 2004)
 Passes WS Policy Interop Round1 TestSuite
 
