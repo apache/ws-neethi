@@ -83,7 +83,7 @@ information they require. Recently it passed all the WS Policy Interop Round1
 which is aimed to test the correctness of object model. And it seems safe to
 say that bright future is ahead.</p>
 
-<p>You can learn how to use Apache WS-Policy by checking out our <a href="userguide.html" target="_blank">User's Guide</a>
+<p>You can learn how to use Apache WS-Policy by checking out our <a href="1_0/userguide.html" target="_blank">User's Guide</a>
 </p>
 
 <h2>Background and Motivation</h2>
@@ -92,7 +92,8 @@ say that bright future is ahead.</p>
 <p>So far there was no standard way to convey this information except documentation or emails from developer to developer. WS-Policy addresses this issue and provides a standard framework to express these additional details. However, it is left to the authors of other specifications to extend this framework to convey any specific details that fall within the scope of those specifications.</p>
 
 <h2>Latest Release</h2>
-<h3>5th March 2006 -Apache WS-Commons Policy version 0.90 Released!</h3>
+<h3>23th March 2006 -Apache WS-Commons Policy version 1.0 Released!</h3>
+<strong>[<a href="http://ws.apache.org/commons/policy/download.cgi" target="_blank">Download 1.0</a>]</strong>
 <h4>Key Features in this Release</h4>
 <ol>
   <li>Fully compliant with latest WS-Policy Specification</li>
@@ -102,13 +103,22 @@ say that bright future is ahead.</p>
 <h2>Resources</h2>
 <ul>
   <li><a
-    href="https://svn.apache.org/repos/asf/webservices/commons/modules/policy/" target="_blank">ws-commons policy</a></li>
+    href="https://svn.apache.org/repos/asf/webservices/commons/modules/policy/" target="_blank">WS-Commons Policy SVN</a></li>
   <li><a href="http://specs.xmlsoap.org/ws/2004/09/policy/ws-policy.pdf" target="_blank">Web
     Services Policy Framework (WS-Policy)</a></li>
   <li>Samaranayake, Sanka. January 2006. <a
     href="http://www.wso2.net/2006/01/web_services_policy_why_what_how" target="_blank">Web
     services Policy - Why, What &amp; How.</a></li>
 </ul>
+<h2>Archived News</h2>
+<h3>5th March 2006 -Apache WS-Commons Policy version 0.90 Released!</h3>
+<strong>[<a href="http://archive.apache.org/dist/ws/commons/policy/0_90/" target="_blank">Download 0.90</a>]</strong>
+<h4>Key Features in this Release</h4>
+<ol>
+  <li>Fully compliant with latest WS-Policy Specification</li>
+  <li>Passes WS-Policy Interop ROUND1 Test Suite</li>
+</ol>
+
 	</section>
 	
 	</body>
