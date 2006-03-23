@@ -6,3 +6,9 @@ Feature List:
 Fully compliant with the WS Policy Specification (September 2004)
 Passes WS Policy Interop Round1 TestSuite
 
+User's guide:
+
+please visit http://ws.apache.org/commons/policy/1_0/userguide.html
+
+
+

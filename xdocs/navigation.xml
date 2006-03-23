@@ -8,7 +8,9 @@
 				<item name="Source Code" href="http://svn.apache.org/repos/asf/webservices/commons/modules/policy"/>
 			</item>
 			<item name="Documentation">
-				<item name="User's Guide" href="/userguide.html"/>
+				<item name="User's Guide">
+					<item name="Version 1.0" href="/1_0/userguide.html"/>
+				</item>
 				<item name="Javadocs" href="/apidocs/index.html"/>
 			</item>
 			<item name="Project Information">
