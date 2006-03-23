@@ -1,8 +1,8 @@
 
-Commons/Policy 0.90 Release Note:
+Apache Commons Policy 1.0 Release Note:
 
 Feature List:
 
-Full compliant with the latest WS Policy Specification (September 2004)
+Full compliant with the WS Policy Specification (September 2004)
 Passes WS Policy Interop Round1 TestSuite
 

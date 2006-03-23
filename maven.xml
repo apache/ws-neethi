@@ -34,13 +34,13 @@
     
     <ant:property name="jar.file" value="${dist.name}.jar" />
     
-    <ant:property name="license.file" value="LICENSE" />
+    <ant:property name="license.file" value="LICENSE.txt" />
     
-    <ant:property name="readme.file" value="README" />
+    <ant:property name="readme.file" value="README.txt" />
     
-    <ant:property name="authors.file" value="AUTHORS" />
+    <ant:property name="authors.file" value="AUTHORS.txt" />
     
-    <ant:property name="release.note.file" value="RELEASE-NOTE"/>
+    <ant:property name="release.note.file" value="RELEASE-NOTE.txt"/>
     
     <!-- ==================== -->
     <!-- Default Global Goals -->
@@ -114,11 +114,13 @@
 	
 	<mkdir dir="${dist.bin.file}/lib"/>
 	
+	<!--
 	<ant:copy todir="${dist.bin.file}/docs">
 	    <ant:fileset dir="docs">
 	        <ant:include name="**"/>
 	    </ant:fileset>
 	</ant:copy>
+	-->
 	
 	<ant:copy todir="${dist.bin.file}/docs/apidocs">
 	    <ant:fileset dir="target/docs/apidocs/">
