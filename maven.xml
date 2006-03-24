@@ -46,6 +46,11 @@
     <!-- Default Global Goals -->
     <!-- ==================== -->
 
+
+    <goal name="jar">
+        <attainGoal name="jar:install"/>
+    </goal>
+    
     <goal name="default">
         <attainGoal name="jar:install"/>
     </goal>
