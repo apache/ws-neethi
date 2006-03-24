@@ -16,28 +16,27 @@
 
 package org.apache.ws.policy.util;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Iterator;
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMAttribute;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMXMLParserWrapper;
+import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
+import org.apache.ws.policy.AndCompositeAssertion;
+import org.apache.ws.policy.Assertion;
+import org.apache.ws.policy.Policy;
+import org.apache.ws.policy.PolicyConstants;
+import org.apache.ws.policy.PolicyReference;
+import org.apache.ws.policy.PrimitiveAssertion;
+import org.apache.ws.policy.XorCompositeAssertion;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import org.apache.ws.commons.om.OMAbstractFactory;
-import org.apache.ws.commons.om.OMAttribute;
-import org.apache.ws.commons.om.OMElement;
-import org.apache.ws.commons.om.OMXMLParserWrapper;
-import org.apache.ws.commons.om.impl.llom.factory.OMXMLBuilderFactory;
-import org.apache.ws.policy.AndCompositeAssertion;
-import org.apache.ws.policy.Assertion;
-import org.apache.ws.policy.Policy;
-import org.apache.ws.policy.PolicyReference;
-import org.apache.ws.policy.PrimitiveAssertion;
-import org.apache.ws.policy.PolicyConstants;
-import org.apache.ws.policy.XorCompositeAssertion;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  * OMPolicyReader implements PolicyReader interface and provides different
