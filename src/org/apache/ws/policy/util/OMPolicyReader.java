@@ -51,6 +51,7 @@ public class OMPolicyReader implements PolicyReader {
 
 	public Policy readPolicy(InputStream in) {
 		try {
+            
 			XMLStreamReader reader = XMLInputFactory.newInstance()
 					.createXMLStreamReader(in);
 			OMXMLParserWrapper builder = OMXMLBuilderFactory
@@ -66,6 +67,7 @@ public class OMPolicyReader implements PolicyReader {
 	}
 
 	private Assertion readAssertion(OMElement element) {
+        
 		String namespace = element.getNamespace().getName();
 		String localName = element.getLocalName();
 

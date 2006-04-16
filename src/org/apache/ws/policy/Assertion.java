@@ -216,4 +216,40 @@ public interface Assertion {
 	 */
 	public short getType();
 
+	/**
+	 * Returns a string which describes the source of the assertion. For
+	 * instance name of the policy file that contains the assertion. Returns
+	 * null if it is not set.
+	 * 
+	 * @return a string that describe the origin of the assertion.
+	 */
+	public String getSource();
+
+	/**
+	 * Sets specified string as the source of the assertion.
+	 * 
+	 * @param source
+	 *            the string which describe the source of the origin of the
+	 *            assertion
+	 */
+	public void setSource(String source);
+
+	/**
+	 * Returns the line no of the assertion which is line no of the assertion in
+	 * the file where the assertion is first read. came from. Returns -1 if it
+	 * is not set.
+	 * 
+	 * @return the line no of the assertion in file where the assertion is first
+	 *         read.
+	 */
+	public int getLineNo();
+
+	/**
+	 * Sets the line no of the assertion which should be the line no of the
+	 * assertion in the file where the assertion is first read.
+	 * 
+	 * @param lineNo
+	 */
+	public void setLineNo(int lineNo);
+
 }

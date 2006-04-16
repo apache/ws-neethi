@@ -35,6 +35,12 @@ public abstract class AbstractAssertion implements Assertion {
 
 	/** To refer to the parent of this assertion */
 	protected Assertion parent = null;
+    
+    /** To store the description of the origin of the assertion */
+    protected String source = null;
+    
+    /** To store the line no of the assertion in the file */
+    protected int lineNo = -1;
 
 	/**
 	 * 
@@ -182,4 +188,20 @@ public abstract class AbstractAssertion implements Assertion {
 	public int size() {
 		return childTerms.size();
 	}
+    
+    public void setSource(String source) {
+        this.source = source;        
+    }
+    
+    public String getSource() {
+        return source;
+    }
+    
+    public void setLineNo(int lineNo) {
+        this.lineNo = lineNo;
+    }
+    
+    public int getLineNo() {
+        return lineNo;
+    }
 }

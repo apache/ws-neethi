@@ -34,6 +34,12 @@ public class PolicyReference implements Assertion {
 	private String PolicyURIString = null;
 
 	private Assertion parent = null;
+    
+    /** To store the description of the origin of the assertion */
+    protected String source = null;
+    
+    /** To store the line no of the assertion in the file */
+    protected int lineNo = -1;
 
 	/**
 	 * Constructs a PolicyReferece object which refers to the Policy which is
@@ -105,7 +111,7 @@ public class PolicyReference implements Assertion {
 	}
 
 	public boolean isNormalized() {
-		throw new UnsupportedOperationException();
+		return false;
 	}
 
 	public void setNormalized(boolean flag) {
@@ -143,5 +149,21 @@ public class PolicyReference implements Assertion {
 	 */
 	public final short getType() {
 		return Assertion.POLIY_REFERCE_TYPE;
-	}
+	}    
+    
+    public void setSource(String source) {
+        this.source = source;        
+    }
+    
+    public String getSource() {
+        return source;
+    }
+    
+    public void setLineNo(int lineNo) {
+        this.lineNo = lineNo;
+    }
+    
+    public int getLineNo() {
+        return lineNo;
+    }
 }

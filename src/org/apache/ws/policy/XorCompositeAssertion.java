@@ -224,15 +224,6 @@ public class XorCompositeAssertion extends AbstractAssertion implements
 						.hasNext();) {
 					nXOR.addTerm(AND.merge((Assertion) iterator2.next()));
 				}
-
-				if (target.isEmpty() && AND.isEmpty()) { // FIXME is this a
-					// hack?
-					/*
-					 * " <wsp:ExactlyOne> <wsp:All/>
-					 * </wsp:ExactlyOne>".intersect(" <wsp:ExactlyOne/>")
-					 */
-					nXOR.addTerm(AND);
-				}
 			}
 
 			return nXOR;
