@@ -2,7 +2,7 @@
 
 <document>
 	<properties>
-		<title>WS Policy User's Guide</title>
+		<title>Apache Neethi User's Guide</title>
 	</properties>
 	
 	<head>
@@ -13,7 +13,7 @@
 	<body>
 		<section>
 			
-			<h1>Apache Web Services Commons Policy User's Guide:</h1>
+			<h1>Apache Neethi User's Guide:</h1>
 			<h4>-Version 1.0</h4>
 			
 			<p>This document will instruct you how to use WS-Policy model, taking you
@@ -21,7 +21,7 @@ step by step through the process using a simple sample.</p>
 			
 			<p>Send your feedback to: <a
 						href="mailto:commons-dev@ws.apache.org">commons-dev@ws.apache.org</a> (Prefix
-the subject with [Policy])</p>
+the subject with [Neethi])</p>
 			<p>To subscribe to developer mailing list see <a href="http://ws.apache.org/commons/policy/mail-lists.html" target="_blank">here</a>
 			</p>
 			
