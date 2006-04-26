@@ -22,8 +22,6 @@ import java.util.HashMap;
 
 /**
  * SchemaRegistry holds schemas associated with URIs.
- * 
- * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class SchemaRegistry {
 

@@ -28,8 +28,6 @@ import org.apache.ws.policy.XorCompositeAssertion;
 
 /**
  * WSPolicyUtil contains several utility methods for policy manipulations.
- * 
- * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class PolicyUtil {
 

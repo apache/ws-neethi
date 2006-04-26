@@ -22,9 +22,6 @@ import java.io.InputStream;
 
 import junit.framework.TestCase;
 
-/**
- * @author Sanka Samaranayake (sanka@apache.org)
- */
 public class PolicyTestCase extends TestCase {
 	protected String baseDir = System.getProperty("basedir");
 	protected String testDir = "test" + File.separator;

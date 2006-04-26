@@ -21,10 +21,6 @@ import secParser.SecurityPolicy;
 import secParser.SecurityPolicyToken;
 import secParser.SecurityProcessorContext;
 
-/**
- * @author Werner Dittmann (werner@apache.org)
- * 
- */
 public class Wss10Processor {
 
 	private boolean initializedWss10 = false;

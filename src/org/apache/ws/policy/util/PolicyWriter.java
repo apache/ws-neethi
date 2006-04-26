@@ -23,8 +23,6 @@ import org.apache.ws.policy.Policy;
 /**
  * PolicyWriter is an interface which all PolicyWriters must implement. It
  * defines a single method which writes a policy to an OutputStream.
- * 
- * @author Sanka Samaranayake (sanka@apache.org)
  */
 public interface PolicyWriter {
 

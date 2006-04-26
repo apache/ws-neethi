@@ -45,8 +45,6 @@ import org.apache.axiom.soap.SOAPEnvelope;
  * 
  * (3) Intersection user@localhost$java -cp <jar files> SimplePolicyClient -I
  * <URL of policy1> <URL of policy2>
- * 
- * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class SimplePolicyClient {
 

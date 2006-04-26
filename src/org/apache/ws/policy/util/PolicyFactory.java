@@ -19,8 +19,6 @@ package org.apache.ws.policy.util;
 /**
  * PolicyFactory is used to create PolicyReader / PolicyWriter objects of
  * different types.
- * 
- * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class PolicyFactory {
 	public static final int OM_POLICY_READER = 1;

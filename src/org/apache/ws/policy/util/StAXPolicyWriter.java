@@ -38,8 +38,6 @@ import org.apache.ws.policy.XorCompositeAssertion;
  * StAXPolicyWriter implements PolicyWriter and provides different methods to
  * create a Policy object. It uses StAX as its underlying mechanism to create
  * XML elements.
- * 
- * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class StAXPolicyWriter implements PolicyWriter {
 

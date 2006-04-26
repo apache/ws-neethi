@@ -23,8 +23,6 @@ import org.apache.ws.policy.Policy;
 /**
  * PolicyReader is an interface which every PolicyReader must implement. It
  * contains a single method to create a Policy object from an InputStream.
- * 
- * @author Sanka Samaranayake (sanka@apache.org)
  */
 public interface PolicyReader {
 

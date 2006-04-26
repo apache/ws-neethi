@@ -38,10 +38,6 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-/**
- * @author Werner Dittmann (werner@apache.org)
- */
-
 public class WSSPolicyPrinter {
 
     FileInputStream fis = null;

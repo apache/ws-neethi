@@ -16,10 +16,6 @@
 
 package secParser;
 
-/**
- * @author werner Dittmann (werner@apache.org)
- *
- */
 public class PolicyEngineData {
 
     public void initializeWithDefaults() {

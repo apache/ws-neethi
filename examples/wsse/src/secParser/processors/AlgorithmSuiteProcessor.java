@@ -21,10 +21,6 @@ import secParser.SecurityProcessorContext;
 
 import org.apache.ws.policy.PrimitiveAssertion;
 
-/**
- * @author Werner Dittmann (werner@apache.org)
- * 
- */
 public class AlgorithmSuiteProcessor {
 	private boolean initializedAlgorithmSuite = false;
 

@@ -38,9 +38,6 @@ import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyWriter;
 
-/**
- * @author Sanka Samaranayake (sanka@apache.org)
- */
 public class SimplePolicyService {
     private MessageContext msgCtx = null;
 

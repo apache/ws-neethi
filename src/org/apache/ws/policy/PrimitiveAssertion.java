@@ -33,8 +33,6 @@ import org.apache.ws.policy.util.PolicyUtil;
  * which contains the required knowledge. For instance a PrimitiveAssertion
  * which contains a WSSecurity policy assertionshould be processed only by the
  * security module.
- * 
- * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 

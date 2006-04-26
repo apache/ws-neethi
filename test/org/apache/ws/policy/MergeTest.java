@@ -21,9 +21,6 @@ import org.apache.ws.policy.util.PolicyComparator;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
 
-/**
- * @author Sanka Samaranayake (sanka@apache.org)
- */
 public class MergeTest extends PolicyTestCase {
 	PolicyReader reader = PolicyFactory
 			.getPolicyReader(PolicyFactory.OM_POLICY_READER);

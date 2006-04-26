@@ -29,9 +29,6 @@ import org.apache.ws.policy.PolicyReference;
 import org.apache.ws.policy.PrimitiveAssertion;
 import org.apache.ws.policy.XorCompositeAssertion;
 
-/**
- * @author Sanka Samaranayake (sanka@apache.org)
- */
 public class PolicyComparator {
 	public static boolean compare(Policy arg1, Policy arg2) {
 		if (arg1.getId() == null && arg2.getId() != null

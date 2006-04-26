@@ -21,9 +21,6 @@ import secParser.SecurityPolicy;
 import secParser.SecurityPolicyToken;
 import secParser.SecurityProcessorContext;
 
-/**
- * @author Werner Dittmann (werner@apache.org)
- */
 public class UsernameTokenProcessor {
 
 	private boolean initializedUsernameToken = false;

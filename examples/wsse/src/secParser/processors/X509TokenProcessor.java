@@ -21,9 +21,6 @@ import secParser.SecurityPolicy;
 import secParser.SecurityPolicyToken;
 import secParser.SecurityProcessorContext;
 
-/**
- * @author Werner Dittmann (werner@apache.org)
- */
 public class X509TokenProcessor {
 	private boolean initializedX509Token = false;
 

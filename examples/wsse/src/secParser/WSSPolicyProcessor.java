@@ -39,10 +39,6 @@ import org.apache.ws.policy.XorCompositeAssertion;
 import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyFactory;
 
-/**
- * @author Werner Dittmann (werner@apache.org)
- */
-
 public class WSSPolicyProcessor {
 
 	FileInputStream fis = null;

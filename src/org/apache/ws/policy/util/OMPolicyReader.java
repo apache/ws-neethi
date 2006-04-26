@@ -42,8 +42,6 @@ import java.util.Iterator;
  * OMPolicyReader implements PolicyReader interface and provides different
  * methods to create a policy object It ueses AxisOM as its underlying mechanism
  * to process XML.
- * 
- * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class OMPolicyReader implements PolicyReader {
 	OMPolicyReader() {

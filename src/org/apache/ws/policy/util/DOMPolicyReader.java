@@ -46,9 +46,6 @@ import org.apache.ws.policy.XorCompositeAssertion;
 /**
  * DOMPolicyReader implements PolicyReader and provides different methods to
  * create a policy object. It uses DOM as it underlying mechanism to XML.
- * 
- * @author Werner Dittmann (werner@apache.org)
- * @author Sanka Samaranayake (sanka@apache.org)
  */
 public class DOMPolicyReader implements PolicyReader {
 	public static final String XMLNS_NS_URI = "http://www.w3.org/2000/xmlns/";

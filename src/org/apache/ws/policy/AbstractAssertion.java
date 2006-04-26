@@ -22,8 +22,6 @@ import java.util.List;
 /**
  * AbstractAssertion provides the default implementation of some basic functions
  * definded in Assertion interface.
- * 
- * @author Sanka Samaranayake (sanka@apache.org)
  */
 public abstract class AbstractAssertion implements Assertion {
 
