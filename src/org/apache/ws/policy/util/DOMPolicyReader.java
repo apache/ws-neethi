@@ -48,175 +48,186 @@ import org.apache.ws.policy.XorCompositeAssertion;
  * create a policy object. It uses DOM as it underlying mechanism to XML.
  */
 public class DOMPolicyReader implements PolicyReader {
-	public static final String XMLNS_NS_URI = "http://www.w3.org/2000/xmlns/";
+    public static final String XMLNS_NS_URI = "http://www.w3.org/2000/xmlns/";
 
-	DOMPolicyReader() {
-	}
+    DOMPolicyReader() {
+    }
 
-	public Policy readPolicy(InputStream in) {
-		try {
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    public Policy readPolicy(InputStream in) {
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
-			dbf.setNamespaceAware(true);
-			dbf.setValidating(false);
+            dbf.setNamespaceAware(true);
+            dbf.setValidating(false);
 
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse(in);
-			Element element = doc.getDocumentElement();
-			return readPolicy(element);
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-			throw new RuntimeException("error : " + e.getMessage());
-		} catch (SAXException e) {
-			e.printStackTrace();
-			throw new RuntimeException("error : " + e.getMessage());
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException("error : " + e.getMessage());
-		}
-	}
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(in);
+            Element element = doc.getDocumentElement();
+            return readPolicy(element);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+            throw new RuntimeException("error : " + e.getMessage());
+        } catch (SAXException e) {
+            e.printStackTrace();
+            throw new RuntimeException("error : " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("error : " + e.getMessage());
+        }
+    }
 
-	private Assertion readAssertion(Element element) {
-		String namespace = element.getNamespaceURI();
-		String localName = element.getLocalName();
+    private Assertion readAssertion(Element element) {
+        String namespace = element.getNamespaceURI();
+        String localName = element.getLocalName();
 
-		if (!(namespace.equals(PolicyConstants.WS_POLICY_NAMESPACE_URI))) {
-			return readPrimitiveAssertion(element);
-		}
+        if (!(namespace.equals(PolicyConstants.WS_POLICY_NAMESPACE_URI))) {
+            return readPrimitiveAssertion(element);
+        }
 
-		if (localName.equals(PolicyConstants.WS_POLICY)) {
-			return readPolicy(element);
+        if (localName.equals(PolicyConstants.WS_POLICY)) {
+            return readPolicy(element);
 
-		} else if (localName.equals(PolicyConstants.AND_COMPOSITE_ASSERTION)) {
-			return readAndComposite(element);
+        } else if (localName.equals(PolicyConstants.AND_COMPOSITE_ASSERTION)) {
+            return readAndComposite(element);
 
-		} else if (localName.equals(PolicyConstants.XOR_COMPOSITE_ASSERTION)) {
-			return readXorComposite(element);
+        } else if (localName.equals(PolicyConstants.XOR_COMPOSITE_ASSERTION)) {
+            return readXorComposite(element);
 
-		} else if (localName.equals(PolicyConstants.WS_POLICY_REFERENCE)) {
-			return readPolicyReference(element);
+        } else if (localName.equals(PolicyConstants.WS_POLICY_REFERENCE)) {
+            return readPolicyReference(element);
 
-		} else {
-			throw new RuntimeException("unknown element ..");
-		}
-	}
+        } else {
+            throw new RuntimeException("unknown element ..");
+        }
+    }
 
-	public Policy readPolicy(Element element) {
-		Policy policy = new Policy();
-		Attr attri;
-		attri = element.getAttributeNodeNS(PolicyConstants.WSU_NAMESPACE_URI,
-				"Id");
-		if (attri != null) {
-			policy.setId(attri.getValue());
-		}
+    public Policy readPolicy(Element element) {
+        Policy policy = new Policy();
+        Attr attri;
+        attri = element.getAttributeNodeNS(PolicyConstants.WSU_NAMESPACE_URI,
+                "Id");
+        if (attri != null) {
+            policy.setId(attri.getValue());
+        }
 
-		attri = element.getAttributeNodeNS(PolicyConstants.XML_NAMESPACE_URI,
-				"base");
-		if (attri != null) {
-			policy.setBase(attri.getValue());
-		}
+        attri = element.getAttributeNodeNS(PolicyConstants.XML_NAMESPACE_URI,
+                "base");
+        if (attri != null) {
+            policy.setBase(attri.getValue());
+        }
 
-		policy.addTerms(readTerms(element));
-		return policy;
-	}
+        policy.addTerms(readTerms(element));
+        return policy;
+    }
 
-	private AndCompositeAssertion readAndComposite(Element element) {
-		AndCompositeAssertion andCompositeAssertion = new AndCompositeAssertion();
-		andCompositeAssertion.addTerms(readTerms(element));
-		return andCompositeAssertion;
-	}
+    private AndCompositeAssertion readAndComposite(Element element) {
+        AndCompositeAssertion andCompositeAssertion = new AndCompositeAssertion();
+        andCompositeAssertion.addTerms(readTerms(element));
+        return andCompositeAssertion;
+    }
 
-	private XorCompositeAssertion readXorComposite(Element element) {
-		XorCompositeAssertion xorCompositeAssertion = new XorCompositeAssertion();
-		xorCompositeAssertion.addTerms(readTerms(element));
-		return xorCompositeAssertion;
-	}
+    private XorCompositeAssertion readXorComposite(Element element) {
+        XorCompositeAssertion xorCompositeAssertion = new XorCompositeAssertion();
+        xorCompositeAssertion.addTerms(readTerms(element));
+        return xorCompositeAssertion;
+    }
 
-	public PolicyReference readPolicyReference(Element element) {
-		Attr attribute = element.getAttributeNode("URI");
-		return new PolicyReference(attribute.getValue());
-	}
+    public PolicyReference readPolicyReference(Element element) {
+        Attr attribute = element.getAttributeNode("URI");
+    
+        if (attribute == null) {
+            attribute = element.getAttributeNodeNS(element.getNamespaceURI(),
+                    element.getLocalName());
+        }
 
-	private PrimitiveAssertion readPrimitiveAssertion(Element element) {
-		QName qname = new QName(element.getNamespaceURI(), element
-				.getLocalName(), element.getPrefix());
-		PrimitiveAssertion result = new PrimitiveAssertion(qname);
+        if (attribute == null) {
+            throw new IllegalArgumentException(
+                    "PolicyReference element has no URI attribute");
+        }
 
-		result.setAttributes(getAttributes(element));
-		String isOptional = result.getAttribute(new QName(
-				PolicyConstants.WS_POLICY_NAMESPACE_URI, "Optional"));
-		result.setOptional(new Boolean(isOptional).booleanValue());
+        return new PolicyReference(attribute.getValue());
+    }
 
-		//CHECK ME
-		NodeList list = element.getChildNodes();
-		int length = list.getLength();
+    private PrimitiveAssertion readPrimitiveAssertion(Element element) {
+        QName qname = new QName(element.getNamespaceURI(), element
+                .getLocalName(), element.getPrefix());
+        PrimitiveAssertion result = new PrimitiveAssertion(qname);
 
-		for (int i = 0; i < length; i++) {
-			Node node = list.item(i);
-			short nodeType = node.getNodeType();
+        result.setAttributes(getAttributes(element));
+        String isOptional = result.getAttribute(new QName(
+                PolicyConstants.WS_POLICY_NAMESPACE_URI, "Optional"));
+        result.setOptional(new Boolean(isOptional).booleanValue());
 
-			if (nodeType == Node.ELEMENT_NODE) {
-				Element childElement = (Element) node;
-				if (childElement.getNamespaceURI().equals(
-						PolicyConstants.WS_POLICY_NAMESPACE_URI)
-						&& childElement.getLocalName().equals(
-								PolicyConstants.WS_POLICY)) {
-					Policy policy = readPolicy(childElement);
-					result.addTerm(policy);
+        //CHECK ME
+        NodeList list = element.getChildNodes();
+        int length = list.getLength();
 
-				} else {
-					PrimitiveAssertion pa = readPrimitiveAssertion(childElement);
-					result.addTerm(pa);
-				}
-			} else if (nodeType == Node.TEXT_NODE) {
-				String strValue = node.getNodeValue();
+        for (int i = 0; i < length; i++) {
+            Node node = list.item(i);
+            short nodeType = node.getNodeType();
 
-				if (strValue != null && strValue.length() != 0) {
-					result.setStrValue(strValue);
-				}
-			}
-		}
-		return result;
-	}
+            if (nodeType == Node.ELEMENT_NODE) {
+                Element childElement = (Element) node;
+                if (childElement.getNamespaceURI().equals(
+                        PolicyConstants.WS_POLICY_NAMESPACE_URI)
+                        && childElement.getLocalName().equals(
+                                PolicyConstants.WS_POLICY)) {
+                    Policy policy = readPolicy(childElement);
+                    result.addTerm(policy);
 
-	private ArrayList readTerms(Element element) {
-		ArrayList terms = new ArrayList();
-		NodeList list = element.getChildNodes();
-		int length = list.getLength();
+                } else {
+                    PrimitiveAssertion pa = readPrimitiveAssertion(childElement);
+                    result.addTerm(pa);
+                }
+            } else if (nodeType == Node.TEXT_NODE) {
+                String strValue = node.getNodeValue();
 
-		for (int i = 0; i < length; i++) {
-			Object obj = list.item(i);
+                if (strValue != null && strValue.length() != 0) {
+                    result.setStrValue(strValue);
+                }
+            }
+        }
+        return result;
+    }
 
-			if (obj instanceof Element) {
-				Element e = (Element) obj;
-				terms.add(readAssertion(e));
-			}
-		}
-		return terms;
-	}
+    private ArrayList readTerms(Element element) {
+        ArrayList terms = new ArrayList();
+        NodeList list = element.getChildNodes();
+        int length = list.getLength();
 
-	private Hashtable getAttributes(Element element) {
-		Hashtable attributes = new Hashtable();
-		NamedNodeMap map = element.getAttributes();
+        for (int i = 0; i < length; i++) {
+            Object obj = list.item(i);
 
-		int length = map.getLength();
+            if (obj instanceof Element) {
+                Element e = (Element) obj;
+                terms.add(readAssertion(e));
+            }
+        }
+        return terms;
+    }
 
-		for (int i = 0; i < length; i++) {
-			Attr attribute = (Attr) map.item(i);
-			if (!XMLNS_NS_URI.equals(attribute.getNamespaceURI())) {
-				String prefix = attribute.getPrefix();
-				QName qn = null;
-				if (prefix != null) {
-					qn = new QName(attribute.getNamespaceURI(), attribute
-							.getLocalName(), prefix);
-				} else {
-					qn = new QName(attribute.getNamespaceURI(), attribute
-							.getLocalName());
-				}
-				attributes.put(qn, attribute.getValue());
-			}
+    private Hashtable getAttributes(Element element) {
+        Hashtable attributes = new Hashtable();
+        NamedNodeMap map = element.getAttributes();
 
-		}
-		return attributes;
-	}
+        int length = map.getLength();
+
+        for (int i = 0; i < length; i++) {
+            Attr attribute = (Attr) map.item(i);
+            if (!XMLNS_NS_URI.equals(attribute.getNamespaceURI())) {
+                String prefix = attribute.getPrefix();
+                QName qn = null;
+                if (prefix != null) {
+                    qn = new QName(attribute.getNamespaceURI(), attribute
+                            .getLocalName(), prefix);
+                } else {
+                    qn = new QName(attribute.getNamespaceURI(), attribute
+                            .getLocalName());
+                }
+                attributes.put(qn, attribute.getValue());
+            }
+
+        }
+        return attributes;
+    }
 }
