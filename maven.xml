@@ -36,6 +36,8 @@
     
     <ant:property name="license.file" value="LICENSE.txt" />
     
+    <ant:property name="notice.file" value="NOTICE.txt" />
+    
     <ant:property name="readme.file" value="README.txt" />
     
     <ant:property name="authors.file" value="AUTHORS.txt" />
@@ -56,6 +58,7 @@
     </goal>
 
     <goal name="build">
+    	    
         <attainGoal name="default"/>
     </goal>
 
@@ -87,7 +90,17 @@
 			<!-- <ant:exclude name="**/*.license"/> -->
 		</ant:fileset>
         </ant:copy>
-	
+   <!--
+   <resources>
+       <resource>
+	       <directory>${dist.src.root.file}</directory>
+		       <includes>
+                   <include>NOTICE.txt</include>
+               </includes>
+               <targetPath>META-INF</targetPath>
+           </resource>
+    </resources>
+	-->
 	<ant:zip destfile="${build.dist.dir}/${dist.name}-src.zip" basedir="${dist.src.root.file}"/>
 	
 	<ant:tar tarfile="${build.dist.dir}/${dist.name}-src.tar" basedir="${dist.src.root.file}"/>

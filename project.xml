@@ -22,13 +22,13 @@
 	
 	<pomVersion>3</pomVersion>
 	
-	<name>Web Services Commons Neethi : A WS-Policy implemenation</name>
+	<name>Web Services Commons Neethi : A WS-Policy implementation</name>
 	<id>neethi</id>
 	<groupId>ws-commons</groupId>
   
   <!-- a short but descriptive name for the project -->
 	
-	<name>Web Servcies Commons Neethi</name>
+	<name>Web Services Commons Neethi</name>
   <!-- The version of the project under development, e.g.
        1.1, 1.2, 2.0-SNAPSHOT -->
 	
@@ -177,6 +177,13 @@
 		</unitTest>
 		
 		<resources>
+		    <resource>
+		    	<directory>${basedir}</directory>
+		    	<targetPath>META-INF</targetPath>
+		    	<includes>
+		    		<include>NOTICE.txt</include>
+		    	</includes>
+		    </resource>
 			<resource>
 				<directory>conf</directory>
 				<includes>
