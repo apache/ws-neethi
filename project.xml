@@ -22,17 +22,17 @@
 	
 	<pomVersion>3</pomVersion>
 	
-	<name>Web Services Commons : WS-Policy implemenation</name>
-	<id>policy</id>
+	<name>Web Services Commons Neethi : A WS-Policy implemenation</name>
+	<id>neethi</id>
 	<groupId>ws-commons</groupId>
   
   <!-- a short but descriptive name for the project -->
 	
-	<name>WS-Policy Implementation</name>
+	<name>Web Servcies Commons Neethi</name>
   <!-- The version of the project under development, e.g.
        1.1, 1.2, 2.0-SNAPSHOT -->
 	
-	<currentVersion>${policy.version}</currentVersion>
+	<currentVersion>${neethi.version}</currentVersion>
   <!-- details about the organization that 'owns' the project -->
 	
 	<organization>
@@ -47,7 +47,7 @@
 
 	<mailingLists>
 		<mailingList>
-			<name>WS-Policy Developer List</name>
+			<name>Neethi Developer List</name>
 			<subscribe>commons-dev-subscribe@ws.apache.org</subscribe>
 			<unsubscribe>commons-dev-unsubscribe@ws.apache.org</unsubscribe>
 			<archive>http://mail-archives.apache.org/mod_mbox/ws-commons-dev/</archive>
@@ -100,8 +100,13 @@
 	<dependencies>
 		<dependency>
 			<groupId>ws-commons</groupId>
-			<artifactId>axiom</artifactId>
-			<version>${axiom.version}</version>
+			<artifactId>${axiom.api.artifactid}</artifactId>
+			<version>${axiom.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ws-commons</groupId>
+			<artifactId>${axiom.impl.artifactid}</artifactId>
+			<version>${axiom.impl.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${stax.impl.groupid}</groupId>
