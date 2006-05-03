@@ -16,7 +16,7 @@
 		<section>
 			<h2>Releases</h2>
 			<div align="left">
-				<p>Please select the Apache Neehti version you want to download. Latest release is 0.90. You can download both
+				<p>Please select the Apache Neehti version you want to download. Latest release is 1.0.1. You can download both
 the binay distribution and the source distribution.</p>
 			</div>
 			<div align="center">
@@ -32,23 +32,57 @@ the binay distribution and the source distribution.</p>
 						</tr>
 						<tr class="b">
 							<td align="center" valign="middle">
+								<a name="09"></a>1.0.1</td>
+							<td align="center">Release</td>
+							<td>Source Distribution <a href="[preferred]/ws/commons/neethi/1_0_1/neethi-1.0.1-src.zip" title="[preferred]/ws/commons/neethi/1_0_1/neethi-1.0.1-src.zip">zip</a>
+								
+								<a href="http://www.apache.org/dist/ws/commons/neethi/1_0_1/neethi-1.0.1-src.zip.md5" class="externalLink" title="http://www.apache.org/dist/ws/commons/neethi/1_0_1/neethi-1.0.1-src.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/1_0_1/neethi-1.0.1-src.zip.asc" class="externalLink" title="http://www.apache.org/dist/ws/commons/neethi/1_0_1/neethi-1.0.1-src.zip.asc">PGP</a>
+								<br />
+								Binary Distribution <a href="[preferred]/ws/commons/neethi/1_0_1/neethi-1.0.1-bin.zip" title="[preferred]/ws/commons/neethi/1_0_1/neethi-1.0.1-bin.zip">zip</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/1_0_1/neethi-1.0.1-bin.zip.md5" class="externalLink" title="http://www.apache.org/dist/ws/commons/neethi/1_0_1/neethi-1.0.1-bin.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/1_0_1/neethi-1.0.1-bin.zip.asc" class="externalLink" title="http://www.apache.org/dist/ws/ws/commons/neethi/1_0_1/neethi-1.0.1-bin.zip.asc">PGP</a>
+								
+								<br />
+							</td>
+							<td>03 - 05  - 2006</td>
+							<td>1.0.1 Release (Mirrored)</td>
+						</tr>
+						<tr class="b"><td align="center" valign="middle">
+								<a name="09"></a>1.0</td>
+								<td align="center">Release</td>
+								<td>Source Distribution <a href="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-src.zip" title="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-src.zip">zip</a>
+								
+									<a href="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-src.zip.md5" class="externalLink" title="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-src.zip.md5">MD5</a>
+									<a href="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-src.zip.asc" class="externalLink" title="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-src.zip.asc">PGP</a>
+								<br></br>
+								Binary Distribution <a href="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-bin.zip" title="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-bin.zip">zip</a>
+								<a href="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-bin.zip.md5" class="externalLink" title="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-bin.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-bin.zip.asc" class="externalLink" title="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-bin.zip.asc">PGP</a>
+								
+								
+								<br></br>
+							</td><td>23 - 03  - 2006</td>
+							<td>1.0 Release (Archived)</td>
+						</tr>					
+						<tr class="b">
+							<td align="center" valign="middle">
 								<a name="09"></a>0.90</td>
 							<td align="center">Release</td>
-							<td>Source Distribution <a href="[preferred]/ws/commons/policy/1_0/policy-1.0-src.zip" title="[preferred]/ws/commons/policy/0_90/policy-0.90-src.zip">zip</a>
+							<td>Source Distribution <a href="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-src.zip" title="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-src.zip">zip</a>
 								
-								<a href="http://www.apache.org/dist/ws/commons/policy/0_90/policy-0.90-src.zip.md5" class="externalLink" title="http://www.apache.org/dist/ws/commons/policy/0_90/policy-0.90-src.zip.md5">MD5</a>
-								<a href="http://www.apache.org/dist/ws/commons/policy/0_90/policy-0.90-src.zip.asc" class="externalLink" title="http://www.apache.org/dist/ws/commons/policy/0_90/policy-0.90-src.zip.asc">PGP</a>
+								<a href="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-src.zip.md5" class="externalLink" title="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-src.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-src.zip.asc" class="externalLink" title="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-src.zip.asc">PGP</a>
 								<br />
-        Binary Distribution <a href="[preferred]/ws/commons/policy/0_90/policy-0.90-bin.zip" title="[preferred]/ws/commons/policy/0_90/policy-0.90-bin.zip">zip</a>
-								<a href="http://www.apache.org/dist/ws/commons/policy/0_90/policy-0.90-bin.zip.md5" class="externalLink" title="http://www.apache.org/dist/ws/commons/policy/0_90/policy-0.90-bin.zip.md5">MD5</a>
-								<a href="http://www.apache.org/dist/ws/commons/policy/0_90/policy-0.90-bin.zip.asc" class="externalLink" title="http://www.apache.org/dist/ws/ws/commons/policy/0_90/policy-0.90-bin.zip.asc">PGP</a>
+								Binary Distribution <a href="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-bin.zip" title="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-bin.zip">zip</a>
+								<a href="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-bin.zip.md5" class="externalLink" title="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-bin.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-bin.zip.asc" class="externalLink" title="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-bin.zip.asc">PGP</a>
 									
 								<br />
 							</td>
 							<td>05 - 03  - 2006</td>
-							<td>0.90 Release (Mirrored)</td>
-						</tr>
-						
+							<td>0.90 Release (Archived)</td>
+						</tr>						
 					</tbody>
 				</table>
 			</div>
@@ -79,7 +113,7 @@ list of mirrors</a>.</p>
 the <a href="http://www.apache.org/dev/release-signing#openpgp">OpenPGP</a>
 compatible signature from the main Apache site. These can be downloaded by
 following the links above. This <a
-									href="http://www.apache.org/dist/ws/commons/policy/KEYS">KEYS</a> file contains the
+									href="http://www.apache.org/dist/ws/commons/neethi/KEYS">KEYS</a> file contains the
 public keys used for signing release. It is recommended that (when possible)
 a <a href="http://www.apache.org/dev/release-signing#web-of-trust">web of
 trust</a> is used to confirm the identity of these keys.</p>
