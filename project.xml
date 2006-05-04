@@ -100,13 +100,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>ws-commons</groupId>
-			<artifactId>${axiom.api.artifactid}</artifactId>
-			<version>${axiom.api.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>ws-commons</groupId>
-			<artifactId>${axiom.impl.artifactid}</artifactId>
-			<version>${axiom.impl.version}</version>
+			<artifactId>axiom</artifactId>
+			<version>${axiom.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${stax.impl.groupid}</groupId>

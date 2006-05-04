@@ -17,6 +17,7 @@
 package org.apache.ws.policy.util;
 
 import java.io.OutputStream;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -62,10 +63,10 @@ public class StAXPolicyWriter implements PolicyWriter {
 
 	public void writePolicy(Policy policy, XMLStreamWriter writer)
 			throws XMLStreamException {
-		String writerPerfix = writer
+		String writerPrefix = writer
 				.getPrefix(PolicyConstants.WS_POLICY_NAMESPACE_URI);
 
-		if (writerPerfix != null) {
+		if (writerPrefix != null) {
 			writer.writeStartElement(PolicyConstants.WS_POLICY_NAMESPACE_URI,
 					PolicyConstants.WS_POLICY);
 
@@ -80,24 +81,54 @@ public class StAXPolicyWriter implements PolicyWriter {
 
 		}
 
-		if (policy.getId() != null) {
+    Hashtable attributes = policy.getAttributes();
+    Enumeration attrNames = attributes.keys();
+    while (attrNames.hasMoreElements()) {
+      QName tAttrName = (QName) attrNames.nextElement();
+      String tAttrNamespaceURI = tAttrName.getNamespaceURI();
+      // If it's a namespace, make sure we note that it's been written ...
 
-			writer.writeNamespace(PolicyConstants.WSU_NAMESPACE_PREFIX,
-					PolicyConstants.WSU_NAMESPACE_URI);
-			writer.setPrefix(PolicyConstants.WSU_NAMESPACE_PREFIX,
-					PolicyConstants.WSU_NAMESPACE_URI);
+      if (tAttrNamespaceURI != null) {
+        if (tAttrNamespaceURI.equals(PolicyConstants.NAMESPACE_XMLNS)) {
+          String tPrefix = tAttrName.getLocalPart();
+          // For XMLSNS attributes, the attribute value is the actual namespace.
+          writerPrefix = writer.getPrefix((String) attributes.get(tAttrName));
+          // We only need to act upon it if we haven't seen it before ...
+          if (writerPrefix == null) {
+            writer.setPrefix(tPrefix, (String) attributes.get(tAttrName));
+            writer.writeNamespace(tPrefix, (String) attributes.get(tAttrName));
+          }
+        } else {
+          // It must be a standard attribute ...
+          String tPrefix = writer.getPrefix(tAttrNamespaceURI);
 
-			writer.writeAttribute("wsu", PolicyConstants.WSU_NAMESPACE_URI,
-					"Id", policy.getId());
-		}
+          // Firstly, deal with the ones that have prefixes in common usage ...
+          if (tAttrNamespaceURI.equals(PolicyConstants.WSU_NAMESPACE_URI)) {
+            if (tPrefix == null) {
+              tPrefix = PolicyConstants.WSU_NAMESPACE_PREFIX;
+              writer.setPrefix(tPrefix, tAttrNamespaceURI);
+              writer.writeNamespace(tPrefix, tAttrNamespaceURI);
+            }
+          } else {
+            if (tPrefix == null) {
+              tPrefix = generateNamespace();
+              writer.setPrefix(tPrefix, tAttrNamespaceURI);
+              writer.writeNamespace(tPrefix, tAttrNamespaceURI);
+            }
+          }
+          writer.writeAttribute(tPrefix, tAttrNamespaceURI, tAttrName
+              .getLocalPart(), (String) attributes.get(tAttrName));
+        }
+      }
+    }
+    Iterator iterator = policy.getTerms().iterator();
+    while (iterator.hasNext()) {
+      Assertion term = (Assertion) iterator.next();
+      writeAssertion(term, writer);
+    }
 
-		Iterator iterator = policy.getTerms().iterator();
-		while (iterator.hasNext()) {
-			Assertion term = (Assertion) iterator.next();
-			writeAssertion(term, writer);
-		}
+    writer.writeEndElement();
 
-		writer.writeEndElement();
 	}
 
 	private void writeAssertion(Assertion assertion, XMLStreamWriter writer)

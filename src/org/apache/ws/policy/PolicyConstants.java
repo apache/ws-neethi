@@ -48,5 +48,14 @@ public interface PolicyConstants {
 
 	/** XML namespace */
 	public static final String XML_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
+  
+  /** Policy Id attribute **/
+  public static final String WS_POLICY_ID = "Id";
+  
+  /** Policy base attribute **/
+  public static final String WS_POLICY_BASE = "base";
+  
+  /** Namespace of xmlns prefix when defining namespace aliases  */
+  public static final String NAMESPACE_XMLNS = "http://www.w3.org/2000/xmlns/";
 
 }

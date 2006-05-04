@@ -102,22 +102,20 @@ public class DOMPolicyReader implements PolicyReader {
     }
 
     public Policy readPolicy(Element element) {
-        Policy policy = new Policy();
-        Attr attri;
-        attri = element.getAttributeNodeNS(PolicyConstants.WSU_NAMESPACE_URI,
-                "Id");
-        if (attri != null) {
-            policy.setId(attri.getValue());
+      Policy policy = new Policy();
+      // We treat all attributes equally ...
+      NamedNodeMap attributes = element.getAttributes();
+      if (attributes != null) {
+        for (int i = 0; i < attributes.getLength(); i++) {
+          Node attributeNode = attributes.item(i);
+          QName attrName = new QName(attributeNode.getNamespaceURI(), attributeNode
+              .getLocalName());
+          policy.addAttribute(new QName(attributeNode.getNamespaceURI(), attributeNode
+              .getLocalName()), attributeNode.getNodeValue());
         }
-
-        attri = element.getAttributeNodeNS(PolicyConstants.XML_NAMESPACE_URI,
-                "base");
-        if (attri != null) {
-            policy.setBase(attri.getValue());
-        }
-
-        policy.addTerms(readTerms(element));
-        return policy;
+      }
+      policy.addTerms(readTerms(element));
+      return policy;
     }
 
     private AndCompositeAssertion readAndComposite(Element element) {

@@ -91,22 +91,17 @@ public class OMPolicyReader implements PolicyReader {
 	}
 
 	public Policy readPolicy(OMElement element) {
-		Policy policy = new Policy();
+    Policy policy = new Policy();
 
-		OMAttribute attri;
-		attri = element.getAttribute(new QName(
-				PolicyConstants.WSU_NAMESPACE_URI, "Id"));
-		if (attri != null) {
-			policy.setId(attri.getAttributeValue());
-		}
-		attri = element.getAttribute(new QName(
-				PolicyConstants.XML_NAMESPACE_URI, "base"));
-		if (attri != null) {
-			policy.setBase(attri.getAttributeValue());
-		}
-
-		policy.addTerms(readTerms(element));
-		return policy;
+    // We treat all attributes equally ...
+    OMAttribute attri;
+    Iterator it = element.getAllAttributes();
+    while (it.hasNext()) {
+      attri = (OMAttribute) it.next();
+      policy.addAttribute(attri.getQName(), attri.getAttributeValue());
+    }
+    policy.addTerms(readTerms(element));
+    return policy;
 	}
 
 	private AndCompositeAssertion readAndComposite(OMElement element) {
