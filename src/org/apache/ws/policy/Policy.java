@@ -113,6 +113,27 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
     }
 
     /**
+         * Sets the Name of the Policy object
+         * 
+         * @param name
+         */
+        public void setName(String name) {
+            addAttribute(new QName("", PolicyConstants.WS_POLICY_NAME), name);
+        }
+    
+        /**
+         * Returns the Name of the Policy object. Returns null if no Name is set.
+         * 
+         * @return the Name of the policy object.
+         */
+        public String getName() {
+            return (String) getAttribute(new QName(
+                    "", PolicyConstants.WS_POLICY_NAME));
+        }
+        
+        /**
+    
+    /**
      * Returns a String which uniquely identify the policy object. It has the
      * format of {$xmlBase}#{$id}. If the xmlBase is null it will return #{$id}
      * as the URI String. If the Id is null, this will return.

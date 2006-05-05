@@ -52,6 +52,9 @@ public interface PolicyConstants {
   /** Policy Id attribute **/
   public static final String WS_POLICY_ID = "Id";
   
+  /** Policy Name attribute **/
+  public static final String WS_POLICY_NAME = "Name";
+  
   /** Policy base attribute **/
   public static final String WS_POLICY_BASE = "base";
   
