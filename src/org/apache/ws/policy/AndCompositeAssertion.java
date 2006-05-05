@@ -446,44 +446,8 @@ public class AndCompositeAssertion extends AbstractAssertion implements
 
 		// processing child-XORCompositeAssertions
 		if (XORs.size() > 1) {
-
-			XorCompositeAssertion XOR_A, XOR_B;
-
-			for (int i = 0; i < XORs.size(); i++) {
-
-				for (int j = i; j < XORs.size(); j++) {
-
-					if (i != j) {
-						XOR_A = (XorCompositeAssertion) XORs.get(i);
-						XOR_B = (XorCompositeAssertion) XORs.get(j);
-
-						Iterator interatorA = XOR_A.getTerms().iterator();
-
-						Assertion anAND_A;
-						Iterator iteratorB;
-
-						while (interatorA.hasNext()) {
-							anAND_A = (Assertion) interatorA.next();
-							iteratorB = XOR_B.getTerms().iterator();
-
-							Assertion anAND_B;
-							AndCompositeAssertion nAND;
-
-							while (iteratorB.hasNext()) {
-
-								anAND_B = (Assertion) iteratorB.next();
-
-								nAND = new AndCompositeAssertion();
-								nAND.addTerms(anAND_A.getTerms());
-								nAND.addTerms(anAND_B.getTerms());
-
-								XOR.addTerm(nAND);
-							}
-						}
-					}
-				}
-			}
-
+            XOR.addTerms(Policy.crossProduct(XORs, 0));
+            
 		} else if (XORs.size() == 1) {
 			Assertion XORterm = (Assertion) XORs.get(0);
 			XOR.addTerms(XORterm.getTerms());

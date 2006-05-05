@@ -205,34 +205,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
         // processing child-XORCompositeAssertions
         if (childXorTermList.size() > 1) {
 
-            for (int i = 0; i < childXorTermList.size(); i++) {
-
-                for (int j = i; j < childXorTermList.size(); j++) {
-
-                    if (i != j) {
-                        XorCompositeAssertion xorTermA = (XorCompositeAssertion) childXorTermList
-                                .get(i);
-                        XorCompositeAssertion xorTermB = (XorCompositeAssertion) childXorTermList
-                                .get(j);
-
-                        Iterator iterA = xorTermA.getTerms().iterator();
-
-                        while (iterA.hasNext()) {
-                            Assertion andTermA = (Assertion) iterA.next();
-
-                            Iterator iterB = xorTermB.getTerms().iterator();
-
-                            while (iterB.hasNext()) {
-                                Assertion andTermB = (Assertion) iterB.next();
-                                AndCompositeAssertion anAndTerm = new AndCompositeAssertion();
-                                anAndTerm.addTerms(andTermA.getTerms());
-                                anAndTerm.addTerms(andTermB.getTerms());
-                                XOR.addTerm(anAndTerm);
-                            }
-                        }
-                    }
-                }
-            }
+            XOR.addTerms(Policy.crossProduct(childXorTermList, 0));
 
         } else if (childXorTermList.size() == 1) {
             Assertion xorTerm = (Assertion) childXorTermList.get(0);
@@ -426,6 +399,43 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
      */
     public void clearAttributes() {
         attributes.clear();
+    }
+
+    /**
+     * @param allTerms
+     *            XorCompositeAssertion to be corssproducted
+     * @param index
+     *            starting point of cross product
+     * @return
+     */
+    protected static ArrayList crossProduct(ArrayList allTerms, int index) {
+
+        ArrayList result = new ArrayList();
+        XorCompositeAssertion firstTerm = (XorCompositeAssertion) allTerms
+                .get(index);
+        ArrayList restTerms;
+
+        if (allTerms.size() == ++index) {
+            restTerms = new ArrayList();
+            AndCompositeAssertion newTerm = new AndCompositeAssertion();
+            restTerms.add(newTerm);
+        } else
+            restTerms = crossProduct(allTerms, index);
+
+        Iterator firstTermIter = firstTerm.getTerms().iterator();
+        while (firstTermIter.hasNext()) {
+            Assertion assertion = (Assertion) firstTermIter.next();
+            Iterator restTermsItr = restTerms.iterator();
+            while (restTermsItr.hasNext()) {
+                Assertion restTerm = (Assertion) restTermsItr.next();
+                AndCompositeAssertion newTerm = new AndCompositeAssertion();
+                newTerm.addTerms(assertion.getTerms());
+                newTerm.addTerms(restTerm.getTerms());
+                result.add(newTerm);
+            }
+        }
+
+        return result;
     }
 
 }
