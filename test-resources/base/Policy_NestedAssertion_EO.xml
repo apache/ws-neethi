@@ -1,0 +1,18 @@
+<wsp:Policy wsu:Id="Policy_NestedAssertion_EO"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	xmlns:cal="http://policy.test.webservices.com/calendar"
+	xmlns:form="http://policy.test.webservices.com/form"
+	xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+	<form:Shape>Circle</form:Shape>
+	<form:Widget>
+		<form:Size>Small</form:Size>
+		<wsp:Policy>
+			<wsp:ExactlyOne>
+				<form:Color>Green</form:Color>
+				<form:Color>Blue</form:Color>
+				<form:Color>Red</form:Color>
+			</wsp:ExactlyOne>
+		</wsp:Policy>
+	</form:Widget>	
+</wsp:Policy>
+

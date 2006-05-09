@@ -154,8 +154,15 @@ public class DOMPolicyReader implements PolicyReader {
         result.setAttributes(getAttributes(element));
         String isOptional = result.getAttribute(new QName(
                 PolicyConstants.WS_POLICY_NAMESPACE_URI, "Optional"));
-        result.setOptional(new Boolean(isOptional).booleanValue());
-
+        
+        if (isOptional != null) {
+            if (isOptional.equalsIgnoreCase("true")) {
+                result.setOptional(true);
+            } else if (isOptional.equals("1")) {
+                result.setOptional(true);
+            }
+        }
+        
         //CHECK ME
         NodeList list = element.getChildNodes();
         int length = list.getLength();

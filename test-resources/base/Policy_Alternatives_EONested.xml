@@ -1,0 +1,20 @@
+<wsp:Policy wsu:Id="Policy_Alternatives_EONested"
+	xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+	xmlns:cal="http://policy.test.webservices.com/calendar"
+	xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
+	<wsp:All>
+		<wsp:ExactlyOne>
+			<cal:Hour>24</cal:Hour>
+			<cal:Log>ID</cal:Log>
+		</wsp:ExactlyOne>
+		<wsp:ExactlyOne>
+			<cal:Month>Alpha</cal:Month>
+			<cal:MonthDay>Numeric</cal:MonthDay>
+		</wsp:ExactlyOne>
+		<wsp:ExactlyOne>
+			<cal:YearDay>Numeric</cal:YearDay>
+			<cal:Year>Numeric</cal:Year>
+		</wsp:ExactlyOne>
+	</wsp:All>
+</wsp:Policy>
+

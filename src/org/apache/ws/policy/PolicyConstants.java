@@ -22,43 +22,43 @@ package org.apache.ws.policy;
  */
 public interface PolicyConstants {
 
-	/** Tag name of AndComposteAssertion */
-	public static final String AND_COMPOSITE_ASSERTION = "All";
+    /** Tag name of AndComposteAssertion */
+    public static final String AND_COMPOSITE_ASSERTION = "All";
 
-	/** Tag name of XorCompositeAssertion */
-	public static final String XOR_COMPOSITE_ASSERTION = "ExactlyOne";
+    /** Tag name of XorCompositeAssertion */
+    public static final String XOR_COMPOSITE_ASSERTION = "ExactlyOne";
 
-	/** Tag name of Policy */
-	public static final String WS_POLICY = "Policy";
+    /** Tag name of Policy */
+    public static final String WS_POLICY = "Policy";
 
-	/** Prefix of WS-Policy namespace */
-	public static final String WS_POLICY_PREFIX = "wsp";
+    /** Prefix of WS-Policy namespace */
+    public static final String WS_POLICY_PREFIX = "wsp";
 
-	/** Prefix of WSU namespace */
-	public static final String WSU_NAMESPACE_PREFIX = "wsu";
+    /** Prefix of WSU namespace */
+    public static final String WSU_NAMESPACE_PREFIX = "wsu";
 
-	/** Tag name of PolicyReference */
-	public static final String WS_POLICY_REFERENCE = "PolicyReference";
+    /** Tag name of PolicyReference */
+    public static final String WS_POLICY_REFERENCE = "PolicyReference";
 
-	/** Namespace of WS-Policy */
-	public static final String WS_POLICY_NAMESPACE_URI = "http://schemas.xmlsoap.org/ws/2004/09/policy";
+    /** Namespace of WS-Policy */
+    public static final String WS_POLICY_NAMESPACE_URI = "http://schemas.xmlsoap.org/ws/2004/09/policy";
 
-	/** Namespace of WSU */
-	public static final String WSU_NAMESPACE_URI = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
+    /** Namespace of WSU */
+    public static final String WSU_NAMESPACE_URI = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
 
-	/** XML namespace */
-	public static final String XML_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
-  
-  /** Policy Id attribute **/
-  public static final String WS_POLICY_ID = "Id";
-  
-  /** Policy Name attribute **/
-  public static final String WS_POLICY_NAME = "Name";
-  
-  /** Policy base attribute **/
-  public static final String WS_POLICY_BASE = "base";
-  
-  /** Namespace of xmlns prefix when defining namespace aliases  */
-  public static final String NAMESPACE_XMLNS = "http://www.w3.org/2000/xmlns/";
+    /** XML namespace */
+    public static final String XML_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
+
+    /** Policy Id attribute * */
+    public static final String WS_POLICY_ID = "Id";
+
+    /** Policy Name attribute * */
+    public static final String WS_POLICY_NAME = "Name";
+
+    /** Policy base attribute * */
+    public static final String WS_POLICY_BASE = "base";
+
+    /** Namespace of xmlns prefix when defining namespace aliases */
+    public static final String NAMESPACE_XMLNS = "http://www.w3.org/2000/xmlns/";
 
 }

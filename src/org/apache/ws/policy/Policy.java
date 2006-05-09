@@ -113,30 +113,29 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
     }
 
     /**
-         * Sets the Name of the Policy object
-         * 
-         * @param name
-         */
-        public void setName(String name) {
-            addAttribute(new QName("", PolicyConstants.WS_POLICY_NAME), name);
-        }
-    
-        /**
-         * Returns the Name of the Policy object. Returns null if no Name is set.
-         * 
-         * @return the Name of the policy object.
-         */
-        public String getName() {
-            return (String) getAttribute(new QName(
-                    "", PolicyConstants.WS_POLICY_NAME));
-        }
-        
-        /**
-    
+     * Sets the Name of the Policy object
+     * 
+     * @param name
+     */
+    public void setName(String name) {
+        addAttribute(new QName("", PolicyConstants.WS_POLICY_NAME), name);
+    }
+
     /**
-     * Returns a String which uniquely identify the policy object. It has the
-     * format of {$xmlBase}#{$id}. If the xmlBase is null it will return #{$id}
-     * as the URI String. If the Id is null, this will return.
+     * Returns the Name of the Policy object. Returns null if no Name is set.
+     * 
+     * @return the Name of the policy object.
+     */
+    public String getName() {
+        return (String) getAttribute(new QName("",
+                PolicyConstants.WS_POLICY_NAME));
+    }
+
+    /**
+     * 
+     * /** Returns a String which uniquely identify the policy object. It has
+     * the format of {$xmlBase}#{$id}. If the xmlBase is null it will return
+     * #{$id} as the URI String. If the Id is null, this will return.
      * 
      * @return a String which uniquely identify the policy object.
      */
@@ -457,6 +456,49 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
         }
 
         return result;
+    }
+
+    /**
+     * Returns an Iterator to track the Alternatives within this Policy. This
+     * iterator will again return an iterator which points to the set of
+     * primitives in an alternative.
+     * 
+     * @return
+     */
+    public Iterator iterator() {
+        return new PolicyIterator(this);
+    }
+
+    private class PolicyIterator implements java.util.Iterator {
+
+        private XorCompositeAssertion XOR = null;
+
+        private int currentIndex = 0;
+
+        private PolicyIterator(Policy policy) {
+            if (!policy.isNormalized()) {
+                policy = (Policy) policy.normalize();
+            }
+
+            XOR = (XorCompositeAssertion) policy.getTerms().get(0);
+        }
+
+        public boolean hasNext() {
+            return XOR.size() > currentIndex;
+        }
+
+        public Object next() {
+            AndCompositeAssertion AND = (AndCompositeAssertion) XOR.getTerms()
+                    .get(currentIndex);
+            currentIndex++;
+            return AND.getTerms();
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException(
+                    "currently not supported .. ");
+
+        }
     }
 
 }
