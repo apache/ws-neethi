@@ -24,20 +24,20 @@ import org.apache.commons.logging.Log;
 import org.apache.ws.policy.util.PolicyRegistry;
 
 /**
- * XorCompositeAssertion requires that exactly one of its terms are met.
+ * ExactlyOne requires that exactly one of its terms are met.
  * 
  * Sanka Samaranayake (sanka@apache.org)
  */
-public class XorCompositeAssertion extends AbstractAssertion implements
+public class ExactlyOne extends AbstractAssertion implements
 		CompositeAssertion {
 
 	private Log log = LogFactory.getLog(this.getClass().getName());
 
-	public XorCompositeAssertion() {
+	public ExactlyOne() {
 	}
 
 	public void addTerm(Assertion assertion) {
-		if (!(isNormalized() && (assertion instanceof AndCompositeAssertion) && ((AndCompositeAssertion) assertion)
+		if (!(isNormalized() && (assertion instanceof All) && ((All) assertion)
 				.isNormalized())) {
 			setNormalized(false);
 		}
@@ -45,17 +45,17 @@ public class XorCompositeAssertion extends AbstractAssertion implements
 	}
 
 	public Assertion normalize(PolicyRegistry reg) {
-		log.debug("Enter: XorCompositeAssertion::normalize");
+		log.debug("Enter: ExactlyOne::normalize");
 
 		if (isNormalized()) {
 			return this;
 		}
 
-		XorCompositeAssertion XOR = new XorCompositeAssertion();
+		ExactlyOne exactlyOne = new ExactlyOne();
 
 		if (isEmpty()) {
-			XOR.setNormalized(true);
-			return XOR;
+			exactlyOne.setNormalized(true);
+			return exactlyOne;
 		}
 
 		Iterator terms = getTerms().iterator();
@@ -65,47 +65,47 @@ public class XorCompositeAssertion extends AbstractAssertion implements
 			term = (term instanceof Policy) ? term : term.normalize(reg);
 
 			if (term instanceof Policy) {
-				Assertion wrapper = new AndCompositeAssertion();
-				((AndCompositeAssertion) wrapper).addTerms(((Policy) term)
+				Assertion wrapper = new All();
+				((All) wrapper).addTerms(((Policy) term)
 						.getTerms());
 				wrapper = wrapper.normalize(reg);
 
-				if (wrapper instanceof AndCompositeAssertion) {
-					XOR.addTerm(wrapper);
+				if (wrapper instanceof All) {
+					exactlyOne.addTerm(wrapper);
 
 				} else {
-					XOR.addTerms(((XorCompositeAssertion) wrapper).getTerms());
+					exactlyOne.addTerms(((ExactlyOne) wrapper).getTerms());
 				}
 				continue;
 			}
 
 			if (term instanceof PrimitiveAssertion) {
-				AndCompositeAssertion wrapper = new AndCompositeAssertion();
+				All wrapper = new All();
 				wrapper.addTerm(term);
-				XOR.addTerm(wrapper);
+				exactlyOne.addTerm(wrapper);
 				continue;
 			}
 
-			if (term instanceof XorCompositeAssertion) {
-				XOR.addTerms(((XorCompositeAssertion) term).getTerms());
+			if (term instanceof ExactlyOne) {
+				exactlyOne.addTerms(((ExactlyOne) term).getTerms());
 				continue;
 			}
 
-			if (term instanceof AndCompositeAssertion) {
-				XOR.addTerm(term);
+			if (term instanceof All) {
+				exactlyOne.addTerm(term);
 			}
 		}
 
-		XOR.setNormalized(true);
-		return XOR;
+		exactlyOne.setNormalized(true);
+		return exactlyOne;
 	}
 
 	public Assertion intersect(Assertion assertion, PolicyRegistry reg) {
-		log.debug("Enter: XorCompositeAssertion::intersect");
+		log.debug("Enter: ExactlyOne::intersect");
 
 		Assertion normalizedMe = (isNormalized()) ? this : normalize(reg);
 
-		if (!(normalizedMe instanceof XorCompositeAssertion)) {
+		if (!(normalizedMe instanceof ExactlyOne)) {
 			return normalizedMe.intersect(assertion, reg);
 		}
 
@@ -115,68 +115,68 @@ public class XorCompositeAssertion extends AbstractAssertion implements
 
 		switch (type) {
 
-		case Assertion.COMPOSITE_POLICY_TYPE: {
-			Policy nPOLICY = new Policy();
-			nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms()
+		case Assertion.POLICY: {
+			Policy newPolicy = new Policy();
+			newPolicy.addTerm(((ExactlyOne) normalizedMe.getTerms()
 					.get(0)).intersect(target));
-			return nPOLICY;
+			return newPolicy;
 		}
 
-		case Assertion.COMPOSITE_XOR_TYPE: {
-			XorCompositeAssertion nXOR = new XorCompositeAssertion();
+		case Assertion.EXACTLY_ONE: {
+			ExactlyOne newExactlyOne = new ExactlyOne();
 
 			Assertion asser;
-			AndCompositeAssertion AND;
+			All all;
 
 			for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator
 					.hasNext();) {
-				AND = (AndCompositeAssertion) iterator.next();
+				all = (All) iterator.next();
 
 				for (Iterator iterator2 = target.getTerms().iterator(); iterator2
 						.hasNext();) {
-					asser = AND.intersect((AndCompositeAssertion) iterator2
+					asser = all.intersect((All) iterator2
 							.next());
 
-					if (asser instanceof AndCompositeAssertion) {
-						nXOR.addTerm(asser);
+					if (asser instanceof All) {
+						newExactlyOne.addTerm(asser);
 					}
 				}
 			}
 
-			return nXOR;
+			return newExactlyOne;
 		}
 
-		case Assertion.COMPOSITE_AND_TYPE: {
-			XorCompositeAssertion nXOR = new XorCompositeAssertion();
+		case Assertion.ALL: {
+			ExactlyOne newExactlyOne = new ExactlyOne();
 			Assertion asser;
 
 			for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator
 					.hasNext();) {
-				asser = ((AndCompositeAssertion) iterator.next())
+				asser = ((All) iterator.next())
 						.intersect(target);
 
-				if (asser instanceof AndCompositeAssertion) {
-					nXOR.addTerm(asser);
+				if (asser instanceof All) {
+					newExactlyOne.addTerm(asser);
 				}
 			}
-			return nXOR;
+			return newExactlyOne;
 		}
 
-		case Assertion.PRIMITIVE_TYPE: {
-			XorCompositeAssertion nXOR = new XorCompositeAssertion();
+		case Assertion.PRIMITIVE: {
+			ExactlyOne newExactlyOne = new ExactlyOne();
 
 			Assertion asser;
 
 			for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator
 					.hasNext();) {
-				asser = ((AndCompositeAssertion) iterator.next())
+				asser = ((All) iterator.next())
 						.intersect(target);
 
-				if (asser instanceof AndCompositeAssertion) {
-					nXOR.addTerm(asser);
+				if (asser instanceof All) {
+					newExactlyOne.addTerm(asser);
 				}
 			}
-			return nXOR;
+			return newExactlyOne;
 		}
 
 		default: {
@@ -188,11 +188,11 @@ public class XorCompositeAssertion extends AbstractAssertion implements
 	}
 
 	public Assertion merge(Assertion assertion, PolicyRegistry reg) {
-		log.debug("Enter: XorCompositeAssertion::merge");
+		log.debug("Enter: ExactlyOne::merge");
 
 		Assertion normalizedMe = (isNormalized()) ? this : normalize(reg);
 
-		if (!(normalizedMe instanceof XorCompositeAssertion)) {
+		if (!(normalizedMe instanceof ExactlyOne)) {
 			return normalizedMe.merge(assertion, reg);
 		}
 
@@ -203,55 +203,55 @@ public class XorCompositeAssertion extends AbstractAssertion implements
 
 		switch (type) {
 
-		case Assertion.COMPOSITE_POLICY_TYPE: {
+		case Assertion.POLICY: {
 
-			Policy nPOLICY = new Policy();
-			nPOLICY.addTerm(normalizedMe.merge((Assertion) target.getTerms()
+			Policy newPolicy = new Policy();
+			newPolicy.addTerm(normalizedMe.merge((Assertion) target.getTerms()
 					.get(0)));
-			return nPOLICY;
+			return newPolicy;
 		}
 
-		case Assertion.COMPOSITE_XOR_TYPE: {
+		case Assertion.EXACTLY_ONE: {
 
-			XorCompositeAssertion nXOR = new XorCompositeAssertion();
+			ExactlyOne newExactlyOne = new ExactlyOne();
 
 			for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator
 					.hasNext();) {
-				AndCompositeAssertion AND = (AndCompositeAssertion) iterator
+				All AND = (All) iterator
 						.next();
 
 				for (Iterator iterator2 = target.getTerms().iterator(); iterator2
 						.hasNext();) {
-					nXOR.addTerm(AND.merge((Assertion) iterator2.next()));
+					newExactlyOne.addTerm(AND.merge((Assertion) iterator2.next()));
 				}
 			}
 
-			return nXOR;
+			return newExactlyOne;
 		}
 
-		case Assertion.COMPOSITE_AND_TYPE: {
+		case Assertion.ALL: {
 
-			XorCompositeAssertion nXOR = new XorCompositeAssertion();
+			ExactlyOne newExactlyOne = new ExactlyOne();
 
 			for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator
 					.hasNext();) {
-				nXOR.addTerm(((AndCompositeAssertion) iterator.next())
+				newExactlyOne.addTerm(((All) iterator.next())
 						.merge(target));
 			}
-			return nXOR;
+			return newExactlyOne;
 
 		}
 
-		case Assertion.PRIMITIVE_TYPE: {
-			XorCompositeAssertion nXOR = new XorCompositeAssertion();
+		case Assertion.PRIMITIVE: {
+			ExactlyOne newExactlyOne = new ExactlyOne();
 
 			for (Iterator iterator = normalizedMe.getTerms().iterator(); iterator
 					.hasNext();) {
-				nXOR.addTerm(((AndCompositeAssertion) iterator.next())
+				newExactlyOne.addTerm(((All) iterator.next())
 						.merge(target));
 			}
 
-			return nXOR;
+			return newExactlyOne;
 		}
 
 		default: {
@@ -263,6 +263,6 @@ public class XorCompositeAssertion extends AbstractAssertion implements
 	}
 
 	public final short getType() {
-		return Assertion.COMPOSITE_XOR_TYPE;
+		return Assertion.EXACTLY_ONE;
 	}
 }
