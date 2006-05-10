@@ -21,10 +21,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.ws.policy.AndCompositeAssertion;
+import org.apache.ws.policy.All;
 import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.PrimitiveAssertion;
-import org.apache.ws.policy.XorCompositeAssertion;
+import org.apache.ws.policy.ExactlyOne;
 
 /**
  * WSPolicyUtil contains several utility methods for policy manipulations.
@@ -72,9 +72,9 @@ public class PolicyUtil {
 			policy = (Policy) policy.normalize();
 		}
 
-		XorCompositeAssertion xorTerm = (XorCompositeAssertion) policy
+		ExactlyOne xorTerm = (ExactlyOne) policy
 				.getTerms().get(0);
-		AndCompositeAssertion andTerm = (AndCompositeAssertion) xorTerm
+		All andTerm = (All) xorTerm
 				.getTerms().get(0);
 
 		return andTerm.getTerms();
@@ -99,8 +99,8 @@ public class PolicyUtil {
 
 	public static Policy getPolicy(List terms) {
 		Policy policyTerm = new Policy();
-		XorCompositeAssertion xorTerm = new XorCompositeAssertion();
-		AndCompositeAssertion andTerm = new AndCompositeAssertion();
+		ExactlyOne xorTerm = new ExactlyOne();
+		All andTerm = new All();
 
 		andTerm.addTerms(terms);
 		xorTerm.addTerm(andTerm);

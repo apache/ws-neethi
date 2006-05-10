@@ -54,11 +54,11 @@ import org.w3c.dom.Document;
 public class WSDLPolicyProcessor {
 
 	private static final QName POLICY = new QName(
-			PolicyConstants.WS_POLICY_NAMESPACE_URI, PolicyConstants.WS_POLICY);
+			PolicyConstants.POLICY_NAMESPACE_URI, PolicyConstants.POLICY);
 
 	private static final QName POLICY_REF = new QName(
-			PolicyConstants.WS_POLICY_NAMESPACE_URI,
-			PolicyConstants.WS_POLICY_REFERENCE);
+			PolicyConstants.POLICY_NAMESPACE_URI,
+			PolicyConstants.POLICY_REFERENCE);
 
 	Definition wsdl4jDefinition = null;
 
@@ -357,7 +357,7 @@ public class WSDLPolicyProcessor {
 	private List getPoliciesAsExtAttributes(Map extAttributes) {
 		ArrayList policyList = new ArrayList();
 		QName PolicyURIs = (QName) extAttributes.get(new QName(
-				PolicyConstants.WS_POLICY_NAMESPACE_URI, "PolicyURIs"));
+				PolicyConstants.POLICY_NAMESPACE_URI, "PolicyURIs"));
 
 		if (PolicyURIs != null) {
 			String[] URIs = PolicyURIs.getLocalPart().split(" ");

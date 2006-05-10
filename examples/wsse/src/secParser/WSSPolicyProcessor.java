@@ -31,11 +31,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.ws.policy.AndCompositeAssertion;
+import org.apache.ws.policy.All;
 import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.Assertion;
 import org.apache.ws.policy.PrimitiveAssertion;
-import org.apache.ws.policy.XorCompositeAssertion;
+import org.apache.ws.policy.ExactlyOne;
 import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyFactory;
 
@@ -182,7 +182,7 @@ public class WSSPolicyProcessor {
 			throw new RuntimeException("Policy is not in normalized format");
 		}
 
-		XorCompositeAssertion xor = (XorCompositeAssertion) policy.getTerms()
+		ExactlyOne xor = (ExactlyOne) policy.getTerms()
 				.get(0);
 		List listOfPolicyAlternatives = xor.getTerms();
 
@@ -190,7 +190,7 @@ public class WSSPolicyProcessor {
 		int numberOfAlternatives = listOfPolicyAlternatives.size();
 
 		for (int i = 0; !success && i < numberOfAlternatives; i++) {
-			AndCompositeAssertion aPolicyAlternative = (AndCompositeAssertion) listOfPolicyAlternatives
+			All aPolicyAlternative = (All) listOfPolicyAlternatives
 					.get(i);
 
 			List listOfAssertions = aPolicyAlternative.getTerms();

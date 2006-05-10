@@ -1154,7 +1154,7 @@ public class Test_Policy extends TestCase {
       Hashtable attributes = pol.getAttributes();
       String value = null;
       assertTrue("Attribute number check [" + attributes.size() + "]",
-          attributes.size() == 4);
+          attributes.size() == 5);
 
       value = pol.getAttribute(q4);
       assertTrue("Attribute value check for [Fourth]", value.equals("Fourth"));
@@ -1182,7 +1182,7 @@ public class Test_Policy extends TestCase {
       assertTrue("Attribute value check", value.equals("First"));
       pol.removeAttribute(q1);
       Hashtable attributes = pol.getAttributes();
-      assertTrue("Should be no attributes", attributes.size() == 0);
+      assertTrue("Should only be ONE attribute", attributes.size() == 1);
 
     } catch (Exception ex) {
       WSPTestSuite.logInfo("Unexpected exception: " + ex.toString());
@@ -1244,12 +1244,14 @@ public class Test_Policy extends TestCase {
       Hashtable attributes = pol.getAttributes();
       String value = null;
       assertTrue("Attribute number check [" + attributes.size() + "]",
-          attributes.size() == 4);
+          attributes.size() == 5);
 
       pol.clearAttributes();
 
       attributes = pol.getAttributes();
       assertTrue("Should be no attributes", attributes.size() == 0);
+      
+      assertTrue("Id should have been cleared", pol.getId() == null);
 
     } catch (Exception ex) {
       WSPTestSuite.logInfo("Unexpected exception: " + ex.toString());

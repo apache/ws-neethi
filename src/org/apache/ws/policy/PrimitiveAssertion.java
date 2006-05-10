@@ -97,18 +97,18 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 		PrimitiveAssertion self = (PrimitiveAssertion) normalizedMe;
 
 		if (!self.getName().equals(arg.getName())) {
-			return new XorCompositeAssertion(); // no bahaviour is admisible
+			return new ExactlyOne(); // no bahaviour is admisible
 		}
 
 		if (self.getTerms().isEmpty() && arg.getTerms().isEmpty()) {
-			AndCompositeAssertion assertion2 = new AndCompositeAssertion();
+			All assertion2 = new All();
 			assertion2.addTerm(self);
 			assertion2.addTerm(arg);
 			return assertion2;
 		}
 
 		if (self.getTerms().isEmpty() || arg.getTerms().isEmpty()) {
-			return new XorCompositeAssertion(); // no
+			return new ExactlyOne(); // no
 		}
 
 		List argChildTerms;
@@ -157,18 +157,18 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 			}
 
 			if (!found) {
-				return new XorCompositeAssertion();
+				return new ExactlyOne();
 			}
 
-			if (PRIMITIVE_A.intersect(PRIMITIVE_B) instanceof XorCompositeAssertion) {
-				return new XorCompositeAssertion();
+			if (PRIMITIVE_A.intersect(PRIMITIVE_B) instanceof ExactlyOne) {
+				return new ExactlyOne();
 			}
 		}
 
-		AndCompositeAssertion andCompositeAssertion = new AndCompositeAssertion();
-		andCompositeAssertion.addTerm(arg);
-		andCompositeAssertion.addTerm(self);
-		return andCompositeAssertion;
+		All all = new All();
+		all.addTerm(arg);
+		all.addTerm(self);
+		return all;
 	}
 
 	public Assertion intersect(Assertion assertion)
@@ -196,10 +196,10 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 		 * both self and the argument are primitive assertions. Hence both
 		 * should be wrapped in an AndCompositeType
 		 */
-		AndCompositeAssertion AND = new AndCompositeAssertion();
-		AND.addTerm(target);
-		AND.addTerm(normalizedMe);
-		return AND;
+		All all = new All();
+		all.addTerm(target);
+		all.addTerm(normalizedMe);
+		return all;
 	}
 
 	public Assertion merge(Assertion assertion) {
@@ -218,26 +218,26 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 		}
 
 		if (isOptional()) {
-			XorCompositeAssertion XOR = new XorCompositeAssertion();
-			AndCompositeAssertion AND = new AndCompositeAssertion();
+			ExactlyOne exactlyOne = new ExactlyOne();
+			All all = new All();
 
-			PrimitiveAssertion PRIM = getSelfWithoutTerms();
-			PRIM.removeAttribute(new QName(
-					PolicyConstants.WS_POLICY_NAMESPACE_URI, "Optional"));
-			PRIM.setOptional(false);
-			PRIM.setTerms(getTerms());
+			PrimitiveAssertion prim = getSelfWithoutTerms();
+			prim.removeAttribute(new QName(
+					PolicyConstants.POLICY_NAMESPACE_URI, "Optional"));
+			prim.setOptional(false);
+			prim.setTerms(getTerms());
 
-			AND.addTerm(PRIM);
-			XOR.addTerm(AND);
-			XOR.addTerm(new AndCompositeAssertion());
+			all.addTerm(prim);
+			exactlyOne.addTerm(all);
+			exactlyOne.addTerm(new All());
 
-			return XOR.normalize(reg);
+			return exactlyOne.normalize(reg);
 		}
 
 		if (getTerms().isEmpty()) {
-			PrimitiveAssertion PRIM = getSelfWithoutTerms();
-			PRIM.setNormalized(true);
-			return PRIM;
+			PrimitiveAssertion pirm = getSelfWithoutTerms();
+			pirm.setNormalized(true);
+			return pirm;
 		}
 
 		ArrayList policyTerms = new ArrayList();
@@ -261,54 +261,54 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 		}
 
 		if (policyTerms.isEmpty()) {
-			PrimitiveAssertion PRIM = getSelfWithoutTerms();
-			PRIM.setTerms(getTerms());
-			PRIM.setNormalized(true);
-			return PRIM;
+			PrimitiveAssertion prim = getSelfWithoutTerms();
+			prim.setTerms(getTerms());
+			prim.setNormalized(true);
+			return prim;
 		}
 
-		Policy policyTerm = PolicyUtil.getSinglePolicy(policyTerms, reg);
-		Assertion xorTerm = (XorCompositeAssertion) policyTerm.getTerms()
+		Policy policy = PolicyUtil.getSinglePolicy(policyTerms, reg);
+		Assertion exactlyOne = (ExactlyOne) policy.getTerms()
 				.get(0);
 
-		List ANDs = xorTerm.getTerms();
+		List alls = exactlyOne.getTerms();
 
-		if (ANDs.size() == 0) {
-			return new XorCompositeAssertion();
+		if (alls.size() == 0) {
+			return new ExactlyOne();
 		}
 
-		if (ANDs.size() == 1) {
-			((AndCompositeAssertion) ANDs.get(0)).addTerms(nonPolicyTerms);
-			PrimitiveAssertion PRIM = getSelfWithoutTerms();
-			PRIM.addTerm(policyTerm);
-			return PRIM;
+		if (alls.size() == 1) {
+			((All) alls.get(0)).addTerms(nonPolicyTerms);
+			PrimitiveAssertion prim = getSelfWithoutTerms();
+			prim.addTerm(policy);
+			return prim;
 		}
 
-		Policy nPOLICY = new Policy();
-		XorCompositeAssertion nXOR = new XorCompositeAssertion();
-		nPOLICY.addTerm(nXOR);
+		Policy newPolicy = new Policy();
+		ExactlyOne newExactlyOne = new ExactlyOne();
+		newPolicy.addTerm(newExactlyOne);
 
-		PrimitiveAssertion nPRIM;
-		Iterator iterator2 = ANDs.iterator();
+		PrimitiveAssertion newPrim;
+		Iterator iterator2 = alls.iterator();
 
 		ArrayList list;
 
 		while (iterator2.hasNext()) {
-			nPRIM = getSelfWithoutTerms();
+			newPrim = getSelfWithoutTerms();
 
 			list = new ArrayList();
-			list.addAll(((AndCompositeAssertion) iterator2.next()).getTerms());
+			list.addAll(((All) iterator2.next()).getTerms());
 
 			if (!nonPolicyTerms.isEmpty()) {
 				list.addAll(nonPolicyTerms);
 			}
-			nPRIM.addTerm(getSinglePolicy(list));
-			AndCompositeAssertion AND = new AndCompositeAssertion();
-			AND.addTerm(nPRIM);
-			nXOR.addTerm(AND);
+			newPrim.addTerm(getSinglePolicy(list));
+			All all = new All();
+			all.addTerm(newPrim);
+			newExactlyOne.addTerm(all);
 		}
-		nPOLICY.setNormalized(true);
-		return nPOLICY;
+		newPolicy.setNormalized(true);
+		return newPolicy;
 	}
 
 	private PrimitiveAssertion getSelfWithoutTerms() {
@@ -420,27 +420,27 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 
 	private Policy getSinglePolicy(List childTerms) {
 		Policy policy = new Policy();
-		XorCompositeAssertion xor = new XorCompositeAssertion();
-		AndCompositeAssertion and = new AndCompositeAssertion();
-		and.addTerms(childTerms);
-		xor.addTerm(and);
-		policy.addTerm(xor);
+		ExactlyOne exactlyOne = new ExactlyOne();
+		All all = new All();
+		all.addTerms(childTerms);
+		exactlyOne.addTerm(all);
+		policy.addTerm(exactlyOne);
 		return policy;
 	}
 
 	private boolean isEmptyPolicy(Policy policy) {
-		XorCompositeAssertion xor = (XorCompositeAssertion) policy.getTerms()
+		ExactlyOne exactlyOne = (ExactlyOne) policy.getTerms()
 				.get(0);
-		return xor.isEmpty();
+		return exactlyOne.isEmpty();
 	}
 
 	private List getTerms(Policy policy) {
-		return ((AndCompositeAssertion) ((XorCompositeAssertion) policy
+		return ((All) ((ExactlyOne) policy
 				.getTerms().get(0)).getTerms().get(0)).getTerms();
 	}
 
 	public final short getType() {
-		return Assertion.PRIMITIVE_TYPE;
+		return Assertion.PRIMITIVE;
 	}
 
 }

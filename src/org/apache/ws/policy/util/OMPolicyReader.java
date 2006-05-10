@@ -21,13 +21,13 @@ import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMXMLParserWrapper;
 import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
-import org.apache.ws.policy.AndCompositeAssertion;
+import org.apache.ws.policy.All;
 import org.apache.ws.policy.Assertion;
 import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.PolicyConstants;
 import org.apache.ws.policy.PolicyReference;
 import org.apache.ws.policy.PrimitiveAssertion;
-import org.apache.ws.policy.XorCompositeAssertion;
+import org.apache.ws.policy.ExactlyOne;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -69,20 +69,20 @@ public class OMPolicyReader implements PolicyReader {
 		String namespace = element.getNamespace().getName();
 		String localName = element.getLocalName();
 
-		if (!(namespace.equals(PolicyConstants.WS_POLICY_NAMESPACE_URI))) {
+		if (!(namespace.equals(PolicyConstants.POLICY_NAMESPACE_URI))) {
 			return readPrimitiveAssertion(element);
 		}
 
-		if (localName.equals(PolicyConstants.WS_POLICY)) {
+		if (localName.equals(PolicyConstants.POLICY)) {
 			return readPolicy(element);
 
-		} else if (localName.equals(PolicyConstants.AND_COMPOSITE_ASSERTION)) {
+		} else if (localName.equals(PolicyConstants.ALL)) {
 			return readAndComposite(element);
 
-		} else if (localName.equals(PolicyConstants.XOR_COMPOSITE_ASSERTION)) {
+		} else if (localName.equals(PolicyConstants.EXACTLY_ONE)) {
 			return readXorComposite(element);
 
-		} else if (localName.equals(PolicyConstants.WS_POLICY_REFERENCE)) {
+		} else if (localName.equals(PolicyConstants.POLICY_REFERENCE)) {
 			return readPolicyReference(element);
 
 		} else {
@@ -104,14 +104,14 @@ public class OMPolicyReader implements PolicyReader {
     return policy;
 	}
 
-	private AndCompositeAssertion readAndComposite(OMElement element) {
-		AndCompositeAssertion andCompositeAssertion = new AndCompositeAssertion();
+	private All readAndComposite(OMElement element) {
+		All andCompositeAssertion = new All();
 		andCompositeAssertion.addTerms(readTerms(element));
 		return andCompositeAssertion;
 	}
 
-	private XorCompositeAssertion readXorComposite(OMElement element) {
-		XorCompositeAssertion xorCompositeAssertion = new XorCompositeAssertion();
+	private ExactlyOne readXorComposite(OMElement element) {
+		ExactlyOne xorCompositeAssertion = new ExactlyOne();
 		xorCompositeAssertion.addTerms(readTerms(element));
 		return xorCompositeAssertion;
 	}
@@ -128,7 +128,7 @@ public class OMPolicyReader implements PolicyReader {
 		result.setAttributes(getAttributes(element));
 
 		String isOptional = result.getAttribute(new QName(
-				PolicyConstants.WS_POLICY_NAMESPACE_URI, "Optional"));
+				PolicyConstants.POLICY_NAMESPACE_URI, "Optional"));
 		result.setOptional(new Boolean(isOptional).booleanValue());
 
 		// setting the text value ..
@@ -145,9 +145,9 @@ public class OMPolicyReader implements PolicyReader {
 			OMElement childElement = (OMElement) childElements.next();
 
 			if (childElement.getNamespace().getName().equals(
-					PolicyConstants.WS_POLICY_NAMESPACE_URI)
+					PolicyConstants.POLICY_NAMESPACE_URI)
 					&& childElement.getLocalName().equals(
-							PolicyConstants.WS_POLICY)) {
+							PolicyConstants.POLICY)) {
 				Policy policy = readPolicy(childElement);
 				result.addTerm(policy);
 

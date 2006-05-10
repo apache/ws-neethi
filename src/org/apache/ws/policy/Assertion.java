@@ -27,20 +27,20 @@ import org.apache.ws.policy.util.PolicyRegistry;
  */
 
 public interface Assertion {
-	/** Defines the short value for Primitive Assertions */
-	public static final short PRIMITIVE_TYPE = 0x1;
+	/** Defines the short value for Primitive assertions */
+	public static final short PRIMITIVE = 0x1;
 
-	/** Defines the short value for ANDCompositeAssertion */
-	public static final short COMPOSITE_AND_TYPE = 0x2;
+	/** Defines the short value for All assertion */
+	public static final short ALL = 0x2;
 
-	/** Defines the short value for XORCompositeAssertion */
-	public static final short COMPOSITE_XOR_TYPE = 0x3;
+	/** Defines the short value for ExactlyOne assertion */
+	public static final short EXACTLY_ONE = 0x3;
 
 	/** Defines the short value for Policy Assertion */
-	public static final short COMPOSITE_POLICY_TYPE = 0x4;
+	public static final short POLICY = 0x4;
 
 	/** Defines the short value for PolicyReferece Assertion */
-	public static final short POLIY_REFERCE_TYPE = 0x5;
+	public static final short POLICY_REF = 0x5;
 
 	/**
 	 * Returns a new assertion which is the normalized form of this assertion.

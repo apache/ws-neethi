@@ -22,12 +22,12 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.ws.policy.AndCompositeAssertion;
+import org.apache.ws.policy.All;
 import org.apache.ws.policy.Assertion;
 import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.PolicyReference;
 import org.apache.ws.policy.PrimitiveAssertion;
-import org.apache.ws.policy.XorCompositeAssertion;
+import org.apache.ws.policy.ExactlyOne;
 
 public class PolicyComparator {
 	public static boolean compare(Policy arg1, Policy arg2) {
@@ -68,14 +68,14 @@ public class PolicyComparator {
 
 			return compare((PolicyReference) arg1, (PolicyReference) arg2);
 
-		} else if (arg1 instanceof AndCompositeAssertion) {
+		} else if (arg1 instanceof All) {
 
-			return compare((AndCompositeAssertion) arg1,
-					(AndCompositeAssertion) arg2);
+			return compare((All) arg1,
+					(All) arg2);
 
-		} else if (arg1 instanceof XorCompositeAssertion) {
-			return compare((XorCompositeAssertion) arg1,
-					(XorCompositeAssertion) arg2);
+		} else if (arg1 instanceof ExactlyOne) {
+			return compare((ExactlyOne) arg1,
+					(ExactlyOne) arg2);
 
 		} else if (arg1 instanceof PrimitiveAssertion) {
 			return compare((PrimitiveAssertion) arg1, (PrimitiveAssertion) arg2);
@@ -93,13 +93,13 @@ public class PolicyComparator {
 		return arg1.getPolicyURIString().equals(arg2.getPolicyURIString());
 	}
 
-	public static boolean compare(AndCompositeAssertion arg1,
-			AndCompositeAssertion arg2) {
+	public static boolean compare(All arg1,
+			All arg2) {
 		return compare(arg1.getTerms(), arg2.getTerms());
 	}
 
-	public static boolean compare(XorCompositeAssertion arg1,
-			XorCompositeAssertion arg2) {
+	public static boolean compare(ExactlyOne arg1,
+			ExactlyOne arg2) {
 		return compare(arg1.getTerms(), arg2.getTerms());
 	}
 

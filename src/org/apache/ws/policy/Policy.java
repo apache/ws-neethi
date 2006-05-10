@@ -76,7 +76,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
      */
     public void setBase(String xmlBase) {
         addAttribute(new QName(PolicyConstants.XML_NAMESPACE_URI,
-                PolicyConstants.WS_POLICY_BASE), xmlBase);
+                PolicyConstants.POLICY_BASE), xmlBase);
     }
 
     /**
@@ -88,7 +88,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
     public String getBase() {
         return (String) getAttribute(new QName(
                 PolicyConstants.XML_NAMESPACE_URI,
-                PolicyConstants.WS_POLICY_BASE));
+                PolicyConstants.POLICY_BASE));
     }
 
     /**
@@ -97,8 +97,8 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
      * @param id
      */
     public void setId(String id) {
-        addAttribute(new QName(PolicyConstants.WS_POLICY_NAMESPACE_URI,
-                PolicyConstants.WS_POLICY_ID), id);
+        addAttribute(new QName(PolicyConstants.POLICY_NAMESPACE_URI,
+                PolicyConstants.POLICY_ID), id);
     }
 
     /**
@@ -108,8 +108,8 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
      */
     public String getId() {
         return (String) getAttribute(new QName(
-                PolicyConstants.WS_POLICY_NAMESPACE_URI,
-                PolicyConstants.WS_POLICY_ID));
+                PolicyConstants.POLICY_NAMESPACE_URI,
+                PolicyConstants.POLICY_ID));
     }
 
     /**
@@ -118,7 +118,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
      * @param name
      */
     public void setName(String name) {
-        addAttribute(new QName("", PolicyConstants.WS_POLICY_NAME), name);
+        addAttribute(new QName("", PolicyConstants.POLICY_NAME), name);
     }
 
     /**
@@ -128,7 +128,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
      */
     public String getName() {
         return (String) getAttribute(new QName("",
-                PolicyConstants.WS_POLICY_NAME));
+                PolicyConstants.POLICY_NAME));
     }
 
     /**
@@ -164,8 +164,8 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
         String id = getId();
         Policy policy = new Policy(xmlBase, id);
 
-        AndCompositeAssertion AND = new AndCompositeAssertion();
-        XorCompositeAssertion XOR = new XorCompositeAssertion();
+        All all = new All();
+        ExactlyOne exactlyOne = new ExactlyOne();
 
         ArrayList childAndTermList = new ArrayList();
         ArrayList childXorTermList = new ArrayList();
@@ -178,27 +178,27 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
             term = term.normalize(reg);
 
             if (term instanceof Policy) {
-                XorCompositeAssertion Xor = (XorCompositeAssertion) ((Policy) term)
+                ExactlyOne anExactlyOne = (ExactlyOne) ((Policy) term)
                         .getTerms().get(0);
 
-                if (Xor.size() != 1) {
-                    term = Xor;
+                if (anExactlyOne.size() != 1) {
+                    term = anExactlyOne;
 
                 } else {
-                    AND
-                            .addTerms(((AndCompositeAssertion) Xor.getTerms()
+                    all
+                            .addTerms(((All) anExactlyOne.getTerms()
                                     .get(0)).getTerms());
                     continue;
                 }
             }
 
-            if (term instanceof XorCompositeAssertion) {
+            if (term instanceof ExactlyOne) {
 
-                if (((XorCompositeAssertion) term).isEmpty()) {
-                    XorCompositeAssertion emptyXor = new XorCompositeAssertion();
-                    emptyXor.setNormalized(true);
+                if (((ExactlyOne) term).isEmpty()) {
+                    ExactlyOne tmpExactlyOne = new ExactlyOne();
+                    tmpExactlyOne.setNormalized(true);
 
-                    policy.addTerm(emptyXor);
+                    policy.addTerm(tmpExactlyOne);
                     policy.setNormalized(true);
 
                     return policy;
@@ -208,48 +208,48 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
                 continue;
             }
 
-            if (term instanceof AndCompositeAssertion) {
+            if (term instanceof All) {
 
-                if (((AndCompositeAssertion) term).isEmpty()) {
-                    AndCompositeAssertion emptyAnd = new AndCompositeAssertion();
-                    XOR.addTerm(emptyAnd);
+                if (((All) term).isEmpty()) {
+                    All emptyAnd = new All();
+                    exactlyOne.addTerm(emptyAnd);
 
                 } else {
-                    AND.addTerms(((AndCompositeAssertion) term).getTerms());
+                    all.addTerms(((All) term).getTerms());
                 }
                 continue;
             }
-            AND.addTerm((Assertion) term);
+            all.addTerm((Assertion) term);
         }
 
         // processing child-XORCompositeAssertions
         if (childXorTermList.size() > 1) {
 
-            XOR.addTerms(Policy.crossProduct(childXorTermList, 0));
+            exactlyOne.addTerms(Policy.crossProduct(childXorTermList, 0));
 
         } else if (childXorTermList.size() == 1) {
-            Assertion xorTerm = (Assertion) childXorTermList.get(0);
-            XOR.addTerms(xorTerm.getTerms());
+            Assertion tmpExactlyOne = (Assertion) childXorTermList.get(0);
+            exactlyOne.addTerms(tmpExactlyOne.getTerms());
         }
 
         if (childXorTermList.isEmpty()) {
-            XorCompositeAssertion xor = new XorCompositeAssertion();
+            ExactlyOne tmpExactlyOne = new ExactlyOne();
 
-            xor.addTerm(AND);
-            policy.addTerm(xor);
+            tmpExactlyOne.addTerm(all);
+            policy.addTerm(tmpExactlyOne);
             policy.setNormalized(true);
             return policy;
         }
 
-        List primTerms = AND.getTerms();
-        Iterator andTerms = XOR.getTerms().iterator();
+        List primTerms = all.getTerms();
+        Iterator alls = exactlyOne.getTerms().iterator();
 
-        while (andTerms.hasNext()) {
-            Assertion anAndTerm = (Assertion) andTerms.next();
+        while (alls.hasNext()) {
+            Assertion anAndTerm = (Assertion) alls.next();
             anAndTerm.addTerms(primTerms);
         }
 
-        policy.addTerm(XOR);
+        policy.addTerm(exactlyOne);
         policy.setNormalized(true);
         return policy;
     }
@@ -267,30 +267,30 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
         short type = target.getType();
 
         switch (type) {
-        case Assertion.COMPOSITE_POLICY_TYPE: {
-            Policy nPOLICY = new Policy();
-            nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms()
-                    .get(0)).intersect((XorCompositeAssertion) target
+        case Assertion.POLICY: {
+            Policy newPolicy = new Policy();
+            newPolicy.addTerm(((ExactlyOne) normalizedMe.getTerms()
+                    .get(0)).intersect((ExactlyOne) target
                     .getTerms().get(0)));
-            return nPOLICY;
+            return newPolicy;
         }
-        case Assertion.COMPOSITE_XOR_TYPE: {
-            Policy nPOLICY = new Policy();
-            nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms()
+        case Assertion.EXACTLY_ONE: {
+            Policy newPolicy = new Policy();
+            newPolicy.addTerm(((ExactlyOne) normalizedMe.getTerms()
                     .get(0)).intersect(target));
-            return nPOLICY;
+            return newPolicy;
         }
-        case Assertion.COMPOSITE_AND_TYPE: {
-            Policy nPOLICY = new Policy();
-            nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms()
+        case Assertion.ALL: {
+            Policy newPolicy = new Policy();
+            newPolicy.addTerm(((ExactlyOne) normalizedMe.getTerms()
                     .get(0)).intersect(target));
-            return nPOLICY;
+            return newPolicy;
         }
-        case Assertion.PRIMITIVE_TYPE: {
-            Policy nPOLICY = new Policy();
-            nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms()
+        case Assertion.PRIMITIVE: {
+            Policy newPolicy = new Policy();
+            newPolicy.addTerm(((ExactlyOne) normalizedMe.getTerms()
                     .get(0)).intersect(target));
-            return nPOLICY;
+            return newPolicy;
         }
 
         default: {
@@ -310,7 +310,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
             return normalizedMe.merge(assertion, reg);
         }
 
-        Policy nPOLICY = new Policy();
+        Policy newPolicy = new Policy();
 
         Assertion target = (assertion.isNormalized()) ? assertion : assertion
                 .normalize(reg);
@@ -318,29 +318,29 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
 
         switch (type) {
 
-        case Assertion.COMPOSITE_POLICY_TYPE: {
+        case Assertion.POLICY: {
 
-            nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms()
-                    .get(0)).merge((XorCompositeAssertion) target.getTerms()
+            newPolicy.addTerm(((ExactlyOne) normalizedMe.getTerms()
+                    .get(0)).merge((ExactlyOne) target.getTerms()
                     .get(0)));
-            return nPOLICY;
+            return newPolicy;
         }
-        case Assertion.COMPOSITE_XOR_TYPE: {
-            nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms()
+        case Assertion.EXACTLY_ONE: {
+            newPolicy.addTerm(((ExactlyOne) normalizedMe.getTerms()
                     .get(0)).merge(target));
-            return nPOLICY;
-        }
-
-        case Assertion.COMPOSITE_AND_TYPE: {
-            nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms()
-                    .get(0)).merge(target));
-            return nPOLICY;
+            return newPolicy;
         }
 
-        case Assertion.PRIMITIVE_TYPE: {
-            nPOLICY.addTerm(((XorCompositeAssertion) normalizedMe.getTerms()
+        case Assertion.ALL: {
+            newPolicy.addTerm(((ExactlyOne) normalizedMe.getTerms()
                     .get(0)).merge(target));
-            return nPOLICY;
+            return newPolicy;
+        }
+
+        case Assertion.PRIMITIVE: {
+            newPolicy.addTerm(((ExactlyOne) normalizedMe.getTerms()
+                    .get(0)).merge(target));
+            return newPolicy;
         }
 
         default: {
@@ -355,7 +355,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
      * Returns a short value which indicates this is a Policy.
      */
     public final short getType() {
-        return Assertion.COMPOSITE_POLICY_TYPE;
+        return Assertion.POLICY;
     }
 
     /**
@@ -431,13 +431,13 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
     protected static ArrayList crossProduct(ArrayList allTerms, int index) {
 
         ArrayList result = new ArrayList();
-        XorCompositeAssertion firstTerm = (XorCompositeAssertion) allTerms
+        ExactlyOne firstTerm = (ExactlyOne) allTerms
                 .get(index);
         ArrayList restTerms;
 
         if (allTerms.size() == ++index) {
             restTerms = new ArrayList();
-            AndCompositeAssertion newTerm = new AndCompositeAssertion();
+            All newTerm = new All();
             restTerms.add(newTerm);
         } else
             restTerms = crossProduct(allTerms, index);
@@ -448,7 +448,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
             Iterator restTermsItr = restTerms.iterator();
             while (restTermsItr.hasNext()) {
                 Assertion restTerm = (Assertion) restTermsItr.next();
-                AndCompositeAssertion newTerm = new AndCompositeAssertion();
+                All newTerm = new All();
                 newTerm.addTerms(assertion.getTerms());
                 newTerm.addTerms(restTerm.getTerms());
                 result.add(newTerm);
@@ -471,7 +471,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
 
     private class PolicyIterator implements java.util.Iterator {
 
-        private XorCompositeAssertion XOR = null;
+        private ExactlyOne exactlyOne = null;
 
         private int currentIndex = 0;
 
@@ -480,18 +480,18 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
                 policy = (Policy) policy.normalize();
             }
 
-            XOR = (XorCompositeAssertion) policy.getTerms().get(0);
+            exactlyOne = (ExactlyOne) policy.getTerms().get(0);
         }
 
         public boolean hasNext() {
-            return XOR.size() > currentIndex;
+            return exactlyOne.size() > currentIndex;
         }
 
         public Object next() {
-            AndCompositeAssertion AND = (AndCompositeAssertion) XOR.getTerms()
+            All all = (All) exactlyOne.getTerms()
                     .get(currentIndex);
             currentIndex++;
-            return AND.getTerms();
+            return all.getTerms();
         }
 
         public void remove() {

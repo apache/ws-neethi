@@ -148,7 +148,7 @@ public class PolicyReference implements Assertion {
 	 * @return a short value to indicate that this is a PolicyReference.
 	 */
 	public final short getType() {
-		return Assertion.POLIY_REFERCE_TYPE;
+		return Assertion.POLICY_REF;
 	}    
     
     public void setSource(String source) {
