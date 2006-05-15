@@ -97,7 +97,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
      * @param id
      */
     public void setId(String id) {
-        addAttribute(new QName(PolicyConstants.POLICY_NAMESPACE_URI,
+        addAttribute(new QName(PolicyConstants.WSU_NAMESPACE_URI,
                 PolicyConstants.POLICY_ID), id);
     }
 
@@ -108,7 +108,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
      */
     public String getId() {
         return (String) getAttribute(new QName(
-                PolicyConstants.POLICY_NAMESPACE_URI,
+                PolicyConstants.WSU_NAMESPACE_URI,
                 PolicyConstants.POLICY_ID));
     }
 

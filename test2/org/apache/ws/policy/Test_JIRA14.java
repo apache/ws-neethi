@@ -19,19 +19,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Hashtable;
-import java.util.List;
-import java.util.Vector;
 
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.apache.ws.policy.Policy;
-import org.apache.ws.policy.PrimitiveAssertion;
-import org.apache.ws.policy.util.PolicyComparator;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
-import org.apache.ws.policy.util.PolicyUtil;
 import org.apache.ws.policy.util.PolicyWriter;
 
 public class Test_JIRA14 extends TestCase {

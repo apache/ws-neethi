@@ -71,7 +71,15 @@ public class PolicyReference implements Assertion {
 			throw new RuntimeException("Cannot resolve : "
 					+ getPolicyURIString() + " .. PolicyRegistry is null");
 		}
-		Policy targetPolicy = reg.lookup(getPolicyURIString());
+        
+        String key = getPolicyURIString();
+        
+        if (key.startsWith("#")) {
+            key = key.substring(key.indexOf('#') + 1);            
+        }
+        
+		Policy targetPolicy = reg.lookup(key);
+        
 		if (targetPolicy == null) {
 			throw new RuntimeException("error : " + getPolicyURIString()
 					+ " doesn't resolve to any known policy");

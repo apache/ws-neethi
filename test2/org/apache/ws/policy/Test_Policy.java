@@ -26,12 +26,9 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.apache.ws.policy.Policy;
-import org.apache.ws.policy.PrimitiveAssertion;
 import org.apache.ws.policy.util.PolicyComparator;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
-import org.apache.ws.policy.util.PolicyUtil;
 
 public class Test_Policy extends TestCase {
 

@@ -67,15 +67,14 @@ public class WSDLPolicyProcessor {
 	DOMPolicyReader prdr = null;
 
 	public WSDLPolicyProcessor(InputStream in) throws WSDLException {
-		this(in, null);
+		this(in, new PolicyRegistry());
 	}
 
 	public WSDLPolicyProcessor(InputStream in, PolicyRegistry registry)
 			throws WSDLException {
-		if (registry != null) {
-			this.registry = registry;
-		}
-
+		
+        setRegistry(registry);
+        
 		try {
 			DocumentBuilderFactory builderFactory = DocumentBuilderFactory
 					.newInstance();
@@ -150,15 +149,37 @@ public class WSDLPolicyProcessor {
 		Binding wsdl4jBinding = wsdl4jPort.getBinding();
 		BindingOperation wsdl4jBindingOperation = wsdl4jBinding
 				.getBindingOperation(opName, null, null);
-		if (wsdl4jBindingOperation == null) {
-			throw new IllegalArgumentException("invalid binding name");
-		}
-
+        
+        Operation wsdl4jOperation;
+        
+        if (wsdl4jBindingOperation == null) {
+            PortType wsdl4jPortType = wsdl4jBinding.getPortType();
+            wsdl4jOperation = wsdl4jPortType.getOperation(opName, null, null);
+            
+        } else {
+            
+            wsdl4jOperation = wsdl4jBindingOperation.getOperation();
+        }
+        
+        if (wsdl4jOperation == null) {
+            
+            PortType wsdl4jPortType = wsdl4jBinding.getPortType();
+            wsdl4jOperation = wsdl4jPortType.getOperation(opName, null, null);
+        }
+        
+        if (wsdl4jOperation == null) {
+            throw new IllegalArgumentException("Invaild operation name " + opName);
+        }
+        
 		ArrayList policyList = new ArrayList();
+        
+        if (wsdl4jBindingOperation != null) {
 		policyList.addAll(getPoliciesAsExtElements(wsdl4jBindingOperation
 				.getExtensibilityElements()));
+        }
 
-		Operation wsdl4jOperation = wsdl4jBindingOperation.getOperation();
+//		Operation wsdl4jOperation = wsdl4jBindingOperation.getOperation();
+        
 		policyList.addAll(getPoliciesAsExtElements(wsdl4jOperation
 				.getExtensibilityElements()));
 
@@ -270,12 +291,19 @@ public class WSDLPolicyProcessor {
          
          return getEffectivePolicy(policyList);
     }
+    
+    private void setRegistry(PolicyRegistry registry) {
+        this.registry = registry;
+    }
+    
+    private PolicyRegistry getRegistry() {
+        return registry;
+    }
 
 	private Policy getEffectivePolicy(List policyList) {
 		Policy policy = null;
 		Object policyElement;
-		;
-
+         
 		for (Iterator iterator = policyList.iterator(); iterator.hasNext();) {
 			policyElement = iterator.next();
 			if (policyElement instanceof Policy) {
@@ -291,13 +319,12 @@ public class WSDLPolicyProcessor {
 
 			}
 		}
-
-		if (!policy.isNormalized()) {
-			policy = (Policy) policy.normalize(registry);
-		}
-
-		return policy;
-
+        
+        if (policy == null) {
+            return null;
+        }
+        
+        return (policy.isNormalized()) ? policy :(Policy) policy.normalize(registry);
 	}
 
 	private void processDefinition(Definition wsdl4jDefinition) {
@@ -316,12 +343,16 @@ public class WSDLPolicyProcessor {
 				unknown = (UnknownExtensibilityElement) extElement;
 
 				if (POLICY.equals(unknown.getElementType())) {
-					Policy p = prdr.readPolicy(unknown.getElement());
-
-					if (p.getPolicyURI() != null) {
-						registry.register(p.getPolicyURI(), p);
-					}
-				}
+					Policy p = prdr.readPolicy(unknown.getElement());                    
+                    
+                    if (p.getId() != null) {
+                        registry.register(p.getId(), p);
+                    }
+                    
+                    if (p.getName() != null) {
+                        registry.register(p.getName(), p);
+                    }
+                }
 			}
 		}
 	}
@@ -364,7 +395,13 @@ public class WSDLPolicyProcessor {
 			Policy policy;
 
 			for (int i = 0; i < URIs.length; i++) {
-				policy = registry.lookup(URIs[i]);
+                String key = URIs[i];
+                
+                if (key.startsWith("#")) {
+                    key = key.substring(key.indexOf("#") + 1);
+                }
+                
+				policy = registry.lookup(key);
 
 				if (policy == null) {
 					throw new RuntimeException("cannot resolve : " + URIs[i]);
