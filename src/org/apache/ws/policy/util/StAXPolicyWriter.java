@@ -44,7 +44,7 @@ public class StAXPolicyWriter implements PolicyWriter {
 
 	private int num = 1;
 
-	StAXPolicyWriter() {
+	public StAXPolicyWriter() {
 	}
 
 	public void writePolicy(Policy policy, OutputStream output) {
@@ -226,7 +226,7 @@ public class StAXPolicyWriter implements PolicyWriter {
 		Hashtable attributes = assertion.getAttributes();
 		writeAttributes(attributes, writer);
 
-		String text = (String) assertion.getStrValue();
+		String text = assertion.getStrValue();
 		if (text != null) {
 			writer.writeCharacters(text);
 		}

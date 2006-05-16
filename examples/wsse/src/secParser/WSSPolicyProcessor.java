@@ -166,7 +166,7 @@ public class WSSPolicyProcessor {
 	 * 
 	 * Each policy must be nromalized accordig to the WS Policy framework
 	 * specification. Therefore a policy has one child (wsp:ExactlyOne) that is
-	 * a XorCompositeAssertion. This child may contain one or more other terms
+	 * an ExactlyOne. This child may contain one or more other terms
 	 * (alternatives). To match the policy one of these terms (alternatives)
 	 * must match. If none of the contained terms match this policy cannot be
 	 * enforced.

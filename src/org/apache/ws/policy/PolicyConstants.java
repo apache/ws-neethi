@@ -25,7 +25,7 @@ public interface PolicyConstants {
     /** Tag name of AndComposteAssertion */
     public static final String ALL = "All";
 
-    /** Tag name of XorCompositeAssertion */
+    /** Tag name of ExactlyOne */
     public static final String EXACTLY_ONE = "ExactlyOne";
 
     /** Tag name of Policy */

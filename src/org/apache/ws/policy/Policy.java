@@ -423,7 +423,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
 
     /**
      * @param allTerms
-     *            XorCompositeAssertion to be corssproducted
+     *            ExactlyOne to be corssproducted
      * @param index
      *            starting point of cross product
      * @return
