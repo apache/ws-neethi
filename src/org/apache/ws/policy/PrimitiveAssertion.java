@@ -74,44 +74,51 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 	public Assertion intersect(Assertion assertion, PolicyRegistry reg) {
 		log.debug("Enter: PrimitveAssertion:intersect");
 
-		Assertion normalizedMe = (isNormalized()) ? this : normalize(reg);
+        // first check whether self is normalized.
+        Assertion normalizedMe = (isNormalized()) ? this : normalize(reg);
 
-		if (!(normalizedMe instanceof PrimitiveAssertion)) {
+        // if normalization made me to some other form than a primitive assertion, then let the new form
+        // handle the intersection
+        if (!(normalizedMe instanceof PrimitiveAssertion)) {
 			return normalizedMe.intersect(assertion, reg);
 		}
 
-		Assertion target = (assertion.isNormalized()) ? assertion : assertion
+        // now normalize the passed argument
+        Assertion target = (assertion.isNormalized()) ? assertion : assertion
 				.normalize(reg);
-
-		// Am not a primitive assertion anymore ..
-		if (!(assertion instanceof PrimitiveAssertion)) {
-			return normalizedMe.intersect(assertion, reg);
-		}
 
 		// argument is not primitive type ..
 		if (!(target instanceof PrimitiveAssertion)) {
 			return target.intersect(normalizedMe, reg);
 		}
 
-		PrimitiveAssertion arg = (PrimitiveAssertion) target;
+		PrimitiveAssertion arg  = (PrimitiveAssertion) target;
 		PrimitiveAssertion self = (PrimitiveAssertion) normalizedMe;
 
-		if (!self.getName().equals(arg.getName())) {
+        // first, if the two names are not equal these can not be intersect and should return an ExactlyOne.
+        if (!self.getName().equals(arg.getName())) {
 			return new ExactlyOne(); // no bahaviour is admisible
 		}
 
-		if (self.getTerms().isEmpty() && arg.getTerms().isEmpty()) {
+        // now the two names are equal.
+
+        // Now one or both of these assertions may contain a Policy element or Primitive assertion inside this.
+        // Lets take the case where both the assertions do not contain a Policy inside this. So this will intersect to an ALL,
+        // which both the primitive assertions as child elements.
+        if (self.getTerms().isEmpty() && arg.getTerms().isEmpty()) {
 			All assertion2 = new All();
 			assertion2.addTerm(self);
 			assertion2.addTerm(arg);
 			return assertion2;
 		}
 
-		if (self.getTerms().isEmpty() || arg.getTerms().isEmpty()) {
+        // if one of them is empty and the other is not, then this can not be intersected.
+        if (self.getTerms().isEmpty() || arg.getTerms().isEmpty()) {
 			return new ExactlyOne(); // no
 		}
 
-		List argChildTerms;
+        // now both the assertions contain Policy elements or Primitive assertion inside them
+        List argChildTerms;
 		if (arg.getTerms().get(0) instanceof Policy) {
 			argChildTerms = PolicyUtil.getPrimTermsList((Policy) arg.getTerms()
 					.get(0));
@@ -140,8 +147,6 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 			primListA = argChildTerms;
 			primListB = selfChildTerms;
 		}
-
-		boolean isIntersect = false;
 
 		for (Iterator iterator = primListA.iterator(); iterator.hasNext();) {
 			PRIMITIVE_A = (PrimitiveAssertion) iterator.next();
