@@ -18,8 +18,6 @@ package org.apache.ws.policy;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.ws.policy.*;
-
 /**
  * <p>
  * Class to represent a collection of PermValues.

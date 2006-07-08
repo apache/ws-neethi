@@ -167,7 +167,6 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
         All all = new All();
         ExactlyOne exactlyOne = new ExactlyOne();
 
-        ArrayList childAndTermList = new ArrayList();
         ArrayList childXorTermList = new ArrayList();
 
         Iterator terms = getTerms().iterator();
@@ -225,7 +224,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
         // processing child-XORCompositeAssertions
         if (childXorTermList.size() > 1) {
 
-            exactlyOne.addTerms(Policy.crossProduct(childXorTermList, 0));
+            exactlyOne.addTerms(AbstractAssertion.crossProduct(childXorTermList, 0));
 
         } else if (childXorTermList.size() == 1) {
             Assertion tmpExactlyOne = (Assertion) childXorTermList.get(0);
@@ -422,6 +421,8 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
     }
 
     /**
+<<<<<<< .mine
+=======
      * @param allTerms
      *            ExactlyOne to be corssproducted
      * @param index
@@ -459,6 +460,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
     }
 
     /**
+>>>>>>> .r407730
      * Returns an Iterator to track the Alternatives within this Policy. This
      * iterator will again return an iterator which points to the set of
      * primitives in an alternative.

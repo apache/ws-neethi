@@ -202,4 +202,41 @@ public abstract class AbstractAssertion implements Assertion {
     public int getLineNo() {
         return lineNo;
     }
+    
+    /**
+     * @param allTerms
+     *            XorCompositeAssertion to be corssproducted
+     * @param index
+     *            starting point of cross product
+     * @return
+     */
+    protected static ArrayList crossProduct(ArrayList allTerms, int index) {
+
+        ArrayList result = new ArrayList();
+        ExactlyOne firstTerm = (ExactlyOne) allTerms
+                .get(index);
+        ArrayList restTerms;
+
+        if (allTerms.size() == ++index) {
+            restTerms = new ArrayList();
+            All newTerm = new All();
+            restTerms.add(newTerm);
+        } else
+            restTerms = crossProduct(allTerms, index);
+
+        Iterator firstTermIter = firstTerm.getTerms().iterator();
+        while (firstTermIter.hasNext()) {
+            Assertion assertion = (Assertion) firstTermIter.next();
+            Iterator restTermsItr = restTerms.iterator();
+            while (restTermsItr.hasNext()) {
+                Assertion restTerm = (Assertion) restTermsItr.next();
+                All newTerm = new All();
+                newTerm.addTerms(assertion.getTerms());
+                newTerm.addTerms(restTerm.getTerms());
+                result.add(newTerm);
+            }
+        }
+
+        return result;
+    }
 }

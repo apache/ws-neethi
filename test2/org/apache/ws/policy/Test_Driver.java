@@ -29,8 +29,8 @@ public class Test_Driver extends TestCase {
   public static void main(String[] args) {
     WSPTestSuite suite = new WSPTestSuite(Test_Driver.class);
 
-//    suite.addTestSuite(Test_JIRA14.class);
-//    suite.addTestSuite(Test_Policy.class);
+    suite.addTestSuite(Test_JIRA14.class);
+    suite.addTestSuite(Test_Policy.class);
     suite.addTestSuite(Test_EffectivePolicy.class);
 
     suite.run();

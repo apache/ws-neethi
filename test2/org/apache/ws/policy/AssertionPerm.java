@@ -18,8 +18,8 @@ package org.apache.ws.policy;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+
 import javax.xml.namespace.QName;
-import org.apache.ws.policy.*;
 
 /**
  * <p>Class to represent an Assertion permutation.
