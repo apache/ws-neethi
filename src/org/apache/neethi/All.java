@@ -52,6 +52,9 @@ public class All extends AbstractPolicyOperator {
                         .getPolicyComponents());
                 component = wrapper.normalize(deep);
                 type = component.getType();
+                
+            } else if (!(type == PolicyComponent.ASSERTION)) {
+                component = ((PolicyOperator) component).normalize(deep);
             }
 
             if (type == PolicyComponent.EXACTLYONE) {
@@ -76,7 +79,7 @@ public class All extends AbstractPolicyOperator {
 
         // processing child ExactlyOne operators
         if (exactlyOnes.size() > 1) {
-            exactlyOne.addPolicyComponents(crossProduct(exactlyOnes, 0));
+            exactlyOne.addPolicyComponents(crossProduct(exactlyOnes, 0, false));
 
         } else if (exactlyOnes.size() == 1) {
             ExactlyOne anExactlyOne = (ExactlyOne) exactlyOnes.get(0);

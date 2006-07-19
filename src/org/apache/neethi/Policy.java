@@ -43,20 +43,24 @@ public class Policy extends AbstractPolicyOperator {
                 .hasNext();) {
             component = (PolicyComponent) iterator.next();
             short type = component.getType();
-
+            
             if (type == PolicyComponent.ASSERTION && deep) {
                 component = ((Assertion) component).normalize();
                 type = component.getType();
             }
-
+            
             if (type == PolicyComponent.POLICY) {
                 All wrapper = new All();
                 wrapper.addPolicyComponents(((Policy) component)
                         .getPolicyComponents());
                 component = wrapper.normalize(deep);
                 type = component.getType();
+                
+            } else if (type != PolicyComponent.ASSERTION) {
+                component = ((PolicyOperator) component).normalize(deep);
+                type = component.getType();
             }
-
+            
             if (type == PolicyComponent.EXACTLYONE) {
 
                 if (((ExactlyOne) component).isEmpty()) {
@@ -82,7 +86,7 @@ public class Policy extends AbstractPolicyOperator {
 
         // processing child ExactlyOne operators
         if (exactlyOnes.size() > 1) {
-            exactlyOne.addPolicyComponents(crossProduct(exactlyOnes, 0));
+            exactlyOne.addPolicyComponents(crossProduct(exactlyOnes, 0, false));
 
         } else if (exactlyOnes.size() == 1) {
             ExactlyOne anExactlyOne = (ExactlyOne) exactlyOnes.get(0);
@@ -120,10 +124,25 @@ public class Policy extends AbstractPolicyOperator {
     }
     
     public Policy merge(Policy policy) {
-        throw new UnsupportedOperationException("still not implemented");
+        
+        Policy result = new Policy();
+        ExactlyOne alternative = new ExactlyOne();
+        result.addPolicyComponent(alternative);
+        
+        ArrayList alternatives = new ArrayList();
+        policy = (Policy) policy.normalize(false);
+        
+        alternatives.add(this.getFirstPolicyComponent());
+        alternatives.add(policy.getFirstPolicyComponent());
+        
+        alternative.addPolicyComponents(crossProduct(alternatives, 0, false));
+        
+        return result;
     }
     
     public Policy intersect(Policy policy) {
+        
+        
         throw new UnsupportedOperationException("still not implemented");
     }
     
@@ -152,6 +171,33 @@ public class Policy extends AbstractPolicyOperator {
     
     public final short getType() {
         return PolicyComponent.POLICY;
+    }
+    
+    public Iterator getAlternatives() {
+        return new PolicyIterator(this);
+    }
+    
+    private class PolicyIterator implements Iterator {
+        Iterator alternatives = null;
+        
+        public PolicyIterator(Policy policy) {
+            policy = (Policy) policy.normalize(false);
+            ExactlyOne exactlyOne = (ExactlyOne) policy.getFirstPolicyComponent();
+            alternatives = exactlyOne.getPolicyComponents().iterator();
+        }
+
+        public boolean hasNext() {
+            return alternatives.hasNext();
+        }
+
+        public Object next() {
+            return ((All) alternatives.next()).getPolicyComponents();
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException("policyAlternative.remove() is not supported");
+        }
+        
     }
     
 }

@@ -421,8 +421,6 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
     }
 
     /**
-<<<<<<< .mine
-=======
      * @param allTerms
      *            ExactlyOne to be corssproducted
      * @param index
@@ -460,7 +458,6 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
     }
 
     /**
->>>>>>> .r407730
      * Returns an Iterator to track the Alternatives within this Policy. This
      * iterator will again return an iterator which points to the set of
      * primitives in an alternative.

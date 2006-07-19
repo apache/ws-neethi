@@ -35,14 +35,18 @@ public class ExactlyOne extends AbstractPolicyOperator {
             
             if (type == PolicyComponent.ASSERTION && deep) {
                 component = ((Assertion) component).normalize();
-                type = component.getType();
-            }
+                type = component.getType();       
+            } 
             
             if (type == PolicyComponent.POLICY) {
                 All wrapper = new All();
-                wrapper.addPolicyComponents(((All) component).getPolicyComponents());
+                wrapper.addPolicyComponents(((Policy) component).getPolicyComponents());
                 
                 component = wrapper.normalize(deep);
+                type = component.getType();
+                
+            } else if (type != PolicyComponent.ASSERTION) {
+                component = ((PolicyOperator) component).normalize(deep);
                 type = component.getType();
             }
             

@@ -19,57 +19,116 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 public abstract class AbstractPolicyOperator implements PolicyOperator {
     protected ArrayList policyComponents = new ArrayList();
-    
+
     public void addPolicyComponent(PolicyComponent component) {
         policyComponents.add(component);
     }
-    
+
     public void addPolicyComponents(List components) {
         policyComponents.addAll(components);
     }
-    
+
     public List getPolicyComponents() {
         return policyComponents;
     }
-    
+
+    public PolicyComponent getFirstPolicyComponent() {
+        return (PolicyComponent) policyComponents.get(0);
+    }
+
     public boolean isEmpty() {
         return policyComponents.isEmpty();
     }
-    
-    protected List crossProduct(ArrayList allTerms, int index) {
+
+    protected List crossProduct(ArrayList allTerms, int index,
+            boolean matchVacabulary) {
 
         ArrayList result = new ArrayList();
-        ExactlyOne firstTerm = (ExactlyOne) allTerms
-                .get(index);
-        
+        ExactlyOne firstTerm = (ExactlyOne) allTerms.get(index);
+
         List restTerms;
-        
+
         if (allTerms.size() == ++index) {
             restTerms = new ArrayList();
             All newTerm = new All();
             restTerms.add(newTerm);
         } else {
-            restTerms = crossProduct(allTerms, index);
+            restTerms = crossProduct(allTerms, index, matchVacabulary);
         }
 
         Iterator firstTermIter = firstTerm.getPolicyComponents().iterator();
-        
+
         while (firstTermIter.hasNext()) {
-            Assertion assertion = (Assertion) firstTermIter.next();
-            Iterator restTermsItr = restTerms.iterator();
             
+            All assertion = (All) firstTermIter.next();
+            Iterator restTermsItr = restTerms.iterator();
+
             while (restTermsItr.hasNext()) {
-                Assertion restTerm = (Assertion) restTermsItr.next();
+                All restTerm = (All) restTermsItr.next();
                 All newTerm = new All();
-                newTerm.addPolicyComponents(((All) assertion).getPolicyComponents());
-                newTerm.addPolicyComponents(((All) restTerm).getPolicyComponents());
-                result.add(newTerm);
+
+                if (matchVacabulary) {
+                    if (matchVocabulary(
+                            ((All) assertion).getPolicyComponents(),
+                            ((All) restTerm).getPolicyComponents())) {
+                        newTerm.addPolicyComponents(((All) assertion)
+                                .getPolicyComponents());
+                        newTerm.addPolicyComponents(((All) restTerm)
+                                .getPolicyComponents());
+                        result.add(newTerm);
+                    }
+
+                } else {
+                    newTerm.addPolicyComponents(((All) assertion)
+                            .getPolicyComponents());
+                    newTerm.addPolicyComponents(((All) restTerm)
+                            .getPolicyComponents());
+                    result.add(newTerm);
+                }
             }
         }
-        
+
         return result;
     }
-    
+
+    private boolean matchVocabulary(List assertions1, List assertions2) {
+
+        Iterator S, L;
+
+        if (assertions1.size() < assertions2.size()) {
+            S = assertions1.iterator();
+            L = assertions2.iterator();
+        } else {
+            S = assertions2.iterator();
+            L = assertions1.iterator();
+        }
+
+        QName Sq, Lq;
+        boolean found;
+
+        for (; L.hasNext();) {
+            Lq = ((PrimitiveAssertion) L.next()).getName();
+
+            found = false;
+
+            for (; S.hasNext();) {
+                Sq = ((PrimitiveAssertion) S.next()).getName();
+
+                if (Lq.equals(Sq)) {
+                    found = true;
+                    break;
+                }
+
+            }
+
+            if (!found) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

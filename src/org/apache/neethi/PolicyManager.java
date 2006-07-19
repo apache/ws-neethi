@@ -23,6 +23,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.neethi.builders.AssertionBuilder;
 
 public class PolicyManager {
+    
     public static final String POLICY_NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/09/policy";
     
     public static final String POLICY = "Policy";

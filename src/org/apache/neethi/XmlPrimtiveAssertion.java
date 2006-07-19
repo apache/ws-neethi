@@ -15,17 +15,27 @@
  */
 package org.apache.neethi;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 
-public class XmlPrimtiveAssertion implements Assertion {
+public class XmlPrimtiveAssertion implements PrimitiveAssertion {
 
     OMElement element;
+    boolean isOptional;
+    QName optionalAttri = new QName(PolicyOperator.NAMESPACE, "Optional", PolicyOperator.PREFIX);
+    
     
     public XmlPrimtiveAssertion(OMElement element) {
         setValue(element);
+        setOptionality(element);        
+    }
+    
+    public QName getName() {
+        return (element != null) ? element.getQName() : null;
     }
 
     public void setValue(OMElement element) {
@@ -35,12 +45,33 @@ public class XmlPrimtiveAssertion implements Assertion {
     public OMElement getValue() {
         return element;
     }
-
-    public Assertion normalize() throws IllegalArgumentException {
+    
+    public boolean isOptional() {
+        return isOptional;
+    }
+    
+    public PolicyComponent normalize() throws IllegalArgumentException {
         return normalize(null);
     }
 
-    public Assertion normalize(PolicyRegistry registry) {
+    public PolicyComponent normalize(PolicyRegistry registry) {
+        
+        if (isOptional) {
+            Policy policy = new Policy();
+            ExactlyOne alternatives = new ExactlyOne();
+            
+            All alternative1 = new All();
+            OMElement element1 = element.cloneOMElement();
+            element1.removeAttribute(element1.getAttribute(optionalAttri));
+            alternative1.addPolicyComponent(new XmlPrimtiveAssertion(element1));
+            alternatives.addPolicyComponent(alternative1);
+            
+            All alternative2 = new All();
+            alternatives.addPolicyComponent(alternative2);
+            
+            policy.addPolicyComponent(alternatives);
+            return policy;
+        }
         return this;
     }
 
@@ -58,5 +89,15 @@ public class XmlPrimtiveAssertion implements Assertion {
     
     public final short getType() {
         return PolicyComponent.ASSERTION;
+    }
+    
+    private void setOptionality(OMElement element) {
+        OMAttribute attribute = element.getAttribute(optionalAttri);
+        if (attribute != null) {
+            this.isOptional = (new Boolean(attribute.getAttributeValue()).booleanValue());
+            
+        } else {
+            this.isOptional = false;            
+        }        
     }
 }
