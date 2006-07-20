@@ -19,10 +19,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.neethi.All;
+import org.apache.neethi.Assertion;
 import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyComponent;
-import org.apache.neethi.PrimitiveAssertion;
 
 public class PolicyComparator {
 
@@ -45,8 +45,8 @@ public class PolicyComparator {
             return compare((ExactlyOne) arg1,
                     (ExactlyOne) arg2);
 
-        } else if (arg1 instanceof PrimitiveAssertion) {
-            return compare((PrimitiveAssertion) arg1, (PrimitiveAssertion) arg2);
+        } else if (arg1 instanceof Assertion) {
+            return compare((Assertion) arg1, (Assertion) arg2);
 
         } else {
             // TODO should I throw an exception ..
@@ -65,8 +65,8 @@ public class PolicyComparator {
         return compare(arg1.getPolicyComponents(), arg2.getPolicyComponents());
     }
 
-    public static boolean compare(PrimitiveAssertion arg1,
-            PrimitiveAssertion arg2) {
+    public static boolean compare(Assertion arg1,
+            Assertion arg2) {
         if (!(arg1.getName().equals(arg2.getName()))) {
             return false;
         }

@@ -111,12 +111,12 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         boolean found;
 
         for (; L.hasNext();) {
-            Lq = ((PrimitiveAssertion) L.next()).getName();
+            Lq = ((Assertion) L.next()).getName();
 
             found = false;
 
             for (; S.hasNext();) {
-                Sq = ((PrimitiveAssertion) S.next()).getName();
+                Sq = ((Assertion) S.next()).getName();
 
                 if (Lq.equals(Sq)) {
                     found = true;

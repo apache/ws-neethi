@@ -15,14 +15,17 @@
  */
 package org.apache.neethi;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamWriter;
 
 public interface Assertion extends PolicyComponent {
-        
+    
+    public QName getName();
+    
+    public boolean isOptional();
+    
     public PolicyComponent normalize();
-    
-    public PolicyComponent normalize(PolicyRegistry registry);
-    
+        
     public void serialize(XMLStreamWriter writer);
     
 }

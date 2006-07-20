@@ -22,7 +22,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 
-public class XmlPrimtiveAssertion implements PrimitiveAssertion {
+public class XmlPrimtiveAssertion implements Assertion {
 
     OMElement element;
     boolean isOptional;

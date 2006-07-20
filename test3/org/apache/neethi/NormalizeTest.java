@@ -24,7 +24,7 @@ import org.apache.neethi.util.PolicyComparator;
 
 public class NormalizeTest extends PolicyTestCase {
     
-    PolicyManager mgr;
+    PolicyEngine mgr;
 
     public NormalizeTest() {
         super("NormalizeTest");
@@ -39,10 +39,10 @@ public class NormalizeTest extends PolicyTestCase {
             r1 = "samples" + File.separator + "test" + i + ".xml";
             r2 = "normalized" + File.separator + "test" + i + ".xml";
 
-            p1 = PolicyManager.getPolicy(getResource(r1));
+            p1 = PolicyEngine.getPolicy(getResource(r1));
             test = p1;
             p1 = (Policy) p1.normalize(true);
-            p2 = PolicyManager.getPolicy(getResource(r2));
+            p2 = PolicyEngine.getPolicy(getResource(r2));
             
             if (!PolicyComparator.compare(p1, p2)) {
                 XMLStreamWriter writer;
