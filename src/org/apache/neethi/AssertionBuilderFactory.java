@@ -40,26 +40,12 @@ public class AssertionBuilderFactory {
     
     public static final String ALL = "All";
     
-//    private final QName POLICY_ASSERTION_BUILDER = new QName(
-//            "http://schemas.xmlsoap.org/ws/2004/09/policy", "Policy");
-//
-//    private final QName EXACTLY_ONE_ASSERTION_BUILDER = new QName(
-//            "http://schemas.xmlsoap.org/ws/2004/09/policy", "ExactlyOne");
-//
-//    private final QName ALL_ASSERTION_BUILDER = new QName(
-//            "http://schemas.xmlsoap.org/ws/2004/09/policy", "All");
-
     private final QName XML_ASSERTION_BUILDER = new QName(
             "http://test.org/test", "test");
 
     private HashMap registeredBuilders = new HashMap();
 
     public AssertionBuilderFactory() {
-//        registerBuilder(POLICY_ASSERTION_BUILDER, new PolicyAssertionBuilder());
-//        registerBuilder(EXACTLY_ONE_ASSERTION_BUILDER,
-//                new ExactlyOneAssertionBuilder());
-//        registerBuilder(ALL_ASSERTION_BUILDER, new AllAssertionBuilder());
-//        registerBuilder(XML_ASSERTION_BUILDER, new XmlAssertionBuilder());
     }
 
     public void registerBuilder(QName key, AssertionBuilder builder) {

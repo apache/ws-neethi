@@ -17,16 +17,46 @@ package org.apache.neethi;
 
 import java.util.List;
 
-
+/**
+ * PolicyOperator is an interface that all Policy operators must implement.
+ * 
+ */
 public interface PolicyOperator extends PolicyComponent {
-    
+
     public static final String NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/09/policy";
+
     public static final String PREFIX = "wsp";
+
     public static final String POLICY = "Policy";
+
     public static final String EXACTLYONE = "ExactlyOne";
+
     public static final String ALL = "All";
-    
+
+    /**
+     * Add a PolicyComponent to the PolicyOperator.
+     * 
+     * @param component
+     */
     public void addPolicyComponent(PolicyComponent component);
+
+    /**
+     * Returns a List of PolicyComponents which this PolicyOperator contains.
+     * 
+     * @return the List of PolicyComponents that this PolicyOperator contains.
+     */
     public List getPolicyComponents();
+
+    /**
+     * Returns a PolicyComponent which is the normalized format of this
+     * PolicyOperator.
+     * 
+     * @param deep
+     *            the deep flag indicates whether the assertion it contains
+     *            should be normalized or not. Merge and Intersect will use a
+     *            partial normalization since partial normalization is
+     *            sufficient for most high level processing of Policies will
+     * @return
+     */
     public PolicyComponent normalize(boolean deep);
 }

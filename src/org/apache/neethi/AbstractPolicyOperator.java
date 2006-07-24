@@ -21,6 +21,10 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+/**
+ * 
+ *
+ */
 public abstract class AbstractPolicyOperator implements PolicyOperator {
     protected ArrayList policyComponents = new ArrayList();
 
@@ -117,12 +121,11 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
 
             for (; S.hasNext();) {
                 Sq = ((Assertion) S.next()).getName();
-
+                
                 if (Lq.equals(Sq)) {
                     found = true;
                     break;
                 }
-
             }
 
             if (!found) {

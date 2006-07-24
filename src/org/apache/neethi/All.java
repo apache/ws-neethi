@@ -21,6 +21,10 @@ import java.util.Iterator;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+/**
+ * 
+ *
+ */
 public class All extends AbstractPolicyOperator {
 
     public PolicyComponent normalize(boolean deep) {

@@ -28,11 +28,10 @@ import org.apache.neethi.builders.AssertionBuilder;
 
 /**
  * PolicyEngine provides set of methods to create a Policy object from an
- * InputStream, OMElement, .. etc. It maintains a registry of AssertionBuilder
- * instances which can create a Domain Assertion out of an OMElement.
- * AssertionBuilder instances are used when a Policy object is constructed by
- * the PolicyEngine.
- * 
+ * InputStream, OMElement, .. etc. It maintains an instance of
+ * AssertionBuilderFactory that can return AssertionBuilders that can create a
+ * Domain Assertion out of an OMElement. These AssertionBuilders are used when
+ * constructing a Policy object.
  */
 public class PolicyEngine {
 
@@ -47,9 +46,10 @@ public class PolicyEngine {
     private static AssertionBuilderFactory factory = new AssertionBuilderFactory();
 
     /**
-     * Registers an AssertionBuilder instances and associates it with a QName. PolicyManager
-     * or other AssertionBuilders instances can use this AssertionBuilder instance to process
-     * and build an Assertion from a OMElement with the specified QName.
+     * Registers an AssertionBuilder instances and associates it with a QName.
+     * PolicyManager or other AssertionBuilders instances can use this
+     * AssertionBuilder instance to process and build an Assertion from a
+     * OMElement with the specified QName.
      * 
      * @param qname
      * @param builder

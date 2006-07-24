@@ -130,9 +130,11 @@ public class Policy extends AbstractPolicyOperator {
         result.addPolicyComponent(alternative);
         
         ArrayList alternatives = new ArrayList();
-        policy = (Policy) policy.normalize(false);
         
-        alternatives.add(this.getFirstPolicyComponent());
+        policy = (Policy) policy.normalize(false);
+        alternatives.add(policy.getFirstPolicyComponent());
+        
+        policy = (Policy) normalize(false);
         alternatives.add(policy.getFirstPolicyComponent());
         
         alternative.addPolicyComponents(crossProduct(alternatives, 0, false));
