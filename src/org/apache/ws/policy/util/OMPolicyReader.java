@@ -23,11 +23,11 @@ import org.apache.axiom.om.OMXMLParserWrapper;
 import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.ws.policy.All;
 import org.apache.ws.policy.Assertion;
+import org.apache.ws.policy.ExactlyOne;
 import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.PolicyConstants;
 import org.apache.ws.policy.PolicyReference;
 import org.apache.ws.policy.PrimitiveAssertion;
-import org.apache.ws.policy.ExactlyOne;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -66,7 +66,7 @@ public class OMPolicyReader implements PolicyReader {
 
 	private Assertion readAssertion(OMElement element) {
         
-		String namespace = element.getNamespace().getName();
+		String namespace = element.getNamespace().getNamespaceURI();
 		String localName = element.getLocalName();
 
 		if (!(namespace.equals(PolicyConstants.POLICY_NAMESPACE_URI))) {
@@ -144,7 +144,7 @@ public class OMPolicyReader implements PolicyReader {
 		while (childElements.hasNext()) {
 			OMElement childElement = (OMElement) childElements.next();
 
-			if (childElement.getNamespace().getName().equals(
+			if (childElement.getNamespace().getNamespaceURI().equals(
 					PolicyConstants.POLICY_NAMESPACE_URI)
 					&& childElement.getLocalName().equals(
 							PolicyConstants.POLICY)) {
