@@ -76,8 +76,8 @@ public class AssertionBuilderFactory {
         return builder.build(element, this);
     }
 
-    public AssertionBuilder getBuilder(String namespace) {
-        return (AssertionBuilder) registeredBuilders.get(namespace);
+    public AssertionBuilder getBuilder(QName qname) {
+        return (AssertionBuilder) registeredBuilders.get(qname);
     }
     
 

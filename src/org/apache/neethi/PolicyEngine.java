@@ -44,6 +44,10 @@ public class PolicyEngine {
     public static final String ALL = "All";
 
     private static AssertionBuilderFactory factory = new AssertionBuilderFactory();
+    
+    static {
+//        factory.registerBuilder(, builder)
+    }
 
     /**
      * Registers an AssertionBuilder instances and associates it with a QName.
@@ -127,8 +131,9 @@ public class PolicyEngine {
                 }
             } else {
 
-                AssertionBuilder builder = factory.getBuilder(childElement
-                        .getNamespace().getName());
+
+                AssertionBuilder builder = factory.getBuilder(childElement.getQName());
+                
 
                 if (builder == null) {
                     XmlPrimtiveAssertion xmlPrimtiveAssertion = new XmlPrimtiveAssertion(

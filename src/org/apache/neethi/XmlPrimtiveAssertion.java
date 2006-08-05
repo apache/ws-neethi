@@ -35,6 +35,8 @@ public class XmlPrimtiveAssertion implements Assertion {
     }
     
     public QName getName() {
+        System.out.println(element.getQName());
+        
         return (element != null) ? element.getQName() : null;
     }
 

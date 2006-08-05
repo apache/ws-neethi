@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.neethi;
+package org.apache.ws.security.policy.builders;
 
-import javax.xml.namespace.QName;
+import org.apache.axiom.om.OMElement;
+import org.apache.neethi.Assertion;
+import org.apache.neethi.AssertionBuilderFactory;
+import org.apache.neethi.builders.AssertionBuilder;
 
-public interface Assertion extends PolicyComponent {
+public class AsymmetricBindingBuilder implements AssertionBuilder {
+
+    public Assertion build(OMElement element, AssertionBuilderFactory factory) throws IllegalArgumentException {
+        
+    }
     
-    public QName getName();
-    
-    public boolean isOptional();
-    
-    public PolicyComponent normalize();
 }
