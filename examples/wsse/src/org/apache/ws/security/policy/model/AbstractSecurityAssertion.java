@@ -13,18 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.ws.security.policy.builders;
+package org.apache.ws.security.policy.model;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.neethi.Assertion;
-import org.apache.neethi.AssertionBuilderFactory;
-import org.apache.neethi.builders.AssertionBuilder;
 
-public class AsymmetricBindingBuilder implements AssertionBuilder {
+public abstract class AbstractSecurityAssertion implements Assertion{
 
-    public Assertion build(OMElement element, AssertionBuilderFactory factory) throws IllegalArgumentException {
-        return null;
-        
+    private boolean isOptional;
+
+    public boolean isOptional() {
+        return isOptional;
     }
     
+    public void setOptional(boolean isOptional) {
+        this.isOptional = isOptional;
+    }
+
+    public short getType() {
+        return Assertion.ASSERTION;
+    }    
+
 }
