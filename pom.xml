@@ -44,7 +44,7 @@
             <name>Sanka Samaranayake</name>
             <id>sanka</id>
             <organization>WSO2 Inc.</organization>
-            <email>sanka@apahce.org</email>
+            <email>sanka@apache.org</email>
         </developer>
         <developer>
             <!-- Documentation -->
@@ -81,6 +81,7 @@
         <directory>${basedir}</directory>
         <includes>
           <include>LICENSE*</include>
+          <include>NOTICE.txt</include>
         </includes>
       </resource>
     </resources>
@@ -238,35 +239,14 @@
   </pluginRepositories>
   <dependencies>
     <dependency>
-        <groupId>org.apache.ws.commons</groupId>
-        <artifactId>axiom</artifactId>
+        <groupId>org.apache.ws.commons.axiom</groupId>
+        <artifactId>axiom-api</artifactId>
         <version>SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.0.4</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>avalon-framework</artifactId>
-          <groupId>avalon-framework</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>logkit</artifactId>
-          <groupId>logkit</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>stax</groupId>
-      <artifactId>stax-api</artifactId>
-      <version>1.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>woodstox</groupId>
-      <artifactId>wstx-asl</artifactId>
-      <version>2.9.3</version>
+        <groupId>org.apache.ws.commons.axiom</groupId>
+        <artifactId>axiom-impl</artifactId>
+        <version>SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>wsdl4j</groupId>
@@ -276,7 +256,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>3.8.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
