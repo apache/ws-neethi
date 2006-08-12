@@ -149,6 +149,29 @@
           <tagBase>https://svn.apache.org/repos/asf/webservices/commons/tags/neethi</tagBase>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>src/main/assembly/bin.xml</descriptor>
+            <descriptor>src/main/assembly/src.xml</descriptor>
+          </descriptors>
+          <tarLongFileMode>gnu</tarLongFileMode>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <attach>true</attach>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <profiles>
@@ -162,52 +185,6 @@
       </activation>
       <build>
         <plugins>
-<!--
-          <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>src-assembly</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>assembly</goal>
-                </goals>
-                <configuration>
-                  <descriptor>assembly-src.xml</descriptor>
-                  <finalName>neethi-${project.version}</finalName>
-                  <outputDirectory>target/src-package</outputDirectory>
-                  <workDirectory>target/assembly/work</workDirectory>
-                </configuration>
-              </execution>
-              <execution>
-                <id>bin-assembly</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>assembly</goal>
-                </goals>
-                <configuration>
-                  <descriptor>assembly-bin.xml</descriptor>
-                  <finalName>neethi-${project.version}</finalName>
-                  <outputDirectory>target/src-package</outputDirectory>
-                  <workDirectory>target/assembly/work</workDirectory>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-  -->
-          <plugin>
-            <artifactId>maven-source-plugin</artifactId>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <attach>true</attach>
-            </configuration>
-          </plugin>
           <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
             <executions>
