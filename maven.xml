@@ -103,6 +103,40 @@
 	
      </goal>
      
+     
+     <!-- ================================================================== -->
+     <!-- Creates and Install Neethi-SNAPSHOT jar                           -->
+     <!-- ================================================================== -->
+     
+     <goal name="neethi:jar:install"  prereqs="clean,test">
+        <ant:property name="dest.file"
+	    value="${pom.artifactId}-${pom.currentVersion}.jar" />
+     	<ant:jar destfile="${maven.build.dir}/${dest.file}"
+	    basedir="${maven.build.dest}"
+	    includes="**/policy/**"
+	    excludes="**/neethi/**" />
+	<ant:copy file="${maven.build.dir}/${dest.file}" 
+	    todir="${maven.repo.local}/${pom.artifactDirectory}/jars"
+	    overwirte="true" />
+     </goal>
+     
+     
+     <!-- ================================================================== -->
+     <!-- Creates and Install Neethi2-SNAPSHOT jar                           -->
+     <!-- ================================================================== -->
+     
+     <goal name="neethi2:jar:install"  prereqs="clean,test">
+        <ant:property name="dest.file"
+	    value="${pom.artifactId}2-${pom.currentVersion}.jar" />
+     	<ant:jar destfile="${maven.build.dir}/${dest.file}"
+	    basedir="${maven.build.dest}"
+	    includes="**/neethi/**"
+	    excludes="**/policy/**" />
+	<ant:copy file="${maven.build.dir}/${dest.file}" 
+	    todir="${maven.repo.local}/${pom.artifactDirectory}/jars"
+	    overwirte="true" />
+     </goal>
+     
      <!-- ================================================================ -->
      <!--- Create the Binary Distribution -->
      <!-- ================================================================ -->
@@ -121,14 +155,6 @@
 	<mkdir dir="${dist.bin.file}/docs/apidocs"/>
 	
 	<mkdir dir="${dist.bin.file}/lib"/>
-	
-	<!--
-	<ant:copy todir="${dist.bin.file}/docs">
-	    <ant:fileset dir="docs">
-	        <ant:include name="**"/>
-	    </ant:fileset>
-	</ant:copy>
-	-->
 	
 	<ant:copy todir="${dist.bin.file}/docs/apidocs">
 	    <ant:fileset dir="target/docs/apidocs/">
