@@ -15,36 +15,24 @@
  */
 package org.apache.neethi;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
 
 import javax.xml.stream.XMLInputFactory;
-
-import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
 
-public class PolicyTestCase extends TestCase {
-	protected String baseDir = System.getProperty("basedir");
-	protected String testDir = "test" + File.separator;
-	protected String testResourceDir = "test-resources";
-	
+
+public class PolicyTestCase extends org.apache.ws.policy.PolicyTestCase {
 	public PolicyTestCase(String name) {
 		super(name);
-		if (baseDir == null) {
-			baseDir = (String) (new File(".")).getAbsolutePath();
-		}
-		testDir = (String) (new File(baseDir, testDir).getAbsolutePath());	
 	}	
 	
-	public OMElement getResource(String name) {
-		String filePath = (new File(testResourceDir, name)).getAbsolutePath(); 
+	public OMElement getResourceAsElement(String name) {
 		try {
-            
-			FileInputStream fis = new FileInputStream(filePath);
-            OMElement element = OMXMLBuilderFactory.createStAXOMBuilder(OMAbstractFactory.getOMFactory(), XMLInputFactory.newInstance().createXMLStreamReader(fis)).getDocumentElement();
+			InputStream in = getResource(name);
+            OMElement element = OMXMLBuilderFactory.createStAXOMBuilder(OMAbstractFactory.getOMFactory(), XMLInputFactory.newInstance().createXMLStreamReader(in)).getDocumentElement();
             return element;
             
 		} catch (Exception e) {

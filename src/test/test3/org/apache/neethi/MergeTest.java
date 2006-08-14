@@ -49,9 +49,9 @@ public class MergeTest extends PolicyTestCase {
             r2 = "samples2" + File.separator + "Policy" + f2 + ".xml";
             r3 = "merged" + File.separator + f;
 
-            p1 = PolicyEngine.getPolicy(getResource(r1));
-            p2 = PolicyEngine.getPolicy(getResource(r2));
-            p3 = PolicyEngine.getPolicy(getResource(r3));
+            p1 = PolicyEngine.getPolicy(getResourceAsElement(r1));
+            p2 = PolicyEngine.getPolicy(getResourceAsElement(r2));
+            p3 = PolicyEngine.getPolicy(getResourceAsElement(r3));
 
             // result
             p4 = (Policy) p1.merge(p2);

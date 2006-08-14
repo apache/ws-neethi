@@ -18,17 +18,16 @@ package org.apache.ws.policy;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.Hashtable;
 
 import javax.xml.namespace.QName;
-
-import junit.framework.TestCase;
 
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyWriter;
 
-public class Test_JIRA14 extends TestCase {
+public class Test_JIRA14 extends PolicyTestCase {
 
   QName q1 = new QName("http://www.apache.org/policyTest", "q1");
   QName q2 = new QName("http://www.apache.org/policyTest", "q2");
@@ -144,7 +143,6 @@ public class Test_JIRA14 extends TestCase {
       pol.addAttribute(q4, "Fourth");
 
       Hashtable attributes = pol.getAttributes();
-      String value = null;
       assertTrue("Attribute number check [" + attributes.size() + "]",
           attributes.size() == 5);
 
@@ -201,8 +199,7 @@ public class Test_JIRA14 extends TestCase {
 
   public void testReadAttributes() {
     try {
-      File f = new File("test-resources/base/Policy_Optional_MixedNested.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Optional_MixedNested.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.OM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -216,8 +213,7 @@ public class Test_JIRA14 extends TestCase {
       assertTrue("Attribute C INCORRECT", pol.getAttribute(qNameC).equals("C"));
 
       // Now do the same for DOM ...
-      f = new File("test-resources/base/Policy_Optional_MixedNested.xml");
-      in = new FileInputStream(f);
+      in = getResource("base/Policy_Optional_MixedNested.xml");
       pReader = PolicyFactory.getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       pol = pReader.readPolicy(in);
 
@@ -235,7 +231,7 @@ public class Test_JIRA14 extends TestCase {
       // Read it back ... it should have the same attributes
       in = new FileInputStream(tempFile);
       pReader = PolicyFactory.getPolicyReader(PolicyFactory.OM_POLICY_READER);
-      Policy polRead = pReader.readPolicy(in);      
+      pReader.readPolicy(in);      
       
       assertTrue("Attribute B INCORRECT", pol.getAttribute(qNameB).equals("B"));
       assertTrue("Attribute A INCORRECT", pol.getAttribute(qNameA).equals("A"));

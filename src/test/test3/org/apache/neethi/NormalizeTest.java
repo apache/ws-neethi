@@ -39,10 +39,10 @@ public class NormalizeTest extends PolicyTestCase {
             r1 = "samples" + File.separator + "test" + i + ".xml";
             r2 = "normalized" + File.separator + "test" + i + ".xml";
 
-            p1 = PolicyEngine.getPolicy(getResource(r1));
+            p1 = PolicyEngine.getPolicy(getResourceAsElement(r1));
             test = p1;
             p1 = (Policy) p1.normalize(true);
-            p2 = PolicyEngine.getPolicy(getResource(r2));
+            p2 = PolicyEngine.getPolicy(getResourceAsElement(r2));
             
             if (!PolicyComparator.compare(p1, p2)) {
                 XMLStreamWriter writer;

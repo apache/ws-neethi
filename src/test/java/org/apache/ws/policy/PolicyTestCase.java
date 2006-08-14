@@ -24,19 +24,17 @@ import junit.framework.TestCase;
 
 public class PolicyTestCase extends TestCase {
 	protected String baseDir = System.getProperty("basedir");
-	protected String testDir = "test" + File.separator;
-	protected String testResourceDir = "test-resources";
+	protected String testResourceDir = "src" + File.separator + "test" + File.separator + "test-resources";
 	
 	public PolicyTestCase(String name) {
 		super(name);
 		if (baseDir == null) {
-			baseDir = (String) (new File(".")).getAbsolutePath();
+			baseDir = (String) new File(".").getAbsolutePath();
 		}
-		testDir = (String) (new File(baseDir, testDir).getAbsolutePath());	
-	}	
-	
+	}
+
 	public InputStream getResource(String name) {
-		String filePath = (new File(testResourceDir, name)).getAbsolutePath(); 
+		String filePath = new File(testResourceDir, name).getAbsolutePath(); 
 		try {
 			FileInputStream fis = new FileInputStream(filePath);
 			return fis;
@@ -46,4 +44,3 @@ public class PolicyTestCase extends TestCase {
 		}
 	}
 }
-

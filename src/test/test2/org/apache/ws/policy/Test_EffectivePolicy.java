@@ -1,21 +1,18 @@
 package org.apache.ws.policy;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import javax.xml.namespace.QName;
 
-import junit.framework.TestCase;
-
 import org.apache.ws.policy.attachment.WSDLPolicyProcessor;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyRegistry;
 
-public class Test_EffectivePolicy extends TestCase {
+public class Test_EffectivePolicy extends PolicyTestCase {
 
     public Test_EffectivePolicy(String name) {
         super(name);
@@ -24,14 +21,9 @@ public class Test_EffectivePolicy extends TestCase {
     public void testService() {
 
         try {
-            String wsdlFile = "EffectivePolicy_Service.wsdl";
-            String sep = System.getProperty("file.separator");
-            File file = new File("test-resources" + sep + "base" + sep
-                    + wsdlFile);
-            // Read this in as an InputStream
-            FileInputStream fIS = new FileInputStream(file);
+        	InputStream in = getResource("base/EffectivePolicy_Service.wsdl");
             // TODO: You get a NPException when you do the following ...
-            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS);
+            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(in);
             // But the following avoid it.
             // WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS, new
             // PolicyRegistry());
@@ -84,14 +76,9 @@ public class Test_EffectivePolicy extends TestCase {
 
     public void testEndpoint() {
         try {
-            String wsdlFile = "EffectivePolicy_Endpoint.wsdl";
-            String sep = System.getProperty("file.separator");
-            File file = new File("test-resources" + sep + "base" + sep
-                    + wsdlFile);
-            // Read this in as an InputStream
-            FileInputStream fIS = new FileInputStream(file);
+        	InputStream in = getResource("base/EffectivePolicy_Endpoint.wsdl");
             // TODO: You get a NPException when you do the following ...
-            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS);
+            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(in);
             // But the following avoid it.
             // WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS, new
             // PolicyRegistry());
@@ -144,14 +131,9 @@ public class Test_EffectivePolicy extends TestCase {
 
     public void testOperation() {
         try {
-            String wsdlFile = "EffectivePolicy_Operation.wsdl";
-            String sep = System.getProperty("file.separator");
-            File file = new File("test-resources" + sep + "base" + sep
-                    + wsdlFile);
-            // Read this in as an InputStream
-            FileInputStream fIS = new FileInputStream(file);
+        	InputStream in = getResource("base/EffectivePolicy_Operation.wsdl");
             // TODO: You get a NPException when you do the following ...
-            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS);
+            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(in);
             // But the following avoid it.
             // WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS, new
             // PolicyRegistry());
@@ -204,13 +186,8 @@ public class Test_EffectivePolicy extends TestCase {
 
     public void testOperation_EmptyBinding() {
         try {
-            String wsdlFile = "EffectivePolicy_Operation_EmptyBinding.wsdl";
-            String sep = System.getProperty("file.separator");
-            File file = new File("test-resources" + sep + "base" + sep
-                    + wsdlFile);
-            // Read this in as an InputStream
-            FileInputStream fIS = new FileInputStream(file);
-            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS);
+        	InputStream in = getResource("base/EffectivePolicy_Operation_EmptyBinding.wsdl");
+            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(in);
 
             String ns = "http://policy.tests.webservices.com";
             QName service = new QName(ns, "MyService");
@@ -260,13 +237,8 @@ public class Test_EffectivePolicy extends TestCase {
 
     public void testInput() {
         try {
-            String wsdlFile = "EffectivePolicy_Input.wsdl";
-            String sep = System.getProperty("file.separator");
-            File file = new File("test-resources" + sep + "base" + sep
-                    + wsdlFile);
-            // Read this in as an InputStream
-            FileInputStream fIS = new FileInputStream(file);
-            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS);
+        	InputStream in = getResource("base/EffectivePolicy_Input.wsdl");
+            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(in);
             
             String ns = "http://policy.tests.webservices.com";
             QName service = new QName(ns, "MyService");
@@ -317,14 +289,9 @@ public class Test_EffectivePolicy extends TestCase {
 
     public void testInput_NotNamed() {
         try {
-            String wsdlFile = "EffectivePolicy_InputNotNamed.wsdl";
-            String sep = System.getProperty("file.separator");
-            File file = new File("test-resources" + sep + "base" + sep
-                    + wsdlFile);
-            // Read this in as an InputStream
-            FileInputStream fIS = new FileInputStream(file);
+        	InputStream in = getResource("base/EffectivePolicy_InputNotNamed.wsdl");
             // TODO: You get a NPException when you do the following ...
-            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS);
+            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(in);
             // But the following avoid it.
             // WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS, new
             // PolicyRegistry());
@@ -377,14 +344,9 @@ public class Test_EffectivePolicy extends TestCase {
 
     public void testOutput() {
         try {
-            String wsdlFile = "EffectivePolicy_Output.wsdl";
-            String sep = System.getProperty("file.separator");
-            File file = new File("test-resources" + sep + "base" + sep
-                    + wsdlFile);
-            // Read this in as an InputStream
-            FileInputStream fIS = new FileInputStream(file);
+        	InputStream in = getResource("base/EffectivePolicy_Output.wsdl");
             // TODO: You get a NPException when you do the following ...
-            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS);
+            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(in);
             // But the following avoid it.
             // WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS, new
             // PolicyRegistry());
@@ -437,14 +399,9 @@ public class Test_EffectivePolicy extends TestCase {
 
     public void testOutput_NotNamed() {
         try {
-            String wsdlFile = "EffectivePolicy_OutputNotNamed.wsdl";
-            String sep = System.getProperty("file.separator");
-            File file = new File("test-resources" + sep + "base" + sep
-                    + wsdlFile);
-            // Read this in as an InputStream
-            FileInputStream fIS = new FileInputStream(file);
+        	InputStream in = getResource("base/EffectivePolicy_OutputNotNamed.wsdl");
             // TODO: You get a NPException when you do the following ...
-            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS);
+            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(in);
             // But the following avoid it.
             // WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS, new
             // PolicyRegistry());
@@ -496,15 +453,14 @@ public class Test_EffectivePolicy extends TestCase {
     }
 
     /*
-     * TODO Faults should be named ... public void testFault() { try { String
-     * wsdlFile = "EffectivePolicy_Fault.wsdl"; String sep =
-     * System.getProperty("file.separator"); File file = new
-     * File("test-resources" + sep + "base" + sep + wsdlFile); // Read this in
-     * as an InputStream FileInputStream fIS = new FileInputStream(file); //
-     * TODO: You get a NPException when you do the following ... //
-     * WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS);
-     * WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS, new
-     * PolicyRegistry());
+     * TODO Faults should be named ...
+     * public void testFault() {
+     *   try {
+     *     InputStream in = getResource("base/EffectivePolicy_Fault.wsdl");
+     *     TODO: You get a NPException when you do the following ...
+     *     // WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(in);
+     *     WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(in,
+     *       new PolicyRegistry());
      * 
      * String ns = "http://policy.tests.webservices.com"; QName service = new
      * QName(ns, "MyService"); Iterator it = null;
@@ -543,21 +499,15 @@ public class Test_EffectivePolicy extends TestCase {
     public void testNoPolicies() {
 
         try {
-            String wsdlFile = "EffectivePolicy_NoPolicies.wsdl";
-            String sep = System.getProperty("file.separator");
-            File file = new File("test-resources" + sep + "base" + sep
-                    + wsdlFile);
-            // Read this in as an InputStream
-            FileInputStream fIS = new FileInputStream(file);
+        	InputStream in = getResource("base/EffectivePolicy_NoPolicies.wsdl");
             // TODO: You get a NPException when you do the following ...
-            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS);
+            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(in);
             // But the following avoid it.
             // WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS, new
             // PolicyRegistry());
 
             String ns = "http://policy.tests.webservices.com";
             QName service = new QName(ns, "MyService");
-            Iterator it = null;
 
             Policy normPolService = wpp.getEffectiveServicePolicy(service);
             assertTrue("Service Policy should be null", normPolService == null);
@@ -616,9 +566,7 @@ public class Test_EffectivePolicy extends TestCase {
             assertions.add(logTimeReference);
             yearDayPolicy.addTerms(assertions);
 
-            File f = new File(
-                    "test-resources/base/EffectivePolicy_ImportedPolicies.xml");
-            FileInputStream in = new FileInputStream(f);
+            InputStream in = getResource("base/EffectivePolicy_ImportedPolicies.xml");
             PolicyReader pReader = PolicyFactory
                     .getPolicyReader(PolicyFactory.OM_POLICY_READER);
             Policy hourAndDay = pReader.readPolicy(in);
@@ -630,15 +578,10 @@ public class Test_EffectivePolicy extends TestCase {
                     "http://policy.tests.webservices.com/HourAndDay",
                     hourAndDay);
 
-            String wsdlFile = "EffectivePolicy_ServicePartial.wsdl";
-            String sep = System.getProperty("file.separator");
-            File file = new File("test-resources" + sep + "base" + sep
-                    + wsdlFile);
-            // Read this in as an InputStream
-            FileInputStream fIS = new FileInputStream(file);
+            in = getResource("base/EffectivePolicy_ServicePartial.wsdl");
             // TODO: You get a NPException when you do the following ...
             // WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS);
-            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(fIS, myRegistry);
+            WSDLPolicyProcessor wpp = new WSDLPolicyProcessor(in, myRegistry);
 
             String ns = "http://policy.tests.webservices.com";
             QName service = new QName(ns, "MyService");

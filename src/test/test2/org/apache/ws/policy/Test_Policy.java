@@ -15,22 +15,19 @@
  */
 package org.apache.ws.policy;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import javax.xml.namespace.QName;
-
-import junit.framework.TestCase;
 
 import org.apache.ws.policy.util.PolicyComparator;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
 
-public class Test_Policy extends TestCase {
+
+public class Test_Policy extends PolicyTestCase {
 
   Policy pol4, pol5, pol6, pol7;
 
@@ -53,8 +50,7 @@ public class Test_Policy extends TestCase {
 
   public void testAlternatives_AllEmpty() {
     try {
-      File f = new File("test-resources/base/Policy_Alternatives_AllEmpty.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_AllEmpty.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -72,8 +68,7 @@ public class Test_Policy extends TestCase {
   public void testAlternatives_EOEmpty() {
 
     try {
-      File f = new File("test-resources/base/Policy_Alternatives_EOEmpty.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_EOEmpty.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.OM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -90,9 +85,7 @@ public class Test_Policy extends TestCase {
   public void testAlternatives_PolicyEmpty() {
 
     try {
-      File f = new File(
-          "test-resources/base/Policy_Alternatives_PolicyEmpty.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_PolicyEmpty.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.OM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -111,9 +104,7 @@ public class Test_Policy extends TestCase {
 
   public void testAlternatives_AllSingle() {
     try {
-      File f = new File(
-          "test-resources/base/Policy_Alternatives_AllSingle.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_AllSingle.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -148,8 +139,7 @@ public class Test_Policy extends TestCase {
 
   public void testAlternatives_EOSingle() {
     try {
-      File f = new File("test-resources/base/Policy_Alternatives_EOSingle.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_EOSingle.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -184,9 +174,7 @@ public class Test_Policy extends TestCase {
 
   public void testAlternatives_PolicySingle() {
     try {
-      File f = new File(
-          "test-resources/base/Policy_Alternatives_PolicySingle.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_PolicySingle.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.OM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -220,8 +208,7 @@ public class Test_Policy extends TestCase {
 
   public void testAlternatives_AllMany() {
     try {
-      File f = new File("test-resources/base/Policy_Alternatives_AllMany.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_AllMany.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -274,8 +261,7 @@ public class Test_Policy extends TestCase {
 
   public void testAlternatives_EOMany() {
     try {
-      File f = new File("test-resources/base/Policy_Alternatives_EOMany.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_EOMany.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.OM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -336,9 +322,7 @@ public class Test_Policy extends TestCase {
 
   public void testAlternatives_PolicyMany() {
     try {
-      File f = new File(
-          "test-resources/base/Policy_Alternatives_PolicyMany.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_PolicyMany.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.OM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -391,9 +375,7 @@ public class Test_Policy extends TestCase {
 
   public void testAlternatives_AllNested() {
     try {
-      File f = new File(
-          "test-resources/base/Policy_Alternatives_AllNested.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_AllNested.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -453,8 +435,7 @@ public class Test_Policy extends TestCase {
 
   public void testAlternatives_EONested() {
     try {
-      File f = new File("test-resources/base/Policy_Alternatives_EONested.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_EONested.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -524,9 +505,7 @@ public class Test_Policy extends TestCase {
 
   public void testAlternatives_PolicyNested() {
     try {
-      File f = new File(
-          "test-resources/base/Policy_Alternatives_PolicyNested.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_PolicyNested.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -584,14 +563,11 @@ public class Test_Policy extends TestCase {
 
   public void testAlternatives_MixedNested() {
     try {
-      File f = new File(
-          "test-resources/base/Policy_Alternatives_MixedNested.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_MixedNested.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
 
-      Vector expectedVocab = new Vector();
       QName qNameHour = new QName(TestConstants.NAMESPACE_CAL,
           TestConstants.ASSERTION_HOUR);
       QName qNameMonth = new QName(TestConstants.NAMESPACE_CAL,
@@ -649,13 +625,11 @@ public class Test_Policy extends TestCase {
 
   public void testOptional_AllSingle() {
     try {
-      File f = new File("test-resources/base/Policy_Optional_AllSingle.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Optional_AllSingle.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
 
-      Vector expectedVocab = new Vector();
       QName qNameHour = new QName(TestConstants.NAMESPACE_CAL,
           TestConstants.ASSERTION_HOUR);
 
@@ -689,13 +663,11 @@ public class Test_Policy extends TestCase {
 
   public void testOptional_EOSingle() {
     try {
-      File f = new File("test-resources/base/Policy_Optional_EOSingle.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Optional_EOSingle.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
 
-      Vector expectedVocab = new Vector();
       QName qNameHour = new QName(TestConstants.NAMESPACE_CAL,
           TestConstants.ASSERTION_HOUR);
 
@@ -729,13 +701,11 @@ public class Test_Policy extends TestCase {
 
   public void testOptional_PolicySingle() {
     try {
-      File f = new File("test-resources/base/Policy_Optional_PolicySingle.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Optional_PolicySingle.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
 
-      Vector expectedVocab = new Vector();
       QName qNameHour = new QName(TestConstants.NAMESPACE_CAL,
           TestConstants.ASSERTION_HOUR);
 
@@ -769,8 +739,7 @@ public class Test_Policy extends TestCase {
 
   public void testOptional_AllMany() {
     try {
-      File f = new File("test-resources/base/Policy_Optional_AllMany.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Optional_AllMany.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -834,8 +803,7 @@ public class Test_Policy extends TestCase {
 
   public void testOptional_EOMany() {
     try {
-      File f = new File("test-resources/base/Policy_Optional_EOMany.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Optional_EOMany.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -903,8 +871,7 @@ public class Test_Policy extends TestCase {
 
   public void testOptional_PolicyMany() {
     try {
-      File f = new File("test-resources/base/Policy_Optional_PolicyMany.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Optional_PolicyMany.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -966,9 +933,7 @@ public class Test_Policy extends TestCase {
 
   public void testOptional_MixedNested() {
     try {
-
-      File f = new File("test-resources/base/Policy_Optional_MixedNested.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Optional_MixedNested.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.DOM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -1073,8 +1038,7 @@ public class Test_Policy extends TestCase {
 
   public void testOptional_Explosion() {
     try {
-      File f = new File("test-resources/base/Policy_Optional_Explosion.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Optional_Explosion.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.OM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -1083,7 +1047,7 @@ public class Test_Policy extends TestCase {
       
       long alternativesCount = 0;
       while (it.hasNext()) {
-        List alternative = (List) it.next();
+    	assertTrue(it.next() instanceof List);
         alternativesCount++;    
       }
       assertTrue("Number of Alternatives [" + alternativesCount + "] should be 65536", alternativesCount == 65536);
@@ -1096,8 +1060,7 @@ public class Test_Policy extends TestCase {
 
   public void testAlternatives_Duplicates() {
     try {
-      File f = new File("test-resources/base/Policy_Alternatives_Duplicates.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Alternatives_Duplicates.xml");
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.OM_POLICY_READER);
       Policy pol = pReader.readPolicy(in);
@@ -1239,7 +1202,6 @@ public class Test_Policy extends TestCase {
       pol.addAttribute(q4, "Fourth");
 
       Hashtable attributes = pol.getAttributes();
-      String value = null;
       assertTrue("Attribute number check [" + attributes.size() + "]",
           attributes.size() == 5);
 
@@ -1260,12 +1222,10 @@ public class Test_Policy extends TestCase {
     try {
       PolicyReader pReader = PolicyFactory
           .getPolicyReader(PolicyFactory.OM_POLICY_READER);
-      File f = new File("test-resources/base/Policy_Equality1.xml");
-      FileInputStream in = new FileInputStream(f);
+      InputStream in = getResource("base/Policy_Equality1.xml");
       Policy pol1 = pReader.readPolicy(in);
 
-      f = new File("test-resources/base/Policy_Equality2.xml");
-      in = new FileInputStream(f);
+      in = getResource("base/Policy_Equality2.xml");
       Policy pol2 = pReader.readPolicy(in);
 
       assertTrue("Comparator: Policy1 should be EQUAL to Policy2",

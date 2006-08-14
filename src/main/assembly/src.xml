@@ -24,14 +24,5 @@
     <fileSet>
       <directory>src</directory>
     </fileSet>
-    <fileSet>
-      <directory>test2</directory>
-    </fileSet>
-    <fileSet>
-      <directory>test3</directory>
-    </fileSet>
-    <fileSet>
-      <directory>test-resources</directory>
-    </fileSet>
   </fileSets>
 </assembly>
