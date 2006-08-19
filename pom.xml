@@ -248,6 +248,11 @@
       <version>3.8.2</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>woodstox</groupId>
+      <artifactId>wstx-asl</artifactId>
+      <version>2.9.3</version>
+    </dependency>
   </dependencies>
   <reporting>
     <plugins>
