@@ -15,6 +15,8 @@
  */
 package org.apache.neethi.builders;
 
+import javax.xml.namespace.QName;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.AssertionBuilderFactory;
@@ -24,5 +26,9 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder {
 
     public Assertion build(OMElement element, AssertionBuilderFactory factory) throws IllegalArgumentException {
         return new XmlPrimtiveAssertion(element);
+    }
+    
+    public QName getKnownElement() {
+        return new QName("UnknownElement");
     }
 }

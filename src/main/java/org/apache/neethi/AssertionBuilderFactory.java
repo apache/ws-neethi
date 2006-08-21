@@ -16,11 +16,15 @@
 package org.apache.neethi;
 
 import java.util.HashMap;
+import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.neethi.builders.AssertionBuilder;
+
+import sun.misc.Service;
 
 /**
  * AssertionFactory is used to create an Assertion from an OMElement. It uses an
@@ -43,15 +47,25 @@ public class AssertionBuilderFactory {
     private final QName XML_ASSERTION_BUILDER = new QName(
             "http://test.org/test", "test");
 
-    private HashMap registeredBuilders = new HashMap();
-
-    public AssertionBuilderFactory() {
+    private static HashMap registeredBuilders = new HashMap();
+    
+    static {
+        AssertionBuilder builder;
+        
+        for (Iterator providers = Service.providers(AssertionBuilder.class); providers.hasNext();) {
+            builder = (AssertionBuilder) providers.next();
+            registerBuilder(builder.getKnownElement(), builder);
+        }
+        
     }
 
-    public void registerBuilder(QName key, AssertionBuilder builder) {
+    public static void registerBuilder(QName key, AssertionBuilder builder) {
         registeredBuilders.put(key, builder);
     }
-
+    
+    public AssertionBuilderFactory() {
+    }
+    
     /**
      * Returns an assertion
      * @param element
@@ -63,7 +77,7 @@ public class AssertionBuilderFactory {
         AssertionBuilder builder;
 
         if (namespace != null) {
-            QName qname = new QName(namespace.getName(), element.getLocalName());
+            QName qname = new QName(namespace.getNamespaceURI(), element.getLocalName());
             builder = (AssertionBuilder) registeredBuilders.get(qname);
 
             if (builder != null) {
