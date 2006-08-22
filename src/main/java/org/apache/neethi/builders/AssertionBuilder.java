@@ -37,5 +37,5 @@ public interface AssertionBuilder {
     public Assertion build(OMElement element, AssertionBuilderFactory factory)
             throws IllegalArgumentException;
     
-    public QName getKnownElement();
+    //public QName getKnownElement();
 }

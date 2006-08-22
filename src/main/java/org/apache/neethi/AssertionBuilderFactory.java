@@ -54,7 +54,7 @@ public class AssertionBuilderFactory {
         
         for (Iterator providers = Service.providers(AssertionBuilder.class); providers.hasNext();) {
             builder = (AssertionBuilder) providers.next();
-            registerBuilder(builder.getKnownElement(), builder);
+            //registerBuilder(builder.getKnownElement(), builder);
         }
         
     }
