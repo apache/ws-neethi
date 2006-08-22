@@ -21,7 +21,6 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMNamespace;
 import org.apache.neethi.builders.AssertionBuilder;
 
 import sun.misc.Service;
@@ -35,54 +34,52 @@ import sun.misc.Service;
  * 
  */
 public class AssertionBuilderFactory {
-    
+
     public static final String POLICY_NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/09/policy";
-    
+
     public static final String POLICY = "Policy";
-    
+
     public static final String EXACTLY_ONE = "ExactlyOne";
-    
+
     public static final String ALL = "All";
-    
+
     private final QName XML_ASSERTION_BUILDER = new QName(
             "http://test.org/test", "test");
 
     private static HashMap registeredBuilders = new HashMap();
-    
+
     static {
         AssertionBuilder builder;
-        
-        for (Iterator providers = Service.providers(AssertionBuilder.class); providers.hasNext();) {
+
+        for (Iterator providers = Service.providers(AssertionBuilder.class); providers
+                .hasNext();) {
             builder = (AssertionBuilder) providers.next();
-            //registerBuilder(builder.getKnownElement(), builder);
+            registerBuilder(builder.getKnownElement(), builder);
         }
-        
     }
 
     public static void registerBuilder(QName key, AssertionBuilder builder) {
         registeredBuilders.put(key, builder);
     }
-    
+
     public AssertionBuilderFactory() {
     }
-    
+
     /**
      * Returns an assertion
+     * 
      * @param element
      * @return
      */
     public Assertion build(OMElement element) {
-        OMNamespace namespace = element.getNamespace();
 
         AssertionBuilder builder;
 
-        if (namespace != null) {
-            QName qname = new QName(namespace.getNamespaceURI(), element.getLocalName());
-            builder = (AssertionBuilder) registeredBuilders.get(qname);
+        QName qname = element.getQName();
+        builder = (AssertionBuilder) registeredBuilders.get(qname);
 
-            if (builder != null) {
-                return builder.build(element, this);
-            }
+        if (builder != null) {
+            return builder.build(element, this);
         }
 
         builder = (AssertionBuilder) registeredBuilders
@@ -93,6 +90,5 @@ public class AssertionBuilderFactory {
     public AssertionBuilder getBuilder(QName qname) {
         return (AssertionBuilder) registeredBuilders.get(qname);
     }
-    
 
 }

@@ -26,6 +26,8 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.neethi.builders.AssertionBuilder;
 
+import sun.misc.Service;
+
 /**
  * PolicyEngine provides set of methods to create a Policy object from an
  * InputStream, OMElement, .. etc. It maintains an instance of
@@ -46,7 +48,12 @@ public class PolicyEngine {
     private static AssertionBuilderFactory factory = new AssertionBuilderFactory();
     
     static {
-//        factory.registerBuilder(, builder)
+        AssertionBuilder builder;
+        
+        for (Iterator iterator = Service.providers(AssertionBuilder.class); iterator.hasNext(); ) {
+            builder = (AssertionBuilder) iterator.next();
+            PolicyEngine.registerBuilder(builder.getKnownElement() , builder);   
+        }
     }
 
     /**
@@ -59,7 +66,7 @@ public class PolicyEngine {
      * @param builder
      */
     public static void registerBuilder(QName qname, AssertionBuilder builder) {
-        factory.registerBuilder(qname, builder);
+        AssertionBuilderFactory.registerBuilder(qname, builder);
     }
 
     /**
@@ -113,8 +120,7 @@ public class PolicyEngine {
                 .hasNext();) {
             childElement = (OMElement) iterator.next();
 
-            if (PolicyOperator.NAMESPACE.equals(childElement.getNamespace()
-                    .getName())) {
+            if (PolicyOperator.NAMESPACE.equals(childElement.getNamespace().getNamespaceURI())) {
 
                 if (PolicyOperator.POLICY.equals(childElement.getLocalName())) {
                     operator
