@@ -27,11 +27,11 @@ public interface PolicyOperator extends PolicyComponent {
 
     public static final String PREFIX = "wsp";
 
-    public static final String POLICY = "Policy";
+    public static final String LOCAL_NAME_POLICY = "Policy";
 
-    public static final String EXACTLYONE = "ExactlyOne";
+    public static final String LOCAL_NAME_EXACTLYONE = "ExactlyOne";
 
-    public static final String ALL = "All";
+    public static final String LOCAL_NAME_ALL = "All";
 
     /**
      * Add a PolicyComponent to the PolicyOperator.
@@ -59,4 +59,12 @@ public interface PolicyOperator extends PolicyComponent {
      * @return
      */
     public PolicyComponent normalize(boolean deep);
+    
+    
+    /**
+     * Returns true if the PolicyOperator doesn't contain any PolicyComponents.
+     * 
+     * @return true if this PolicyOperator doesn't contain any PolicyComponenets
+     */
+    public boolean isEmpty();
 }

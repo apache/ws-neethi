@@ -35,6 +35,7 @@ public class PolicyTestCase extends TestCase {
 
 	public InputStream getResource(String name) {
 		String filePath = new File(testResourceDir, name).getAbsolutePath(); 
+
 		try {
 			FileInputStream fis = new FileInputStream(filePath);
 			return fis;

@@ -32,15 +32,15 @@ public class NormalizeTest extends PolicyTestCase {
 
     public void test() throws Exception {
         String r1, r2;
-        Policy p1, p2, test;
-
-        for (int i = 1; i < 26; i++) {
+        Policy p1, p2;
+        
+        for (int i =1; i < 26; i++) {
 
             r1 = "samples" + File.separator + "test" + i + ".xml";
             r2 = "normalized" + File.separator + "test" + i + ".xml";
 
+            
             p1 = PolicyEngine.getPolicy(getResourceAsElement(r1));
-            test = p1;
             p1 = (Policy) p1.normalize(true);
             p2 = PolicyEngine.getPolicy(getResourceAsElement(r2));
             
@@ -48,16 +48,10 @@ public class NormalizeTest extends PolicyTestCase {
                 XMLStreamWriter writer;
                 
                 writer = XMLOutputFactory.newInstance().createXMLStreamWriter(System.out);
-                test.serialize(writer);
-                writer.flush();
-                
-                System.out.println("----");
-                
-                writer = XMLOutputFactory.newInstance().createXMLStreamWriter(System.out);
                 p1.serialize(writer);
                 writer.flush();
                 
-                System.out.println("----");
+                System.out.println("\n ------------ \n");
                 
                 writer = XMLOutputFactory.newInstance().createXMLStreamWriter(System.out);
                 p2.serialize(writer);

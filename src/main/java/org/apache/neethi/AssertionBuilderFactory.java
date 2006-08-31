@@ -90,5 +90,4 @@ public class AssertionBuilderFactory {
     public AssertionBuilder getBuilder(QName qname) {
         return (AssertionBuilder) registeredBuilders.get(qname);
     }
-
 }

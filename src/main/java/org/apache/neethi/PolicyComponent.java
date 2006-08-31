@@ -20,7 +20,6 @@ import javax.xml.stream.XMLStreamWriter;
 
 /**
  * This is an interface which any component of the frame must implement.
- * 
  */
 public interface PolicyComponent {
 
@@ -34,24 +33,25 @@ public interface PolicyComponent {
 
     /**
      * Serializes the PolicyComponent using an XMLStreamWriter.
-     * 
-     * @param writer
-     *            the writer that the component should write itself
-     * @throws XMLStreamException
-     *             if an errors in the process of serialization of the
-     *             PolicyComponent.
+     *
+     * @param writer the writer that the component should write itself
+     * @throws XMLStreamException if an errors in the process of serialization of the
+     *                            PolicyComponent.
      */
     public void serialize(XMLStreamWriter writer) throws XMLStreamException;
 
     /**
      * Returns a short value which uniquely identify the type of the
      * PolicyComponent.
-     * 
+     *
      * @return PolicyComponent.POLICY for Policy type PolicyComponent
      *         PolicyComponent.EXACTLYONE for ExactlyOne type PolicyComponent
      *         PolicyComponent.All for All type PolicyComponent
      *         PolicyComponent.ASSERTION for Assertion type PolicyComponent
-     * 
      */
     public short getType();
+
+    public PolicyComponent normalize();
+    
+    public boolean equal(PolicyComponent policyComponent);
 }

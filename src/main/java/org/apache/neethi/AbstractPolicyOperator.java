@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.namespace.QName;
+import org.apache.neethi.util.PolicyComparator;
 
 /**
  * 
@@ -48,90 +48,157 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         return policyComponents.isEmpty();
     }
 
-    protected List crossProduct(ArrayList allTerms, int index,
-            boolean matchVacabulary) {
-
-        ArrayList result = new ArrayList();
-        ExactlyOne firstTerm = (ExactlyOne) allTerms.get(index);
-
-        List restTerms;
-
-        if (allTerms.size() == ++index) {
-            restTerms = new ArrayList();
-            All newTerm = new All();
-            restTerms.add(newTerm);
-        } else {
-            restTerms = crossProduct(allTerms, index, matchVacabulary);
-        }
-
-        Iterator firstTermIter = firstTerm.getPolicyComponents().iterator();
-
-        while (firstTermIter.hasNext()) {
-            
-            All assertion = (All) firstTermIter.next();
-            Iterator restTermsItr = restTerms.iterator();
-
-            while (restTermsItr.hasNext()) {
-                All restTerm = (All) restTermsItr.next();
-                All newTerm = new All();
-
-                if (matchVacabulary) {
-                    if (matchVocabulary(
-                            ((All) assertion).getPolicyComponents(),
-                            ((All) restTerm).getPolicyComponents())) {
-                        newTerm.addPolicyComponents(((All) assertion)
-                                .getPolicyComponents());
-                        newTerm.addPolicyComponents(((All) restTerm)
-                                .getPolicyComponents());
-                        result.add(newTerm);
-                    }
-
-                } else {
-                    newTerm.addPolicyComponents(((All) assertion)
-                            .getPolicyComponents());
-                    newTerm.addPolicyComponents(((All) restTerm)
-                            .getPolicyComponents());
-                    result.add(newTerm);
-                }
-            }
-        }
-
-        return result;
+    public PolicyComponent normalize() {
+        return normalize(true);
     }
 
-    private boolean matchVocabulary(List assertions1, List assertions2) {
+    /**
+     * normalized form of the the assertion, all and Exactly one define as
+     * <ExactlyOne>
+     * <All>
+     * <Assertion/>
+     * </All>
+     * <ExactlyOne>
+     *
+     * @param deep - normalize the assertions or not - currently assertion normalization is not implemented
+     * @return the normalize form of this policy commponent
+     */
 
-        Iterator S, L;
+    public PolicyComponent normalize(boolean deep) {
+        return AbstractPolicyOperator.normalize(this, deep);
+    }
+    
+    /**
+     * here it is assumed that the two arguments passed to the method are not empty arguments
+     * and exactlyOne1 and exactlyOne2 in normal form
+     *
+     * @param exactlyOne1
+     * @param exactlyOne2
+     * @return cross product of the two exactlyones
+     */
+    private static ExactlyOne getCrossProduct(ExactlyOne exactlyOne1, ExactlyOne exactlyOne2) {
+        ExactlyOne crossProduct = new ExactlyOne();
+        All crossProductAll;
 
-        if (assertions1.size() < assertions2.size()) {
-            S = assertions1.iterator();
-            L = assertions2.iterator();
-        } else {
-            S = assertions2.iterator();
-            L = assertions1.iterator();
+        All currentAll1;
+        All currentAll2;
+
+        for (Iterator iter1 = exactlyOne1.getPolicyComponents().iterator(); iter1.hasNext();) {
+            currentAll1 = (All) iter1.next();
+
+            for (Iterator iter2 = exactlyOne2.getPolicyComponents().iterator(); iter2.hasNext();) {
+                currentAll2 = (All) iter2.next();
+                crossProductAll = new All();
+                crossProductAll.addPolicyComponents(currentAll1.getPolicyComponents());
+                crossProductAll.addPolicyComponents(currentAll2.getPolicyComponents());
+                crossProduct.addPolicyComponent(crossProductAll);
+            }
         }
 
-        QName Sq, Lq;
-        boolean found;
-
-        for (; L.hasNext();) {
-            Lq = ((Assertion) L.next()).getName();
-
-            found = false;
-
-            for (; S.hasNext();) {
-                Sq = ((Assertion) S.next()).getName();
+        return crossProduct;
+    }
+        
+    private static PolicyComponent normalize(PolicyOperator operator, boolean deep) {
                 
-                if (Lq.equals(Sq)) {
-                    found = true;
-                    break;
-                }
+        short type = operator.getType();
+                
+        
+        if (operator.isEmpty()) {
+            ExactlyOne exactlyOne = new ExactlyOne();
+            
+            if (PolicyComponent.EXACTLYONE != type) {
+                exactlyOne.addPolicyComponent(new All());
             }
+            return exactlyOne;
+        }
+                
+        ArrayList childComponentsList = new ArrayList();
+        PolicyComponent policyComponent;
+        
+        for (Iterator iterator = operator.getPolicyComponents().iterator(); iterator.hasNext();) {
+            policyComponent = (PolicyComponent) iterator.next();
+            
+            if (policyComponent.getType() == PolicyComponent.ASSERTION) {
+                policyComponent = ((Assertion) policyComponent).normalize();
+                
+                if (policyComponent.getType() == PolicyComponent.POLICY) {
+                    childComponentsList.add(((Policy) policyComponent).getFirstPolicyComponent());
+                    
+                } else  {
+                    ExactlyOne exactlyOne = new ExactlyOne();
+                    All all = new All();
+                    
+                    all.addPolicyComponent(policyComponent);
+                    exactlyOne.addPolicyComponent(all);
+                    childComponentsList.add(exactlyOne);
+                }
+                
+            } else if (policyComponent.getType() == PolicyComponent.POLICY) {
+                All all = new All();
+                all.addPolicyComponents(((Policy) policyComponent).getPolicyComponents());
+                childComponentsList.add(all.normalize(deep));
+                
+            } else {
+                childComponentsList.add(((AbstractPolicyOperator) policyComponent).normalize(deep));
+            }            
+        }
+        
+        return computeResultantComponent(childComponentsList, type);
+    }
+    
+    /**
+     * 
+     * @param normalizedInnerComponets
+     * @param componentType
+     * @return
+     */
+    private static PolicyComponent computeResultantComponent(List normalizedInnerComponets, short componentType) {
+        
+        ExactlyOne exactlyOne = new ExactlyOne();
+        
+        if (componentType == PolicyComponent.EXACTLYONE) {            
+            ExactlyOne innerExactlyOne;
+            
+            for (Iterator iter = normalizedInnerComponets.iterator(); iter.hasNext();) {
+                innerExactlyOne = (ExactlyOne) iter.next();
+                exactlyOne.addPolicyComponents(innerExactlyOne.getPolicyComponents());
+            }
+            
+        } else if ((componentType == PolicyComponent.POLICY) || (componentType == PolicyComponent.ALL)) {
+            // if the parent type is All then we have to get the cross product
+            if (normalizedInnerComponets.size() > 1) {
+                // then we have to get the cross product with each other to process all elements
+                Iterator iter = normalizedInnerComponets.iterator();
+                // first get the first element
+                exactlyOne = (ExactlyOne) iter.next();
+                // if this is empty, this is an not admissible policy and total result is equalent to that
+                if (!exactlyOne.isEmpty()) {
+                    ExactlyOne currentExactlyOne;
 
-            if (!found) {
-                return false;
+                    for (; iter.hasNext();) {
+                        currentExactlyOne = (ExactlyOne) iter.next();
+                        if (currentExactlyOne.isEmpty()) {
+                            // if this is empty, this is an not admissible policy and total result is equalent to that
+                            exactlyOne = currentExactlyOne;
+                            break;
+                        } else {
+                            exactlyOne = getCrossProduct(exactlyOne, currentExactlyOne);
+                        }
+                    }
+
+                }
+
+            } else {
+                // i.e only one element exists in the list then we can safely
+                // return that element this is ok even if it is an empty element
+                exactlyOne = (ExactlyOne) normalizedInnerComponets.iterator().next();
             }
         }
-        return true;
+        
+        return exactlyOne;
+    }
+
+    public boolean equal(PolicyComponent policyComponent) {
+        return PolicyComparator.compare(this, policyComponent);
     }
 }

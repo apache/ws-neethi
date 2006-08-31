@@ -15,8 +15,8 @@
  */
 package org.apache.neethi;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -25,95 +25,25 @@ import javax.xml.stream.XMLStreamWriter;
  * 
  *
  */
-public class All extends AbstractPolicyOperator {
+public class All extends AbstractPolicyOperator implements PolicyAlternative {
+    
+    public void addAssertion(Assertion assertion) {
+        addPolicyComponent(assertion);
+    }
 
-    public PolicyComponent normalize(boolean deep) {
-
-        All all = new All();
-        ExactlyOne exactlyOne = new ExactlyOne();
-
-        ArrayList exactlyOnes = new ArrayList();
-
-        if (isEmpty()) {
-            return all;
-        }
-
-        PolicyComponent component;
-
-        for (Iterator iterator = getPolicyComponents().iterator(); iterator
-                .hasNext();) {
-            component = (PolicyComponent) iterator.next();
-            short type = component.getType();
-
-            if (type == PolicyComponent.ASSERTION && deep) {
-                component = ((Assertion) component).normalize();
-                type = component.getType();
-            }
-
-            if (type == PolicyComponent.POLICY) {
-                All wrapper = new All();
-                wrapper.addPolicyComponents(((Policy) component)
-                        .getPolicyComponents());
-                component = wrapper.normalize(deep);
-                type = component.getType();
-                
-            } else if (!(type == PolicyComponent.ASSERTION)) {
-                component = ((PolicyOperator) component).normalize(deep);
-            }
-
-            if (type == PolicyComponent.EXACTLYONE) {
-
-                if (((ExactlyOne) component).isEmpty()) {
-                    ExactlyOne anExactlyOne = new ExactlyOne();
-                    return anExactlyOne;
-
-                } else {
-                    exactlyOnes.add(component);
-                }
-
-            } else if (type == PolicyComponent.ALL) {
-                all
-                        .addPolicyComponents(((All) component)
-                                .getPolicyComponents());
-
-            } else {
-                all.addPolicyComponent(component);
-            }
-        }
-
-        // processing child ExactlyOne operators
-        if (exactlyOnes.size() > 1) {
-            exactlyOne.addPolicyComponents(crossProduct(exactlyOnes, 0, false));
-
-        } else if (exactlyOnes.size() == 1) {
-            ExactlyOne anExactlyOne = (ExactlyOne) exactlyOnes.get(0);
-            exactlyOne.addPolicyComponents(anExactlyOne.getPolicyComponents());
-        }
-
-        if (exactlyOne.isEmpty()) {
-            return all;
-        } else if (all.isEmpty()) {
-            return exactlyOne;
-        } else {
-            All anAll;
-            for (Iterator iterator = exactlyOne.getPolicyComponents()
-                    .iterator(); iterator.hasNext();) {
-                anAll = (All) iterator.next();
-                anAll.addPolicyComponents(all.getPolicyComponents());
-            }
-            return exactlyOne;
-        }
+    public List getAssertions() {
+        return policyComponents;
     }
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
         String prefix = writer.getPrefix(NAMESPACE);
 
         if (prefix == null) {
-            writer.writeStartElement(PREFIX, ALL, NAMESPACE);
+            writer.writeStartElement(PREFIX, LOCAL_NAME_ALL, NAMESPACE);
             writer.writeNamespace(PREFIX, NAMESPACE);
             writer.setPrefix(PREFIX, NAMESPACE);
         } else {
-            writer.writeStartElement(NAMESPACE, ALL);
+            writer.writeStartElement(NAMESPACE, LOCAL_NAME_ALL);
         }
 
         PolicyComponent policyComponent;
@@ -127,7 +57,7 @@ public class All extends AbstractPolicyOperator {
         writer.writeEndElement();
     }
 
-    public final short getType() {
+    public short getType() {
         return PolicyComponent.ALL;
     }
 }

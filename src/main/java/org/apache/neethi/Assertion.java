@@ -16,12 +16,33 @@
 package org.apache.neethi;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
+/**
+ * This is an interface that any Assertion must implement. Hence any domain 
+ * specific type can be used with this framework if it implements this 
+ * interface.
+ */
 public interface Assertion extends PolicyComponent {
     
+    /**
+     * Returns the QName of the Root Element of this Assertion.
+     *  
+     * @return QName the QName of the Root Element of this Assertion.
+     */
     public QName getName();
     
+    /**
+     * Returns true if this Assertion is optional. Returns false otherwise. 
+     * 
+     * @return true if the assertion is optional.
+     */
     public boolean isOptional();
     
-    public PolicyComponent normalize();
+    /**
+     * Serialize this Assertion into its XML infoset using XMLStreamWriter.
+     */
+    public void serialize(XMLStreamWriter writer) throws XMLStreamException;
+    
 }

@@ -122,16 +122,16 @@ public class PolicyEngine {
 
             if (PolicyOperator.NAMESPACE.equals(childElement.getNamespace().getNamespaceURI())) {
 
-                if (PolicyOperator.POLICY.equals(childElement.getLocalName())) {
+                if (PolicyOperator.LOCAL_NAME_POLICY.equals(childElement.getLocalName())) {
                     operator
                             .addPolicyComponent(getPolicyOperator(childElement));
 
-                } else if (PolicyOperator.EXACTLYONE.equals(childElement
+                } else if (PolicyOperator.LOCAL_NAME_EXACTLYONE.equals(childElement
                         .getLocalName())) {
                     operator
                             .addPolicyComponent(getExactlyOneOperator(childElement));
 
-                } else if (PolicyOperator.ALL.equals(childElement
+                } else if (PolicyOperator.LOCAL_NAME_ALL.equals(childElement
                         .getLocalName())) {
                     operator.addPolicyComponent(getAllOperator(childElement));
                 }

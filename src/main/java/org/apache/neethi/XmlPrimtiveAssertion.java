@@ -22,84 +22,153 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 
+import java.util.Iterator;
+
 public class XmlPrimtiveAssertion implements Assertion {
 
     OMElement element;
+
     boolean isOptional;
-    QName optionalAttri = new QName(PolicyOperator.NAMESPACE, "Optional", PolicyOperator.PREFIX);
-    
-    
+
+    QName optionalAttri = new QName(PolicyOperator.NAMESPACE, "Optional",
+            PolicyOperator.PREFIX);
+
+    // Assertions can contain policies inside it.
+    Policy policy;
+
     public XmlPrimtiveAssertion(OMElement element) {
         setValue(element);
-        setOptionality(element);        
+        setOptionality(element);
     }
-    
+
     public QName getName() {
-        System.out.println(element.getQName());
-        
         return (element != null) ? element.getQName() : null;
     }
 
     public void setValue(OMElement element) {
         this.element = element;
+        // get all the policy namespace children
+        // actually there can only be one nested policy
+        Iterator iter = element.getChildrenWithName(new QName(
+                PolicyOperator.NAMESPACE, PolicyOperator.LOCAL_NAME_POLICY));
+        if (iter.hasNext()) {
+            OMElement policyOMElement = (OMElement) iter.next();
+            this.policy = PolicyEngine.getPolicy(policyOMElement);
+            // detach element from the om tree
+            policyOMElement.detach();
+        }
+
     }
 
     public OMElement getValue() {
         return element;
     }
-    
+
     public boolean isOptional() {
         return isOptional;
     }
-    
-    public PolicyComponent normalize() throws IllegalArgumentException {
-        return normalize(null);
+
+    public PolicyComponent normalize() {
+        if (isOptional) {
+            Policy policy = new Policy();
+            ExactlyOne exactlyOne = new ExactlyOne();
+
+            All all = new All();
+            OMElement omElement = element.cloneOMElement();
+
+            omElement.removeAttribute(omElement.getAttribute(optionalAttri));
+            all.addPolicyComponent(new XmlPrimtiveAssertion(omElement));
+            exactlyOne.addPolicyComponent(all);
+
+            exactlyOne.addPolicyComponent(new All());
+            policy.addPolicyComponent(exactlyOne);
+
+            return policy;
+        }
+
+        return this;
+    }
+
+    public PolicyComponent normalize(boolean isDeep) {
+        throw new UnsupportedOperationException();
     }
 
     public PolicyComponent normalize(PolicyRegistry registry) {
-        
+
         if (isOptional) {
             Policy policy = new Policy();
             ExactlyOne alternatives = new ExactlyOne();
-            
+
             All alternative1 = new All();
             OMElement element1 = element.cloneOMElement();
             element1.removeAttribute(element1.getAttribute(optionalAttri));
             alternative1.addPolicyComponent(new XmlPrimtiveAssertion(element1));
             alternatives.addPolicyComponent(alternative1);
-            
+
             All alternative2 = new All();
             alternatives.addPolicyComponent(alternative2);
-            
+
             policy.addPolicyComponent(alternatives);
             return policy;
         }
         return this;
     }
 
-    public void serialize(XMLStreamWriter writer) {
+    public void serialize(XMLStreamWriter writer) throws XMLStreamException {
         if (element != null) {
-            try {
+
+            if (policy != null) {
+                // write the start part of the element
+                String prefix = writer.getPrefix(element.getNamespace()
+                        .getNamespaceURI());
+                if (prefix == null) {
+                    writer.writeStartElement(element.getQName().getPrefix(),
+                            element.getQName().getLocalPart(), element
+                                    .getNamespace().getNamespaceURI());
+                    writer.writeNamespace(element.getQName().getPrefix(),
+                            element.getNamespace().getNamespaceURI());
+                    writer.setPrefix(element.getQName().getPrefix(), element
+                            .getNamespace().getNamespaceURI());
+
+                } else {
+                    writer.writeStartElement(element.getNamespace()
+                            .getNamespaceURI(), element.getQName()
+                            .getLocalPart());
+                }
+                // TODO : write attributes and inner elements
+                policy.serialize(writer);
+                writer.writeEndElement();
+            } else {
+                // we can not serialize as follows since OMElement seriali
                 element.serialize(writer);
-            } catch (XMLStreamException ex) {
-                throw new RuntimeException(ex);
             }
+
         } else {
             // TODO throw an exception??
         }
     }
-    
+
     public final short getType() {
         return PolicyComponent.ASSERTION;
     }
-    
+
     private void setOptionality(OMElement element) {
         OMAttribute attribute = element.getAttribute(optionalAttri);
         if (attribute != null) {
-            this.isOptional = (new Boolean(attribute.getAttributeValue()).booleanValue());
-            
+            this.isOptional = (new Boolean(attribute.getAttributeValue())
+                    .booleanValue());
+
         } else {
-            this.isOptional = false;            
-        }        
+            this.isOptional = false;
+        }
     }
+
+    public boolean equal(PolicyComponent policyComponent) {
+        if (policyComponent.getType() != Assertion.ASSERTION) {
+            return false;
+        }
+
+        return getName().equals(((Assertion) policyComponent).getName());
+    }
+
 }
