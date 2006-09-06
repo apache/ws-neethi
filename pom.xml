@@ -96,6 +96,7 @@
 		     its contents.
 		-->
         <artifactId>maven-antrun-plugin</artifactId>
+<version>1.1</version>
         <executions>
           <execution>
             <phase>generate-resources</phase>
