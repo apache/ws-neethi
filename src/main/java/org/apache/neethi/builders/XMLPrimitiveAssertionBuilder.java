@@ -28,7 +28,7 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder {
         return new XmlPrimtiveAssertion(element);
     }
     
-    public QName getKnownElement() {
-        return new QName("UnknownElement");
+    public QName[] getKnownElements() {
+        return new QName[] {new QName("UnknownElement")};
     }
 }

@@ -49,10 +49,15 @@ public class PolicyEngine {
     
     static {
         AssertionBuilder builder;
+        QName[] knownElements;
         
         for (Iterator iterator = Service.providers(AssertionBuilder.class); iterator.hasNext(); ) {
             builder = (AssertionBuilder) iterator.next();
-            PolicyEngine.registerBuilder(builder.getKnownElement() , builder);   
+            knownElements = builder.getKnownElements();
+            
+            for (int i = 0; i < knownElements.length; i++) {
+                PolicyEngine.registerBuilder(knownElements[i], builder);
+            }   
         }
     }
 
@@ -96,6 +101,7 @@ public class PolicyEngine {
      * @return
      */
     public static Policy getPolicy(OMElement element) {
+        
         return getPolicyOperator(element);
     }
 

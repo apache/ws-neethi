@@ -66,6 +66,10 @@ public class Policy extends All {
     public short getType() {
         return PolicyComponent.POLICY;
     }
+    
+    public void addAlternatives(PolicyAlternatives policyAlternatives) {
+        policyComponents.add(policyAlternatives);
+    }
 
     public Iterator getAlternatives() {
         return new PolicyIterator(this);

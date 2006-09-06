@@ -54,7 +54,11 @@ public class AssertionBuilderFactory {
         for (Iterator providers = Service.providers(AssertionBuilder.class); providers
                 .hasNext();) {
             builder = (AssertionBuilder) providers.next();
-            registerBuilder(builder.getKnownElement(), builder);
+            
+            QName[] knownElements = builder.getKnownElements();
+            for (int i = 0; i < knownElements.length; i++) {
+                registerBuilder(knownElements[i], builder);                
+            }
         }
     }
 

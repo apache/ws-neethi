@@ -119,7 +119,10 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
             policyComponent = (PolicyComponent) iterator.next();
             
             if (policyComponent.getType() == PolicyComponent.ASSERTION) {
-                policyComponent = ((Assertion) policyComponent).normalize();
+                
+                if (deep) {
+                    policyComponent = ((Assertion) policyComponent).normalize();                    
+                }
                 
                 if (policyComponent.getType() == PolicyComponent.POLICY) {
                     childComponentsList.add(((Policy) policyComponent).getFirstPolicyComponent());
