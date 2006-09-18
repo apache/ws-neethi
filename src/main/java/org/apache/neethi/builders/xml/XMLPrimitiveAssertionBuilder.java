@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.neethi.builders;
+package org.apache.neethi.builders.xml;
 
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.AssertionBuilderFactory;
-import org.apache.neethi.XmlPrimtiveAssertion;
+import org.apache.neethi.builders.AssertionBuilder;
 
 public class XMLPrimitiveAssertionBuilder implements AssertionBuilder {
 

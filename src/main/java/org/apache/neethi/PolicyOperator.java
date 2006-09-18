@@ -22,17 +22,7 @@ import java.util.List;
  * 
  */
 public interface PolicyOperator extends PolicyComponent {
-
-    public static final String NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/09/policy";
-
-    public static final String PREFIX = "wsp";
-
-    public static final String LOCAL_NAME_POLICY = "Policy";
-
-    public static final String LOCAL_NAME_EXACTLYONE = "ExactlyOne";
-
-    public static final String LOCAL_NAME_ALL = "All";
-
+ 
     /**
      * Add a PolicyComponent to the PolicyOperator.
      * 
@@ -58,7 +48,7 @@ public interface PolicyOperator extends PolicyComponent {
      *            sufficient for most high level processing of Policies will
      * @return
      */
-    public PolicyComponent normalize(boolean deep);
+//    public PolicyComponent normalize(boolean deep);
     
     
     /**

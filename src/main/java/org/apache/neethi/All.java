@@ -36,14 +36,14 @@ public class All extends AbstractPolicyOperator implements PolicyAlternative {
     }
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
-        String prefix = writer.getPrefix(NAMESPACE);
+        String prefix = writer.getPrefix(Constants.URI_POLICY_NS);
 
         if (prefix == null) {
-            writer.writeStartElement(PREFIX, LOCAL_NAME_ALL, NAMESPACE);
-            writer.writeNamespace(PREFIX, NAMESPACE);
-            writer.setPrefix(PREFIX, NAMESPACE);
+            writer.writeStartElement(Constants.POLICY_PREFIX, Constants.ELEM_ALL, Constants.URI_POLICY_NS);
+            writer.writeNamespace(Constants.POLICY_PREFIX, Constants.URI_POLICY_NS);
+            writer.setPrefix(Constants.POLICY_PREFIX, Constants.URI_POLICY_NS);
         } else {
-            writer.writeStartElement(NAMESPACE, LOCAL_NAME_ALL);
+            writer.writeStartElement(Constants.URI_POLICY_NS, Constants.ELEM_ALL);
         }
 
         PolicyComponent policyComponent;
@@ -58,6 +58,6 @@ public class All extends AbstractPolicyOperator implements PolicyAlternative {
     }
 
     public short getType() {
-        return PolicyComponent.ALL;
+        return Constants.TYPE_ALL;
     }
 }

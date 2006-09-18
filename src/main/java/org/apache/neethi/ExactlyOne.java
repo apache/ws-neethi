@@ -34,14 +34,14 @@ public class ExactlyOne extends AbstractPolicyOperator implements PolicyAlternat
     }
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
-        String prefix = writer.getPrefix(NAMESPACE);
+        String prefix = writer.getPrefix(Constants.URI_POLICY_NS);
 
         if (prefix == null) {
-            writer.writeStartElement(PREFIX, LOCAL_NAME_EXACTLYONE, NAMESPACE);
-            writer.writeNamespace(PREFIX, NAMESPACE);
-            writer.setPrefix(PREFIX, NAMESPACE);
+            writer.writeStartElement(Constants.POLICY_PREFIX, Constants.ELEM_EXACTLYONE, Constants.URI_POLICY_NS);
+            writer.writeNamespace(Constants.POLICY_PREFIX, Constants.URI_POLICY_NS);
+            writer.setPrefix(Constants.POLICY_PREFIX, Constants.URI_POLICY_NS);
         } else {
-            writer.writeStartElement(NAMESPACE, LOCAL_NAME_EXACTLYONE);
+            writer.writeStartElement(Constants.URI_POLICY_NS, Constants.ELEM_EXACTLYONE);
         }
 
         PolicyComponent policyComponent;
@@ -52,12 +52,9 @@ public class ExactlyOne extends AbstractPolicyOperator implements PolicyAlternat
         }
 
         writer.writeEndElement();
-
     }
 
     public final short getType() {
-        return PolicyComponent.EXACTLYONE;
+        return Constants.TYPE_EXACTLYONE;
     }
-
-
 }

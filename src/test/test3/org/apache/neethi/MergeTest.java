@@ -55,7 +55,7 @@ public class MergeTest extends PolicyTestCase {
 
             // result
             p4 = (Policy) p1.merge(p2);
-            p4 = (Policy) p4.normalize();
+            p4 = (Policy) p4.normalize(true);
             
 //            System.out.println("samples2" + File.separator + " Policy" + f1
 //                    + ".merge(Policy" + f2 + ") PASSED");

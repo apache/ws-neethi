@@ -15,17 +15,24 @@
  */
 package org.apache.neethi;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 public class Policy extends All {
 
+    private HashMap attributes = new HashMap();
+
     public PolicyComponent normalize(boolean deep) {
-        Policy policy = new Policy();
-        policy.addPolicyComponent(super.normalize(deep));
-        return policy;
+        return normalize(null, deep);
+    }
+    
+    public PolicyComponent normalize(PolicyRegistry reg, boolean deep) {
+        return normalize(this, reg, deep);
     }
 
     public Policy merge(Policy policy) {
@@ -40,15 +47,15 @@ public class Policy extends All {
     }
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
-        String prefix = writer.getPrefix(NAMESPACE);
+        String prefix = writer.getPrefix(Constants.ATTR_NAME);
 
         if (prefix == null) {
-            writer.writeStartElement(PREFIX, LOCAL_NAME_POLICY, NAMESPACE);
-            writer.writeNamespace(PREFIX, NAMESPACE);
-            writer.setPrefix(PREFIX, NAMESPACE);
+            writer.writeStartElement(Constants.POLICY_PREFIX, Constants.ELEM_POLICY, Constants.URI_POLICY_NS);
+            writer.writeNamespace(Constants.POLICY_PREFIX, Constants.URI_POLICY_NS);
+            writer.setPrefix(Constants.POLICY_PREFIX, Constants.URI_POLICY_NS);
 
         } else {
-            writer.writeStartElement(NAMESPACE, LOCAL_NAME_POLICY);
+            writer.writeStartElement(Constants.URI_POLICY_NS, Constants.ELEM_POLICY);
         }
 
         PolicyComponent policyComponent;
@@ -64,9 +71,9 @@ public class Policy extends All {
     }
 
     public short getType() {
-        return PolicyComponent.POLICY;
+        return Constants.TYPE_POLICY;
     }
-    
+
     public void addAlternatives(PolicyAlternatives policyAlternatives) {
         policyComponents.add(policyAlternatives);
     }
@@ -97,6 +104,36 @@ public class Policy extends All {
             throw new UnsupportedOperationException(
                     "policyAlternative.remove() is not supported");
         }
+    }
 
+    public void addAttribute(QName name, String value) {
+        attributes.put(name, value);
+    }
+
+    public String getAttribute(QName name) {
+        return (String) attributes.get(name);
+    }
+
+    public Map getAttributes() {
+        return attributes;
+    }
+
+    public void setName(String name) {
+        addAttribute(new QName("", Constants.ATTR_NAME), name);
+    }
+
+    public String getName() {
+        return getAttribute(new QName("", Constants.ATTR_NAME));
+    }
+
+    public void setId(String id) {
+        addAttribute(
+                new QName(Constants.URI_WSU_NS, Constants.ATTR_ID),
+                getName());
+    }
+
+    public String getId() {
+        return getAttribute(new QName(Constants.URI_WSU_NS,
+                Constants.ATTR_ID));
     }
 }

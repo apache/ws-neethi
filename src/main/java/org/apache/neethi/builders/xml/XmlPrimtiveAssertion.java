@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.neethi;
+package org.apache.neethi.builders.xml;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -21,6 +21,14 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
+import org.apache.neethi.All;
+import org.apache.neethi.Assertion;
+import org.apache.neethi.Constants;
+import org.apache.neethi.ExactlyOne;
+import org.apache.neethi.Policy;
+import org.apache.neethi.PolicyComponent;
+import org.apache.neethi.PolicyEngine;
+import org.apache.neethi.PolicyRegistry;
 
 import java.util.Iterator;
 
@@ -30,9 +38,7 @@ public class XmlPrimtiveAssertion implements Assertion {
 
     boolean isOptional;
 
-    QName optionalAttri = new QName(PolicyOperator.NAMESPACE, "Optional",
-            PolicyOperator.PREFIX);
-
+    
     // Assertions can contain policies inside it.
     Policy policy;
 
@@ -49,8 +55,7 @@ public class XmlPrimtiveAssertion implements Assertion {
         this.element = element;
         // get all the policy namespace children
         // actually there can only be one nested policy
-        Iterator iter = element.getChildrenWithName(new QName(
-                PolicyOperator.NAMESPACE, PolicyOperator.LOCAL_NAME_POLICY));
+        Iterator iter = element.getChildrenWithName(new QName(Constants.URI_POLICY_NS, Constants.ELEM_POLICY));
         if (iter.hasNext()) {
             OMElement policyOMElement = (OMElement) iter.next();
             this.policy = PolicyEngine.getPolicy(policyOMElement);
@@ -76,7 +81,7 @@ public class XmlPrimtiveAssertion implements Assertion {
             All all = new All();
             OMElement omElement = element.cloneOMElement();
 
-            omElement.removeAttribute(omElement.getAttribute(optionalAttri));
+            omElement.removeAttribute(omElement.getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR));
             all.addPolicyComponent(new XmlPrimtiveAssertion(omElement));
             exactlyOne.addPolicyComponent(all);
 
@@ -101,7 +106,7 @@ public class XmlPrimtiveAssertion implements Assertion {
 
             All alternative1 = new All();
             OMElement element1 = element.cloneOMElement();
-            element1.removeAttribute(element1.getAttribute(optionalAttri));
+            element1.removeAttribute(element1.getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR));
             alternative1.addPolicyComponent(new XmlPrimtiveAssertion(element1));
             alternatives.addPolicyComponent(alternative1);
 
@@ -149,11 +154,11 @@ public class XmlPrimtiveAssertion implements Assertion {
     }
 
     public final short getType() {
-        return PolicyComponent.ASSERTION;
+        return Constants.TYPE_ASSERTION;
     }
 
     private void setOptionality(OMElement element) {
-        OMAttribute attribute = element.getAttribute(optionalAttri);
+        OMAttribute attribute = element.getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR);
         if (attribute != null) {
             this.isOptional = (new Boolean(attribute.getAttributeValue())
                     .booleanValue());
@@ -164,7 +169,7 @@ public class XmlPrimtiveAssertion implements Assertion {
     }
 
     public boolean equal(PolicyComponent policyComponent) {
-        if (policyComponent.getType() != Assertion.ASSERTION) {
+        if (policyComponent.getType() != Constants.TYPE_ASSERTION) {
             return false;
         }
 

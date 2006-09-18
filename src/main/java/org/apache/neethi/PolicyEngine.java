@@ -25,6 +25,7 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.neethi.builders.AssertionBuilder;
+import org.apache.neethi.builders.xml.XmlPrimtiveAssertion;
 
 import sun.misc.Service;
 
@@ -45,19 +46,22 @@ public class PolicyEngine {
 
     public static final String ALL = "All";
 
+    public static final String POLICY_REF = "PolicyReference";
+
     private static AssertionBuilderFactory factory = new AssertionBuilderFactory();
-    
+
     static {
         AssertionBuilder builder;
         QName[] knownElements;
-        
-        for (Iterator iterator = Service.providers(AssertionBuilder.class); iterator.hasNext(); ) {
+
+        for (Iterator iterator = Service.providers(AssertionBuilder.class); iterator
+                .hasNext();) {
             builder = (AssertionBuilder) iterator.next();
             knownElements = builder.getKnownElements();
-            
+
             for (int i = 0; i < knownElements.length; i++) {
                 PolicyEngine.registerBuilder(knownElements[i], builder);
-            }   
+            }
         }
     }
 
@@ -91,7 +95,28 @@ public class PolicyEngine {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        
+        // TODO throw an IllegalArgumentException
         return null;
+    }
+    
+    
+    public static PolicyReference getPolicyReferene(InputStream inputStream) {
+        
+        try {
+            OMElement element = OMXMLBuilderFactory.createStAXOMBuilder(
+                    OMAbstractFactory.getOMFactory(),
+                    XMLInputFactory.newInstance().createXMLStreamReader(
+                            inputStream)).getDocumentElement();
+            return getPolicyReference(element);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        // TODO throw an IllegalArgumentException
+        return null;
+        
     }
 
     /**
@@ -101,22 +126,39 @@ public class PolicyEngine {
      * @return
      */
     public static Policy getPolicy(OMElement element) {
-        
+
         return getPolicyOperator(element);
     }
+    
+    public static PolicyReference getPolicyReference(OMElement element) {
 
-    public static Policy getPolicyOperator(OMElement element) {
+        if (!(Constants.URI_POLICY_NS.equals(element.getNamespace()
+                .getNamespaceURI()) && Constants.ELEM_POLICYREF
+                .equals(element.getLocalName()))) {
+
+            throw new RuntimeException(
+                    "Specified element is not a <wsp:PolicyReference .. />  element");
+        }
+
+        PolicyReference reference = new PolicyReference();
+        
+        // setting the URI value
+        reference.setURI(element.getAttributeValue(new QName("URI")));
+        return reference;
+    }
+
+    private static Policy getPolicyOperator(OMElement element) {
         return (Policy) processOperationElement(element, new Policy());
     }
 
-    public static ExactlyOne getExactlyOneOperator(OMElement element) {
+    private static ExactlyOne getExactlyOneOperator(OMElement element) {
         return (ExactlyOne) processOperationElement(element, new ExactlyOne());
     }
 
-    public static All getAllOperator(OMElement element) {
+    private static All getAllOperator(OMElement element) {
         return (All) processOperationElement(element, new All());
     }
-
+    
     private static PolicyOperator processOperationElement(
             OMElement operationElement, PolicyOperator operator) {
 
@@ -126,26 +168,32 @@ public class PolicyEngine {
                 .hasNext();) {
             childElement = (OMElement) iterator.next();
 
-            if (PolicyOperator.NAMESPACE.equals(childElement.getNamespace().getNamespaceURI())) {
+            if (Constants.URI_POLICY_NS.equals(childElement.getNamespace()
+                    .getNamespaceURI())) {
 
-                if (PolicyOperator.LOCAL_NAME_POLICY.equals(childElement.getLocalName())) {
+                if (Constants.ELEM_POLICY.equals(childElement
+                        .getLocalName())) {
                     operator
                             .addPolicyComponent(getPolicyOperator(childElement));
 
-                } else if (PolicyOperator.LOCAL_NAME_EXACTLYONE.equals(childElement
-                        .getLocalName())) {
+                } else if (Constants.ELEM_EXACTLYONE
+                        .equals(childElement.getLocalName())) {
                     operator
                             .addPolicyComponent(getExactlyOneOperator(childElement));
 
-                } else if (PolicyOperator.LOCAL_NAME_ALL.equals(childElement
+                } else if (Constants.ELEM_ALL.equals(childElement
                         .getLocalName())) {
                     operator.addPolicyComponent(getAllOperator(childElement));
+
+                } else if (Constants.ELEM_POLICYREF.equals(childElement
+                        .getLocalName())) {
+                    operator.addPolicyComponent(getPolicyReference(childElement));
                 }
+
             } else {
 
-
-                AssertionBuilder builder = factory.getBuilder(childElement.getQName());
-                
+                AssertionBuilder builder = factory.getBuilder(childElement
+                        .getQName());
 
                 if (builder == null) {
                     XmlPrimtiveAssertion xmlPrimtiveAssertion = new XmlPrimtiveAssertion(

@@ -15,10 +15,31 @@
  */
 package org.apache.neethi;
 
-public interface PolicyRegistry {
-    
-    public void register(String key, Policy policy);
-    
-    public Policy lookup(String key);
+import java.util.HashMap;
 
+public class PolicyRegistryImpl implements PolicyRegistry {
+    
+    private PolicyRegistry parent = null;
+    
+    private HashMap reg = new HashMap();
+    
+    public PolicyRegistryImpl() {
+    }
+    
+    public PolicyRegistryImpl(PolicyRegistry parent) {
+        this.parent = parent;
+    }
+    
+    public Policy lookup(String key) {
+        Policy policy = (Policy) reg.get(key);
+        
+        if (policy == null && parent != null) {
+            return parent.lookup(key);
+        }
+        return null;
+    }
+
+    public void register(String key, Policy policy) {
+        reg.put(key, policy);
+    }
 }

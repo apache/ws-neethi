@@ -22,15 +22,7 @@ import javax.xml.stream.XMLStreamWriter;
  * This is an interface which any component of the frame must implement.
  */
 public interface PolicyComponent {
-
-    public static final short POLICY = 0x1;
-
-    public static final short EXACTLYONE = 0x2;
-
-    public static final short ALL = 0x3;
-
-    public static final short ASSERTION = 0x4;
-
+    
     /**
      * Serializes the PolicyComponent using an XMLStreamWriter.
      *
@@ -51,7 +43,5 @@ public interface PolicyComponent {
      */
     public short getType();
 
-    public PolicyComponent normalize();
-    
     public boolean equal(PolicyComponent policyComponent);
 }

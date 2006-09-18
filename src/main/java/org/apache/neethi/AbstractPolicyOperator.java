@@ -47,66 +47,26 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
     public boolean isEmpty() {
         return policyComponents.isEmpty();
     }
-
-    public PolicyComponent normalize() {
-        return normalize(true);
-    }
-
-    /**
-     * normalized form of the the assertion, all and Exactly one define as
-     * <ExactlyOne>
-     * <All>
-     * <Assertion/>
-     * </All>
-     * <ExactlyOne>
-     *
-     * @param deep - normalize the assertions or not - currently assertion normalization is not implemented
-     * @return the normalize form of this policy commponent
-     */
-
-    public PolicyComponent normalize(boolean deep) {
-        return AbstractPolicyOperator.normalize(this, deep);
+    
+    public boolean equal(PolicyComponent policyComponent) {
+        return PolicyComparator.compare(this, policyComponent);
     }
     
-    /**
-     * here it is assumed that the two arguments passed to the method are not empty arguments
-     * and exactlyOne1 and exactlyOne2 in normal form
-     *
-     * @param exactlyOne1
-     * @param exactlyOne2
-     * @return cross product of the two exactlyones
-     */
-    private static ExactlyOne getCrossProduct(ExactlyOne exactlyOne1, ExactlyOne exactlyOne2) {
-        ExactlyOne crossProduct = new ExactlyOne();
-        All crossProductAll;
-
-        All currentAll1;
-        All currentAll2;
-
-        for (Iterator iter1 = exactlyOne1.getPolicyComponents().iterator(); iter1.hasNext();) {
-            currentAll1 = (All) iter1.next();
-
-            for (Iterator iter2 = exactlyOne2.getPolicyComponents().iterator(); iter2.hasNext();) {
-                currentAll2 = (All) iter2.next();
-                crossProductAll = new All();
-                crossProductAll.addPolicyComponents(currentAll1.getPolicyComponents());
-                crossProductAll.addPolicyComponents(currentAll2.getPolicyComponents());
-                crossProduct.addPolicyComponent(crossProductAll);
-            }
-        }
-
-        return crossProduct;
+    protected static Policy normalize(Policy policy, PolicyRegistry reg, boolean deep) {
+        Policy result = new Policy();
+        result.addPolicyComponent(normalizeOperator(policy,reg, deep));
+        return result;
     }
-        
-    private static PolicyComponent normalize(PolicyOperator operator, boolean deep) {
-                
+    
+    private static PolicyComponent normalizeOperator(PolicyOperator operator, PolicyRegistry reg, boolean deep) {
+                        
         short type = operator.getType();
                 
         
         if (operator.isEmpty()) {
             ExactlyOne exactlyOne = new ExactlyOne();
             
-            if (PolicyComponent.EXACTLYONE != type) {
+            if (Constants.TYPE_EXACTLYONE != type) {
                 exactlyOne.addPolicyComponent(new All());
             }
             return exactlyOne;
@@ -118,13 +78,13 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         for (Iterator iterator = operator.getPolicyComponents().iterator(); iterator.hasNext();) {
             policyComponent = (PolicyComponent) iterator.next();
             
-            if (policyComponent.getType() == PolicyComponent.ASSERTION) {
+            if (policyComponent.getType() == Constants.TYPE_ASSERTION) {
                 
                 if (deep) {
                     policyComponent = ((Assertion) policyComponent).normalize();                    
                 }
                 
-                if (policyComponent.getType() == PolicyComponent.POLICY) {
+                if (policyComponent.getType() == Constants.TYPE_POLICY) {
                     childComponentsList.add(((Policy) policyComponent).getFirstPolicyComponent());
                     
                 } else  {
@@ -135,14 +95,21 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                     exactlyOne.addPolicyComponent(all);
                     childComponentsList.add(exactlyOne);
                 }
+            } else if (policyComponent.getType() == Constants.TYPE_POLICYREF) {
+                String uri = ((PolicyReference) policyComponent).getURI();
+                policyComponent = reg.lookup(uri);
                 
-            } else if (policyComponent.getType() == PolicyComponent.POLICY) {
+                if (policyComponent == null) {
+                    throw new RuntimeException(uri + " can't be resolved");
+                }
+                
+            } else if (policyComponent.getType() == Constants.TYPE_POLICY) {
                 All all = new All();
                 all.addPolicyComponents(((Policy) policyComponent).getPolicyComponents());
-                childComponentsList.add(all.normalize(deep));
+                childComponentsList.add(AbstractPolicyOperator.normalizeOperator(all, reg, deep));
                 
             } else {
-                childComponentsList.add(((AbstractPolicyOperator) policyComponent).normalize(deep));
+                childComponentsList.add(AbstractPolicyOperator.normalizeOperator((PolicyOperator) policyComponent, reg, deep));
             }            
         }
         
@@ -159,7 +126,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         
         ExactlyOne exactlyOne = new ExactlyOne();
         
-        if (componentType == PolicyComponent.EXACTLYONE) {            
+        if (componentType == Constants.TYPE_EXACTLYONE) {            
             ExactlyOne innerExactlyOne;
             
             for (Iterator iter = normalizedInnerComponets.iterator(); iter.hasNext();) {
@@ -167,7 +134,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                 exactlyOne.addPolicyComponents(innerExactlyOne.getPolicyComponents());
             }
             
-        } else if ((componentType == PolicyComponent.POLICY) || (componentType == PolicyComponent.ALL)) {
+        } else if ((componentType == Constants.TYPE_POLICY) || (componentType == Constants.TYPE_ALL)) {
             // if the parent type is All then we have to get the cross product
             if (normalizedInnerComponets.size() > 1) {
                 // then we have to get the cross product with each other to process all elements
@@ -200,8 +167,26 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         
         return exactlyOne;
     }
+    
+    private static ExactlyOne getCrossProduct(ExactlyOne exactlyOne1, ExactlyOne exactlyOne2) {
+        ExactlyOne crossProduct = new ExactlyOne();
+        All crossProductAll;
 
-    public boolean equal(PolicyComponent policyComponent) {
-        return PolicyComparator.compare(this, policyComponent);
+        All currentAll1;
+        All currentAll2;
+
+        for (Iterator iter1 = exactlyOne1.getPolicyComponents().iterator(); iter1.hasNext();) {
+            currentAll1 = (All) iter1.next();
+
+            for (Iterator iter2 = exactlyOne2.getPolicyComponents().iterator(); iter2.hasNext();) {
+                currentAll2 = (All) iter2.next();
+                crossProductAll = new All();
+                crossProductAll.addPolicyComponents(currentAll1.getPolicyComponents());
+                crossProductAll.addPolicyComponents(currentAll2.getPolicyComponents());
+                crossProduct.addPolicyComponent(crossProductAll);
+            }
+        }
+
+        return crossProduct;
     }
 }
