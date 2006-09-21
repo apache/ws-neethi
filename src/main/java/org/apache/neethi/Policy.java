@@ -129,7 +129,7 @@ public class Policy extends All {
     public void setId(String id) {
         addAttribute(
                 new QName(Constants.URI_WSU_NS, Constants.ATTR_ID),
-                getName());
+                id);
     }
 
     public String getId() {
