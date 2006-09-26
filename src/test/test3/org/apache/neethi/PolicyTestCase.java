@@ -25,20 +25,22 @@ import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
 
 
 public class PolicyTestCase extends org.apache.ws.policy.PolicyTestCase {
-	public PolicyTestCase(String name) {
-		super(name);
-	}	
-	
-	public OMElement getResourceAsElement(String name) {
-		try {
-			InputStream in = getResource(name);
-            OMElement element = OMXMLBuilderFactory.createStAXOMBuilder(OMAbstractFactory.getOMFactory(), XMLInputFactory.newInstance().createXMLStreamReader(in)).getDocumentElement();
+    public PolicyTestCase(String name) {
+        super(name);
+    }
+
+    public OMElement getResourceAsElement(String name) {
+        try {
+            InputStream in = getResource(name);
+            OMElement element = OMXMLBuilderFactory.createStAXOMBuilder(
+                    OMAbstractFactory.getOMFactory(),
+                    XMLInputFactory.newInstance().createXMLStreamReader(in)).getDocumentElement();
             return element;
-            
-		} catch (Exception e) {
-			fail("Cannot get resource: " + e.getMessage());
-			throw new RuntimeException();
-		}
-	}
+
+        } catch (Exception e) {
+            fail("Cannot get resource: " + e.getMessage());
+            throw new RuntimeException();
+        }
+    }
 }
 

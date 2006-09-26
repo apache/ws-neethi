@@ -15,19 +15,16 @@
  */
 package org.apache.neethi;
 
-import java.io.InputStream;
-import java.util.Iterator;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.neethi.builders.AssertionBuilder;
 import org.apache.neethi.builders.xml.XmlPrimtiveAssertion;
 
-import sun.misc.Service;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import java.io.InputStream;
+import java.util.Iterator;
 
 /**
  * PolicyEngine provides set of methods to create a Policy object from an
@@ -49,21 +46,6 @@ public class PolicyEngine {
     public static final String POLICY_REF = "PolicyReference";
 
     private static AssertionBuilderFactory factory = new AssertionBuilderFactory();
-
-    static {
-        AssertionBuilder builder;
-        QName[] knownElements;
-
-        for (Iterator iterator = Service.providers(AssertionBuilder.class); iterator
-                .hasNext();) {
-            builder = (AssertionBuilder) iterator.next();
-            knownElements = builder.getKnownElements();
-
-            for (int i = 0; i < knownElements.length; i++) {
-                PolicyEngine.registerBuilder(knownElements[i], builder);
-            }
-        }
-    }
 
     /**
      * Registers an AssertionBuilder instances and associates it with a QName.
@@ -95,14 +77,14 @@ public class PolicyEngine {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
+
         // TODO throw an IllegalArgumentException
         return null;
     }
-    
-    
+
+
     public static PolicyReference getPolicyReferene(InputStream inputStream) {
-        
+
         try {
             OMElement element = OMXMLBuilderFactory.createStAXOMBuilder(
                     OMAbstractFactory.getOMFactory(),
@@ -113,15 +95,15 @@ public class PolicyEngine {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
+
         // TODO throw an IllegalArgumentException
         return null;
-        
+
     }
 
     /**
      * Creates a Policy object from an OMElement.
-     * 
+     *
      * @param element
      * @return
      */
@@ -129,7 +111,7 @@ public class PolicyEngine {
 
         return getPolicyOperator(element);
     }
-    
+
     public static PolicyReference getPolicyReference(OMElement element) {
 
         if (!(Constants.URI_POLICY_NS.equals(element.getNamespace()
@@ -141,7 +123,7 @@ public class PolicyEngine {
         }
 
         PolicyReference reference = new PolicyReference();
-        
+
         // setting the URI value
         reference.setURI(element.getAttributeValue(new QName("URI")));
         return reference;
@@ -158,7 +140,7 @@ public class PolicyEngine {
     private static All getAllOperator(OMElement element) {
         return (All) processOperationElement(element, new All());
     }
-    
+
     private static PolicyOperator processOperationElement(
             OMElement operationElement, PolicyOperator operator) {
 

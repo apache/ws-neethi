@@ -31,45 +31,51 @@ import org.apache.ws.security.policy.Constants;
 
 
 public class Test {
-    
+
     public static void main(String[] args) throws Exception {
-        
-        OMElement element = OMXMLBuilderFactory.createStAXOMBuilder(OMAbstractFactory.getOMFactory(),
-                XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream("/home/sanka/testpolicy.xml"))).getDocumentElement();
-        
+
+        OMElement element =
+                OMXMLBuilderFactory.
+                createStAXOMBuilder(OMAbstractFactory.getOMFactory(),
+                                   XMLInputFactory.newInstance().createXMLStreamReader(
+                                   new FileInputStream("/home/sanka/testpolicy.xml")))
+                                   .getDocumentElement();
+
         AssertionBuilderFactory factory = new AssertionBuilderFactory();
         AssertionBuilder builder;
-        
+
         builder = new TransportBindingBuilder();
         PolicyEngine.registerBuilder(new QName(Constants.SP_NS, "TransportBinding"), builder);
-        
+
         builder = new AlgorithmSuiteBuilder();
-        PolicyEngine.registerBuilder(new QName(Constants.SP_NS,"AlgorithmSuite"),builder);
-        
+        PolicyEngine.registerBuilder(new QName(Constants.SP_NS, "AlgorithmSuite"), builder);
+
         builder = new TransportTokenBuilder();
         PolicyEngine.registerBuilder(new QName(Constants.SP_NS, "TransportToken"), builder);
-        
+
         builder = new LayoutBuilder();
         PolicyEngine.registerBuilder(new QName(Constants.SP_NS, "Layout"), builder);
-        
+
         builder = new SignedElementsBuilder();
         PolicyEngine.registerBuilder(new QName(Constants.SP_NS, "SignedElements"), builder);
-                
+
         builder = new SignedPartsBuilder();
         PolicyEngine.registerBuilder(new QName(Constants.SP_NS, "SignedParts"), builder);
-        
+
         builder = new SupportingTokensBuilder();
         PolicyEngine.registerBuilder(new QName(Constants.SP_NS, "SupportingTokens"), builder);
         PolicyEngine.registerBuilder(new QName(Constants.SP_NS, "SignedSupportingTokens"), builder);
-        PolicyEngine.registerBuilder(new QName(Constants.SP_NS, "EndorsingSupportingTokens"), builder);
-        PolicyEngine.registerBuilder(new QName(Constants.SP_NS, "SignedEndorsingSupportingTokens"), builder);
-        
-                
+        PolicyEngine
+                .registerBuilder(new QName(Constants.SP_NS, "EndorsingSupportingTokens"), builder);
+        PolicyEngine.registerBuilder(new QName(Constants.SP_NS, "SignedEndorsingSupportingTokens"),
+                                     builder);
+
+
         builder = new UsernameTokenBuilder();
         PolicyEngine.registerBuilder(new QName(Constants.SP_NS, "UsernameToken"), builder);
-        
+
         Policy p = PolicyEngine.getPolicy(element);
         System.out.println(p + "done");
-        
+
     }
 }
