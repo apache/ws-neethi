@@ -18,6 +18,9 @@ package org.apache.neethi;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+/**
+ * PolicyReference is a wrapper that holds explict PolicyReferences.
+ */
 public class PolicyReference implements PolicyComponent {
 
     private String uri;
@@ -56,5 +59,4 @@ public class PolicyReference implements PolicyComponent {
         throw new UnsupportedOperationException();
 
     }
-
 }

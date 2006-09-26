@@ -17,35 +17,43 @@ package org.apache.neethi;
 
 import javax.xml.namespace.QName;
 
+/**
+ * Constants contains the set of Constants that are used throughout the Neethi2
+ * framework.
+ * 
+ */
 public class Constants {
-    
+
     public static final String ATTR_NAME = "Name";
-    
+
     public static final String ATTR_ID = "Id";
+
+    public static final String ATTR_WSP = "wsp";
     
-    public static final String POLICY_PREFIX = "wsp";
-    
+    public static final String ATTR_WSU = "wsu";
+
     public static final String URI_POLICY_NS = "http://schemas.xmlsoap.org/ws/2004/09/policy";
-    
+
     public static final String URI_WSU_NS = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
-    
+
     public static final String ELEM_POLICY = "Policy";
 
     public static final String ELEM_EXACTLYONE = "ExactlyOne";
 
     public static final String ELEM_ALL = "All";
-    
+
     public static final String ELEM_POLICYREF = "PolicyReference";
-    
+
     public static final short TYPE_POLICY = 0x1;
 
     public static final short TYPE_EXACTLYONE = 0x2;
 
     public static final short TYPE_ALL = 0x3;
-    
+
     public static final short TYPE_POLICYREF = 0x4;
 
     public static final short TYPE_ASSERTION = 0x5;
-    
-    public static final QName Q_ELEM_OPTIONAL_ATTR = new QName(Constants.URI_POLICY_NS, "Optional",Constants.POLICY_PREFIX);    
+
+    public static final QName Q_ELEM_OPTIONAL_ATTR = new QName(
+            Constants.URI_POLICY_NS, "Optional", Constants.ATTR_WSP);
 }

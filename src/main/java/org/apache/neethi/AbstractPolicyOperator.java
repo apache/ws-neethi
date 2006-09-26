@@ -22,8 +22,8 @@ import java.util.List;
 import org.apache.neethi.util.PolicyComparator;
 
 /**
- * 
- *
+ * AbstractPolicyOperator provides an implementation of few functions of 
+ * PolicyOperator interface that other PolicyOperators can use.
  */
 public abstract class AbstractPolicyOperator implements PolicyOperator {
     protected ArrayList policyComponents = new ArrayList();
@@ -54,6 +54,18 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
     
     protected static Policy normalize(Policy policy, PolicyRegistry reg, boolean deep) {
         Policy result = new Policy();
+        
+        String policyName = policy.getName();
+        if (policyName != null) {
+            result.setName(policyName);
+        }
+        
+        String id = policy.getId();
+        if (id != null) {
+            result.setId(id);
+        }
+        
+        
         result.addPolicyComponent(normalizeOperator(policy,reg, deep));
         return result;
     }
@@ -116,12 +128,6 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         return computeResultantComponent(childComponentsList, type);
     }
     
-    /**
-     * 
-     * @param normalizedInnerComponets
-     * @param componentType
-     * @return
-     */
     private static PolicyComponent computeResultantComponent(List normalizedInnerComponets, short componentType) {
         
         ExactlyOne exactlyOne = new ExactlyOne();

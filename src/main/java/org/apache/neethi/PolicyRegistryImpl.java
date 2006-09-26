@@ -17,6 +17,9 @@ package org.apache.neethi;
 
 import java.util.HashMap;
 
+/**
+ * Provides a default implementation of PolicyRegistry interface.
+ */
 public class PolicyRegistryImpl implements PolicyRegistry {
     
     private PolicyRegistry parent = null;

@@ -23,6 +23,11 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+/**
+ * Policy is a PolicyOperator that requires to statisfy all of its
+ * PolicyComponents. It is always the outermost component of a Policy.
+ * 
+ */
 public class Policy extends All {
 
     private HashMap attributes = new HashMap();
@@ -30,7 +35,7 @@ public class Policy extends All {
     public PolicyComponent normalize(boolean deep) {
         return normalize(null, deep);
     }
-    
+
     public PolicyComponent normalize(PolicyRegistry reg, boolean deep) {
         return normalize(this, reg, deep);
     }
@@ -47,17 +52,53 @@ public class Policy extends All {
     }
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
-        String prefix = writer.getPrefix(Constants.ATTR_NAME);
-
-        if (prefix == null) {
-            writer.writeStartElement(Constants.POLICY_PREFIX, Constants.ELEM_POLICY, Constants.URI_POLICY_NS);
-            writer.writeNamespace(Constants.POLICY_PREFIX, Constants.URI_POLICY_NS);
-            writer.setPrefix(Constants.POLICY_PREFIX, Constants.URI_POLICY_NS);
-
-        } else {
-            writer.writeStartElement(Constants.URI_POLICY_NS, Constants.ELEM_POLICY);
+        String wspPrefix = writer.getPrefix(Constants.URI_POLICY_NS);
+        if (wspPrefix == null) {
+            wspPrefix = Constants.ATTR_WSP;
+            writer.setPrefix(wspPrefix, Constants.URI_POLICY_NS);
         }
-
+        
+        String wsuPrefix = writer.getPrefix(Constants.URI_WSU_NS);
+        if (wsuPrefix == null) {
+            wsuPrefix = Constants.ATTR_WSU;
+            writer.setPrefix(wsuPrefix, Constants.URI_WSU_NS);
+        }
+        
+        writer.writeStartElement(wspPrefix, Constants.ELEM_POLICY, Constants.URI_POLICY_NS);
+        
+        QName key;
+        String prefix;
+         
+        HashMap prefix2ns = new HashMap();
+        
+        for (Iterator iterator = getAttributes().keySet().iterator(); iterator.hasNext();) {
+            key = (QName) iterator.next();
+            
+            prefix = writer.getPrefix(key.getNamespaceURI());
+            if (prefix == null) { 
+                prefix = key.getPrefix();
+                
+                if (prefix != null) {
+                    writer.setPrefix(prefix, key.getNamespaceURI());
+                }
+            }
+            
+            if (prefix != null) {
+                writer.writeAttribute(prefix, key.getNamespaceURI(), key.getLocalPart(), getAttribute(key));
+                prefix2ns.put(prefix, key.getNamespaceURI());
+                
+            } else {
+                writer.writeAttribute(key.getNamespaceURI(), key.getLocalPart(), getAttribute(key));
+            }
+        }
+        
+        String prefiX;
+        
+        for (Iterator iterator = prefix2ns.keySet().iterator(); iterator.hasNext();) {
+            prefiX = (String) iterator.next();
+            writer.writeNamespace(prefiX, (String) prefix2ns.get(prefiX));
+        }
+        
         PolicyComponent policyComponent;
 
         for (Iterator iterator = getPolicyComponents().iterator(); iterator
@@ -72,10 +113,6 @@ public class Policy extends All {
 
     public short getType() {
         return Constants.TYPE_POLICY;
-    }
-
-    public void addAlternatives(PolicyAlternatives policyAlternatives) {
-        policyComponents.add(policyAlternatives);
     }
 
     public Iterator getAlternatives() {
@@ -127,13 +164,10 @@ public class Policy extends All {
     }
 
     public void setId(String id) {
-        addAttribute(
-                new QName(Constants.URI_WSU_NS, Constants.ATTR_ID),
-                id);
+        addAttribute(new QName(Constants.URI_WSU_NS, Constants.ATTR_ID), id);
     }
 
     public String getId() {
-        return getAttribute(new QName(Constants.URI_WSU_NS,
-                Constants.ATTR_ID));
+        return getAttribute(new QName(Constants.URI_WSU_NS, Constants.ATTR_ID));
     }
 }

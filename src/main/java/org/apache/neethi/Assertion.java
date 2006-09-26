@@ -46,7 +46,7 @@ public interface Assertion extends PolicyComponent {
     public void serialize(XMLStreamWriter writer) throws XMLStreamException;
     
     /**
-     * 
+     * Returns a new PolicyComponent that is the normalized version of this. 
      */
     public PolicyComponent normalize();
 }

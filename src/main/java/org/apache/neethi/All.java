@@ -21,11 +21,10 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-/**
- * 
- *
+/** 
+ * All is a PolicyOperator that require all its PolicyComponents to be met.
  */
-public class All extends AbstractPolicyOperator implements PolicyAlternative {
+public class All extends AbstractPolicyOperator {
     
     public void addAssertion(Assertion assertion) {
         addPolicyComponent(assertion);
@@ -39,9 +38,9 @@ public class All extends AbstractPolicyOperator implements PolicyAlternative {
         String prefix = writer.getPrefix(Constants.URI_POLICY_NS);
 
         if (prefix == null) {
-            writer.writeStartElement(Constants.POLICY_PREFIX, Constants.ELEM_ALL, Constants.URI_POLICY_NS);
-            writer.writeNamespace(Constants.POLICY_PREFIX, Constants.URI_POLICY_NS);
-            writer.setPrefix(Constants.POLICY_PREFIX, Constants.URI_POLICY_NS);
+            writer.writeStartElement(Constants.ATTR_WSP, Constants.ELEM_ALL, Constants.URI_POLICY_NS);
+            writer.writeNamespace(Constants.ATTR_WSP, Constants.URI_POLICY_NS);
+            writer.setPrefix(Constants.ATTR_WSP, Constants.URI_POLICY_NS);
         } else {
             writer.writeStartElement(Constants.URI_POLICY_NS, Constants.ELEM_ALL);
         }

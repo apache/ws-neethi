@@ -16,7 +16,9 @@
 package org.apache.neethi;
 
 import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.neethi.builders.AssertionBuilder;
 import org.apache.neethi.builders.xml.XmlPrimtiveAssertion;
@@ -82,7 +84,6 @@ public class PolicyEngine {
         return null;
     }
 
-
     public static PolicyReference getPolicyReferene(InputStream inputStream) {
 
         try {
@@ -115,8 +116,8 @@ public class PolicyEngine {
     public static PolicyReference getPolicyReference(OMElement element) {
 
         if (!(Constants.URI_POLICY_NS.equals(element.getNamespace()
-                .getNamespaceURI()) && Constants.ELEM_POLICYREF
-                .equals(element.getLocalName()))) {
+                .getNamespaceURI()) && Constants.ELEM_POLICYREF.equals(element
+                .getLocalName()))) {
 
             throw new RuntimeException(
                     "Specified element is not a <wsp:PolicyReference .. />  element");
@@ -144,7 +145,33 @@ public class PolicyEngine {
     private static PolicyOperator processOperationElement(
             OMElement operationElement, PolicyOperator operator) {
 
+        if (Constants.TYPE_POLICY == operator.getType()) {
+            Policy policyOperator = (Policy) operator;
+            
+            OMAttribute attribute;
+            OMNamespace namespace;
+            QName key;
+            
+            for (Iterator iterator = operationElement.getAllAttributes(); iterator.hasNext(); ) {
+                attribute = (OMAttribute) iterator.next();
+                namespace = attribute.getNamespace();
+                
+                if (namespace == null) {
+                    key = new QName(attribute.getLocalName());
+                    
+                } else if (namespace.getPrefix() == null) {
+                    key = new QName(namespace.getNamespaceURI(), attribute.getLocalName());
+                    
+                } else {
+                    key = new QName(namespace.getNamespaceURI(), attribute.getLocalName(), namespace.getPrefix());
+                }
+                
+                policyOperator.addAttribute(key, attribute.getAttributeValue());
+            }
+        }
+        
         OMElement childElement;
+        
 
         for (Iterator iterator = operationElement.getChildElements(); iterator
                 .hasNext();) {
@@ -153,13 +180,12 @@ public class PolicyEngine {
             if (Constants.URI_POLICY_NS.equals(childElement.getNamespace()
                     .getNamespaceURI())) {
 
-                if (Constants.ELEM_POLICY.equals(childElement
-                        .getLocalName())) {
+                if (Constants.ELEM_POLICY.equals(childElement.getLocalName())) {
                     operator
                             .addPolicyComponent(getPolicyOperator(childElement));
 
-                } else if (Constants.ELEM_EXACTLYONE
-                        .equals(childElement.getLocalName())) {
+                } else if (Constants.ELEM_EXACTLYONE.equals(childElement
+                        .getLocalName())) {
                     operator
                             .addPolicyComponent(getExactlyOneOperator(childElement));
 
@@ -169,23 +195,12 @@ public class PolicyEngine {
 
                 } else if (Constants.ELEM_POLICYREF.equals(childElement
                         .getLocalName())) {
-                    operator.addPolicyComponent(getPolicyReference(childElement));
+                    operator
+                            .addPolicyComponent(getPolicyReference(childElement));
                 }
 
             } else {
-
-                AssertionBuilder builder = factory.getBuilder(childElement
-                        .getQName());
-
-                if (builder == null) {
-                    XmlPrimtiveAssertion xmlPrimtiveAssertion = new XmlPrimtiveAssertion(
-                            childElement);
-                    operator.addPolicyComponent(xmlPrimtiveAssertion);
-
-                } else {
-                    operator.addPolicyComponent(builder.build(childElement,
-                            factory));
-                }
+                    operator.addPolicyComponent(factory.build(childElement));
             }
         }
         return operator;

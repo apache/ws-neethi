@@ -36,20 +36,6 @@ public interface PolicyOperator extends PolicyComponent {
      * @return the List of PolicyComponents that this PolicyOperator contains.
      */
     public List getPolicyComponents();
-
-    /**
-     * Returns a PolicyComponent which is the normalized format of this
-     * PolicyOperator.
-     * 
-     * @param deep
-     *            the deep flag indicates whether the assertion it contains
-     *            should be normalized or not. Merge and Intersect will use a
-     *            partial normalization since partial normalization is
-     *            sufficient for most high level processing of Policies will
-     * @return
-     */
-//    public PolicyComponent normalize(boolean deep);
-    
     
     /**
      * Returns true if the PolicyOperator doesn't contain any PolicyComponents.

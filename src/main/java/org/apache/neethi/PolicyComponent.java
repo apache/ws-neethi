@@ -19,7 +19,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
- * This is an interface which any component of the frame must implement.
+ * This is an interface which any component of the framework must implement.
  */
 public interface PolicyComponent {
     
@@ -36,12 +36,19 @@ public interface PolicyComponent {
      * Returns a short value which uniquely identify the type of the
      * PolicyComponent.
      *
-     * @return PolicyComponent.POLICY for Policy type PolicyComponent
-     *         PolicyComponent.EXACTLYONE for ExactlyOne type PolicyComponent
-     *         PolicyComponent.All for All type PolicyComponent
-     *         PolicyComponent.ASSERTION for Assertion type PolicyComponent
+     * @return Constants.POLICY for Policy type PolicyComponent
+     *         Constants.EXACTLYONE for ExactlyOne type PolicyComponent
+     *         Constants.All for All type PolicyComponent
+     *         Constants.ASSERTION for Assertion type PolicyComponent
      */
     public short getType();
 
+    /**
+     * Returns true if the argument is equal to self.
+     *  
+     * @param policyComponent the PolicyComponent to check whether self is 
+     *      logically equal or not 
+     * @return ture if the argument is equal to self.
+     */
     public boolean equal(PolicyComponent policyComponent);
 }

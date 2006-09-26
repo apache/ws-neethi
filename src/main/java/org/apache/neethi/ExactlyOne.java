@@ -16,37 +16,35 @@
 package org.apache.neethi;
 
 import java.util.Iterator;
-import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-public class ExactlyOne extends AbstractPolicyOperator implements PolicyAlternatives {
-    
-    public void addAlternative(PolicyAlternative policyAlternative) {
-        addPolicyComponent(policyAlternative);
-    }
-    
-
-    public List getAlternatives() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+/**
+ * ExactlyOne PolicyOperator requires exactly one of its PolicyComponents to be
+ * met.
+ * 
+ */
+public class ExactlyOne extends AbstractPolicyOperator {
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
         String prefix = writer.getPrefix(Constants.URI_POLICY_NS);
 
         if (prefix == null) {
-            writer.writeStartElement(Constants.POLICY_PREFIX, Constants.ELEM_EXACTLYONE, Constants.URI_POLICY_NS);
-            writer.writeNamespace(Constants.POLICY_PREFIX, Constants.URI_POLICY_NS);
-            writer.setPrefix(Constants.POLICY_PREFIX, Constants.URI_POLICY_NS);
+            writer.writeStartElement(Constants.ATTR_WSP,
+                    Constants.ELEM_EXACTLYONE, Constants.URI_POLICY_NS);
+            writer.writeNamespace(Constants.ATTR_WSP,
+                    Constants.URI_POLICY_NS);
+            writer.setPrefix(Constants.ATTR_WSP, Constants.URI_POLICY_NS);
         } else {
-            writer.writeStartElement(Constants.URI_POLICY_NS, Constants.ELEM_EXACTLYONE);
+            writer.writeStartElement(Constants.URI_POLICY_NS,
+                    Constants.ELEM_EXACTLYONE);
         }
 
         PolicyComponent policyComponent;
 
-        for (Iterator iterator = getPolicyComponents().iterator(); iterator.hasNext();) {
+        for (Iterator iterator = getPolicyComponents().iterator(); iterator
+                .hasNext();) {
             policyComponent = (PolicyComponent) iterator.next();
             policyComponent.serialize(writer);
         }

@@ -15,6 +15,10 @@
  */
 package org.apache.neethi;
 
+/**
+ * PolicyRegistry contains (URI,Policy) pairs and it is used to resolve explicit Policy references.
+ *
+ */
 public interface PolicyRegistry {
     
     public void register(String key, Policy policy);
