@@ -53,6 +53,7 @@ public class Policy extends All {
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
         String wspPrefix = writer.getPrefix(Constants.URI_POLICY_NS);
+       
         if (wspPrefix == null) {
             wspPrefix = Constants.ATTR_WSP;
             writer.setPrefix(wspPrefix, Constants.URI_POLICY_NS);
@@ -92,12 +93,17 @@ public class Policy extends All {
             }
         }
         
+        // writes xmlns:wsp=".." 
+        writer.writeNamespace(wspPrefix, Constants.URI_POLICY_NS);
+        
         String prefiX;
         
         for (Iterator iterator = prefix2ns.keySet().iterator(); iterator.hasNext();) {
             prefiX = (String) iterator.next();
             writer.writeNamespace(prefiX, (String) prefix2ns.get(prefiX));
         }
+        
+        
         
         PolicyComponent policyComponent;
 
