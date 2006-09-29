@@ -39,7 +39,8 @@ public class PolicyRegistryImpl implements PolicyRegistry {
         if (policy == null && parent != null) {
             return parent.lookup(key);
         }
-        return null;
+        
+        return policy;
     }
 
     public void register(String key, Policy policy) {

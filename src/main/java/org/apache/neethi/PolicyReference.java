@@ -46,10 +46,15 @@ public class PolicyReference implements PolicyComponent {
     }
     
     public PolicyComponent normalize(PolicyRegistry reg, boolean deep) {
-        Policy policy = reg.lookup(getURI());
+        String key = getURI();
+        if (key.startsWith("#")) {
+            key = key.substring(1);
+        }
+        
+        Policy policy = reg.lookup(key);
         
         if (policy == null) {
-            throw new RuntimeException(getURI() + " can't be resolved" );
+            throw new RuntimeException(key + " can't be resolved" );
         }
         
         return policy.normalize(reg, deep);
