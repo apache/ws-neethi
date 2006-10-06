@@ -24,7 +24,7 @@
 	
 	<name>Web Services Commons Neethi : A WS-Policy implementation</name>
 	<id>neethi</id>
-	<groupId>ws-commons</groupId>
+	<groupId>org.apache.ws.commons.neethi</groupId>
   
   <!-- a short but descriptive name for the project -->
 	
