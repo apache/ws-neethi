@@ -99,7 +99,7 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>ws-commons</groupId>
+			<groupId>org.apache.ws.commons.axiom</groupId>
 			<artifactId>axiom</artifactId>
 			<version>${axiom.version}</version>
 		</dependency>
