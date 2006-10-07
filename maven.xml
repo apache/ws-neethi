@@ -20,6 +20,7 @@
 <!-- $Rev: 330371 $ $Date: 2005-11-02 16:57:37 -0500 (Wed, 02 Nov 2005) $ -->
 
 <project 
+	default="jar"
 	xmlns:j="jelly:core"
     xmlns:u="jelly:util"
     xmlns:ant="jelly:ant"
