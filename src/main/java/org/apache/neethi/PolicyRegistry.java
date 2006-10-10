@@ -24,5 +24,7 @@ public interface PolicyRegistry {
     public void register(String key, Policy policy);
     
     public Policy lookup(String key);
+    
+    public void remove(String key);
 
 }
