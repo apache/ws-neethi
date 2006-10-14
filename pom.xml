@@ -254,6 +254,21 @@
       <artifactId>wstx-asl</artifactId>
       <version>2.9.3</version>
     </dependency>
+    <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.0.4</version>
+        <exclusions>
+            <exclusion>
+                <artifactId>avalon-framework</artifactId>
+                <groupId>avalon-framework</groupId>
+            </exclusion>
+            <exclusion>
+                 <artifactId>logkit</artifactId>
+                 <groupId>logkit</groupId>
+            </exclusion>
+        </exclusions>
+    </dependency>
   </dependencies>
   <reporting>
     <plugins>

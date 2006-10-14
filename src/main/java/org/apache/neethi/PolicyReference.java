@@ -15,6 +15,8 @@
  */
 package org.apache.neethi;
 
+import org.apache.ws.policy.PolicyConstants;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -61,7 +63,25 @@ public class PolicyReference implements PolicyComponent {
     }
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
-        throw new UnsupportedOperationException();
 
+        String writerPrefix = writer
+                .getPrefix(PolicyConstants.POLICY_NAMESPACE_URI);
+        if (writerPrefix != null) {
+            writer.writeStartElement(PolicyConstants.POLICY_NAMESPACE_URI,
+                    PolicyConstants.POLICY_REFERENCE);
+        } else {
+
+            writer.writeStartElement(PolicyConstants.POLICY_PREFIX,
+                    PolicyConstants.POLICY_REFERENCE,
+                    PolicyConstants.POLICY_NAMESPACE_URI);
+            writer.writeNamespace(PolicyConstants.POLICY_PREFIX,
+                    PolicyConstants.POLICY_NAMESPACE_URI);
+            writer.setPrefix(PolicyConstants.POLICY_PREFIX,
+                    PolicyConstants.POLICY_NAMESPACE_URI);
+
+        }
+        writer.writeAttribute("URI", uri);
+
+        writer.writeEndElement();
     }
 }
