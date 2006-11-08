@@ -107,10 +107,6 @@ public class PolicyEngine {
      * @return
      */
     public static Policy getPolicy(OMElement element) {
-        
-        if (! element.getQName().equals(Constants.Q_ELEM_POLICY)) {
-            throw new IllegalArgumentException("Input is not a wsp:Policy type");
-        }
         return getPolicyOperator(element);
     }
 
