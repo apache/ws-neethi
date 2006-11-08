@@ -21,8 +21,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.neethi.builders.AssertionBuilder;
-import org.apache.neethi.builders.xml.XmlPrimtiveAssertion;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import java.io.InputStream;
@@ -109,7 +107,10 @@ public class PolicyEngine {
      * @return
      */
     public static Policy getPolicy(OMElement element) {
-
+        
+        if (! element.getQName().equals(Constants.Q_ELEM_POLICY)) {
+            throw new IllegalArgumentException("Input is not a wsp:Policy type");
+        }
         return getPolicyOperator(element);
     }
 
