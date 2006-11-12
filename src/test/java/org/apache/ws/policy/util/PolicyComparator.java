@@ -42,17 +42,6 @@ public class PolicyComparator {
 			}
 		}
 
-		if (arg1.getBase() == null && arg2.getBase() != null
-				|| arg1.getBase() != null && arg1.getBase() == null) {
-			return false;
-		}
-
-		if (arg1.getBase() != null) {
-			if (!arg1.getBase().equals(arg2.getBase())) {
-				return false;
-			}
-		}
-
 		return compare(arg1.getTerms(), arg2.getTerms());
 	}
 	

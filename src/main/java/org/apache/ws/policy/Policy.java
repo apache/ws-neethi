@@ -44,17 +44,6 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
     }
 
     /**
-     * Creates a policy object with the specified Id
-     * 
-     * @param id
-     *            a string as the id
-     */
-    public Policy(String id) {
-        this(null, id);
-        setNormalized(false);
-    }
-
-    /**
      * Creates a policy object with the specified xml-base and id.
      * 
      * @param xmlBase
@@ -62,33 +51,9 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
      * @param id
      *            a string as the id
      */
-    public Policy(String xmlBase, String id) {
-        setBase(xmlBase);
+    public Policy(String id) {
         setId(id);
         setNormalized(false);
-    }
-
-    /**
-     * Set the xml-base of the policy object
-     * 
-     * @param xmlBase
-     *            the xml base of the policy object
-     */
-    public void setBase(String xmlBase) {
-        addAttribute(new QName(PolicyConstants.XML_NAMESPACE_URI,
-                PolicyConstants.POLICY_BASE), xmlBase);
-    }
-
-    /**
-     * Returns the xml-base of the policy object. Returns null if no xml-base is
-     * set.
-     * 
-     * @return xml base of the policy object
-     */
-    public String getBase() {
-        return (String) getAttribute(new QName(
-                PolicyConstants.XML_NAMESPACE_URI,
-                PolicyConstants.POLICY_BASE));
     }
 
     /**
@@ -141,9 +106,6 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
      */
     public String getPolicyURI() {
         if (getId() != null) {
-            if (getBase() != null) {
-                return getBase() + "#" + getId();
-            }
             return "#" + getId();
         }
         return null;
@@ -160,9 +122,8 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
             return this;
         }
 
-        String xmlBase = getBase();
         String id = getId();
-        Policy policy = new Policy(xmlBase, id);
+        Policy policy = new Policy(id);
 
         All all = new All();
         ExactlyOne exactlyOne = new ExactlyOne();
@@ -467,7 +428,36 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
     public Iterator iterator() {
         return new PolicyIterator(this);
     }
-
+    /**
+     * Returns the vocabulary of this Policy.
+     *     
+     * @return List of QNames of assertions in this Policy
+     */
+    public List getVocabulary(){
+      return getVocabulary(this);      
+    }
+    
+    private List getVocabulary(Assertion assertion){
+    
+      List result = new ArrayList();
+      if (assertion instanceof CompositeAssertion){
+         List subAssertion = assertion.getTerms();
+         Iterator itr = subAssertion.iterator();
+         while (itr.hasNext()){
+           List vocab = getVocabulary((Assertion)itr.next());
+           result.removeAll(vocab);
+           result.addAll(vocab);           
+         }
+      } else {
+        if (assertion instanceof PrimitiveAssertion){
+          result.remove(((PrimitiveAssertion)assertion).getName());
+          result.add(((PrimitiveAssertion)assertion).getName());
+        }
+      }
+      
+      return result;
+    }
+    
     private class PolicyIterator implements java.util.Iterator {
 
         private ExactlyOne exactlyOne = null;
