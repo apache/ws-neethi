@@ -1,9 +1,0 @@
-<wsp:Policy Name="http://policy.test.webservices.com/HourAndDay"
-	xmlns:cal="http://policy.test.webservices.com/calendar"
-   	xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
-	<wsp:ExactlyOne>
-		<cal:Hour>Numeric</cal:Hour>
-		<cal:Day>Alpha</cal:Day>
-	</wsp:ExactlyOne>
-</wsp:Policy>
-
