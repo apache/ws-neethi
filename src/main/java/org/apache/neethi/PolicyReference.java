@@ -69,18 +69,10 @@ public class PolicyReference implements PolicyComponent {
             writer.setPrefix(wspPrefix, Constants.URI_POLICY_NS);
         }
         
-        String wsuPrefix = writer.getPrefix(Constants.URI_WSU_NS);
-        if (wsuPrefix == null) {
-            wsuPrefix = Constants.ATTR_WSU;
-            writer.setPrefix(wsuPrefix, Constants.URI_WSU_NS);
-        }
-        
         writer.writeStartElement(wspPrefix, Constants.ELEM_POLICY_REF, Constants.URI_POLICY_NS);
         
         writer.writeAttribute(Constants.ATTR_URI, getURI());
         
         writer.writeEndElement();
-        
-        
     }
 }
