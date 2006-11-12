@@ -113,7 +113,7 @@ public class PolicyEngine {
     public static PolicyReference getPolicyReference(OMElement element) {
 
         if (!(Constants.URI_POLICY_NS.equals(element.getNamespace()
-                .getNamespaceURI()) && Constants.ELEM_POLICYREF.equals(element
+                .getNamespaceURI()) && Constants.ELEM_POLICY_REF.equals(element
                 .getLocalName()))) {
 
             throw new RuntimeException(
@@ -190,7 +190,7 @@ public class PolicyEngine {
                         .getLocalName())) {
                     operator.addPolicyComponent(getAllOperator(childElement));
 
-                } else if (Constants.ELEM_POLICYREF.equals(childElement
+                } else if (Constants.ELEM_POLICY_REF.equals(childElement
                         .getLocalName())) {
                     operator
                             .addPolicyComponent(getPolicyReference(childElement));

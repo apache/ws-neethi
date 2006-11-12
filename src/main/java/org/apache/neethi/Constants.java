@@ -31,6 +31,8 @@ public class Constants {
     public static final String ATTR_WSP = "wsp";
 
     public static final String ATTR_WSU = "wsu";
+    
+    public static final String ATTR_URI = "URI";
 
     public static final String URI_POLICY_NS = "http://schemas.xmlsoap.org/ws/2004/09/policy";
 
@@ -42,7 +44,7 @@ public class Constants {
 
     public static final String ELEM_ALL = "All";
 
-    public static final String ELEM_POLICYREF = "PolicyReference";
+    public static final String ELEM_POLICY_REF = "PolicyReference";
 
     public static final short TYPE_POLICY = 0x1;
 
