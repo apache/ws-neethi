@@ -8,9 +8,11 @@ import java.util.Vector;
 import javax.xml.namespace.QName;
 
 import org.apache.ws.policy.attachment.WSDLPolicyProcessor;
+import org.apache.ws.policy.util.ExtraUtil;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyRegistry;
+import org.apache.ws.policy.util.PolicyUtil;
 
 public class Test_EffectivePolicy extends PolicyTestCase {
 
@@ -193,28 +195,21 @@ public class Test_EffectivePolicy extends PolicyTestCase {
             QName service = new QName(ns, "MyService");
             Iterator it = null;
 
-            Policy normPolOperation = wpp.getEffectiveOperationPolicy(service,
-                    "MyPort", "MyOperation");
+            Policy normPolOperation = wpp.getEffectiveOperationPolicy(service,                
+                    "MyPort", "MyOperation");          
             it = normPolOperation.iterator();
 
-            PrimitiveAssertion yearDay = new PrimitiveAssertion(new QName(
-                    TestConstants.NAMESPACE_CAL,
-                    TestConstants.ASSERTION_YEAR_DAY));
-            yearDay.setStrValue(TestConstants.VALUE_NUMERIC);
             PrimitiveAssertion hour = new PrimitiveAssertion(new QName(
                     TestConstants.NAMESPACE_CAL, TestConstants.ASSERTION_HOUR));
             hour.setStrValue(TestConstants.VALUE_NUMERIC);
             PrimitiveAssertion day = new PrimitiveAssertion(new QName(
                     TestConstants.NAMESPACE_CAL, TestConstants.ASSERTION_DAY));
             day.setStrValue(TestConstants.VALUE_ALPHA);
-            PrimitiveAssertion logTime = new PrimitiveAssertion(new QName(
-                    TestConstants.NAMESPACE_UTIL, TestConstants.ASSERTION_LOG));
-            logTime.setStrValue(TestConstants.VALUE_TIME);
-
+       
             AssertionSet set = new AssertionSet();
 
-            PrimitiveAssertion p1[] = { yearDay, logTime, hour };
-            PrimitiveAssertion p2[] = { yearDay, logTime, day };
+            PrimitiveAssertion p1[] = { hour };
+            PrimitiveAssertion p2[] = { day };
 
             set.clear();
             set.add(p1);
