@@ -24,7 +24,7 @@
 	
 	<name>Web Services Commons Neethi : A WS-Policy implementation</name>
 	<id>neethi</id>
-	<groupId>org.apache.ws.commons.neethi</groupId>
+	<groupId>org.apache.neethi</groupId>
   
   <!-- a short but descriptive name for the project -->
 	
@@ -43,7 +43,7 @@
 	
 	<inceptionYear>2002</inceptionYear>
 	
-	<package>org.apache.ws.policy</package>
+	<package>org.apache.neethi</package>
 
 	<mailingLists>
 		<mailingList>

@@ -13,17 +13,12 @@
     </links>
 
     <menu name="Apache Neethi">
-      <item name="Home" href="/index.html"/>
-      <item nane="Downloads">
-        <item name="Releases" href="/download.html"/>
+      <item name="Downloads">
         <item name="Source Code" href="/source-repository.html"/>
       </item>
       <item name="Documentation">
-        <item name="User's Guide" href="/userguide.html"/>
         <item name="Javadocs" href="/apidocs/index.html"/>
       </item>
     </menu>
-
-    ${reports}
   </body>
 </project>
