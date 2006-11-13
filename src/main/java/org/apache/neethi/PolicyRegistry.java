@@ -16,15 +16,38 @@
 package org.apache.neethi;
 
 /**
- * PolicyRegistry contains (URI,Policy) pairs and it is used to resolve explicit Policy references.
- *
+ * PolicyRegistry contains (URI,Policy) pairs and it is used to resolve explicit
+ * Policy references.
+ * 
  */
 public interface PolicyRegistry {
-    
+
+    /**
+     * Associates a key with a Policy
+     * 
+     * @param key
+     *            the key that the specified Policy to be associated
+     * @param policy
+     *            the policy to be associated with the key
+     */
     public void register(String key, Policy policy);
-    
+
+    /**
+     * Returns the Policy that the specified key is mapped. Retruns null if no
+     * Policy is associated with that key.
+     * 
+     * @param key
+     *            the key whose associated Policy is to be returned.
+     * @return the policy associated with the specified key.
+     */
     public Policy lookup(String key);
-    
+
+    /**
+     * Removes the mapping for this key if present.
+     * 
+     * @param key
+     *            the key whose mapping is to be removed
+     */
     public void remove(String key);
 
 }

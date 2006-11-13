@@ -26,14 +26,25 @@ import javax.xml.stream.XMLStreamWriter;
  */
 public class All extends AbstractPolicyOperator {
     
+    /**
+     * Adds an assertion to its PolicyComponent list.
+     * 
+     * @param assertion the assertion to be added.
+     */
     public void addAssertion(Assertion assertion) {
         addPolicyComponent(assertion);
     }
 
+    /**
+     * Returns a <tt>List</tt> of it's PolicyComponents.
+     * 
+     * @return a List of it's PolicyComponents
+     */
     public List getAssertions() {
         return policyComponents;
     }
 
+    
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
         String prefix = writer.getPrefix(Constants.URI_POLICY_NS);
 
@@ -56,6 +67,9 @@ public class All extends AbstractPolicyOperator {
         writer.writeEndElement();
     }
 
+    /**
+     * Returns Constants.TYPE_ALL
+     */
     public short getType() {
         return Constants.TYPE_ALL;
     }

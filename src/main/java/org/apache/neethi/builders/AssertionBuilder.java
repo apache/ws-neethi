@@ -34,8 +34,28 @@ import org.apache.neethi.AssertionBuilderFactory;
  */
 public interface AssertionBuilder {
 
+    /**
+     * Constructs an assertion from a known OMElement. If that element contains
+     * other child elements that the Builder doesn't understand, it uses the
+     * AssertionBuilderFactory to construct assertions from them.
+     * 
+     * @param element
+     *            the known element from which an assertion can be built
+     * @param factory
+     *            the factory from which AssertionBuilders are taken to build
+     *            assertion from unknown child elements
+     * @return an Assertion built from the given element
+     * @throws IllegalArgumentException
+     *             if the given element is malformed
+     */
     public Assertion build(OMElement element, AssertionBuilderFactory factory)
             throws IllegalArgumentException;
-    
+
+    /**
+     * Returns an array of QNames of OMElements from which assertion can be
+     * built by this AssertionFactory.
+     * 
+     * @return an array of QNames of known OMElements
+     */
     public QName[] getKnownElements();
 }

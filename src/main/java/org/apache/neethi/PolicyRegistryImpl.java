@@ -29,6 +29,13 @@ public class PolicyRegistryImpl implements PolicyRegistry {
     public PolicyRegistryImpl() {
     }
     
+    /**
+     * Constructs a PolicyRegistryImpl with the specified PolicyRegistry
+     * as it's parent. If it can't lookup a Policy in it's own registry
+     * then it lookup in the parent and returns the results.  
+     * 
+     * @param parent the Parent of this PolicyRegistry
+     */
     public PolicyRegistryImpl(PolicyRegistry parent) {
         this.parent = parent;
     }

@@ -24,11 +24,12 @@ import org.apache.neethi.builders.AssertionBuilder;
 
 public class XMLPrimitiveAssertionBuilder implements AssertionBuilder {
 
-    public Assertion build(OMElement element, AssertionBuilderFactory factory) throws IllegalArgumentException {
+    public Assertion build(OMElement element, AssertionBuilderFactory factory)
+            throws IllegalArgumentException {
         return new XmlPrimtiveAssertion(element);
     }
-    
+
     public QName[] getKnownElements() {
-        return new QName[] {new QName("UnknownElement")};
+        return new QName[] { new QName("UnknownElement") };
     }
 }

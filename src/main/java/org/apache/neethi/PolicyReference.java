@@ -25,10 +25,18 @@ public class PolicyReference implements PolicyComponent {
 
     private String uri;
 
+    /**
+     * Sets the Policy URI
+     * @param uri the Policy URI
+     */
     public void setURI(String uri) {
         this.uri = uri;
     }
 
+    /**
+     * Gets the Policy URI that is refered by self.
+     * @return a String that is the Policy URI refered by self
+     */
     public String getURI() {
         return uri;
     }
@@ -37,14 +45,32 @@ public class PolicyReference implements PolicyComponent {
         throw new UnsupportedOperationException("TODO");
     }
 
+
+    /**
+     * Returns short value of Constants.TYPE_POLICY_REF 
+     */
     public short getType() {
-        return Constants.TYPE_POLICYREF;
+        return Constants.TYPE_POLICY_REF;
     }
 
+    /**
+     * Throws an UnsupportedOperationException since PolicyReference.normalize()
+     * can't resolve the Policy that it refers to unless a PolicyRegistry is
+     * provided.
+     */
     public PolicyComponent normalize() {
         throw new UnsupportedOperationException("PolicyReference.normalize() is meaningless");
     }
     
+    /**
+     * Returns normalized version of the Policy that is refered by self. The specified 
+     * PolicyRegistry is used to lookup for the Policy that is refered and <tt>dee</tt> 
+     * indicates the level of normalization fo the returning Policy.
+     * 
+     * @param reg the PolicyRegistry that is used to resolved the Policy refered by self
+     * @param deep the falg to indicate whether returning Policy should be fully normailized
+     * @return the normalized version fo the Policy refered by self
+     */
     public PolicyComponent normalize(PolicyRegistry reg, boolean deep) {
         String key = getURI();
         if (key.startsWith("#")) {

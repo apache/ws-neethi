@@ -54,7 +54,10 @@ public class PolicyEngine {
      * OMElement with the specified QName.
      * 
      * @param qname
+     *            the QName of the Assertion that the Builder can build
      * @param builder
+     *            the AssertionBuilder that can build assertions that of 'qname'
+     *            type
      */
     public static void registerBuilder(QName qname, AssertionBuilder builder) {
         AssertionBuilderFactory.registerBuilder(qname, builder);
@@ -64,7 +67,8 @@ public class PolicyEngine {
      * Creates a Policy object from an InputStream.
      * 
      * @param inputStream
-     * @return
+     *            the InputStream of the Policy
+     * @return a Policy object of the Policy that is fed as a InputStream
      */
     public static Policy getPolicy(InputStream inputStream) {
         try {
@@ -82,6 +86,13 @@ public class PolicyEngine {
         return null;
     }
 
+    /**
+     * Creates a PolicyReference object.
+     * 
+     * @param inputStream
+     *            the InputStream of the PolicyReference
+     * @return a PolicyReference object of the PolicyReference
+     */
     public static PolicyReference getPolicyReferene(InputStream inputStream) {
 
         try {
@@ -102,14 +113,22 @@ public class PolicyEngine {
 
     /**
      * Creates a Policy object from an OMElement.
-     *
+     * 
      * @param element
-     * @return
+     *            the Policy element
+     * @retun a Policy object of the Policy element
      */
     public static Policy getPolicy(OMElement element) {
         return getPolicyOperator(element);
     }
 
+    /**
+     * Creates a PolicyReference object from an OMElement.
+     * 
+     * @param element
+     *            the PolicyReference element
+     * @return a PolicyReference object of the PolicyReference element
+     */
     public static PolicyReference getPolicyReference(OMElement element) {
 
         if (!(Constants.URI_POLICY_NS.equals(element.getNamespace()
@@ -144,31 +163,33 @@ public class PolicyEngine {
 
         if (Constants.TYPE_POLICY == operator.getType()) {
             Policy policyOperator = (Policy) operator;
-            
+
             OMAttribute attribute;
             OMNamespace namespace;
             QName key;
-            
-            for (Iterator iterator = operationElement.getAllAttributes(); iterator.hasNext(); ) {
+
+            for (Iterator iterator = operationElement.getAllAttributes(); iterator
+                    .hasNext();) {
                 attribute = (OMAttribute) iterator.next();
                 namespace = attribute.getNamespace();
-                
+
                 if (namespace == null) {
                     key = new QName(attribute.getLocalName());
-                    
+
                 } else if (namespace.getPrefix() == null) {
-                    key = new QName(namespace.getNamespaceURI(), attribute.getLocalName());
-                    
+                    key = new QName(namespace.getNamespaceURI(), attribute
+                            .getLocalName());
+
                 } else {
-                    key = new QName(namespace.getNamespaceURI(), attribute.getLocalName(), namespace.getPrefix());
+                    key = new QName(namespace.getNamespaceURI(), attribute
+                            .getLocalName(), namespace.getPrefix());
                 }
-                
+
                 policyOperator.addAttribute(key, attribute.getAttributeValue());
             }
         }
-        
+
         OMElement childElement;
-        
 
         for (Iterator iterator = operationElement.getChildElements(); iterator
                 .hasNext();) {
@@ -197,7 +218,7 @@ public class PolicyEngine {
                 }
 
             } else {
-                    operator.addPolicyComponent(factory.build(childElement));
+                operator.addPolicyComponent(factory.build(childElement));
             }
         }
         return operator;

@@ -52,6 +52,9 @@ public class ExactlyOne extends AbstractPolicyOperator {
         writer.writeEndElement();
     }
 
+    /**
+     * Returns Constants.TYPE_EXACTLYONE;
+     */
     public final short getType() {
         return Constants.TYPE_EXACTLYONE;
     }

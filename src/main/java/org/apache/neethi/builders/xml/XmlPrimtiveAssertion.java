@@ -27,52 +27,69 @@ import org.apache.neethi.Constants;
 import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyComponent;
-import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.PolicyRegistry;
 
-import java.util.Iterator;
-
+/**
+ * XmlPrimitiveAssertion wraps an OMElement s.t. any unkown elements can be
+ * treated an assertions if there is no AssertionBuilder that can build an
+ * assertion from that OMElement.
+ * 
+ */
 public class XmlPrimtiveAssertion implements Assertion {
 
     OMElement element;
 
     boolean isOptional;
 
-    
-    // Assertions can contain policies inside it.
-    Policy policy;
-
+    /**
+     * Constructs a XmlPrimitiveAssertion from an OMElement.
+     * 
+     * @param element
+     *            the OMElement from which the XmlAssertion is constructed
+     */
     public XmlPrimtiveAssertion(OMElement element) {
         setValue(element);
         setOptionality(element);
     }
 
+    /**
+     * Returns the QName of the wrapped OMElement.
+     */
     public QName getName() {
         return (element != null) ? element.getQName() : null;
     }
 
+    /**
+     * Sets the wrapped OMElement.
+     * 
+     * @param element
+     *            the OMElement to be set as wrapped
+     */
     public void setValue(OMElement element) {
         this.element = element;
-        // get all the policy namespace children
-        // actually there can only be one nested policy
-        Iterator iter = element.getChildrenWithName(new QName(Constants.URI_POLICY_NS, Constants.ELEM_POLICY));
-        if (iter.hasNext()) {
-            OMElement policyOMElement = (OMElement) iter.next();
-            this.policy = PolicyEngine.getPolicy(policyOMElement);
-            // detach element from the om tree
-            policyOMElement.detach();
-        }
-
     }
 
+    /**
+     * Returns the wrapped OMElement.
+     * 
+     * @return the wrapped OMElement
+     */
     public OMElement getValue() {
         return element;
     }
 
+    /**
+     * Returns <tt>true</tt> if the wrapped element that assumed to be an
+     * assertion, is optional.
+     */
     public boolean isOptional() {
         return isOptional;
     }
 
+    /**
+     * Returns the partial normalized version of the wrapped OMElement, that is
+     * assumed to be an assertion.
+     */
     public PolicyComponent normalize() {
         if (isOptional) {
             Policy policy = new Policy();
@@ -81,7 +98,8 @@ public class XmlPrimtiveAssertion implements Assertion {
             All all = new All();
             OMElement omElement = element.cloneOMElement();
 
-            omElement.removeAttribute(omElement.getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR));
+            omElement.removeAttribute(omElement
+                    .getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR));
             all.addPolicyComponent(new XmlPrimtiveAssertion(omElement));
             exactlyOne.addPolicyComponent(all);
 
@@ -94,71 +112,33 @@ public class XmlPrimtiveAssertion implements Assertion {
         return this;
     }
 
+    /**
+     * Throws an UnsupportedOperationException since an assertion of an unknown
+     * element can't be fully normalized due to it's unkonwn composite.
+     */
     public PolicyComponent normalize(boolean isDeep) {
         throw new UnsupportedOperationException();
     }
 
-    public PolicyComponent normalize(PolicyRegistry registry) {
-
-        if (isOptional) {
-            Policy policy = new Policy();
-            ExactlyOne alternatives = new ExactlyOne();
-
-            All alternative1 = new All();
-            OMElement element1 = element.cloneOMElement();
-            element1.removeAttribute(element1.getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR));
-            alternative1.addPolicyComponent(new XmlPrimtiveAssertion(element1));
-            alternatives.addPolicyComponent(alternative1);
-
-            All alternative2 = new All();
-            alternatives.addPolicyComponent(alternative2);
-
-            policy.addPolicyComponent(alternatives);
-            return policy;
-        }
-        return this;
-    }
-
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
         if (element != null) {
-
-            if (policy != null) {
-                // write the start part of the element
-                String prefix = writer.getPrefix(element.getNamespace()
-                        .getNamespaceURI());
-                if (prefix == null) {
-                    writer.writeStartElement(element.getQName().getPrefix(),
-                            element.getQName().getLocalPart(), element
-                                    .getNamespace().getNamespaceURI());
-                    writer.writeNamespace(element.getQName().getPrefix(),
-                            element.getNamespace().getNamespaceURI());
-                    writer.setPrefix(element.getQName().getPrefix(), element
-                            .getNamespace().getNamespaceURI());
-
-                } else {
-                    writer.writeStartElement(element.getNamespace()
-                            .getNamespaceURI(), element.getQName()
-                            .getLocalPart());
-                }
-                // TODO : write attributes and inner elements
-                policy.serialize(writer);
-                writer.writeEndElement();
-            } else {
-                // we can not serialize as follows since OMElement seriali
-                element.serialize(writer);
-            }
+            element.serialize(writer);
 
         } else {
-            // TODO throw an exception??
+            throw new RuntimeException("Wrapped Element is not set");
         }
     }
 
+    /**
+     * Returns Constants.TYPE_ASSERTION
+     */
     public final short getType() {
         return Constants.TYPE_ASSERTION;
     }
 
     private void setOptionality(OMElement element) {
-        OMAttribute attribute = element.getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR);
+        OMAttribute attribute = element
+                .getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR);
         if (attribute != null) {
             this.isOptional = (new Boolean(attribute.getAttributeValue())
                     .booleanValue());
@@ -175,5 +155,4 @@ public class XmlPrimtiveAssertion implements Assertion {
 
         return getName().equals(((Assertion) policyComponent).getName());
     }
-
 }

@@ -107,7 +107,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                     exactlyOne.addPolicyComponent(all);
                     childComponentsList.add(exactlyOne);
                 }
-            } else if (policyComponent.getType() == Constants.TYPE_POLICYREF) {
+            } else if (policyComponent.getType() == Constants.TYPE_POLICY_REF) {
                 String uri = ((PolicyReference) policyComponent).getURI();
                 policyComponent = reg.lookup(uri);
                 

@@ -18,11 +18,13 @@ package org.apache.neethi;
 import java.util.List;
 
 /**
- * PolicyOperator is an interface that all Policy operators must implement.
+ * PolicyOperator is an interface that all Policy operators must implement. It
+ * can contain any number of Assertions or PolicyOperators and it has an
+ * implecit logic of how those PolicyComponents should be met.
  * 
  */
 public interface PolicyOperator extends PolicyComponent {
- 
+
     /**
      * Add a PolicyComponent to the PolicyOperator.
      * 
@@ -36,7 +38,7 @@ public interface PolicyOperator extends PolicyComponent {
      * @return the List of PolicyComponents that this PolicyOperator contains.
      */
     public List getPolicyComponents();
-    
+
     /**
      * Returns true if the PolicyOperator doesn't contain any PolicyComponents.
      * 

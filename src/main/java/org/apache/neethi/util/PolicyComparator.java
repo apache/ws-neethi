@@ -24,14 +24,38 @@ import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyComponent;
 
+/**
+ * A Utility class that provides methods the check the equality of
+ * PolicyComponents.
+ * 
+ */
 public class PolicyComparator {
 
+    /**
+     * Returns <tt>true</tt> if the two policies have the same semantics
+     * 
+     * @param arg1
+     *            a Policy
+     * @param arg2
+     *            an another Policy
+     * @return <tt>true</tt> if both policies have the same semantics
+     */
     public static boolean compare(Policy arg1, Policy arg2) {
         return compare(arg1.getPolicyComponents(), arg2.getPolicyComponents());
     }
-    
+
+    /**
+     * Returns <tt>true</tt> if the two PolicyComponents have the same
+     * semantics.
+     * 
+     * @param arg1
+     *            a PolicyComponent
+     * @param arg2
+     *            an another PolicyComponent
+     * @return <tt>true</tt> if both PolicyComponents have the same semantics
+     */
     public static boolean compare(PolicyComponent arg1, PolicyComponent arg2) {
-        if (! arg1.getClass().equals(arg2.getClass())) {
+        if (!arg1.getClass().equals(arg2.getClass())) {
             return false;
         }
 
@@ -39,11 +63,10 @@ public class PolicyComparator {
             return compare((Policy) arg1, (Policy) arg2);
 
         } else if (arg1 instanceof All) {
-            return compare((All) arg1,(All) arg2);
+            return compare((All) arg1, (All) arg2);
 
         } else if (arg1 instanceof ExactlyOne) {
-            return compare((ExactlyOne) arg1,
-                    (ExactlyOne) arg2);
+            return compare((ExactlyOne) arg1, (ExactlyOne) arg2);
 
         } else if (arg1 instanceof Assertion) {
             return compare((Assertion) arg1, (Assertion) arg2);
@@ -55,18 +78,15 @@ public class PolicyComparator {
         return false;
     }
 
-    public static boolean compare(All arg1,
-            All arg2) {
+    public static boolean compare(All arg1, All arg2) {
         return compare(arg1.getPolicyComponents(), arg2.getPolicyComponents());
     }
 
-    public static boolean compare(ExactlyOne arg1,
-            ExactlyOne arg2) {
+    public static boolean compare(ExactlyOne arg1, ExactlyOne arg2) {
         return compare(arg1.getPolicyComponents(), arg2.getPolicyComponents());
     }
 
-    public static boolean compare(Assertion arg1,
-            Assertion arg2) {
+    public static boolean compare(Assertion arg1, Assertion arg2) {
         if (!(arg1.getName().equals(arg2.getName()))) {
             return false;
         }
@@ -77,7 +97,7 @@ public class PolicyComparator {
         if (arg1.size() != arg2.size()) {
             return false;
         }
-        
+
         Iterator iterator = arg1.iterator();
         PolicyComponent assertion1;
 

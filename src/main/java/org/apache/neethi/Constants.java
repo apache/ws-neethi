@@ -52,7 +52,7 @@ public class Constants {
 
     public static final short TYPE_ALL = 0x3;
 
-    public static final short TYPE_POLICYREF = 0x4;
+    public static final short TYPE_POLICY_REF = 0x4;
 
     public static final short TYPE_ASSERTION = 0x5;
 

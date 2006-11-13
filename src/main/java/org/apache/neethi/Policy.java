@@ -32,14 +32,41 @@ public class Policy extends All {
 
     private HashMap attributes = new HashMap();
 
+    /**
+     * Returns a Normalized version of self. If <tt>deep</tt> is set
+     * <tt>false</tt> then the assertions are not normalized and it returns a
+     * partially normalized version of self.
+     * 
+     * @param deep
+     *            a flag to indicate whether to normalize the assertions
+     * @return a PolicyComponent that is normalized version of self
+     */
     public PolicyComponent normalize(boolean deep) {
         return normalize(null, deep);
     }
 
+    /**
+     * Returns a normalized version of self.If <tt>deep</tt> is set
+     * <tt>false</tt> then the assertions are not normalized and it returns a
+     * partially normalized version of self.
+     * 
+     * @param reg
+     *            a PolicyRegistry from which the PolicyReferences are resolved
+     * @param deep
+     *            a flag to indicate whether to normalize the assertions
+     * @return a normalzied version of self
+     */
     public PolicyComponent normalize(PolicyRegistry reg, boolean deep) {
         return normalize(this, reg, deep);
     }
 
+    /**
+     * Returns a Policy that is the merge of specified Policy and self.
+     * 
+     * @param policy
+     *            the Policy to be merged with self
+     * @return a Policy that is the merge of the specified Policy and self
+     */
     public Policy merge(Policy policy) {
         Policy result = new Policy();
         result.addPolicyComponents(getPolicyComponents());
@@ -47,64 +74,73 @@ public class Policy extends All {
         return result;
     }
 
+    /**
+     * Throws an UnSupportedOpertionException. TODO for a next version.
+     */
     public Policy intersect(Policy policy) {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Serializes the Policy to a XMLStreamWriter.
+     */
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
         String wspPrefix = writer.getPrefix(Constants.URI_POLICY_NS);
-       
+
         if (wspPrefix == null) {
             wspPrefix = Constants.ATTR_WSP;
             writer.setPrefix(wspPrefix, Constants.URI_POLICY_NS);
         }
-        
+
         String wsuPrefix = writer.getPrefix(Constants.URI_WSU_NS);
         if (wsuPrefix == null) {
             wsuPrefix = Constants.ATTR_WSU;
             writer.setPrefix(wsuPrefix, Constants.URI_WSU_NS);
         }
-        
-        writer.writeStartElement(wspPrefix, Constants.ELEM_POLICY, Constants.URI_POLICY_NS);
-        
+
+        writer.writeStartElement(wspPrefix, Constants.ELEM_POLICY,
+                Constants.URI_POLICY_NS);
+
         QName key;
         String prefix;
-         
+
         HashMap prefix2ns = new HashMap();
-        
-        for (Iterator iterator = getAttributes().keySet().iterator(); iterator.hasNext();) {
+
+        for (Iterator iterator = getAttributes().keySet().iterator(); iterator
+                .hasNext();) {
             key = (QName) iterator.next();
-            
+
             prefix = writer.getPrefix(key.getNamespaceURI());
-            if (prefix == null) { 
+            if (prefix == null) {
                 prefix = key.getPrefix();
-                
+
                 if (prefix != null) {
                     writer.setPrefix(prefix, key.getNamespaceURI());
                 }
             }
-            
+
             if (prefix != null) {
-                writer.writeAttribute(prefix, key.getNamespaceURI(), key.getLocalPart(), getAttribute(key));
+                writer.writeAttribute(prefix, key.getNamespaceURI(), key
+                        .getLocalPart(), getAttribute(key));
                 prefix2ns.put(prefix, key.getNamespaceURI());
-                
+
             } else {
-                writer.writeAttribute(key.getNamespaceURI(), key.getLocalPart(), getAttribute(key));
+                writer.writeAttribute(key.getNamespaceURI(),
+                        key.getLocalPart(), getAttribute(key));
             }
         }
-        
-        // writes xmlns:wsp=".." 
+
+        // writes xmlns:wsp=".."
         writer.writeNamespace(wspPrefix, Constants.URI_POLICY_NS);
-        
+
         String prefiX;
-        
-        for (Iterator iterator = prefix2ns.keySet().iterator(); iterator.hasNext();) {
+
+        for (Iterator iterator = prefix2ns.keySet().iterator(); iterator
+                .hasNext();) {
             prefiX = (String) iterator.next();
             writer.writeNamespace(prefiX, (String) prefix2ns.get(prefiX));
         }
-        
-        
-        
+
         PolicyComponent policyComponent;
 
         for (Iterator iterator = getPolicyComponents().iterator(); iterator
@@ -117,10 +153,22 @@ public class Policy extends All {
 
     }
 
+    /**
+     * Returns Constants.TYPE_POLICY
+     */
     public short getType() {
         return Constants.TYPE_POLICY;
     }
 
+    /**
+     * Returns an Iterator that will return a list of assertions correspond to a
+     * Policy alternative if any. The <tt>iterator.next()</tt> will return a
+     * list of assertions correspond to a Policy alternative if any and
+     * <tt>iterator.hasNext()</tt> will indicates whether there is another
+     * Policy alternative.
+     * 
+     * @return
+     */
     public Iterator getAlternatives() {
         return new PolicyIterator(this);
     }
@@ -149,30 +197,73 @@ public class Policy extends All {
         }
     }
 
+    /**
+     * Adds an attribute to self.
+     * 
+     * @param name
+     *            the name of the attribute
+     * @param value
+     *            the value of the attribute
+     */
     public void addAttribute(QName name, String value) {
         attributes.put(name, value);
     }
 
+    /**
+     * Returns the value of the attribute specified by the QName. Returns
+     * <tt>null</tt> if not present.
+     * 
+     * @param name
+     *            the QName of the attribute
+     * @return the value of the attribute specified by the QName
+     */
     public String getAttribute(QName name) {
         return (String) attributes.get(name);
     }
 
+    /**
+     * Returns a <tt>Map</tt> of all attributes of self.
+     * 
+     * @return a Map of all attributes of self
+     */
     public Map getAttributes() {
         return attributes;
     }
 
+    /**
+     * Sets the <tt>Name</tt> attribute of self.
+     * 
+     * @param name
+     *            the Name attribute of self
+     */
     public void setName(String name) {
         addAttribute(new QName("", Constants.ATTR_NAME), name);
     }
 
+    /**
+     * Returns the <tt>Name</tt> attribute of self.
+     * 
+     * @return the Name attribute of self
+     */
     public String getName() {
         return getAttribute(new QName("", Constants.ATTR_NAME));
     }
 
+    /**
+     * Sets the wsu:Id attribute of self.
+     * 
+     * @param id
+     *            the Id attribute of self
+     */
     public void setId(String id) {
         addAttribute(new QName(Constants.URI_WSU_NS, Constants.ATTR_ID), id);
     }
 
+    /**
+     * Returns the Id attribute of self.
+     * 
+     * @return the Id attribute of self
+     */
     public String getId() {
         return getAttribute(new QName(Constants.URI_WSU_NS, Constants.ATTR_ID));
     }
