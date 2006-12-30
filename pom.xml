@@ -204,6 +204,20 @@
 			</build>
 		</profile>
 	</profiles>
+    <repositories>
+        <repository>
+            <id>maven-central</id>
+            <name>central maven repository</name>
+            <url>http://repo1.maven.org/maven/</url>
+            <layout>legacy</layout>
+        </repository>
+        <repository>
+            <id>ws-zones</id>
+            <name>ws.zones maven repository</name>
+            <url>http://people.apache.org/repo/m1-snapshot-repository/</url>
+            <layout>legacy</layout>
+        </repository>
+    </repositories>
 	<pluginRepositories>
 		<pluginRepository>
 			<id>snapshot</id>
