@@ -339,7 +339,7 @@ public class PrimitiveAssertion extends AbstractAssertion implements Assertion {
 		return attributes;
 	}
 
-	public void addAttribute(QName qname, Object value) {
+	public void addAttribute(QName qname, String value) {
 		attributes.put(qname, value);
 	}
 
