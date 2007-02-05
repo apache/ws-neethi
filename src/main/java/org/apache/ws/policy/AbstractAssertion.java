@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.ws.policy.util.PolicyComparator;
+
 /**
  * AbstractAssertion provides the default implementation of some basic functions
  * definded in Assertion interface.
@@ -203,6 +205,10 @@ public abstract class AbstractAssertion implements Assertion {
         return lineNo;
     }
     
+    public boolean equals(Policy policy) {
+        return PolicyComparator.compare(this, policy);
+    }
+    
     /**
      * @param allTerms
      *            XorCompositeAssertion to be corssproducted
@@ -239,4 +245,6 @@ public abstract class AbstractAssertion implements Assertion {
 
         return result;
     }
+    
+    
 }
