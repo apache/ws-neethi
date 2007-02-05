@@ -25,6 +25,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.ws.policy.util.PolicyComparator;
 import org.apache.ws.policy.util.PolicyRegistry;
 
 /**
@@ -457,7 +458,7 @@ public class Policy extends AbstractAssertion implements CompositeAssertion {
       
       return result;
     }
-    
+     
     private class PolicyIterator implements java.util.Iterator {
 
         private ExactlyOne exactlyOne = null;

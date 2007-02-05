@@ -1227,7 +1227,7 @@ public class Test_Policy extends PolicyTestCase {
 
       in = getResource("base/Policy_Equality2.xml");
       Policy pol2 = pReader.readPolicy(in);
-
+      
       assertTrue("Comparator: Policy1 should be EQUAL to Policy2",
           PolicyComparator.compare(pol1, pol2) == true);
       assertTrue("Comparator: Policy2 should be EQUAL to Policy1",

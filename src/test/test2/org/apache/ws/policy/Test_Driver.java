@@ -32,6 +32,7 @@ public class Test_Driver extends TestCase {
     suite.addTestSuite(Test_JIRA14.class);
     suite.addTestSuite(Test_Policy.class);
     suite.addTestSuite(Test_EffectivePolicy.class);
+    suite.addTestSuite(Test_Policy2.class);
 
     suite.run();
   }

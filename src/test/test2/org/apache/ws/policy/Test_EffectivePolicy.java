@@ -8,11 +8,9 @@ import java.util.Vector;
 import javax.xml.namespace.QName;
 
 import org.apache.ws.policy.attachment.WSDLPolicyProcessor;
-import org.apache.ws.policy.util.ExtraUtil;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyReader;
 import org.apache.ws.policy.util.PolicyRegistry;
-import org.apache.ws.policy.util.PolicyUtil;
 
 public class Test_EffectivePolicy extends PolicyTestCase {
 
