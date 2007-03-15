@@ -256,7 +256,7 @@
 		<dependency>
 			<groupId>wsdl4j</groupId>
 			<artifactId>wsdl4j</artifactId>
-			<version>1.5.2</version>
+			<version>1.6.1</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -267,7 +267,7 @@
 		<dependency>
 			<groupId>woodstox</groupId>
 			<artifactId>wstx-asl</artifactId>
-			<version>2.9.3</version>
+			<version>3.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
