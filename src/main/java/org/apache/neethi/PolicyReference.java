@@ -42,7 +42,16 @@ public class PolicyReference implements PolicyComponent {
     }
 
     public boolean equal(PolicyComponent policyComponent) {
-        throw new UnsupportedOperationException("TODO");
+        if (Constants.TYPE_POLICY_REF != policyComponent.getType()) {
+            return false;
+        }
+        
+        String URI = ((PolicyReference) policyComponent).getURI();
+        if (URI != null && URI.length() != 0) {
+            return URI.equals(this.uri);
+        } 
+        
+        return false;
     }
 
 

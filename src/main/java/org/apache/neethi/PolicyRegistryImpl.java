@@ -57,4 +57,12 @@ public class PolicyRegistryImpl implements PolicyRegistry {
     public void remove(String key) {
         reg.remove(key);
     }
+    
+    public void setParent(PolicyRegistry parent) {
+        this.parent = parent;
+    }
+    
+    public PolicyRegistry getParent() {
+        return parent;
+    }
 }

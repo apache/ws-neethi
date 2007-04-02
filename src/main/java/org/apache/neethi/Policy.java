@@ -102,32 +102,48 @@ public class Policy extends All {
                 Constants.URI_POLICY_NS);
 
         QName key;
-        String prefix;
+        
+        String prefix = null;
+        String namespaceURI = null;
+        String localName = null;
 
         HashMap prefix2ns = new HashMap();
 
         for (Iterator iterator = getAttributes().keySet().iterator(); iterator
                 .hasNext();) {
+            
             key = (QName) iterator.next();
-
-            prefix = writer.getPrefix(key.getNamespaceURI());
-            if (prefix == null) {
-                prefix = key.getPrefix();
-
-                if (prefix != null) {
-                    writer.setPrefix(prefix, key.getNamespaceURI());
+            localName = key.getLocalPart();
+            
+            namespaceURI = key.getNamespaceURI();
+            namespaceURI = (namespaceURI == null || namespaceURI.length() == 0) ? null : namespaceURI;
+                        
+            if (namespaceURI != null) {
+                
+                String writerPrefix = writer.getPrefix(namespaceURI);
+                writerPrefix = (writerPrefix == null || writerPrefix.length() == 0) ? null : writerPrefix;
+                
+                if (writerPrefix == null) {
+                    prefix = key.getPrefix();
+                    prefix = (prefix == null || prefix.length() == 0) ? null : prefix;
+                    
+                } else {
+                    prefix = writerPrefix;
                 }
-            }
+                
+                if (prefix != null) {
+                    writer.writeAttribute(prefix, namespaceURI, localName, getAttribute(key));
+                    prefix2ns.put(prefix, key.getNamespaceURI());
 
-            if (prefix != null) {
-                writer.writeAttribute(prefix, key.getNamespaceURI(), key
-                        .getLocalPart(), getAttribute(key));
-                prefix2ns.put(prefix, key.getNamespaceURI());
-
+                } else {
+                    writer.writeAttribute(namespaceURI, localName, getAttribute(key));
+                }
+                    
             } else {
-                writer.writeAttribute(key.getNamespaceURI(),
-                        key.getLocalPart(), getAttribute(key));
+                writer.writeAttribute(localName, getAttribute(key));
             }
+
+            
         }
 
         // writes xmlns:wsp=".."
