@@ -184,19 +184,7 @@
 		    		<include>NOTICE.txt</include>
 		    	</includes>
 		    </resource>
-			<resource>
-				<directory>conf</directory>
-				<includes>
-					<include>**/*.properties</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>src</directory>
-				<includes>
-					<include>**/*.properties</include>
-					<include>**/*.xml</include>
-				</includes>
-			</resource>
 		</resources>
+	
 	</build>
 </project>
