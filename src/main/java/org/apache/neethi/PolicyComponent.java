@@ -38,7 +38,7 @@ public interface PolicyComponent {
      *
      * @return Constants.POLICY for Policy type PolicyComponent
      *         Constants.EXACTLYONE for ExactlyOne type PolicyComponent
-     *         Constants.All for All type PolicyComponent
+     *         Constants.ALL for All type PolicyComponent
      *         Constants.ASSERTION for Assertion type PolicyComponent
      */
     public short getType();
