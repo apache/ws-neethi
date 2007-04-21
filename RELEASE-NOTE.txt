@@ -1,5 +1,7 @@
 
-Apache Commons Neethi-2.0 Release Note:
+Apache Commons Neethi-2.0.1 Release Note:
+
+Contains the fix for WSCOMMONS-178.
 
 Feature List:
 
@@ -16,11 +18,4 @@ Provides a mechanism where domain specific types can be used assertion within
 the generic framework
 
 Provides more control to the assertion authors to control behavior of the 
-assertions they implement
-
-
-
-
-
-
-
+assertions they implement.

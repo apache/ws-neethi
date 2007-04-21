@@ -41,6 +41,42 @@ public class PolicyComparator {
      * @return <tt>true</tt> if both policies have the same semantics
      */
     public static boolean compare(Policy arg1, Policy arg2) {
+        
+        // check Name attributes of each policies
+        if (arg1.getName() != null) {
+            
+            if (arg2.getName() != null) {
+                arg1.getName().equals(arg2.getName());
+                
+            } else {
+                return false;
+            }
+            
+        } else {
+            
+            if (arg2.getName() != null) {
+                return false;                
+            }
+        }
+        
+        
+        // check Id attributes of each policies
+        if (arg1.getId() != null) {
+            
+            if (arg2.getId() != null) {
+                arg1.getId().equals(arg2.getId());
+                
+            } else {
+                return false;
+            }
+            
+        } else {
+            
+            if (arg2.getId() != null) {
+                return false;
+            }
+        }
+        
         return compare(arg1.getPolicyComponents(), arg2.getPolicyComponents());
     }
 
