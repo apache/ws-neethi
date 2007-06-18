@@ -115,6 +115,10 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                     throw new RuntimeException(uri + " can't be resolved");
                 }
                 
+                All all = new All();
+                all.addPolicyComponents(((Policy) policyComponent).getPolicyComponents());
+                childComponentsList.add(AbstractPolicyOperator.normalizeOperator(all, reg, deep));
+         
             } else if (policyComponent.getType() == Constants.TYPE_POLICY) {
                 All all = new All();
                 all.addPolicyComponents(((Policy) policyComponent).getPolicyComponents());
