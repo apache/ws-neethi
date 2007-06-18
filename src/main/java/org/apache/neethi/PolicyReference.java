@@ -15,8 +15,21 @@
  */
 package org.apache.neethi;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 
 /**
  * PolicyReference is a wrapper that holds explict PolicyReferences.
@@ -82,14 +95,24 @@ public class PolicyReference implements PolicyComponent {
      */
     public PolicyComponent normalize(PolicyRegistry reg, boolean deep) {
         String key = getURI();
-        if (key.startsWith("#")) {
+        int pos = key.indexOf("#");
+        if (pos == 0) {
             key = key.substring(1);
+        }else if(pos > 0){
+        	key = key.substring(0, pos);
         }
         
-        Policy policy = reg.lookup(key);
+        Policy policy = reg.lookup(key);        
         
         if (policy == null) {
-            throw new RuntimeException(key + " can't be resolved" );
+        	policy = getRemoteReferencedPolicy(key);
+        	
+        	if(policy == null){
+        		throw new RuntimeException(key + " can't be resolved" );
+        	}
+        	
+        	reg.register(key, policy);
+            
         }
         
         return policy.normalize(reg, deep);
@@ -109,5 +132,48 @@ public class PolicyReference implements PolicyComponent {
         writer.writeAttribute(Constants.ATTR_URI, getURI());
         
         writer.writeEndElement();
+    }
+    
+    public OMElement getRemoteReferedElement(String uri){
+    	OMElement documentElement = null;
+    	
+    	try{    		    		
+    		
+	    	//create java.net URL pointing to remote resource			
+			URL url = new URL(uri);
+			URLConnection connection = url.openConnection();
+			connection.setDoInput(true);
+			
+			//create stax parser with the url content
+			XMLStreamReader parser = XMLInputFactory.newInstance().
+			                                         createXMLStreamReader(connection.getInputStream()); 
+			
+	        //get the root element (in this case the envelope)
+			StAXOMBuilder builder = new StAXOMBuilder(parser); 
+			documentElement = builder.getDocumentElement();	
+			
+        }catch(XMLStreamException se){        	        	
+        	throw new RuntimeException("Bad policy content: " + uri);
+        }catch(MalformedURLException mue){        	
+        	throw new RuntimeException("Malformed uri: " + uri);
+        }catch(IOException ioe){        
+        	throw new RuntimeException("Cannot reach remote resource: " + uri);
+        }       
+		
+		return documentElement;
+    }
+    
+    
+    
+    public Policy getRemoteReferencedPolicy(String uri) {
+    	Policy policy = null;
+    	
+    	//extract the remote resource contents
+    	OMElement policyElement = getRemoteReferedElement(uri);
+    	
+    	//call the policy engine with already extracted content
+    	policy = PolicyEngine.getPolicy(policyElement);
+    	
+		return policy;
     }
 }
