@@ -1,7 +1,10 @@
 
-Apache Commons Neethi-2.0.1 Release Note:
+Apache Commons Neethi-2.0.2 Release Note:
 
-Contains the fix for WSCOMMONS-178.
+Contains a fix that guarantee proper normalization of
+<PolicyReference> elements. 
+
+see: committed revision 548263
 
 Feature List:
 
