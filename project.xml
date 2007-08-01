@@ -100,7 +100,7 @@
 	
 	<dependencies>
 		<dependency>
-            		<groupId>org.apache.axiom</groupId>
+            		<groupId>org.apache.ws.commons.axiom</groupId>
             		<artifactId>axiom-api</artifactId>
             		<version>${axiom.version}</version>
         	</dependency>

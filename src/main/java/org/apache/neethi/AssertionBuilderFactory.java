@@ -31,7 +31,7 @@ import sun.misc.Service;
 
 /**
  * AssertionFactory is used to create an Assertion from an OMElement. It uses an
- * appropriate AssertionBuilder instace to create an Assertion based on the
+ * appropriate AssertionBuilder instance to create an Assertion based on the
  * QName of the given OMElement. Domain Policy authors could right custom
  * AssertionBuilders to build Assertions for domain specific assertions.
  * 

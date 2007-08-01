@@ -24,7 +24,7 @@
 	<artifactId>neethi</artifactId>
 	<name>Neethi</name>
 	<version>2.0.2</version>
-	<description>Neethi API</description>
+	<description>Apache Neethi Project</description>
 	<url>http://ws.apache.org/commons/neethi/</url>
 	<issueManagement>
 		<url>http://issues.apache.org/jira/browse/WSCOMMONS</url>
@@ -76,7 +76,6 @@
 			<email>sanka@apache.org</email>
 		</developer>
 		<developer>
-            <!-- Documentation -->
 			<name>Chatra Nakkawita</name>
 			<id>chatra</id>
 			<organization>WSO2 Inc.</organization>
@@ -149,6 +148,7 @@
 					</includes>
 				</configuration>
 			</plugin>
+			<!--
 			<plugin>
 				<artifactId>maven-one-plugin</artifactId>
 				<executions>
@@ -164,6 +164,7 @@
 					<remoteRepositoryUrl>scpexe://people.apache.org/www/people.apache.org/repo/m1-snapshot-repository/</remoteRepositoryUrl>
 				</configuration>
 			</plugin>
+			-->
 			<plugin>
 				<artifactId>maven-release-plugin</artifactId>
 				<configuration>
@@ -223,19 +224,12 @@
 			</build>
 		</profile>
 	</profiles>
-    <repositories>
-        <repository>
-            <id>maven-central</id>
-            <name>central maven repository</name>
-            <url>http://repo1.maven.org/maven/</url>
-            <layout>legacy</layout>
-        </repository>
-        <repository>
-            <id>ws-zones</id>
-            <name>ws.zones maven repository</name>
-            <url>http://people.apache.org/repo/m1-snapshot-repository/</url>
-            <layout>legacy</layout>
-        </repository>
+	<repositories>
+		<repository>
+			<id>maven2</id>
+			<name>Maven Central Development Repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+		</repository>
     </repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -265,12 +259,12 @@
 		<dependency>
 			<groupId>org.apache.ws.commons.axiom</groupId>
 			<artifactId>axiom-api</artifactId>
-			<version>1.2.3</version>
+			<version>${axiom.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ws.commons.axiom</groupId>
 			<artifactId>axiom-impl</artifactId>
-			<version>1.2.3</version>
+			<version>${axiom.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>wsdl4j</groupId>
@@ -307,8 +301,8 @@
 	<reporting>
 		<plugins>
 			<plugin>
-				 <groupId>org.apache.maven.plugins</groupId>
-				 <artifactId>maven-javadoc-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
@@ -326,19 +320,22 @@
 		</plugins>
 	</reporting>
 	<distributionManagement>
-        <repository>
-            <id>apache-repo</id>
-            <name>Maven Central Repository</name>
-            <url>scpexe://people.apache.org//www/people.apache.org/repo/m2-ibiblio-rsync-repository</url>
-        </repository>
-        <snapshotRepository>
-            <id>apache-snapshots</id>
-            <name>Apache Development Repository</name>
-            <url>scpexe://people.apache.org//www/people.apache.org/repo/m2-snapshot-repository</url>
-        </snapshotRepository>
+		<repository>
+			<id>apache-repo</id>
+			<name>Maven Central Repository</name>
+			<url>scpexe://people.apache.org//www/people.apache.org/repo/m2-ibiblio-rsync-repository</url>
+		</repository>
+		<snapshotRepository>
+			<id>apache-snapshots</id>
+			<name>Apache Development Repository</name>
+			<url>scpexe://people.apache.org//www/people.apache.org/repo/m2-snapshot-repository</url>
+		</snapshotRepository>
 		<site>
 			<id>website</id>
 			<url>scpexe://people.apache.org/www/ws.apache.org/commons/neethi</url>
 		</site>
 	</distributionManagement>
+	<properties>
+		<axiom.version>1.2.5</axiom.version>
+	</properties>
 </project>
