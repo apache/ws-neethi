@@ -101,6 +101,33 @@
 	</organization>
 	<build>
 		<plugins>
+            <plugin>
+              <artifactId>maven-jar-plugin</artifactId>
+              <configuration>
+                <archive>
+                  <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                </archive>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.felix</groupId>
+              <artifactId>maven-bundle-plugin</artifactId>
+              <version>${bundle.plugin.version}</version>
+              <configuration>
+                  <instructions>
+                      <Bundle-Version>${neethi.osgi.version}</Bundle-Version>
+                  </instructions>
+              </configuration>
+              <executions>
+                <execution>
+                  <id>bundle-manifest</id>
+                  <phase>process-classes</phase>
+                  <goals>
+                    <goal>manifest</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -147,21 +174,6 @@
 					<includes>
 						<include>**/*Test*.java</include>
 					</includes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-one-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>install-maven-one-repository</goal>
-							<goal>deploy-maven-one-repository</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<remoteRepositoryId>apache</remoteRepositoryId>
-					<remoteRepositoryUrl>scpexe://people.apache.org/www/people.apache.org/repo/m1-snapshot-repository/</remoteRepositoryUrl>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -350,5 +362,7 @@
 	</distributionManagement>
 	<properties>
 		<axiom.version>SNAPSHOT</axiom.version>
+        <neethi.osgi.version>2.0.3</neethi.osgi.version>
+        <bundle.plugin.version>1.4.0</bundle.plugin.version>
 	</properties>
 </project>
