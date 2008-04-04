@@ -6,7 +6,7 @@ Import-Package:
  org.apache.axiom.om,
  org.apache.axiom.om.impl.builder,
  org.apache.axiom.om.impl.llom.factory,
- sun.misc
+ sun.misc;resolution:=optional
 Export-Package: 
  org.apache.neethi,
  org.apache.neethi.builders,
