@@ -20,10 +20,20 @@
 <assembly>
   <id>bin</id>
   <formats>
-    <format>tar.gz</format>
+    <format>zip</format>
   </formats>
-  <includeSiteDirectory>true</includeSiteDirectory>
+  <includeSiteDirectory>false</includeSiteDirectory>
   <fileSets>
+		<fileSet>
+			<directory>target/site</directory>
+			<outputDirectory>docs</outputDirectory>
+			<includes>
+				<include>**/*</include>
+			</includes>
+			<excludes>
+				<exclude>testapidocs/**/*</exclude>
+			</excludes>
+		</fileSet>
     <fileSet>
       <includes>
 		<include>*.txt</include>

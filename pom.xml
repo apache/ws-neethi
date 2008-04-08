@@ -24,7 +24,7 @@
 	<artifactId>neethi</artifactId>
 	<name>Neethi</name>
 	<version>SNAPSHOT</version>
-	<description>Neethi API</description>
+	<description>Apache Neethi provides general framework for the programmers to use WS Policy. It is compliant with latest WS Policy specification which was published in March 2006. This framework is specifically written to enable the Apache Web services stack to use WS Policy as a way of expressing it's requirements and capabilities.</description>
 	<url>http://ws.apache.org/commons/neethi/</url>
 	<issueManagement>
 		<url>http://issues.apache.org/jira/browse/WSCOMMONS</url>
@@ -60,7 +60,7 @@
 		<developer>
 			<name>Davanum Srinivas</name>
 			<id>dims</id>
-			<organization>WSO2 Inc.</organization>
+			<organization>IBM</organization>
 			<email>dims@yahoo.com</email>
 		</developer>
 		<developer>
@@ -182,7 +182,7 @@
 						<executions>
 							<execution>
 								<goals>
-									<goal>jar</goal>
+									<goal>javadoc</goal>
 								</goals>
 							</execution>
 						</executions>
@@ -290,16 +290,6 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jdepend-maven-plugin</artifactId>
-				<version>2.0-beta-1</version>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jxr-maven-plugin</artifactId>
-				<version>2.0-beta-2-SNAPSHOT</version>
 			</plugin>
 		</plugins>
 	</reporting>
