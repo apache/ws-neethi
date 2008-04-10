@@ -1,0 +1,28 @@
+           -----------------------------------
+           Apache Axiom - The XML Object Model
+           -----------------------------------
+
+Welcome to Apache Axiom
+
+  Apache Neethi provides general framework for the programmers to use WS Policy. 
+  It is compliant with latest WS Policy specification which was published in 
+  March 2006. This framework is specifically written to enable the Apache Web 
+  services stack to use WS Policy as a way of expressing it's requirements and 
+  capabilities.
+
+Latest Release
+
+  <<9th April 2008 - Apache Neethi Version 2.0.3 Released!>>
+
+  \[{{{http://ws.apache.org/commons/neethi/download.cgi}Download Neethi 2.0.3}}\]
+
+
+Key Features
+
+    * Provides a convenient API for Policy processing 
+
+    * Provides a mechanism to extend domain specific types as assertions 
+
+    * Provides a mechanism to provide custom serialization / de-serialization of assertions 
+
+    * More provision for the domain authors to determine the behavior of the assertions 
