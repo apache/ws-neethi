@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements. See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership. The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<document>
+    <properties>
+        <title>:: Apache Neethi Releases ::</title>
+    </properties>
+
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <meta content="text/html; charset=iso-8859-1"/>
+    </head>
+
+    <body>
+
+    <script src="http://www.google-analytics.com/urchin.js"  type="text/javascript" />
+    <script type="text/javascript">
+		_uacct = "UA-1954378-9";
+		urchinTracker();
+    </script>
+    
+    <section>
+            <h2>Releases</h2>
+            <div align="left">
+                <p>Please select the Apache Neethi version you want to download. Latest release is 2.0.3. You can download both the binary distribution and the source distribution.  All the releases are available for download as source or binary. For more information,
+                    please see
+                    <a href="http://www.apache.org/dev/release.html">Apache Release FAQ</a>
+                </p>
+                <p>Please select the AXIOM version you want to download.</p>
+            </div>
+            <div align="center">
+
+				<table class="bodyTable">
+					<tbody>
+						<tr class="a">
+							<td>Name</td>
+							<td>Type</td>
+							<td>Distribution</td>
+							<td>Date</td>
+							<td>Description</td>
+						</tr>
+						<tr class="b">
+							<td>
+								<a name="2_0_3"></a>2.0.3</td>
+							<td>Release</td>
+							<td>Source Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/2_0_2/neethi-2.0.2-src.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.3-src.zip');">zip</a>
+								
+								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-src.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-src.zip.asc">PGP</a>
+								<br></br>
+								Binary Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/2_0_3/neethi-2.0.3-bin.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.3-bin.zip');">zip</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-bin.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-bin.zip.asc">PGP</a>
+								
+								<br></br>
+							</td>
+							<td>04 - 09  - 2008</td>
+							<td>2.0.3 Release (Mirrored)</td>
+						</tr>
+						<tr class="b">
+							<td>
+								<a name="2_0_2"></a>2.0.2</td>
+							<td>Release</td>
+							<td>Source Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/2_0_2/neethi-2.0.2-src.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.2-src.zip');">zip</a>
+								
+								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-src.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-src.zip.asc">PGP</a>
+								<br></br>
+								Binary Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/2_0_2/neethi-2.0.2-bin.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.2-bin.zip');">zip</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-bin.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-bin.zip.asc">PGP</a>
+								
+								<br></br>
+							</td>
+							<td>30 - 07  - 2007</td>
+							<td>2.0.2 Release (Mirrored)</td>
+						</tr>
+						<tr class="b">
+							<td>
+								<a name="2_0_1"></a>2.0.1</td>
+							<td>Release</td>
+							<td>Source Distribution <a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_1/neethi-2.0.1-src.zip">zip</a>
+								
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_1/neethi-2.0.1-src.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_1/neethi-2.0.1-src.zip.asc">PGP</a>
+								<br></br>
+								Binary Distribution <a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_1/neethi-2.0.1-bin.zip">zip</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_1/neethi-2.0.1-bin.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_1/neethi-2.0.1-bin.zip.asc">PGP</a>
+								
+								<br></br>
+							</td>
+							<td>24 - 04  - 2007</td>
+							<td>2.0.1 Release (Archived)</td>
+						</tr>
+						<tr class="b">
+							<td>
+								<a name="09"></a>2.0</td>
+							<td>Release</td>
+							<td>Source Distribution <a href="http://archive.apache.org/dist/ws/commons/neethi/2_0/neethi-2.0-src.zip">zip</a>
+								
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0/neethi-2.0-src.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0/neethi-2.0-src.zip.asc">PGP</a>
+								<br></br>
+								Binary Distribution <a href="http://archive.apache.org/dist/ws/commons/neethi/2_0/neethi-2.0-bin.zip">zip</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0/neethi-2.0-bin.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0/neethi-2.0-bin.zip.asc">PGP</a>
+								
+								<br></br>
+							</td>
+							<td>13 - 11  - 2006</td>
+							<td>2.0 Release (Archived)</td>
+						</tr>
+						<tr class="a">
+							<td>
+								<a name="09"></a>1.0.1</td>
+							<td>Release</td>
+							<td>Source Distribution <a href="http://archive.apache.org/dist/ws/commons/neethi/1_0_1/neethi-1.0.1-src.zip">zip</a>
+								
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/1_0_1/neethi-1.0.1-src.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/1_0_1/neethi-1.0.1-src.zip.asc">PGP</a>
+								<br></br>
+								Binary Distribution <a href="http://archive.apache.org/dist/ws/commons/neethi/1_0_1/neethi-1.0.1-bin.zip">zip</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/1_0_1/neethi-1.0.1-bin.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/1_0_1/neethi-1.0.1-bin.zip.asc">PGP</a>
+								
+								<br></br>
+							</td>
+							<td>03 - 05  - 2006</td>
+							<td>1.0.1 Release (Archived)</td>
+						</tr>
+						<tr class="b">
+							<td>
+								<a name="09"></a>1.0</td>
+							<td>Release</td>
+							<td>Source Distribution <a href="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-src.zip">zip</a>
+									
+								<a href="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-src.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-src.zip.asc">PGP</a>
+								<br></br>
+								Binary Distribution <a href="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-bin.zip">zip</a>
+								<a href="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-bin.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/policy/1_0/policy-1.0-bin.zip.asc">PGP</a>
+								
+								
+								<br></br>
+							</td>
+							<td>23 - 03  - 2006</td>
+							<td>1.0 Release (Archived)</td>
+						</tr>
+						<tr class="a">
+							<td>
+								<a name="09"></a>0.90</td>
+							<td>Release</td>
+							<td>Source Distribution <a href="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-src.zip">zip</a>
+								
+								<a href="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-src.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-src.zip.asc">PGP</a>
+								<br></br>
+								Binary Distribution <a href="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-bin.zip">zip</a>
+								<a href="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-bin.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/policy/0_90/policy-0.90-bin.zip.asc">PGP</a>
+								
+								<br></br>
+							</td>
+							<td>05 - 03  - 2006</td>
+							<td>0.90 Release (Archived)</td>
+						</tr>
+					</tbody>
+				</table>
+            </div>
+            <div align="left">
+                <p>[if-any logo]
+                    <a href="[link]">
+                        <img align="right" src="[logo]"
+                             border="0"/>
+                    </a>
+                    [end] The currently selected mirror is
+                    <b>[preferred]</b>
+                    . If
+                    you encounter a problem with this mirror, please select another mirror. If
+                    all mirrors are failing, there are
+                    <i>backup</i>
+                    mirrors (at the end of the
+                    mirrors list) that should be available.
+                </p>
+
+                <form action="[location]" method="get" id="SelectMirror">
+                    Other mirrors:
+                    <select name="Preferred">[if-any http][for http]
+                        <option value="[http]"
+                                selected="selected">[http]</option>
+                        [end][end][if-any ftp][for ftp]
+                        <option value="[ftp]">[ftp]</option>
+                        [end][end][if-any backup][for backup]
+                        <option value="[backup]">[backup] (backup)</option>
+                        [end][end]
+                    </select>
+
+                    <input type="submit" value="Change"/>
+                </form>
+
+                <p>You may also consult the
+                    <a href="http://www.apache.org/mirrors/">complete
+                        list of mirrors</a>
+                    .
+                </p>
+
+                <p>
+                    <strong>Note:</strong>
+                    when downloading from a mirror please check the
+                    <a
+                            href="http://www.apache.org/dev/release-signing#md5">md5sum</a>
+                    and verify
+                    the
+                    <a href="http://www.apache.org/dev/release-signing#openpgp">OpenPGP</a>
+                    compatible signature from the main Apache site. These can be downloaded by
+                    following the links above. This
+                    <a
+                            href="http://www.apache.org/dist/ws/commons/axiom/KEYS">KEYS</a>
+                    file contains the
+                    public keys used for signing release. It is recommended that (when possible)
+                    a
+                    <a href="http://www.apache.org/dev/release-signing#web-of-trust">web of
+                        trust</a>
+                    is used to confirm the identity of these keys.
+                </p>
+            </div>
+
+        </section>
+    </body>
+</document>

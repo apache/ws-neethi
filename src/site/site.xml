@@ -33,6 +33,7 @@
 
     <menu name="Apache Neethi">
       <item name="Downloads">
+        <item name="Releases" href="download.cgi"/>
         <item name="Source Code" href="/source-repository.html"/>
       </item>
       <item name="Documentation">
