@@ -27,8 +27,7 @@ import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMElement;
 import org.apache.neethi.builders.AssertionBuilder;
 import org.apache.neethi.builders.xml.XMLPrimitiveAssertionBuilder;
-
-import sun.misc.Service;
+import org.apache.neethi.util.Service;
 
 /**
  * AssertionFactory is used to create an Assertion from an OMElement. It uses an
