@@ -132,7 +132,7 @@ public class PolicyReference implements PolicyComponent {
         }
         
         writer.writeStartElement(wspPrefix, Constants.ELEM_POLICY_REF, Constants.URI_POLICY_NS);
-        
+        writer.writeNamespace(Constants.ATTR_WSP, Constants.URI_POLICY_NS);
         writer.writeAttribute(Constants.ATTR_URI, getURI());
         
         writer.writeEndElement();
