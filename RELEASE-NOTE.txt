@@ -1,7 +1,10 @@
 
-Apache Commons Neethi-2.0.2 Release Note:
+Apache Commons Neethi-2.0.4 Release Note:
 
-Contains the fix for WSCOMMONS-288.
+Contains the fix for :
+* WSCOMMONS-322 - Get rid of sun.misc.Service
+* WSCOMMONS-316 - PolicyReference.serialize(..) does not declare policy namespace
+
 
 Feature List:
 

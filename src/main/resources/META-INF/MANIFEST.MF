@@ -12,7 +12,7 @@ Export-Package:
  org.apache.neethi.builders,
  org.apache.neethi.builders.xml,
  org.apache.neethi.util
-Bundle-Version: 2.0.3
+Bundle-Version: 2.0.4
 Bundle-Name: Neethi
 Bundle-DocURL: http://www.apache.org/
 Bundle-ManifestVersion: 2
