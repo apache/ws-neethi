@@ -96,7 +96,7 @@
 		<url>http://svn.apache.org/viewcvs.cgi/webservices/commons/trunk/modules/neethi</url>
 	</scm>
 	<organization>
-		<name>Apache Software Foundation</name>
+		<name>The Apache Software Foundation</name>
 		<url>http://www.apache.org/</url>
 	</organization>
 	<build>
