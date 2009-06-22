@@ -30,22 +30,22 @@ import org.apache.neethi.util.PolicyComparator;
  * PolicyOperator interface that other PolicyOperators can use.
  */
 public abstract class AbstractPolicyOperator implements PolicyOperator {
-    protected ArrayList policyComponents = new ArrayList();
+    protected List<PolicyComponent> policyComponents = new ArrayList<PolicyComponent>();
 
     public void addPolicyComponent(PolicyComponent component) {
         policyComponents.add(component);
     }
 
-    public void addPolicyComponents(List components) {
+    public void addPolicyComponents(List<PolicyComponent> components) {
         policyComponents.addAll(components);
     }
 
-    public List getPolicyComponents() {
+    public List<PolicyComponent> getPolicyComponents() {
         return policyComponents;
     }
 
     public PolicyComponent getFirstPolicyComponent() {
-        return (PolicyComponent) policyComponents.get(0);
+        return policyComponents.get(0);
     }
 
     public boolean isEmpty() {
@@ -88,12 +88,8 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
             return exactlyOne;
         }
                 
-        ArrayList childComponentsList = new ArrayList();
-        PolicyComponent policyComponent;
-        
-        for (Iterator iterator = operator.getPolicyComponents().iterator(); iterator.hasNext();) {
-            policyComponent = (PolicyComponent) iterator.next();
-            
+        List<PolicyComponent> childComponentsList = new ArrayList<PolicyComponent>();
+        for (PolicyComponent policyComponent : operator.getPolicyComponents()) {
             if (policyComponent.getType() == Constants.TYPE_ASSERTION) {
                 
                 if (deep) {
@@ -136,15 +132,14 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         return computeResultantComponent(childComponentsList, type);
     }
     
-    private static PolicyComponent computeResultantComponent(List normalizedInnerComponets, short componentType) {
+    private static PolicyComponent computeResultantComponent(List<PolicyComponent> normalizedInnerComponets, 
+                                                             short componentType) {
         
         ExactlyOne exactlyOne = new ExactlyOne();
         
         if (componentType == Constants.TYPE_EXACTLYONE) {            
-            ExactlyOne innerExactlyOne;
-            
-            for (Iterator iter = normalizedInnerComponets.iterator(); iter.hasNext();) {
-                innerExactlyOne = (ExactlyOne) iter.next();
+            for (PolicyComponent comp : normalizedInnerComponets) {
+                ExactlyOne innerExactlyOne = (ExactlyOne)comp;
                 exactlyOne.addPolicyComponents(innerExactlyOne.getPolicyComponents());
             }
             
@@ -152,7 +147,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
             // if the parent type is All then we have to get the cross product
             if (normalizedInnerComponets.size() > 1) {
                 // then we have to get the cross product with each other to process all elements
-                Iterator iter = normalizedInnerComponets.iterator();
+                Iterator<PolicyComponent> iter = normalizedInnerComponets.iterator();
                 // first get the first element
                 exactlyOne = (ExactlyOne) iter.next();
                 // if this is empty, this is an not admissible policy and total result is equalent to that
@@ -175,7 +170,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
             } else {
                 // i.e only one element exists in the list then we can safely
                 // return that element this is ok even if it is an empty element
-                exactlyOne = (ExactlyOne) normalizedInnerComponets.iterator().next();
+                exactlyOne = (ExactlyOne) normalizedInnerComponets.get(0);
             }
         }
         

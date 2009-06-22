@@ -41,7 +41,7 @@ public interface PolicyOperator extends PolicyComponent {
      * 
      * @return the List of PolicyComponents that this PolicyOperator contains.
      */
-    public List getPolicyComponents();
+    public List<PolicyComponent> getPolicyComponents();
 
     /**
      * Returns true if the PolicyOperator doesn't contain any PolicyComponents.

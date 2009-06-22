@@ -133,23 +133,15 @@ public class PolicyComparator {
         return true;
     }
 
-    private static boolean compare(List arg1, List arg2) {
+    private static boolean compare(List<PolicyComponent> arg1, List<PolicyComponent> arg2) {
         if (arg1.size() != arg2.size()) {
             return false;
         }
 
-        Iterator iterator = arg1.iterator();
-        PolicyComponent assertion1;
-
-        while (iterator.hasNext()) {
-            assertion1 = (PolicyComponent) iterator.next();
-
-            Iterator iterator2 = arg2.iterator();
+        
+        for (PolicyComponent assertion1 : arg1) {
             boolean match = false;
-            PolicyComponent assertion2;
-
-            while (iterator2.hasNext()) {
-                assertion2 = (PolicyComponent) iterator2.next();
+            for (PolicyComponent assertion2 : arg2) {
                 if (compare(assertion1, assertion2)) {
                     match = true;
                     break;

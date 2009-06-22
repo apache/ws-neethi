@@ -19,7 +19,8 @@
 
 package org.apache.neethi;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Provides a default implementation of PolicyRegistry interface.
@@ -28,7 +29,7 @@ public class PolicyRegistryImpl implements PolicyRegistry {
     
     private PolicyRegistry parent = null;
     
-    private HashMap reg = new HashMap();
+    private Map<String, Policy> reg = new ConcurrentHashMap<String, Policy>();
     
     public PolicyRegistryImpl() {
     }
@@ -45,7 +46,7 @@ public class PolicyRegistryImpl implements PolicyRegistry {
     }
     
     public Policy lookup(String key) {
-        Policy policy = (Policy) reg.get(key);
+        Policy policy = reg.get(key);
         
         if (policy == null && parent != null) {
             return parent.lookup(key);

@@ -25,7 +25,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -45,8 +47,12 @@ import java.util.Map;
 public class Service {
 
     // Remember providers we have looked up before.
-    static Map classMap = new java.util.HashMap();
-    static Map instanceMap = new java.util.HashMap();
+    static Map<String, List<?>> instanceMap = new HashMap<String, List<?>>();
+    
+    @SuppressWarnings("unchecked")
+    private static <T> List<T> cast(List<?> p) {
+        return (List<T>)p;
+    }
 
     /**
      * Returns an iterator where each element should implement the
@@ -59,33 +65,17 @@ public class Service {
      *
      * @param cls The class/interface to search for providers of.
      */
-    public static synchronized Iterator providers(Class cls) {
-        return providers(cls, true);
-    }
-    
-    /**
-     * Returns an iterator where each element should implement the
-     * interface (or subclass the baseclass) described by cls.  The
-     * Classes are found by searching the classpath for service files
-     * named: 'META-INF/services/&lt;fully qualified classname&gt; that list
-     * fully qualifted classnames of classes that implement the
-     * service files classes interface.  These classes must have
-     * default constructors if returnInstances is true.
-     *
-     * @param cls The class/interface to search for providers of.
-     * @param returnInstances true if the iterator should return instances rather than class names.
-     */
-    public static synchronized Iterator providers(Class cls, boolean returnInstances) {
-        String serviceFile = "META-INF/services/" + cls.getName();
-        Map cacheMap = (returnInstances ? instanceMap : classMap);
+    public static synchronized <T> List<? extends T> providers(Class<T> cls) {
 
-        List l = (List)cacheMap.get(serviceFile);
+        String serviceFile = "META-INF/services/" + cls.getName();
+
+        List<T> l = cast(instanceMap.get(serviceFile));
         if (l != null) {
-            return l.iterator();
+            return l;
         }
 
-        l = new java.util.ArrayList();
-        cacheMap.put(serviceFile, l);
+        l = new ArrayList<T>();
+        instanceMap.put(serviceFile, l);
 
         ClassLoader cl = null;
         try {
@@ -98,20 +88,22 @@ public class Service {
         if (cl == null) cl = ClassLoader.getSystemClassLoader();
 
         // No class loader so we can't find 'serviceFile'.
-        if (cl == null) return l.iterator();
+        if (cl == null) return l;
 
-        Enumeration e;
+        Enumeration<URL> e;
         try {
             e = cl.getResources(serviceFile);
         } catch (IOException ioe) {
-            return l.iterator();
+            return l;
         }
 
         while (e.hasMoreElements()) {
+            InputStream is = null;
             try {
-                URL u = (URL)e.nextElement();
+                URL u = e.nextElement();
 
-                InputStream    is = u.openStream();
+                is = u.openStream();
+                
                 Reader         r  = new InputStreamReader(is, "UTF-8");
                 BufferedReader br = new BufferedReader(r);
 
@@ -132,14 +124,10 @@ public class Service {
                             continue;
                         }
 
-                        if (returnInstances) {
-                            // Try and load the class 
-                            Object obj = cl.loadClass(line).newInstance();
-                            // stick it into our vector...
-                            l.add(obj);
-                        } else {
-                            l.add(line);
-                        }
+                        // Try and load the class 
+                        Object obj = cl.loadClass(line).newInstance();
+                        // stick it into our vector...
+                        l.add(cls.cast(obj));
                     } catch (Exception ex) {
                         // Just try the next line
                     }
@@ -149,9 +137,17 @@ public class Service {
                 // Just try the next file...
             } catch (LinkageError le) {
                 // Just try the next file...
+            } finally {
+                try {
+                    if (is != null) {
+                        is.close();
+                    }
+                } catch (IOException ex) {
+                    //ignore
+                }
             }
         }
-        return l.iterator();
+        return l;
     }
     
 }

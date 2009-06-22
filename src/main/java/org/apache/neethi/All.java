@@ -44,7 +44,7 @@ public class All extends AbstractPolicyOperator {
      * 
      * @return a List of it's PolicyComponents
      */
-    public List getAssertions() {
+    public List<PolicyComponent> getAssertions() {
         return policyComponents;
     }
 
@@ -60,11 +60,7 @@ public class All extends AbstractPolicyOperator {
             writer.writeStartElement(Constants.URI_POLICY_NS, Constants.ELEM_ALL);
         }
 
-        PolicyComponent policyComponent;
-
-        for (Iterator iterator = getPolicyComponents().iterator(); iterator
-                .hasNext();) {
-            policyComponent = (PolicyComponent) iterator.next();
+        for (PolicyComponent policyComponent : getPolicyComponents()){
             policyComponent.serialize(writer);
         }
 

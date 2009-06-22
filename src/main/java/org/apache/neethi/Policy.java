@@ -34,7 +34,7 @@ import javax.xml.stream.XMLStreamWriter;
  */
 public class Policy extends All {
 
-    private HashMap attributes = new HashMap();
+    private Map<QName, String> attributes = new HashMap<QName, String>();
 
     /**
      * Returns a Normalized version of self. If <tt>deep</tt> is set
@@ -111,7 +111,7 @@ public class Policy extends All {
         String namespaceURI = null;
         String localName = null;
 
-        HashMap prefix2ns = new HashMap();
+        Map<String, String> prefix2ns = new HashMap<String, String>();
 
         for (Iterator iterator = getAttributes().keySet().iterator(); iterator
                 .hasNext();) {
@@ -238,7 +238,7 @@ public class Policy extends All {
      * @return the value of the attribute specified by the QName
      */
     public String getAttribute(QName name) {
-        return (String) attributes.get(name);
+        return attributes.get(name);
     }
 
     /**
@@ -246,7 +246,7 @@ public class Policy extends All {
      * 
      * @return a Map of all attributes of self
      */
-    public Map getAttributes() {
+    public Map<QName, String> getAttributes() {
         return attributes;
     }
 

@@ -21,6 +21,8 @@ package org.apache.neethi;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.namespace.QName;
 
@@ -49,15 +51,11 @@ public class AssertionBuilderFactory {
     private static final QName XML_ASSERTION_BUILDER = new QName(
             "http://test.org/test", "test");
 
-    private static HashMap registeredBuilders = new HashMap();
+    private static Map<QName, AssertionBuilder> registeredBuilders 
+        = new ConcurrentHashMap<QName, AssertionBuilder>();
 
     static {
-        AssertionBuilder builder;
-
-        for (Iterator providers = Service.providers(AssertionBuilder.class); providers
-                .hasNext();) {
-            builder = (AssertionBuilder) providers.next();
-
+        for (AssertionBuilder builder : Service.providers(AssertionBuilder.class)) {
             QName[] knownElements = builder.getKnownElements();
             for (int i = 0; i < knownElements.length; i++) {
                 registerBuilder(knownElements[i], builder);
@@ -93,7 +91,7 @@ public class AssertionBuilderFactory {
         AssertionBuilder builder;
 
         QName qname = element.getQName();
-        builder = (AssertionBuilder) registeredBuilders.get(qname);
+        builder = registeredBuilders.get(qname);
 
         if (builder != null) {
             return builder.build(element, this);
@@ -103,8 +101,7 @@ public class AssertionBuilderFactory {
          *  if we can't locate an appropriate AssertionBuilder, we always
          *  use the XMLPrimitiveAssertionBuilder 
          */ 
-        builder = (AssertionBuilder) registeredBuilders
-                .get(XML_ASSERTION_BUILDER);
+        builder = registeredBuilders.get(XML_ASSERTION_BUILDER);
         return builder.build(element, this);
     }
     
@@ -116,6 +113,6 @@ public class AssertionBuilderFactory {
      * @return an AssertionBuilder that understands qname type
      */
     public AssertionBuilder getBuilder(QName qname) {
-        return (AssertionBuilder) registeredBuilders.get(qname);
+        return registeredBuilders.get(qname);
     }
 }
