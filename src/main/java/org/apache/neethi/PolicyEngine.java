@@ -24,11 +24,14 @@ import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
+import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.builders.AssertionBuilder;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import java.io.InputStream;
 import java.util.Iterator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * PolicyEngine provides set of methods to create a Policy object from an
@@ -39,6 +42,7 @@ import java.util.Iterator;
  */
 public class PolicyEngine {
 
+    private static final Log log = LogFactory.getLog(PolicyEngine.class);
     public static final String POLICY_NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/09/policy";
 
     public static final String POLICY = "Policy";
@@ -199,7 +203,16 @@ public class PolicyEngine {
                 .hasNext();) {
             childElement = (OMElement) iterator.next();
 
-            if (Constants.URI_POLICY_NS.equals(childElement.getNamespace()
+            if (childElement == null || 
+                    childElement.getNamespace() == null) {
+                if (log.isDebugEnabled()) {
+                    try {
+                        log.debug("Skipping bad policy element " + childElement);
+                    } catch (Throwable t) {
+                        log.debug("Problem occurred while logging trace " + t);
+                    }
+                }
+            } else if (Constants.URI_POLICY_NS.equals(childElement.getNamespace()
                     .getNamespaceURI())) {
 
                 if (Constants.ELEM_POLICY.equals(childElement.getLocalName())) {
