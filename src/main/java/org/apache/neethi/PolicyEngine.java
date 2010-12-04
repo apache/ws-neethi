@@ -23,11 +23,10 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
+import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.builders.AssertionBuilder;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
 import java.io.InputStream;
 import java.util.Iterator;
 import org.apache.commons.logging.Log;
@@ -80,10 +79,8 @@ public class PolicyEngine {
      */
     public static Policy getPolicy(InputStream inputStream) {
         try {
-            OMElement element = OMXMLBuilderFactory.createStAXOMBuilder(
-                    OMAbstractFactory.getOMFactory(),
-                    XMLInputFactory.newInstance().createXMLStreamReader(
-                            inputStream)).getDocumentElement();
+            OMElement element = OMXMLBuilderFactory.createOMBuilder(
+                    inputStream).getDocumentElement();
             return getPolicy(element);
 
         } catch (Exception ex) {
@@ -104,10 +101,8 @@ public class PolicyEngine {
     public static PolicyReference getPolicyReferene(InputStream inputStream) {
 
         try {
-            OMElement element = OMXMLBuilderFactory.createStAXOMBuilder(
-                    OMAbstractFactory.getOMFactory(),
-                    XMLInputFactory.newInstance().createXMLStreamReader(
-                            inputStream)).getDocumentElement();
+            OMElement element = OMXMLBuilderFactory.createOMBuilder(
+                    inputStream).getDocumentElement();
             return getPolicyReference(element);
 
         } catch (Exception ex) {

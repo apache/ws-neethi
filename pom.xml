@@ -212,6 +212,7 @@
 			<groupId>org.apache.ws.commons.axiom</groupId>
 			<artifactId>axiom-impl</artifactId>
 			<version>${axiom.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>wsdl4j</groupId>
@@ -274,7 +275,7 @@
 		</site>
 	</distributionManagement>
 	<properties>
-        <axiom.version>1.2.8</axiom.version>
+        <axiom.version>1.2.11-SNAPSHOT</axiom.version>
         <neethi.osgi.version>${pom.version}</neethi.osgi.version>
         <bundle.plugin.version>1.4.0</bundle.plugin.version>
         <failIfNoTests>false</failIfNoTests>
