@@ -33,7 +33,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
 
 
-public class PolicyTestCase extends TestCase{
+public abstract class PolicyTestCase extends TestCase{
     
     protected String baseDir = System.getProperty("basedir");
     protected String testResourceDir = "src" + File.separator + "test" + File.separator + "test-resources";
@@ -45,6 +45,10 @@ public class PolicyTestCase extends TestCase{
         }
     }
 
+    public Policy getPolicy(String name) {
+        return PolicyEngine.getPolicy(getResourceAsElement(name));
+    }
+    
     public InputStream getResource(String name) {
         String filePath = new File(testResourceDir, name).getAbsolutePath(); 
 

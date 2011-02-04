@@ -19,17 +19,38 @@
 
 package org.apache.neethi.builders.xml;
 
+import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 
+import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.AssertionBuilderFactory;
+import org.apache.neethi.Constants;
+import org.apache.neethi.Policy;
+import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.builders.AssertionBuilder;
+import org.apache.neethi.builders.NestedPrimitiveAssertion;
 
 public class XMLPrimitiveAssertionBuilder implements AssertionBuilder {
 
     public Assertion build(OMElement element, AssertionBuilderFactory factory)
             throws IllegalArgumentException {
+        Iterator it = element.getChildElements();
+        OMElement el = it.hasNext() ? (OMElement)it.next() : null;
+        if (!it.hasNext() && el != null && el.getQName().equals(Constants.Q_ELEM_POLICY)) {
+            OMAttribute attribute = element
+                .getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR);
+            boolean isOptional = false;
+            if (attribute != null) {
+                isOptional = (new Boolean(attribute.getAttributeValue())
+                    .booleanValue());
+            }
+            
+            Policy policy = PolicyEngine.getPolicy(el);
+            return new NestedPrimitiveAssertion(element.getQName(), isOptional, policy);
+        }
         return new XmlPrimtiveAssertion(element);
     }
 

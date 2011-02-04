@@ -21,47 +21,30 @@ package org.apache.neethi;
 
 import java.io.File;
 
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
-
 import org.apache.neethi.util.PolicyComparator;
 
-public class NormalizeTest extends PolicyTestCase {
-    
-    PolicyEngine mgr;
+public class Normalize2Test extends PolicyTestCase {
 
-    public NormalizeTest() {
-        super("NormalizeTest");
+    public Normalize2Test() {
+        super("Normalize2Test");
     }
 
     public void test() throws Exception {
         String r1, r2;
         Policy p1, p2;
-        
-        for (int i =1; i < 26; i++) {
 
-            r1 = "samples" + File.separator + "test" + i + ".xml";
-            r2 = "normalized" + File.separator + "test" + i + ".xml";
+        for (int i = 1; i < 21; i++) {
 
-            
+            r1 = "samples2" + File.separator + "Policy" + i + ".xml";
+            r2 = "normalized2" + File.separator + "Policy" + i + ".xml";
+
             p1 = getPolicy(r1);
-            p1 = (Policy) p1.normalize(true);
+            p1 = (Policy)p1.normalize(true);
+
             p2 = getPolicy(r2);
-            
+
             if (!PolicyComparator.compare(p1, p2)) {
-                XMLStreamWriter writer;
-                
-                writer = XMLOutputFactory.newInstance().createXMLStreamWriter(System.out);
-                p1.serialize(writer);
-                writer.flush();
-                
-                System.out.println("\n ------------ \n");
-                
-                writer = XMLOutputFactory.newInstance().createXMLStreamWriter(System.out);
-                p2.serialize(writer);
-                writer.flush();
-                
-                fail("test" + i + " normalize() FAILED");
+                fail("samples2" + File.separator + "Policy" + i + ".normalize() FAILED");
             }
         }
     }

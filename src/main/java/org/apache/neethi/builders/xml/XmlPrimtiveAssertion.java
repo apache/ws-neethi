@@ -34,7 +34,7 @@ import org.apache.neethi.PolicyComponent;
 import org.apache.neethi.PolicyRegistry;
 
 /**
- * XmlPrimitiveAssertion wraps an OMElement s.t. any unkown elements can be
+ * XmlPrimitiveAssertion wraps an OMElement s.t. any unknown elements can be
  * treated an assertions if there is no AssertionBuilder that can build an
  * assertion from that OMElement.
  * 

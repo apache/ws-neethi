@@ -1,0 +1,139 @@
+﻿<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements. See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership. The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+  <wsp:Policy 
+  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+  xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+  <!-- Policy20 -->
+  <wsp:ExactlyOne>
+    <!-- Asymmetric Policy A1 - Basic256Rsa15, timestamp, do not encrypt signature, include tokens under signature -->
+    <sp:AsymmetricBinding  >
+      <wsp:Policy>
+        <sp:RecipientToken>
+          <wsp:Policy>
+            <sp:X509Token 
+     sp:IncludeToken='http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never' >
+              <wsp:Policy>
+                <sp:WssX509V3Token10 />
+              </wsp:Policy>
+            </sp:X509Token>
+          </wsp:Policy>
+        </sp:RecipientToken>
+        <sp:InitiatorToken>
+          <wsp:Policy>
+            <sp:X509Token 
+     sp:IncludeToken='http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient' >
+              <wsp:Policy>
+                <sp:WssX509V3Token10 />
+              </wsp:Policy>
+            </sp:X509Token>
+          </wsp:Policy>
+        </sp:InitiatorToken>
+        <sp:AlgorithmSuite>
+          <wsp:Policy>
+            <sp:Basic256Rsa15 />
+          </wsp:Policy>
+        </sp:AlgorithmSuite>
+        <sp:Layout>
+          <wsp:Policy>
+            <sp:Lax />
+          </wsp:Policy>
+        </sp:Layout>
+        <sp:IncludeTimestamp />
+        <sp:ProtectTokens />
+        <sp:OnlySignEntireHeadersAndBody />
+      </wsp:Policy>
+    </sp:AsymmetricBinding>
+    <!-- Asymmetric Policy A2 - TripleDesRsa15, timestamp, do not encrypt signature, include tokens under signature -->
+    <sp:AsymmetricBinding  >
+      <wsp:Policy>
+        <sp:RecipientToken>
+          <wsp:Policy>
+            <sp:X509Token 
+     sp:IncludeToken='http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never' >
+              <wsp:Policy>
+                <sp:WssX509V3Token10 />
+              </wsp:Policy>
+            </sp:X509Token>
+          </wsp:Policy>
+        </sp:RecipientToken>
+        <sp:InitiatorToken>
+          <wsp:Policy>
+            <sp:X509Token 
+     sp:IncludeToken='http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient' >
+              <wsp:Policy>
+                <sp:WssX509V3Token10 />
+              </wsp:Policy>
+            </sp:X509Token>
+          </wsp:Policy>
+        </sp:InitiatorToken>
+        <sp:AlgorithmSuite>
+          <wsp:Policy>
+            <sp:TripleDesRsa15 />
+          </wsp:Policy>
+        </sp:AlgorithmSuite>
+        <sp:Layout>
+          <wsp:Policy>
+            <sp:Lax />
+          </wsp:Policy>
+        </sp:Layout>
+        <sp:IncludeTimestamp />
+        <sp:ProtectTokens />
+        <sp:OnlySignEntireHeadersAndBody />
+      </wsp:Policy>
+    </sp:AsymmetricBinding>
+    <!-- Asymmetric Policy A3 - Basic256Rsa15, no timestamp, do not encrypt signature, include tokens under signature -->
+    <sp:AsymmetricBinding  >
+      <wsp:Policy>
+        <sp:RecipientToken>
+          <wsp:Policy>
+            <sp:X509Token 
+     sp:IncludeToken='http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never' >
+              <wsp:Policy>
+                <sp:WssX509V3Token10 />
+              </wsp:Policy>
+            </sp:X509Token>
+          </wsp:Policy>
+        </sp:RecipientToken>
+        <sp:InitiatorToken>
+          <wsp:Policy>
+            <sp:X509Token 
+     sp:IncludeToken='http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient' >
+              <wsp:Policy>
+                <sp:WssX509V3Token10 />
+              </wsp:Policy>
+            </sp:X509Token>
+          </wsp:Policy>
+        </sp:InitiatorToken>
+        <sp:AlgorithmSuite>
+          <wsp:Policy>
+            <sp:Basic256Rsa15 />
+          </wsp:Policy>
+        </sp:AlgorithmSuite>
+        <sp:Layout>
+          <wsp:Policy>
+            <sp:Lax />
+          </wsp:Policy>
+        </sp:Layout>
+        <sp:ProtectTokens />
+        <sp:OnlySignEntireHeadersAndBody />
+      </wsp:Policy>
+    </sp:AsymmetricBinding>
+  </wsp:ExactlyOne>
+</wsp:Policy>

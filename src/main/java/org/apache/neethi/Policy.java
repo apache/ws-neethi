@@ -21,6 +21,7 @@ package org.apache.neethi;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -72,6 +73,7 @@ public class Policy extends All {
      * @return a Policy that is the merge of the specified Policy and self
      */
     public Policy merge(Policy policy) {
+
         Policy result = new Policy();
         result.addPolicyComponents(getPolicyComponents());
         result.addPolicyComponents(policy.getPolicyComponents());
@@ -189,12 +191,12 @@ public class Policy extends All {
      * 
      * @return
      */
-    public Iterator getAlternatives() {
+    public Iterator<List<PolicyComponent>> getAlternatives() {
         return new PolicyIterator(this);
     }
 
-    private class PolicyIterator implements Iterator {
-        Iterator alternatives = null;
+    private class PolicyIterator implements Iterator<List<PolicyComponent>> {
+        Iterator<PolicyComponent> alternatives = null;
 
         public PolicyIterator(Policy policy) {
             policy = (Policy) policy.normalize(false);
@@ -207,7 +209,7 @@ public class Policy extends All {
             return alternatives.hasNext();
         }
 
-        public Object next() {
+        public List<PolicyComponent> next() {
             return ((All) alternatives.next()).getPolicyComponents();
         }
 
