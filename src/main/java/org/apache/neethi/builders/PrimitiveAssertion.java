@@ -130,8 +130,4 @@ public class PrimitiveAssertion implements Assertion {
         return new PrimitiveAssertion(name, false, ignorable);
     }
 
-    public Policy getPolicy() {
-        return null;
-    }
-
 }

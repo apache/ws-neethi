@@ -85,6 +85,10 @@ public class Constants {
         return URI_POLICY_NS.equals(ns) 
             || URI_POLICY_15_NS.equals(ns);
     }
+    public static boolean isPolicyElement(String ns, String local) {
+        return (URI_POLICY_NS.equals(ns) 
+            || URI_POLICY_15_NS.equals(ns)) && ELEM_POLICY.equals(local);
+    }
     public static boolean isPolicyElement(QName q) {
         return isInPolicyNS(q) && ELEM_POLICY.equals(q.getLocalPart());
     }

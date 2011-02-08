@@ -22,9 +22,20 @@ package org.apache.neethi;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.w3c.dom.Element;
+
+import org.xml.sax.SAXException;
 
 import junit.framework.TestCase;
 
@@ -45,34 +56,58 @@ public abstract class PolicyTestCase extends TestCase{
         }
     }
 
-    public Policy getPolicy(String name) {
-        return PolicyEngine.getPolicy(getResourceAsElement(name));
+    public Policy getPolicy(String name) throws Exception {
+        return getPolicy(name, 3);
+    }
+    public Policy getPolicy(String name, int type) throws Exception {
+        switch (type) {
+        case 0:
+            return PolicyEngine.getPolicy(getResource(name));
+        case 1:
+            return PolicyEngine.getPolicy(getResourceAsDOM(name));
+        case 2:
+            return PolicyEngine.getPolicy(getResourceAsStax(name));
+        default:
+            return PolicyEngine.getPolicy(getResourceAsElement(name));
+        }
     }
     
-    public InputStream getResource(String name) {
+    public InputStream getResource(String name) throws FileNotFoundException {
         String filePath = new File(testResourceDir, name).getAbsolutePath(); 
+        return new FileInputStream(filePath);
+    }
+    public Element getResourceAsDOM(String name) 
+        throws ParserConfigurationException, SAXException, IOException {
+        InputStream in = getResource(name);
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
-        try {
-            FileInputStream fis = new FileInputStream(filePath);
-            return fis;
-        } catch (FileNotFoundException e) {
-            fail("Cannot get resource: " + e.getMessage());
-            throw new RuntimeException();
-        }
+        dbf.setValidating(false);
+        dbf.setIgnoringComments(false);
+        dbf.setIgnoringElementContentWhitespace(true);
+        dbf.setNamespaceAware(true);
+        // dbf.setCoalescing(true);
+        // dbf.setExpandEntityReferences(true);
+
+        DocumentBuilder db = null;
+        db = dbf.newDocumentBuilder();
+
+        // db.setErrorHandler( new MyErrorHandler());
+
+        return db.parse(in).getDocumentElement();
     }
     
-    public OMElement getResourceAsElement(String name) {
-        try {
-            InputStream in = getResource(name);
-            OMElement element = OMXMLBuilderFactory.createStAXOMBuilder(
-                    OMAbstractFactory.getOMFactory(),
-                    XMLInputFactory.newInstance().createXMLStreamReader(in)).getDocumentElement();
-            return element;
-
-        } catch (Exception e) {
-            fail("Cannot get resource: " + e.getMessage());
-            throw new RuntimeException();
-        }
+    public XMLStreamReader getResourceAsStax(String name) 
+        throws XMLStreamException, FactoryConfigurationError, FileNotFoundException {
+        InputStream in = getResource(name);
+        return XMLInputFactory.newInstance().createXMLStreamReader(in);
+    }    
+    public OMElement getResourceAsElement(String name) 
+        throws XMLStreamException, FactoryConfigurationError, FileNotFoundException {
+        InputStream in = getResource(name);
+        OMElement element = OMXMLBuilderFactory.createStAXOMBuilder(
+                OMAbstractFactory.getOMFactory(),
+                XMLInputFactory.newInstance().createXMLStreamReader(in)).getDocumentElement();
+        return element;
     }
 }
 

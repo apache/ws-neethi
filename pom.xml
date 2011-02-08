@@ -186,9 +186,12 @@
                         <Import-Package>
                               org.apache.axiom.*;resolution:=optional,
                               javax.xml.stream;version="[0.0,2)",
-                              javax.xml.namespace,
                               org.apache.commons.logging,
+                              *
                         </Import-Package>
+                        <_failok>true</_failok>
+                        <_nouses>true</_nouses>
+                        <_versionpolicy>[$(version;==;$(@)),$(version;+;$(@)))</_versionpolicy>
                     </instructions>
                 </configuration>
             </plugin>
@@ -231,12 +234,13 @@
 			<groupId>org.apache.ws.commons.axiom</groupId>
 			<artifactId>axiom-api</artifactId>
 			<version>${axiom.version}</version>
+            <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ws.commons.axiom</groupId>
 			<artifactId>axiom-impl</artifactId>
 			<version>${axiom.version}</version>
-			<scope>runtime</scope>
+			<scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.codehaus.woodstox</groupId>
@@ -244,6 +248,18 @@
                 </exclusion>
             </exclusions>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-dom</artifactId>
+            <version>${axiom.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.woodstox</groupId>
+                    <artifactId>wstx-asl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 		<dependency>
 			<groupId>wsdl4j</groupId>
 			<artifactId>wsdl4j</artifactId>
@@ -282,7 +298,7 @@
 	<properties>
         <axiom.version>1.2.12-SNAPSHOT</axiom.version>
         <neethi.osgi.version>${project.version}</neethi.osgi.version>
-        <bundle.plugin.version>1.4.0</bundle.plugin.version>
+        <bundle.plugin.version>2.1.0</bundle.plugin.version>
         <failIfNoTests>false</failIfNoTests>
 	</properties>
 </project>

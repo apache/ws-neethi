@@ -27,8 +27,20 @@ public class MergeTest extends PolicyTestCase {
     public MergeTest() {
         super("MergeTest");
     }
+    public void testOM() throws Exception {
+        doTest(3);
+    }
+    public void testDOM() throws Exception {
+        doTest(1);
+    }
+    public void testStax() throws Exception {
+        doTest(2);
+    }
+    public void testStream() throws Exception {
+        doTest(3);
+    }
 
-    public void test() throws Exception {
+    public void doTest(int type) throws Exception {
         String r1, r2, r3;
         Policy p1, p2, p3, p4;
 
@@ -52,9 +64,9 @@ public class MergeTest extends PolicyTestCase {
             r2 = "samples2" + File.separator + "Policy" + f2 + ".xml";
             r3 = "merged" + File.separator + f;
 
-            p1 = getPolicy(r1);
-            p2 = getPolicy(r2);
-            p3 = getPolicy(r3);
+            p1 = getPolicy(r1, type);
+            p2 = getPolicy(r2, type);
+            p3 = getPolicy(r3, type);
 
             // result
             p4 = (Policy)p1.merge(p2);

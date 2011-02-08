@@ -28,8 +28,20 @@ public class Normalize2Test extends PolicyTestCase {
     public Normalize2Test() {
         super("Normalize2Test");
     }
+    public void testOM() throws Exception {
+        doTest(3);
+    }
+    public void testDOM() throws Exception {
+        doTest(1);
+    }
+    public void testStax() throws Exception {
+        doTest(2);
+    }
+    public void testStream() throws Exception {
+        doTest(3);
+    }
 
-    public void test() throws Exception {
+    public void doTest(int type) throws Exception {
         String r1, r2;
         Policy p1, p2;
 
@@ -38,10 +50,10 @@ public class Normalize2Test extends PolicyTestCase {
             r1 = "samples2" + File.separator + "Policy" + i + ".xml";
             r2 = "normalized2" + File.separator + "Policy" + i + ".xml";
 
-            p1 = getPolicy(r1);
+            p1 = getPolicy(r1, type);
             p1 = (Policy)p1.normalize(true);
 
-            p2 = getPolicy(r2);
+            p2 = getPolicy(r2, type);
 
             if (!PolicyComparator.compare(p1, p2)) {
                 fail("samples2" + File.separator + "Policy" + i + ".normalize() FAILED");

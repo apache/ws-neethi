@@ -22,6 +22,7 @@ package org.apache.neethi;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,9 +32,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
-
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 
 /**
  * PolicyReference is a wrapper that holds explicit PolicyReferences.
@@ -138,43 +136,23 @@ public class PolicyReference implements PolicyComponent {
         writer.writeEndElement();
     }
     
-    public OMElement getRemoteReferedElement(String uri){
-    	OMElement documentElement = null;
-    	
+    public Policy getRemoteReferencedPolicy(String uri){
     	try {    		    		
             //create java.net URL pointing to remote resource			
     	    URL url = new URL(uri);
     	    URLConnection connection = url.openConnection();
     	    connection.setDoInput(true);
 
-    	    //create stax parser with the url content
-    	    XMLStreamReader parser = XMLInputFactory.newInstance().
-    	        createXMLStreamReader(connection.getInputStream()); 
-			
-    	    //get the root element (in this case the envelope)
-    	    StAXOMBuilder builder = new StAXOMBuilder(parser); 
-    	    documentElement = builder.getDocumentElement();	
-        } catch(XMLStreamException se) {        	        	
-        	throw new RuntimeException("Bad policy content: " + uri);
+    	    InputStream in = connection.getInputStream();
+    	    try {
+    	        return PolicyEngine.getPolicy(connection.getInputStream());
+    	    } finally {
+    	        in.close();
+    	    }
         } catch(MalformedURLException mue) {        	
         	throw new RuntimeException("Malformed uri: " + uri);
         } catch(IOException ioe) {        
         	throw new RuntimeException("Cannot reach remote resource: " + uri);
         }       		
-        return documentElement;
-    }
-    
-    
-    
-    public Policy getRemoteReferencedPolicy(String uri) {
-    	Policy policy = null;
-    	
-    	//extract the remote resource contents
-    	OMElement policyElement = getRemoteReferedElement(uri);
-    	
-    	//call the policy engine with already extracted content
-    	policy = PolicyEngine.getPolicy(policyElement);
-    	
-    	return policy;
     }
 }

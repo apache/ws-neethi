@@ -19,24 +19,33 @@
 
 package org.apache.neethi;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.xml.namespace.QName;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.neethi.builders.AssertionBuilder;
+import org.apache.neethi.builders.converters.Converter;
+import org.apache.neethi.builders.converters.ConverterRegistry;
+import org.apache.neethi.builders.converters.DOMToDOMConverter;
+import org.apache.neethi.builders.converters.DOMToStaxConverter;
+import org.apache.neethi.builders.converters.StaxToDOMConverter;
+import org.apache.neethi.builders.converters.StaxToStaxConverter;
 import org.apache.neethi.builders.xml.XMLPrimitiveAssertionBuilder;
 import org.apache.neethi.util.Service;
 
 /**
- * AssertionFactory is used to create an Assertion from an OMElement. It uses an
+ * AssertionFactory is used to create an Assertion from an Element. It uses an
  * appropriate AssertionBuilder instance to create an Assertion based on the
- * QName of the given OMElement. Domain Policy authors could right custom
+ * QName of the given element. Domain Policy authors could right custom
  * AssertionBuilders to build Assertions for domain specific assertions.
- * 
  */
 public class AssertionBuilderFactory {
 
@@ -48,12 +57,12 @@ public class AssertionBuilderFactory {
 
     public static final String ALL = "All";
 
-    private static final QName XML_ASSERTION_BUILDER = new QName(
-            "http://test.org/test", "test");
+    private static final QName XML_ASSERTION_BUILDER = new QName("http://test.org/test", "test");
 
-    private static Map<QName, AssertionBuilder> registeredBuilders 
-        = new ConcurrentHashMap<QName, AssertionBuilder>();
+    private static Map<QName, AssertionBuilder> registeredBuilders = new ConcurrentHashMap<QName, AssertionBuilder>();
 
+    private final ConverterRegistry converters;
+    
     static {
         for (AssertionBuilder builder : Service.providers(AssertionBuilder.class)) {
             QName[] knownElements = builder.getKnownElements();
@@ -61,55 +70,75 @@ public class AssertionBuilderFactory {
                 registerBuilder(knownElements[i], builder);
             }
         }
-        
         registerBuilder(XML_ASSERTION_BUILDER, new XMLPrimitiveAssertionBuilder());
     }
 
     /**
-     * Registers an AssertionBuilder with a specified QName. 
-     *  
+     * Registers an AssertionBuilder with a specified QName.
+     * 
      * @param key the QName that the AssertionBuilder understand
      * @param builder the AssertionBuilder that can build an Assertion from
-     *      OMElement of specified type
+     *            an element of specified type
      */
     public static void registerBuilder(QName key, AssertionBuilder builder) {
         registeredBuilders.put(key, builder);
     }
 
-    public AssertionBuilderFactory() {
+    
+    public AssertionBuilderFactory(ConverterRegistry reg) {
+        converters = reg;
     }
 
     /**
-     * Returns an assertion that is built using the specified OMElement.
+     * Returns an assertion that is built using the specified element.
      * 
-     * @param element the element that the AssertionBuilder can use to build
-     *      an Assertion.
+     * @param element the element that the AssertionBuilder can use to build an
+     *            Assertion.
      * @return an Assertion that is built using the specified element.
      */
-    public Assertion build(OMElement element) {
-
+    public Assertion build(Object element) {
         AssertionBuilder builder;
 
-        QName qname = element.getQName();
+        QName qname = converters.findQName(element);
         builder = registeredBuilders.get(qname);
-
         if (builder != null) {
-            return builder.build(element, this);
+            return invokeBuilder(element, builder);
         }
-
         /*
-         *  if we can't locate an appropriate AssertionBuilder, we always
-         *  use the XMLPrimitiveAssertionBuilder 
-         */ 
+         * if we can't locate an appropriate AssertionBuilder, we always use the
+         * XMLPrimitiveAssertionBuilder
+         */
         builder = registeredBuilders.get(XML_ASSERTION_BUILDER);
-        return builder.build(element, this);
+        return invokeBuilder(element, builder);
     }
-    
+
+    @SuppressWarnings("unchecked")
+    private Assertion invokeBuilder(Object element, AssertionBuilder builder) {
+        Class<?> type = findAssertionBuilderTarget(builder.getClass());
+        return builder.build(converters.convert(element, type), this);
+    }
+
+    private Class<?> findAssertionBuilderTarget(Class<?> c) {
+        Class interfaces[] = c.getInterfaces();
+        for (int x = 0; x < interfaces.length; x++) {
+            if (interfaces[x] == AssertionBuilder.class) {
+                ParameterizedType pt = (ParameterizedType)c.getGenericInterfaces()[x];
+                return (Class)pt.getActualTypeArguments()[0];
+            }
+        }
+        if (c.getClass().getSuperclass() != null) {
+            return findAssertionBuilderTarget(c.getSuperclass());
+        }
+        return null;
+    }
+
+
     /**
-     * Returns an AssertionBuilder that build an Assertion from an OMElement
-     * of qname type.
+     * Returns an AssertionBuilder that build an Assertion from an element of
+     * qname type.
      * 
-     * @param qname the type that the AssertionBuilder understands and builds an Assertion from
+     * @param qname the type that the AssertionBuilder understands and builds an
+     *            Assertion from
      * @return an AssertionBuilder that understands qname type
      */
     public AssertionBuilder getBuilder(QName qname) {

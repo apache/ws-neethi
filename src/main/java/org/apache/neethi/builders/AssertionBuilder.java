@@ -21,25 +21,27 @@ package org.apache.neethi.builders;
 
 import javax.xml.namespace.QName;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.AssertionBuilderFactory;
 
 /**
  * AssertionBuilder is the interface which must implement by any
- * CustomAssertionBuilder. It defines a single method which takes an OMElement
- * and an AssertionFactory instance and creates an Assertion from the given
- * OMElement. Custom AssertionBuilder authors can use the AssertionFactory
- * specified to build Assertions for any unknown OMElements inside the given
- * OMElement. They are given the opportunity to control the behavior of
+ * CustomAssertionBuilder. It defines a single method which takes an element
+ * definitionand an AssertionFactory instance and creates an Assertion.  The 
+ * AssertionBuilder must use one of the types for which there is a
+ * Converter registered.  By default, that would be either an Element,
+ * and XMLStreamReader, or OMElement (if Axiom is available).
+ * Custom AssertionBuilder authors can use the AssertionFactory
+ * specified to build Assertions for any unknown elements inside the given
+ * element. They are given the opportunity to control the behavior of
  * Assertion operations based on the corresponding domain policy assertion of
- * the given OMElement and the level of its processing.
+ * the given element and the level of its processing.
  * 
  */
-public interface AssertionBuilder {
+public interface AssertionBuilder<T> {
 
     /**
-     * Constructs an assertion from a known OMElement. If that element contains
+     * Constructs an assertion from a known element. If that element contains
      * other child elements that the Builder doesn't understand, it uses the
      * AssertionBuilderFactory to construct assertions from them.
      * 
@@ -52,14 +54,15 @@ public interface AssertionBuilder {
      * @throws IllegalArgumentException
      *             if the given element is malformed
      */
-    public Assertion build(OMElement element, AssertionBuilderFactory factory)
+    Assertion build(T element, AssertionBuilderFactory factory)
             throws IllegalArgumentException;
 
     /**
-     * Returns an array of QNames of OMElements from which assertion can be
+     * Returns an array of QNames of elements from which assertion can be
      * built by this AssertionFactory.
      * 
-     * @return an array of QNames of known OMElements
+     * @return an array of QNames of known elements
      */
-    public QName[] getKnownElements();
+    QName[] getKnownElements();
+    
 }

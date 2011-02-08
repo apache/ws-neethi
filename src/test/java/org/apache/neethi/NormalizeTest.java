@@ -34,7 +34,20 @@ public class NormalizeTest extends PolicyTestCase {
         super("NormalizeTest");
     }
 
-    public void test() throws Exception {
+    public void testOM() throws Exception {
+        doTest(3);
+    }
+    public void testDOM() throws Exception {
+        doTest(1);
+    }
+    public void testStax() throws Exception {
+        doTest(2);
+    }
+    public void testStream() throws Exception {
+        doTest(3);
+    }
+
+    public void doTest(int type) throws Exception {
         String r1, r2;
         Policy p1, p2;
         
@@ -44,9 +57,9 @@ public class NormalizeTest extends PolicyTestCase {
             r2 = "normalized" + File.separator + "test" + i + ".xml";
 
             
-            p1 = getPolicy(r1);
+            p1 = getPolicy(r1, type);
             p1 = (Policy) p1.normalize(true);
-            p2 = getPolicy(r2);
+            p2 = getPolicy(r2, type);
             
             if (!PolicyComparator.compare(p1, p2)) {
                 XMLStreamWriter writer;

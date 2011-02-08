@@ -23,8 +23,10 @@ import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 
-import org.apache.axiom.om.OMAttribute;
-import org.apache.axiom.om.OMElement;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import org.apache.neethi.Assertion;
 import org.apache.neethi.AssertionBuilderFactory;
 import org.apache.neethi.Constants;
@@ -33,34 +35,33 @@ import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.builders.AssertionBuilder;
 import org.apache.neethi.builders.PolicyContainingAssertion;
 
-public class XMLPrimitiveAssertionBuilder implements AssertionBuilder {
+public class XMLPrimitiveAssertionBuilder implements AssertionBuilder<Element> {
 
-    public Assertion build(OMElement element, AssertionBuilderFactory factory)
+    public Assertion build(Element element, AssertionBuilderFactory factory)
             throws IllegalArgumentException {
-        Iterator it = element.getChildElements();
-        OMElement el = it.hasNext() ? (OMElement)it.next() : null;
-        if (!it.hasNext() && el != null && Constants.isPolicyElement(el.getQName())) {
-            OMAttribute attribute = element
-                .getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR);
-            if (attribute == null) {
-                attribute = element
-                    .getAttribute(Constants.Q_ELEM_OPTIONAL_15_ATTR);
+        Node nd = element.getFirstChild();
+        while (nd != null) {
+            if (!(nd instanceof Element)) {
+                nd = nd.getNextSibling();
+                continue;
             }
-            boolean optional = false;
-            if (attribute != null) {
-                optional = (new Boolean(attribute.getAttributeValue())
-                    .booleanValue());
-            }
-            attribute = element
-                .getAttribute(Constants.Q_ELEM_IGNORABLE_15_ATTR);
-            boolean ignorable = false;
-            if (attribute != null) {
-                ignorable = (new Boolean(attribute.getAttributeValue())
-                    .booleanValue());
-            }
+            Element el = (Element)nd; 
+            if (Constants.isPolicyElement(el.getNamespaceURI(), el.getLocalName())) {
+                Attr optional = el.getAttributeNodeNS(Constants.URI_POLICY_NS, Constants.ATTR_OPTIONAL);
+                if (optional == null) {
+                    optional = el.getAttributeNodeNS(Constants.URI_POLICY_15_NS, Constants.ATTR_OPTIONAL);
+                }
+                Attr ignorable = el.getAttributeNodeNS(Constants.URI_POLICY_15_NS, Constants.ATTR_IGNORABLE);
+                
+
             
-            Policy policy = PolicyEngine.getPolicy(el);
-            return new PolicyContainingAssertion(element.getQName(), optional, ignorable, policy);
+                Policy policy = PolicyEngine.getPolicy(el);
+                return new PolicyContainingAssertion(new QName(element.getNamespaceURI(), element.getLocalName()),
+                                                 optional == null ? false : Boolean.parseBoolean(optional.getValue()),
+                                                 ignorable == null ? false : Boolean.parseBoolean(ignorable.getValue()),
+                                                 policy);
+            }
+            nd = nd.getNextSibling();
         }
         return new XmlPrimitiveAssertion(element);
     }
@@ -68,4 +69,5 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder {
     public QName[] getKnownElements() {
         return new QName[] { new QName("UnknownElement") };
     }
+
 }
