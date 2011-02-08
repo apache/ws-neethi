@@ -29,7 +29,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
- * Policy is a PolicyOperator that requires to statisfy all of its
+ * Policy is a PolicyOperator that requires to satisfy all of its
  * PolicyComponents. It is always the outermost component of a Policy.
  * 
  */
@@ -44,9 +44,9 @@ public class Policy extends All {
      * 
      * @param deep
      *            a flag to indicate whether to normalize the assertions
-     * @return a PolicyComponent that is normalized version of self
+     * @return a Policy that is normalized version of self
      */
-    public PolicyComponent normalize(boolean deep) {
+    public Policy normalize(boolean deep) {
         return normalize(null, deep);
     }
 
@@ -59,9 +59,9 @@ public class Policy extends All {
      *            a PolicyRegistry from which the PolicyReferences are resolved
      * @param deep
      *            a flag to indicate whether to normalize the assertions
-     * @return a normalzied version of self
+     * @return a normalized version of self
      */
-    public PolicyComponent normalize(PolicyRegistry reg, boolean deep) {
+    public Policy normalize(PolicyRegistry reg, boolean deep) {
         return normalize(this, reg, deep);
     }
 
@@ -84,6 +84,9 @@ public class Policy extends All {
      * Throws an UnSupportedOpertionException. TODO for a next version.
      */
     public Policy intersect(Policy policy) {
+        //Policy p1 = normalize(true);
+        //Policy p2 = policy.normalize(true);
+        
         throw new UnsupportedOperationException();
     }
 
@@ -199,7 +202,7 @@ public class Policy extends All {
         Iterator<PolicyComponent> alternatives = null;
 
         public PolicyIterator(Policy policy) {
-            policy = (Policy) policy.normalize(false);
+            policy = policy.normalize(false);
             ExactlyOne exactlyOne = (ExactlyOne) policy
                     .getFirstPolicyComponent();
             alternatives = exactlyOne.getPolicyComponents().iterator();

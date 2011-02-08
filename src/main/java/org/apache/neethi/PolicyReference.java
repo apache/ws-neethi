@@ -36,7 +36,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 
 /**
- * PolicyReference is a wrapper that holds explict PolicyReferences.
+ * PolicyReference is a wrapper that holds explicit PolicyReferences.
  */
 public class PolicyReference implements PolicyComponent {
 
@@ -51,8 +51,8 @@ public class PolicyReference implements PolicyComponent {
     }
 
     /**
-     * Gets the Policy URI that is refered by self.
-     * @return a String that is the Policy URI refered by self
+     * Gets the Policy URI that is referred by self.
+     * @return a String that is the Policy URI referred by self
      */
     public String getURI() {
         return uri;
@@ -89,13 +89,13 @@ public class PolicyReference implements PolicyComponent {
     }
     
     /**
-     * Returns normalized version of the Policy that is refered by self. The specified 
-     * PolicyRegistry is used to lookup for the Policy that is refered and <tt>dee</tt> 
-     * indicates the level of normalization fo the returning Policy.
+     * Returns normalized version of the Policy that is referred by self. The specified 
+     * PolicyRegistry is used to lookup for the Policy that is referred and <tt>deep</tt> 
+     * indicates the level of normalization for the returning Policy.
      * 
-     * @param reg the PolicyRegistry that is used to resolved the Policy refered by self
-     * @param deep the falg to indicate whether returning Policy should be fully normailized
-     * @return the normalized version fo the Policy refered by self
+     * @param reg the PolicyRegistry that is used to resolved the Policy referred by self
+     * @param deep the flag to indicate whether returning Policy should be fully normalized
+     * @return the normalized version for the Policy refered by self
      */
     public PolicyComponent normalize(PolicyRegistry reg, boolean deep) {
         String key = getURI();

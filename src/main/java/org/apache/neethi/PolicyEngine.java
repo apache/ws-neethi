@@ -119,7 +119,7 @@ public class PolicyEngine {
      * 
      * @param element
      *            the Policy element
-     * @retun a Policy object of the Policy element
+     * @return a Policy object of the Policy element
      */
     public static Policy getPolicy(OMElement element) {
         return getPolicyOperator(element);

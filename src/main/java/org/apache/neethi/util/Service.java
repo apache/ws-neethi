@@ -59,7 +59,7 @@ public class Service {
      * interface (or subclass the baseclass) described by cls.  The
      * Classes are found by searching the classpath for service files
      * named: 'META-INF/services/&lt;fully qualified classname&gt; that list
-     * fully qualifted classnames of classes that implement the
+     * fully qualified classnames of classes that implement the
      * service files classes interface.  These classes must have
      * default constructors.
      *

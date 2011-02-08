@@ -150,14 +150,14 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                 Iterator<PolicyComponent> iter = normalizedInnerComponets.iterator();
                 // first get the first element
                 exactlyOne = (ExactlyOne) iter.next();
-                // if this is empty, this is an not admissible policy and total result is equalent to that
+                // if this is empty, this is an not admissible policy and total result is equivalent to that
                 if (!exactlyOne.isEmpty()) {
                     ExactlyOne currentExactlyOne;
 
                     for (; iter.hasNext();) {
                         currentExactlyOne = (ExactlyOne) iter.next();
                         if (currentExactlyOne.isEmpty()) {
-                            // if this is empty, this is an not admissible policy and total result is equalent to that
+                            // if this is empty, this is an not admissible policy and total result is equivalent to that
                             exactlyOne = currentExactlyOne;
                             break;
                         } else {

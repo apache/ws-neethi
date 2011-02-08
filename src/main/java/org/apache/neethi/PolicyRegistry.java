@@ -37,7 +37,7 @@ public interface PolicyRegistry {
     public void register(String key, Policy policy);
 
     /**
-     * Returns the Policy that the specified key is mapped. Retruns null if no
+     * Returns the Policy that the specified key is mapped. Returns null if no
      * Policy is associated with that key.
      * 
      * @param key

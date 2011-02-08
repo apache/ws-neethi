@@ -52,7 +52,7 @@ public interface PolicyComponent {
      *  
      * @param policyComponent the PolicyComponent to check whether self is 
      *      logically equal or not 
-     * @return ture if the argument is equal to self.
+     * @return true if the argument is equal to self.
      */
     public boolean equal(PolicyComponent policyComponent);
 }

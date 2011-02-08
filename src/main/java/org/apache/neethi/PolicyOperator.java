@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * PolicyOperator is an interface that all Policy operators must implement. It
  * can contain any number of Assertions or PolicyOperators and it has an
- * implecit logic of how those PolicyComponents should be met.
+ * Implicit logic of how those PolicyComponents should be met.
  * 
  */
 public interface PolicyOperator extends PolicyComponent {

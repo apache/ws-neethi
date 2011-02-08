@@ -28,10 +28,10 @@ import org.apache.neethi.AssertionBuilderFactory;
 /**
  * AssertionBuilder is the interface which must implement by any
  * CustomAssertionBuilder. It defines a single method which takes an OMElement
- * and an AssertionFactory instace and creates an Assertion from the given
+ * and an AssertionFactory instance and creates an Assertion from the given
  * OMElement. Custom AssertionBuilder authors can use the AssertionFactory
  * specified to build Assertions for any unknown OMElements inside the given
- * OMElement. They are given the opportunity to control the behaviour of
+ * OMElement. They are given the opportunity to control the behavior of
  * Assertion operations based on the corresponding domain policy assertion of
  * the given OMElement and the level of its processing.
  * 
