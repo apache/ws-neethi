@@ -44,6 +44,14 @@ public interface Assertion extends PolicyComponent {
      */
     public boolean isOptional();
     
+    
+    /**
+     * Returns true if this Assertion is ignorable. Returns false otherwise. 
+     * 
+     * @return true if the assertion is ignorable.
+     */
+    public boolean isIgnorable();
+    
     /**
      * Serialize this Assertion into its XML infoset using XMLStreamWriter.
      */

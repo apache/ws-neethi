@@ -57,13 +57,14 @@ public class PolicyComparator {
             }
             
         } else {
-            
             if (arg2.getName() != null) {
                 return false;                
             }
         }
-        
-        
+        if (arg1.getNamespace() != null
+            && !arg1.getNamespace().equals(arg2.getNamespace())) {
+            return false;
+        }
         // check Id attributes of each policies
         if (arg1.getId() != null) {
             

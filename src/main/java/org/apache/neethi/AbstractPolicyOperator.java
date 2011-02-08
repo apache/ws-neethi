@@ -57,7 +57,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
     }
     
     protected static Policy normalize(Policy policy, PolicyRegistry reg, boolean deep) {
-        Policy result = new Policy();
+        Policy result = new Policy(policy.getNamespace());
         
         String policyName = policy.getName();
         if (policyName != null) {

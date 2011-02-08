@@ -31,7 +31,7 @@ import org.apache.neethi.Constants;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.builders.AssertionBuilder;
-import org.apache.neethi.builders.NestedPrimitiveAssertion;
+import org.apache.neethi.builders.PolicyContainingAssertion;
 
 public class XMLPrimitiveAssertionBuilder implements AssertionBuilder {
 
@@ -39,19 +39,30 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder {
             throws IllegalArgumentException {
         Iterator it = element.getChildElements();
         OMElement el = it.hasNext() ? (OMElement)it.next() : null;
-        if (!it.hasNext() && el != null && el.getQName().equals(Constants.Q_ELEM_POLICY)) {
+        if (!it.hasNext() && el != null && Constants.isPolicyElement(el.getQName())) {
             OMAttribute attribute = element
                 .getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR);
-            boolean isOptional = false;
+            if (attribute == null) {
+                attribute = element
+                    .getAttribute(Constants.Q_ELEM_OPTIONAL_15_ATTR);
+            }
+            boolean optional = false;
             if (attribute != null) {
-                isOptional = (new Boolean(attribute.getAttributeValue())
+                optional = (new Boolean(attribute.getAttributeValue())
+                    .booleanValue());
+            }
+            attribute = element
+                .getAttribute(Constants.Q_ELEM_IGNORABLE_15_ATTR);
+            boolean ignorable = false;
+            if (attribute != null) {
+                ignorable = (new Boolean(attribute.getAttributeValue())
                     .booleanValue());
             }
             
             Policy policy = PolicyEngine.getPolicy(el);
-            return new NestedPrimitiveAssertion(element.getQName(), isOptional, policy);
+            return new PolicyContainingAssertion(element.getQName(), optional, ignorable, policy);
         }
-        return new XmlPrimtiveAssertion(element);
+        return new XmlPrimitiveAssertion(element);
     }
 
     public QName[] getKnownElements() {

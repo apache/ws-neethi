@@ -50,14 +50,15 @@ public class All extends AbstractPolicyOperator {
 
     
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
-        String prefix = writer.getPrefix(Constants.URI_POLICY_NS);
+        String namespace = Constants.findPolicyNamespace(writer);
+        String prefix = writer.getPrefix(namespace);
 
         if (prefix == null) {
-            writer.writeStartElement(Constants.ATTR_WSP, Constants.ELEM_ALL, Constants.URI_POLICY_NS);
-            writer.writeNamespace(Constants.ATTR_WSP, Constants.URI_POLICY_NS);
-            writer.setPrefix(Constants.ATTR_WSP, Constants.URI_POLICY_NS);
+            writer.writeStartElement(Constants.ATTR_WSP, Constants.ELEM_ALL, namespace);
+            writer.writeNamespace(Constants.ATTR_WSP, namespace);
+            writer.setPrefix(Constants.ATTR_WSP, namespace);
         } else {
-            writer.writeStartElement(Constants.URI_POLICY_NS, Constants.ELEM_ALL);
+            writer.writeStartElement(namespace, Constants.ELEM_ALL);
         }
 
         for (PolicyComponent policyComponent : getPolicyComponents()){

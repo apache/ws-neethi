@@ -39,11 +39,12 @@ import org.apache.neethi.PolicyRegistry;
  * assertion from that OMElement.
  * 
  */
-public class XmlPrimtiveAssertion implements Assertion {
+public class XmlPrimitiveAssertion implements Assertion {
 
     OMElement element;
 
-    boolean isOptional;
+    boolean optional;
+    boolean ignorable;
 
     /**
      * Constructs a XmlPrimitiveAssertion from an OMElement.
@@ -51,10 +52,12 @@ public class XmlPrimtiveAssertion implements Assertion {
      * @param element
      *            the OMElement from which the XmlAssertion is constructed
      */
-    public XmlPrimtiveAssertion(OMElement element) {
+    public XmlPrimitiveAssertion(OMElement element) {
         setValue(element);
         setOptionality(element);
+        setIgnorability(element);
     }
+
 
     /**
      * Returns the QName of the wrapped OMElement.
@@ -87,7 +90,14 @@ public class XmlPrimtiveAssertion implements Assertion {
      * assertion, is optional.
      */
     public boolean isOptional() {
-        return isOptional;
+        return optional;
+    }
+    /**
+     * Returns <tt>true</tt> if the wrapped element that assumed to be an
+     * assertion, is ignorable.
+     */
+    public boolean isIgnorable() {
+        return ignorable;
     }
 
     /**
@@ -95,16 +105,19 @@ public class XmlPrimtiveAssertion implements Assertion {
      * assumed to be an assertion.
      */
     public PolicyComponent normalize() {
-        if (isOptional) {
+        if (optional) {
             Policy policy = new Policy();
             ExactlyOne exactlyOne = new ExactlyOne();
 
             All all = new All();
             OMElement omElement = element.cloneOMElement();
 
-            omElement.removeAttribute(omElement
-                    .getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR));
-            all.addPolicyComponent(new XmlPrimtiveAssertion(omElement));
+            OMAttribute att = omElement.getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR);
+            if (att == null) {
+                att = omElement.getAttribute(Constants.Q_ELEM_OPTIONAL_15_ATTR);
+            }
+            omElement.removeAttribute(att);
+            all.addPolicyComponent(new XmlPrimitiveAssertion(omElement));
             exactlyOne.addPolicyComponent(all);
 
             exactlyOne.addPolicyComponent(new All());
@@ -143,13 +156,29 @@ public class XmlPrimtiveAssertion implements Assertion {
     private void setOptionality(OMElement element) {
         OMAttribute attribute = element
                 .getAttribute(Constants.Q_ELEM_OPTIONAL_ATTR);
+        if (attribute == null) {
+            attribute = element
+                .getAttribute(Constants.Q_ELEM_OPTIONAL_15_ATTR);
+        }
         if (attribute != null) {
-            this.isOptional = (new Boolean(attribute.getAttributeValue())
+            this.optional = (new Boolean(attribute.getAttributeValue())
                     .booleanValue());
 
         } else {
-            this.isOptional = false;
+            this.optional = false;
         }
+    }
+    private void setIgnorability(OMElement element2) {
+        OMAttribute attribute = element
+            .getAttribute(Constants.Q_ELEM_IGNORABLE_15_ATTR);
+        if (attribute != null) {
+            this.ignorable = (new Boolean(attribute.getAttributeValue())
+                    .booleanValue());
+        
+        } else {
+            this.ignorable = false;
+        }
+        
     }
 
     public boolean equal(PolicyComponent policyComponent) {

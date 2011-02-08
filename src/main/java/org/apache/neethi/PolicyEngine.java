@@ -42,15 +42,6 @@ import org.apache.commons.logging.LogFactory;
 public class PolicyEngine {
 
     private static final Log log = LogFactory.getLog(PolicyEngine.class);
-    public static final String POLICY_NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/09/policy";
-
-    public static final String POLICY = "Policy";
-
-    public static final String EXACTLY_ONE = "ExactlyOne";
-
-    public static final String ALL = "All";
-
-    public static final String POLICY_REF = "PolicyReference";
 
     private static AssertionBuilderFactory factory = new AssertionBuilderFactory();
 
@@ -134,10 +125,7 @@ public class PolicyEngine {
      */
     public static PolicyReference getPolicyReference(OMElement element) {
 
-        if (!(Constants.URI_POLICY_NS.equals(element.getNamespace()
-                .getNamespaceURI()) && Constants.ELEM_POLICY_REF.equals(element
-                .getLocalName()))) {
-
+        if (!Constants.isPolicyRef(element.getQName())) {
             throw new RuntimeException(
                     "Specified element is not a <wsp:PolicyReference .. />  element");
         }
@@ -150,7 +138,8 @@ public class PolicyEngine {
     }
 
     private static Policy getPolicyOperator(OMElement element) {
-        return (Policy) processOperationElement(element, new Policy());
+        String ns = element.getNamespace().getNamespaceURI();
+        return (Policy) processOperationElement(element, new Policy(ns));
     }
 
     private static ExactlyOne getExactlyOneOperator(OMElement element) {
@@ -207,28 +196,19 @@ public class PolicyEngine {
                         log.debug("Problem occurred while logging trace " + t);
                     }
                 }
-            } else if (Constants.URI_POLICY_NS.equals(childElement.getNamespace()
-                    .getNamespaceURI())) {
-
+            } else if (Constants.isInPolicyNS(childElement.getQName())) {
                 if (Constants.ELEM_POLICY.equals(childElement.getLocalName())) {
-                    operator
-                            .addPolicyComponent(getPolicyOperator(childElement));
-
+                    operator.addPolicyComponent(getPolicyOperator(childElement));
                 } else if (Constants.ELEM_EXACTLYONE.equals(childElement
                         .getLocalName())) {
-                    operator
-                            .addPolicyComponent(getExactlyOneOperator(childElement));
-
+                    operator.addPolicyComponent(getExactlyOneOperator(childElement));
                 } else if (Constants.ELEM_ALL.equals(childElement
                         .getLocalName())) {
                     operator.addPolicyComponent(getAllOperator(childElement));
-
                 } else if (Constants.ELEM_POLICY_REF.equals(childElement
                         .getLocalName())) {
-                    operator
-                            .addPolicyComponent(getPolicyReference(childElement));
+                    operator.addPolicyComponent(getPolicyReference(childElement));
                 }
-
             } else {
                 operator.addPolicyComponent(factory.build(childElement));
             }

@@ -45,12 +45,12 @@ import org.apache.neethi.PolicyOperator;
  * of type Policy (as does for examples the wsam:Addressing assertion).
  * 
  */
-public class NestedPrimitiveAssertion extends PrimitiveAssertion {
+public class PolicyContainingAssertion extends PrimitiveAssertion {
     private Policy nested;
     
     
-    public NestedPrimitiveAssertion(QName name, boolean optional, Policy p) {
-        super(name, optional);
+    public PolicyContainingAssertion(QName name, boolean optional, boolean ignorable, Policy p) {
+        super(name, optional, ignorable);
         this.nested = p;
     }
 
@@ -65,13 +65,14 @@ public class NestedPrimitiveAssertion extends PrimitiveAssertion {
         if (isOptional()) {
             ea.addPolicyComponent(new All());
         }
-        // for all alternatives in normalised nested policy
+        // for all alternatives in normalized nested policy
         Iterator<List<PolicyComponent>> alternatives = normalisedNested.getAlternatives();
         while (alternatives.hasNext()) {
             All all = new All();
             List<PolicyComponent> alternative = alternatives.next();
             Policy n = new Policy();
-            NestedPrimitiveAssertion a = new NestedPrimitiveAssertion(getName(), false, nested);
+            PolicyContainingAssertion a 
+                = new PolicyContainingAssertion(getName(), false, ignorable, nested);
             ExactlyOne nea = new ExactlyOne();
             n.addPolicyComponent(nea);
             All na = new All();
@@ -88,21 +89,24 @@ public class NestedPrimitiveAssertion extends PrimitiveAssertion {
         if (!super.equal(policyComponent)) {
             return false;
         }
-        NestedPrimitiveAssertion other = (NestedPrimitiveAssertion)policyComponent;
+        PolicyContainingAssertion other = (PolicyContainingAssertion)policyComponent;
         return getPolicy().equal(other.getPolicy());
     }
     
-    protected void setPolicy(Policy n) {
+    public void setPolicy(Policy n) {
         nested = n;
     }
     public Policy getPolicy() {
         return nested;
     }
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
+        String namespace = Constants.findPolicyNamespace(writer);
         writer.writeStartElement(name.getNamespaceURI(), name.getLocalPart());
         if (optional) {
-            writer.writeAttribute(Constants.Q_ELEM_OPTIONAL_ATTR.getNamespaceURI(),
-                                  Constants.Q_ELEM_OPTIONAL_ATTR.getLocalPart(), "true");
+            writer.writeAttribute(namespace, Constants.ATTR_OPTIONAL, "true");
+        }
+        if (ignorable) {
+            writer.writeAttribute(namespace, Constants.ATTR_IGNORABLE, "true");
         }
         nested.serialize(writer);
         writer.writeEndElement();

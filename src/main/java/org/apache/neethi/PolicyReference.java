@@ -123,16 +123,16 @@ public class PolicyReference implements PolicyComponent {
     }
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
-
-        String wspPrefix = writer.getPrefix(Constants.URI_POLICY_NS);
+        String namespace = Constants.findPolicyNamespace(writer);
+        String wspPrefix = writer.getPrefix(namespace);
         
         if (wspPrefix == null) {
             wspPrefix = Constants.ATTR_WSP;
-            writer.setPrefix(wspPrefix, Constants.URI_POLICY_NS);
+            writer.setPrefix(wspPrefix, namespace);
         }
         
-        writer.writeStartElement(wspPrefix, Constants.ELEM_POLICY_REF, Constants.URI_POLICY_NS);
-        writer.writeNamespace(Constants.ATTR_WSP, Constants.URI_POLICY_NS);
+        writer.writeStartElement(wspPrefix, Constants.ELEM_POLICY_REF, namespace);
+        writer.writeNamespace(Constants.ATTR_WSP, namespace);
         writer.writeAttribute(Constants.ATTR_URI, getURI());
         
         writer.writeEndElement();
@@ -141,30 +141,27 @@ public class PolicyReference implements PolicyComponent {
     public OMElement getRemoteReferedElement(String uri){
     	OMElement documentElement = null;
     	
-    	try{    		    		
-    		
-	    	//create java.net URL pointing to remote resource			
-			URL url = new URL(uri);
-			URLConnection connection = url.openConnection();
-			connection.setDoInput(true);
+    	try {    		    		
+            //create java.net URL pointing to remote resource			
+    	    URL url = new URL(uri);
+    	    URLConnection connection = url.openConnection();
+    	    connection.setDoInput(true);
+
+    	    //create stax parser with the url content
+    	    XMLStreamReader parser = XMLInputFactory.newInstance().
+    	        createXMLStreamReader(connection.getInputStream()); 
 			
-			//create stax parser with the url content
-			XMLStreamReader parser = XMLInputFactory.newInstance().
-			                                         createXMLStreamReader(connection.getInputStream()); 
-			
-	        //get the root element (in this case the envelope)
-			StAXOMBuilder builder = new StAXOMBuilder(parser); 
-			documentElement = builder.getDocumentElement();	
-			
-        }catch(XMLStreamException se){        	        	
+    	    //get the root element (in this case the envelope)
+    	    StAXOMBuilder builder = new StAXOMBuilder(parser); 
+    	    documentElement = builder.getDocumentElement();	
+        } catch(XMLStreamException se) {        	        	
         	throw new RuntimeException("Bad policy content: " + uri);
-        }catch(MalformedURLException mue){        	
+        } catch(MalformedURLException mue) {        	
         	throw new RuntimeException("Malformed uri: " + uri);
-        }catch(IOException ioe){        
+        } catch(IOException ioe) {        
         	throw new RuntimeException("Cannot reach remote resource: " + uri);
-        }       
-		
-		return documentElement;
+        }       		
+        return documentElement;
     }
     
     
@@ -178,6 +175,6 @@ public class PolicyReference implements PolicyComponent {
     	//call the policy engine with already extracted content
     	policy = PolicyEngine.getPolicy(policyElement);
     	
-		return policy;
+    	return policy;
     }
 }

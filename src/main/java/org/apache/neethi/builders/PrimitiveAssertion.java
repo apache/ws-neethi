@@ -40,6 +40,7 @@ public class PrimitiveAssertion implements Assertion {
     
     protected QName name;
     protected boolean optional;
+    protected boolean ignorable;
     
     public PrimitiveAssertion() {
         this((QName)null);
@@ -52,6 +53,11 @@ public class PrimitiveAssertion implements Assertion {
     public PrimitiveAssertion(QName n, boolean o) {
         name = n;
         optional = o;
+    }
+    public PrimitiveAssertion(QName n, boolean o, boolean i) {
+        name = n;
+        optional = o;
+        ignorable = i;
     }
 
     public String toString() {
@@ -83,6 +89,13 @@ public class PrimitiveAssertion implements Assertion {
     public void setOptional(boolean o) {
         optional = o;        
     }
+    public boolean isIgnorable() {
+        return ignorable;
+    }
+
+    public void setIgnorable(boolean i) {
+        ignorable = i;
+    }
     
     public PolicyComponent normalize() {
         if (isOptional()) {
@@ -102,16 +115,19 @@ public class PrimitiveAssertion implements Assertion {
     }
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
+        String namespace = Constants.findPolicyNamespace(writer);
         writer.writeEmptyElement(name.getNamespaceURI(), name.getLocalPart());
         if (optional) {
-            writer.writeAttribute(Constants.Q_ELEM_OPTIONAL_ATTR.getNamespaceURI(),
-                                  Constants.Q_ELEM_OPTIONAL_ATTR.getLocalPart(), "true");
+            writer.writeAttribute(namespace, Constants.ATTR_OPTIONAL, "true");
+        }
+        if (ignorable) {
+            writer.writeAttribute(namespace, Constants.ATTR_IGNORABLE, "true");
         }
         writer.writeEndElement();
     }
     
     protected Assertion cloneMandatory() {
-        return new PrimitiveAssertion(name, false);
+        return new PrimitiveAssertion(name, false, ignorable);
     }
 
     public Policy getPolicy() {

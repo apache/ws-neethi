@@ -32,16 +32,17 @@ import javax.xml.stream.XMLStreamWriter;
 public class ExactlyOne extends AbstractPolicyOperator {
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
-        String prefix = writer.getPrefix(Constants.URI_POLICY_NS);
+        String namespace = Constants.findPolicyNamespace(writer);
+        String prefix = writer.getPrefix(namespace);
 
         if (prefix == null) {
             writer.writeStartElement(Constants.ATTR_WSP,
-                    Constants.ELEM_EXACTLYONE, Constants.URI_POLICY_NS);
+                    Constants.ELEM_EXACTLYONE, namespace);
             writer.writeNamespace(Constants.ATTR_WSP,
-                    Constants.URI_POLICY_NS);
-            writer.setPrefix(Constants.ATTR_WSP, Constants.URI_POLICY_NS);
+                    namespace);
+            writer.setPrefix(Constants.ATTR_WSP, namespace);
         } else {
-            writer.writeStartElement(Constants.URI_POLICY_NS,
+            writer.writeStartElement(namespace,
                     Constants.ELEM_EXACTLYONE);
         }
 

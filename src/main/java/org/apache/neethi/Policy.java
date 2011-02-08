@@ -36,6 +36,17 @@ import javax.xml.stream.XMLStreamWriter;
 public class Policy extends All {
 
     private Map<QName, String> attributes = new HashMap<QName, String>();
+    private String namespace;
+    
+    public Policy() {
+    }
+    public Policy(String ns) {
+        namespace = ns;
+    }
+    
+    public String getNamespace() {
+        return namespace;
+    }
 
     /**
      * Returns a Normalized version of self. If <tt>deep</tt> is set
@@ -74,7 +85,7 @@ public class Policy extends All {
      */
     public Policy merge(Policy policy) {
 
-        Policy result = new Policy();
+        Policy result = new Policy(namespace);
         result.addPolicyComponents(getPolicyComponents());
         result.addPolicyComponents(policy.getPolicyComponents());
         return result;
@@ -84,9 +95,6 @@ public class Policy extends All {
      * Throws an UnSupportedOpertionException. TODO for a next version.
      */
     public Policy intersect(Policy policy) {
-        //Policy p1 = normalize(true);
-        //Policy p2 = policy.normalize(true);
-        
         throw new UnsupportedOperationException();
     }
 
@@ -94,11 +102,15 @@ public class Policy extends All {
      * Serializes the Policy to a XMLStreamWriter.
      */
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
-        String wspPrefix = writer.getPrefix(Constants.URI_POLICY_NS);
+        String nspace = namespace;
+        if (namespace == null) {
+            nspace = Constants.findPolicyNamespace(writer);
+        }
+        String wspPrefix = writer.getPrefix(nspace);
 
         if (wspPrefix == null) {
             wspPrefix = Constants.ATTR_WSP;
-            writer.setPrefix(wspPrefix, Constants.URI_POLICY_NS);
+            writer.setPrefix(wspPrefix, nspace);
         }
 
         String wsuPrefix = writer.getPrefix(Constants.URI_WSU_NS);
@@ -108,7 +120,7 @@ public class Policy extends All {
         }
 
         writer.writeStartElement(wspPrefix, Constants.ELEM_POLICY,
-                Constants.URI_POLICY_NS);
+                nspace);
 
         QName key;
         
@@ -156,7 +168,7 @@ public class Policy extends All {
         }
 
         // writes xmlns:wsp=".."
-        writer.writeNamespace(wspPrefix, Constants.URI_POLICY_NS);
+        writer.writeNamespace(wspPrefix, nspace);
 
         String prefiX;
 
