@@ -36,7 +36,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         policyComponents.add(component);
     }
 
-    public void addPolicyComponents(List<PolicyComponent> components) {
+    public void addPolicyComponents(List<? extends PolicyComponent> components) {
         policyComponents.addAll(components);
     }
 
