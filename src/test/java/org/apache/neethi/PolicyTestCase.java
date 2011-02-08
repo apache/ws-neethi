@@ -30,7 +30,7 @@ import junit.framework.TestCase;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
+import org.apache.axiom.om.OMXMLBuilderFactory;
 
 
 public abstract class PolicyTestCase extends TestCase{
