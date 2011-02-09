@@ -50,6 +50,7 @@ public class PolicyEngine {
 
     private ConverterRegistry converters = new ConverterRegistry();
     private AssertionBuilderFactory factory = new AssertionBuilderFactory(this, converters);
+    private PolicyRegistry defaultPolicyRegistry;
     
     /**
      * Registers an AssertionBuilder instances and associates it with a QName.
@@ -65,6 +66,20 @@ public class PolicyEngine {
      */
     public void registerBuilder(QName qname, AssertionBuilder builder) {
         factory.registerBuilder(qname, builder);
+    }
+    
+    
+    /**
+     * The PolicyEngine can have a default PolicyRegistry that the Policy objects
+     * that it creates are setup to use when normalize is called without the 
+     * PolicyRegistry.   
+     * @return the default PolicyRegistry
+     */
+    public PolicyRegistry getPolicyRegistry() {
+        return defaultPolicyRegistry;
+    }
+    public void setPolicyRegistry(PolicyRegistry reg) {
+        defaultPolicyRegistry = reg;
     }
 
     /**
@@ -152,7 +167,7 @@ public class PolicyEngine {
 
     private Policy getPolicyOperator(Object element) {
         String ns = converters.findQName(element).getNamespaceURI();
-        return (Policy) processOperationElement(element, new Policy(ns));
+        return (Policy) processOperationElement(element, new Policy(defaultPolicyRegistry, ns));
     }
 
     private ExactlyOne getExactlyOneOperator(Object element) {
@@ -186,11 +201,7 @@ public class PolicyEngine {
             if (childElement == null || qn == null 
                 || qn.getNamespaceURI() == null) {
                 if (log.isDebugEnabled()) {
-                    try {
-                        log.debug("Skipping bad policy element " + childElement);
-                    } catch (Throwable t) {
-                        log.debug("Problem occurred while logging trace " + t);
-                    }
+                    log.debug("Skipping bad policy element " + childElement);
                 }
             } else if (Constants.isInPolicyNS(qn)) {
                 if (Constants.ELEM_POLICY.equals(qn.getLocalPart())) {
@@ -201,6 +212,8 @@ public class PolicyEngine {
                     operator.addPolicyComponent(getAllOperator(childElement));
                 } else if (Constants.ELEM_POLICY_REF.equals(qn.getLocalPart())) {
                     operator.addPolicyComponent(getPolicyReference(childElement));
+                } else {
+                    operator.addPolicyComponent(factory.build(childElement));
                 }
             } else {
                 operator.addPolicyComponent(factory.build(childElement));

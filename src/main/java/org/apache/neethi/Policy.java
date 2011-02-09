@@ -37,16 +37,27 @@ public class Policy extends All {
 
     private Map<QName, String> attributes = new HashMap<QName, String>();
     private String namespace;
+    private PolicyRegistry registry;
     
     public Policy() {
     }
-    public Policy(String ns) {
+    public Policy(PolicyRegistry r) {
+        registry = r;
+    }
+    public Policy(PolicyRegistry r, String ns) {
+        this(r);
         namespace = ns;
     }
     public Policy(PolicyOperator parent) {
         super(parent);
     }
 
+    public PolicyRegistry getPolicyRegistry() {
+        return registry;
+    }
+    public void setPolicyRegistry(PolicyRegistry reg) {
+        registry = reg;
+    }
     
     public String getNamespace() {
         return namespace;
@@ -62,7 +73,7 @@ public class Policy extends All {
      * @return a Policy that is normalized version of self
      */
     public Policy normalize(boolean deep) {
-        return normalize(null, deep);
+        return normalize(registry, deep);
     }
 
     /**
@@ -89,7 +100,7 @@ public class Policy extends All {
      */
     public Policy merge(Policy policy) {
 
-        Policy result = new Policy(namespace);
+        Policy result = new Policy(registry, namespace);
         result.addPolicyComponents(getPolicyComponents());
         result.addPolicyComponents(policy.getPolicyComponents());
         return result;
@@ -211,14 +222,17 @@ public class Policy extends All {
      * @return
      */
     public Iterator<List<PolicyComponent>> getAlternatives() {
-        return new PolicyIterator(this);
+        return new PolicyIterator(this, registry);
+    }
+    public Iterator<List<PolicyComponent>> getAlternatives(PolicyRegistry reg) {
+        return new PolicyIterator(this, reg);
     }
 
     private class PolicyIterator implements Iterator<List<PolicyComponent>> {
         Iterator<PolicyComponent> alternatives = null;
 
-        public PolicyIterator(Policy policy) {
-            policy = policy.normalize(false);
+        public PolicyIterator(Policy policy, PolicyRegistry reg) {
+            policy = policy.normalize(reg, false);
             ExactlyOne exactlyOne = (ExactlyOne) policy
                     .getFirstPolicyComponent();
             alternatives = exactlyOne.getPolicyComponents().iterator();

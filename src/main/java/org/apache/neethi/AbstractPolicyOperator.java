@@ -68,7 +68,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
     }
     
     protected static Policy normalize(Policy policy, PolicyRegistry reg, boolean deep) {
-        Policy result = new Policy(policy.getNamespace());
+        Policy result = new Policy(reg, policy.getNamespace());
         
         String policyName = policy.getName();
         if (policyName != null) {
@@ -120,7 +120,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                 }
             } else if (policyComponent.getType() == Constants.TYPE_POLICY_REF) {
                 String uri = ((PolicyReference) policyComponent).getURI();
-                policyComponent = reg.lookup(uri);
+                policyComponent = reg == null ? null : reg.lookup(uri);
                 
                 if (policyComponent == null) {
                     throw new RuntimeException(uri + " can't be resolved");

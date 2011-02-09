@@ -59,7 +59,7 @@ public class PolicyContainingAssertion extends PrimitiveAssertion {
         Policy normalisedNested 
             = (Policy)nested.normalize(true);
         
-        Policy p = new Policy();
+        Policy p = new Policy(nested.getPolicyRegistry(), nested.getNamespace());
         ExactlyOne ea = new ExactlyOne();
         p.addPolicyComponent(ea);
         if (isOptional()) {
@@ -70,7 +70,7 @@ public class PolicyContainingAssertion extends PrimitiveAssertion {
         while (alternatives.hasNext()) {
             All all = new All();
             List<PolicyComponent> alternative = alternatives.next();
-            Policy n = new Policy();
+            Policy n = new Policy(nested.getPolicyRegistry(), nested.getNamespace());
             PolicyContainingAssertion a 
                 = new PolicyContainingAssertion(getName(), false, ignorable, nested);
             ExactlyOne nea = new ExactlyOne();
