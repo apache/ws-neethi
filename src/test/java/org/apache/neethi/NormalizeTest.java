@@ -51,7 +51,7 @@ public class NormalizeTest extends PolicyTestCase {
         String r1, r2;
         Policy p1, p2;
         
-        for (int i =1; i < 27; i++) {
+        for (int i =1; i < 28; i++) {
 
             r1 = "samples" + File.separator + "test" + i + ".xml";
             r2 = "normalized" + File.separator + "test" + i + ".xml";
