@@ -40,10 +40,10 @@ public interface PolicyComponent {
      * Returns a short value which uniquely identify the type of the
      * PolicyComponent.
      *
-     * @return Constants.POLICY for Policy type PolicyComponent
-     *         Constants.EXACTLYONE for ExactlyOne type PolicyComponent
-     *         Constants.ALL for All type PolicyComponent
-     *         Constants.ASSERTION for Assertion type PolicyComponent
+     * @return Constants.TYPE_POLICY for Policy type PolicyComponent
+     *         Constants.TYPE_EXACTLYONE for ExactlyOne type PolicyComponent
+     *         Constants.TYPE_ALL for All type PolicyComponent
+     *         Constants.TYPE_ASSERTION for Assertion type PolicyComponent
      */
     public short getType();
 
