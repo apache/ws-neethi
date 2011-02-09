@@ -31,6 +31,14 @@ import org.apache.neethi.util.PolicyComparator;
  */
 public abstract class AbstractPolicyOperator implements PolicyOperator {
     protected List<PolicyComponent> policyComponents = new ArrayList<PolicyComponent>();
+    
+    public AbstractPolicyOperator() {
+        
+    }
+    
+    public AbstractPolicyOperator(PolicyOperator parent) {
+        parent.addPolicyComponent(this);
+    }
 
     public void addPolicyComponent(PolicyComponent component) {
         policyComponents.add(component);

@@ -30,6 +30,13 @@ import javax.xml.stream.XMLStreamWriter;
  */
 public class All extends AbstractPolicyOperator {
     
+    public All() {
+        super();
+    }
+    public All(PolicyOperator parent) {
+        super(parent);
+    }
+    
     /**
      * Adds an assertion to its PolicyComponent list.
      * 

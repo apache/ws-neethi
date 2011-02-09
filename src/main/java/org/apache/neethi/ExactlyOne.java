@@ -30,6 +30,12 @@ import javax.xml.stream.XMLStreamWriter;
  * 
  */
 public class ExactlyOne extends AbstractPolicyOperator {
+    public ExactlyOne() {
+        super();
+    }
+    public ExactlyOne(PolicyOperator parent) {
+        super(parent);
+    }
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
         String namespace = Constants.findPolicyNamespace(writer);

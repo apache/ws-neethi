@@ -43,6 +43,10 @@ public class Policy extends All {
     public Policy(String ns) {
         namespace = ns;
     }
+    public Policy(PolicyOperator parent) {
+        super(parent);
+    }
+
     
     public String getNamespace() {
         return namespace;
