@@ -53,6 +53,9 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
     }
 
     public PolicyComponent getFirstPolicyComponent() {
+        if (policyComponents.isEmpty()) {
+            return null;
+        }
         return policyComponents.get(0);
     }
 
