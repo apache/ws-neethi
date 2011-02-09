@@ -48,8 +48,8 @@ public class PolicyEngine {
 
     private static final Log log = LogFactory.getLog(PolicyEngine.class);
 
-    private static ConverterRegistry converters = new ConverterRegistry();
-    private static AssertionBuilderFactory factory = new AssertionBuilderFactory(converters);
+    private ConverterRegistry converters = new ConverterRegistry();
+    private AssertionBuilderFactory factory = new AssertionBuilderFactory(this, converters);
     
     /**
      * Registers an AssertionBuilder instances and associates it with a QName.
@@ -63,8 +63,8 @@ public class PolicyEngine {
      *            the AssertionBuilder that can build assertions that of 'qname'
      *            type
      */
-    public static void registerBuilder(QName qname, AssertionBuilder builder) {
-        AssertionBuilderFactory.registerBuilder(qname, builder);
+    public void registerBuilder(QName qname, AssertionBuilder builder) {
+        factory.registerBuilder(qname, builder);
     }
 
     /**
@@ -74,7 +74,7 @@ public class PolicyEngine {
      *            the InputStream of the Policy
      * @return a Policy object of the Policy that is fed as a InputStream
      */
-    public static Policy getPolicy(InputStream inputStream) {
+    public Policy getPolicy(InputStream inputStream) {
         try {
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
             return getPolicy(reader);
@@ -85,12 +85,12 @@ public class PolicyEngine {
         // TODO throw an IllegalArgumentException
         return null;
     }
-    public static Policy getPolicy(Element el) {
+    public Policy getPolicy(Element el) {
         return getPolicyOperator(el);
     }
     
     
-    public static Policy getPolicy(XMLStreamReader reader) {
+    public Policy getPolicy(XMLStreamReader reader) {
         return getPolicyOperator(reader);
     }
     
@@ -102,7 +102,7 @@ public class PolicyEngine {
      *            the Policy element
      * @return a Policy object of the Policy element
      */
-    public static Policy getPolicy(Object element) {
+    public Policy getPolicy(Object element) {
         return getPolicyOperator(element);
     }
     
@@ -114,7 +114,7 @@ public class PolicyEngine {
      *            the InputStream of the PolicyReference
      * @return a PolicyReference object of the PolicyReference
      */
-    public static PolicyReference getPolicyReference(InputStream inputStream) {
+    public PolicyReference getPolicyReference(InputStream inputStream) {
         try {
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
             return getPolicyReference(reader);
@@ -133,7 +133,7 @@ public class PolicyEngine {
      *            the PolicyReference element
      * @return a PolicyReference object of the PolicyReference element
      */
-    public static PolicyReference getPolicyReference(Object element) {
+    public PolicyReference getPolicyReference(Object element) {
         QName qn = converters.findQName(element);
 
         if (!Constants.isPolicyRef(qn)) {
@@ -141,7 +141,7 @@ public class PolicyEngine {
                     "Specified element is not a <wsp:PolicyReference .. />  element");
         }
 
-        PolicyReference reference = new PolicyReference();
+        PolicyReference reference = new PolicyReference(this);
 
         Map<QName, String> attrs = converters.getAttributes(element);
 
@@ -150,20 +150,20 @@ public class PolicyEngine {
         return reference;
     }
 
-    private static Policy getPolicyOperator(Object element) {
+    private Policy getPolicyOperator(Object element) {
         String ns = converters.findQName(element).getNamespaceURI();
         return (Policy) processOperationElement(element, new Policy(ns));
     }
 
-    private static ExactlyOne getExactlyOneOperator(Object element) {
+    private ExactlyOne getExactlyOneOperator(Object element) {
         return (ExactlyOne) processOperationElement(element, new ExactlyOne());
     }
 
-    private static All getAllOperator(Object element) {
+    private All getAllOperator(Object element) {
         return (All) processOperationElement(element, new All());
     }
 
-    private static PolicyOperator processOperationElement(Object operationElement,
+    private PolicyOperator processOperationElement(Object operationElement,
                                                           PolicyOperator operator) {
 
         if (Constants.TYPE_POLICY == operator.getType()) {

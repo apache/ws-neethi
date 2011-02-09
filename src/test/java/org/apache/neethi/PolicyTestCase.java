@@ -48,6 +48,7 @@ public abstract class PolicyTestCase extends TestCase{
     
     protected String baseDir = System.getProperty("basedir");
     protected String testResourceDir = "src" + File.separator + "test" + File.separator + "test-resources";
+    protected PolicyEngine policyEngine = new PolicyEngine();
     
     public PolicyTestCase(String name) {
         super(name);
@@ -62,13 +63,13 @@ public abstract class PolicyTestCase extends TestCase{
     public Policy getPolicy(String name, int type) throws Exception {
         switch (type) {
         case 0:
-            return PolicyEngine.getPolicy(getResource(name));
+            return policyEngine.getPolicy(getResource(name));
         case 1:
-            return PolicyEngine.getPolicy(getResourceAsDOM(name));
+            return policyEngine.getPolicy(getResourceAsDOM(name));
         case 2:
-            return PolicyEngine.getPolicy(getResourceAsStax(name));
+            return policyEngine.getPolicy(getResourceAsStax(name));
         default:
-            return PolicyEngine.getPolicy(getResourceAsElement(name));
+            return policyEngine.getPolicy(getResourceAsElement(name));
         }
     }
     

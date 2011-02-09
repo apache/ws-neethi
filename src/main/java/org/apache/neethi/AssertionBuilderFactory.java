@@ -56,21 +56,27 @@ public class AssertionBuilderFactory {
     public static final String EXACTLY_ONE = "ExactlyOne";
 
     public static final String ALL = "All";
-
-    private static final QName XML_ASSERTION_BUILDER = new QName("http://test.org/test", "test");
-
-    private static Map<QName, AssertionBuilder> registeredBuilders = new ConcurrentHashMap<QName, AssertionBuilder>();
-
-    private final ConverterRegistry converters;
     
-    static {
+    private Map<QName, AssertionBuilder> registeredBuilders = new ConcurrentHashMap<QName, AssertionBuilder>();
+    private AssertionBuilder defaultBuilder;
+    private final ConverterRegistry converters;
+    private final PolicyEngine engine;
+    
+    public AssertionBuilderFactory(PolicyEngine eng, ConverterRegistry reg) {
+        converters = reg;
+        engine = eng;
+
         for (AssertionBuilder builder : Service.providers(AssertionBuilder.class)) {
             QName[] knownElements = builder.getKnownElements();
             for (int i = 0; i < knownElements.length; i++) {
                 registerBuilder(knownElements[i], builder);
             }
         }
-        registerBuilder(XML_ASSERTION_BUILDER, new XMLPrimitiveAssertionBuilder());
+        defaultBuilder = new XMLPrimitiveAssertionBuilder();
+    }
+    
+    public PolicyEngine getPolicyEngine() {
+        return engine;
     }
 
     /**
@@ -80,15 +86,11 @@ public class AssertionBuilderFactory {
      * @param builder the AssertionBuilder that can build an Assertion from
      *            an element of specified type
      */
-    public static void registerBuilder(QName key, AssertionBuilder builder) {
+    public void registerBuilder(QName key, AssertionBuilder builder) {
         registeredBuilders.put(key, builder);
     }
 
     
-    public AssertionBuilderFactory(ConverterRegistry reg) {
-        converters = reg;
-    }
-
     /**
      * Returns an assertion that is built using the specified element.
      * 
@@ -101,14 +103,13 @@ public class AssertionBuilderFactory {
 
         QName qname = converters.findQName(element);
         builder = registeredBuilders.get(qname);
-        if (builder != null) {
-            return invokeBuilder(element, builder);
+        if (builder == null) {
+            /*
+             * if we can't locate an appropriate AssertionBuilder, we always use the
+             * XMLPrimitiveAssertionBuilder
+             */
+            builder = defaultBuilder;
         }
-        /*
-         * if we can't locate an appropriate AssertionBuilder, we always use the
-         * XMLPrimitiveAssertionBuilder
-         */
-        builder = registeredBuilders.get(XML_ASSERTION_BUILDER);
         return invokeBuilder(element, builder);
     }
 

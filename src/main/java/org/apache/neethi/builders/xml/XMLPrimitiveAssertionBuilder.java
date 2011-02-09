@@ -55,7 +55,7 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder<Element> {
                 
 
             
-                Policy policy = PolicyEngine.getPolicy(el);
+                Policy policy = factory.getPolicyEngine().getPolicy(el);
                 return new PolicyContainingAssertion(new QName(element.getNamespaceURI(), element.getLocalName()),
                                                  optional == null ? false : Boolean.parseBoolean(optional.getValue()),
                                                  ignorable == null ? false : Boolean.parseBoolean(ignorable.getValue()),

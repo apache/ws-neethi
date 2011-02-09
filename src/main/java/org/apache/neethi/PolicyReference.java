@@ -39,7 +39,15 @@ import javax.xml.stream.XMLStreamWriter;
 public class PolicyReference implements PolicyComponent {
 
     private String uri;
+    private PolicyEngine engine;
 
+    public PolicyReference(){
+    }
+    
+    public PolicyReference(PolicyEngine p){
+        engine = p;
+    }
+    
     /**
      * Sets the Policy URI
      * @param uri the Policy URI
@@ -107,14 +115,12 @@ public class PolicyReference implements PolicyComponent {
         Policy policy = reg.lookup(key);        
         
         if (policy == null) {
-        	policy = getRemoteReferencedPolicy(key);
-        	
-        	if(policy == null){
-        		throw new RuntimeException(key + " can't be resolved" );
-        	}
-        	
-        	reg.register(key, policy);
-            
+            policy = getRemoteReferencedPolicy(key);
+
+            if (policy == null){
+                throw new RuntimeException(key + " can't be resolved" );
+            }
+            reg.register(key, policy);
         }
         
         return policy.normalize(reg, deep);
@@ -136,7 +142,7 @@ public class PolicyReference implements PolicyComponent {
         writer.writeEndElement();
     }
     
-    public Policy getRemoteReferencedPolicy(String uri){
+    public Policy getRemoteReferencedPolicy(String uri) {
     	try {    		    		
             //create java.net URL pointing to remote resource			
     	    URL url = new URL(uri);
@@ -145,7 +151,11 @@ public class PolicyReference implements PolicyComponent {
 
     	    InputStream in = connection.getInputStream();
     	    try {
-    	        return PolicyEngine.getPolicy(connection.getInputStream());
+    	        PolicyEngine pe = engine;
+    	        if (pe == null) {
+    	            pe = new PolicyEngine();
+    	        }
+    	        return pe.getPolicy(connection.getInputStream());
     	    } finally {
     	        in.close();
     	    }
