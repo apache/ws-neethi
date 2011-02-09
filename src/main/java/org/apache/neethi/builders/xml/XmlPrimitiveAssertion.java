@@ -54,10 +54,9 @@ import org.apache.neethi.PolicyRegistry;
  */
 public class XmlPrimitiveAssertion implements Assertion {
 
-    Element element;
-
-    boolean optional;
-    boolean ignorable;
+    protected Element element;
+    protected boolean optional;
+    protected boolean ignorable;
 
     /**
      * Constructs a XmlPrimitiveAssertion from an Element.
