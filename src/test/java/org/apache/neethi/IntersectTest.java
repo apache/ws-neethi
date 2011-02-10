@@ -70,6 +70,11 @@ public class IntersectTest extends PolicyTestCase {
             if (files[i].isHidden()) { // to ignore .svn files
                 continue;
             }
+            if (f.startsWith(".")) {
+                continue;
+            }
+
+            
             boolean strict = !f.contains("lax");
             if (f.contains("-lax")) {
                 f = f.substring(0, f.indexOf("-lax")) + f.substring(f.indexOf("-lax") + 4);

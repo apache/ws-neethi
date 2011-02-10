@@ -62,6 +62,11 @@ public class MergeTest extends PolicyTestCase {
             }
 
             f = files[i].getName();
+            if (f.startsWith(".")) {
+                continue;
+            }
+
+            
             f1 = f.substring(f.indexOf('y') + 1, f.indexOf('-'));
             f2 = f.substring(f.indexOf('-') + 1, f.indexOf('.'));
 

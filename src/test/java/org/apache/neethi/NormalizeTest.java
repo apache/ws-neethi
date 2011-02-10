@@ -74,6 +74,9 @@ public class NormalizeTest extends PolicyTestCase {
             if (excludes.contains(name)) {
                 continue;
             }
+            if (name.startsWith(".")) {
+                continue;
+            }
             
             r1 = base + File.separator + name;
             r2 = normalized + File.separator + name;
