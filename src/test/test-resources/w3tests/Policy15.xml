@@ -1,0 +1,6 @@
+<wsp:Policy xmlns:wsp="http://www.w3.org/ns/ws-policy" >
+  <!-- Policy15 -->
+  <wsp:ExactlyOne>
+    <wsp:ExactlyOne />
+  </wsp:ExactlyOne>
+</wsp:Policy>

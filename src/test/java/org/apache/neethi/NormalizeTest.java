@@ -20,6 +20,11 @@
 package org.apache.neethi;
 
 import java.io.File;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
@@ -35,27 +40,43 @@ public class NormalizeTest extends PolicyTestCase {
     }
 
     public void testOM() throws Exception {
-        doTest(3);
+        doTest("samples", "normalized", 3);
     }
     public void testDOM() throws Exception {
-        doTest(1);
+        doTest("samples", "normalized", 1);
     }
     public void testStax() throws Exception {
-        doTest(2);
+        doTest("samples", "normalized", 2);
     }
     public void testStream() throws Exception {
-        doTest(3);
+        doTest("samples", "normalized", 3);
     }
-
-    public void doTest(int type) throws Exception {
+    public void testDOMW3C() throws Exception {
+        registry.register("#Policy1",
+                          getPolicy("w3tests" + File.separator + "Common/Protection.xml", 1));
+        doTest("w3tests", "w3tests" + File.separator + "Normalized", 1);
+    }
+    public void testOMW3C() throws Exception {
+        registry.register("#Policy1", getPolicy("w3tests" + File.separator + "Common/Protection.xml", 1));
+        doTest("w3tests", "w3tests" + File.separator + "Normalized", 3);
+    }
+    
+    public void doTest(String base, String normalized, int type) throws Exception {
+        doTest(base, normalized, type, new ArrayList<String>());
+    }
+    public void doTest(String base, String normalized, int type,
+                       List<String> excludes) throws Exception {
         String r1, r2;
         Policy p1, p2;
         
-        for (int i =1; i < 28; i++) {
-
-            r1 = "samples" + File.separator + "test" + i + ".xml";
-            r2 = "normalized" + File.separator + "test" + i + ".xml";
-
+        File file = new File(testResourceDir + File.separator + normalized);
+        for (String name : file.list()) {
+            if (excludes.contains(name)) {
+                continue;
+            }
+            
+            r1 = base + File.separator + name;
+            r2 = normalized + File.separator + name;
             
             p1 = getPolicy(r1, type);
             p1 = (Policy) p1.normalize(true);
@@ -74,8 +95,17 @@ public class NormalizeTest extends PolicyTestCase {
                 p2.serialize(writer);
                 writer.flush();
                 
-                fail("test" + i + " normalize() FAILED");
+                fail(name + " normalize() FAILED");
+            } else {
+                XMLStreamWriter writer;
+                
+                writer = XMLOutputFactory.newInstance().createXMLStreamWriter(new StringWriter());
+                p1.serialize(writer);
+                writer = XMLOutputFactory.newInstance().createXMLStreamWriter(new StringWriter());
+                p2.serialize(writer);
             }
+            
+            
         }
     }
 }

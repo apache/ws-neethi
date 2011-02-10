@@ -28,23 +28,29 @@ public class MergeTest extends PolicyTestCase {
         super("MergeTest");
     }
     public void testOM() throws Exception {
-        doTest(3);
+        doTest("samples2", "merged", 3);
     }
     public void testDOM() throws Exception {
-        doTest(1);
+        doTest("samples2", "merged", 1);
     }
     public void testStax() throws Exception {
-        doTest(2);
+        doTest("samples2", "merged", 2);
     }
     public void testStream() throws Exception {
-        doTest(3);
+        doTest("samples2", "merged", 3);
+    }
+    public void testW3CDOM() throws Exception {
+        doTest("w3tests", "w3tests" + File.separator + "Merged", 1);
+    }
+    public void testW3COM() throws Exception {
+        doTest("w3tests", "w3tests" + File.separator + "Merged", 3);
     }
 
-    public void doTest(int type) throws Exception {
+    public void doTest(String base, String merged, int type) throws Exception {
         String r1, r2, r3;
         Policy p1, p2, p3, p4;
 
-        File samples2 = new File(testResourceDir, "merged");
+        File samples2 = new File(testResourceDir, merged);
         File[] files = samples2.listFiles();
 
         String f, f1, f2;
@@ -56,13 +62,12 @@ public class MergeTest extends PolicyTestCase {
             }
 
             f = files[i].getName();
-
             f1 = f.substring(f.indexOf('y') + 1, f.indexOf('-'));
             f2 = f.substring(f.indexOf('-') + 1, f.indexOf('.'));
 
-            r1 = "samples2" + File.separator + "Policy" + f1 + ".xml";
-            r2 = "samples2" + File.separator + "Policy" + f2 + ".xml";
-            r3 = "merged" + File.separator + f;
+            r1 = base + File.separator + "Policy" + f1 + ".xml";
+            r2 = base + File.separator + "Policy" + f2 + ".xml";
+            r3 = merged + File.separator + f;
 
             p1 = getPolicy(r1, type);
             p2 = getPolicy(r2, type);

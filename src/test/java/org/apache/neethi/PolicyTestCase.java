@@ -49,12 +49,14 @@ public abstract class PolicyTestCase extends TestCase{
     protected String baseDir = System.getProperty("basedir");
     protected String testResourceDir = "src" + File.separator + "test" + File.separator + "test-resources";
     protected PolicyEngine policyEngine = new PolicyEngine();
+    protected PolicyRegistry registry = new PolicyRegistryImpl();
     
     public PolicyTestCase(String name) {
         super(name);
         if (baseDir == null) {
             baseDir = (String) new File(".").getAbsolutePath();
         }
+        policyEngine.setPolicyRegistry(registry);
     }
 
     public Policy getPolicy(String name) throws Exception {

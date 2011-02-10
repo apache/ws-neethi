@@ -30,13 +30,14 @@ import org.apache.neethi.All;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.Constants;
 import org.apache.neethi.ExactlyOne;
+import org.apache.neethi.IntersectableAssertion;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyComponent;
 
 /**
  * 
  */
-public class PrimitiveAssertion implements Assertion {
+public class PrimitiveAssertion implements IntersectableAssertion {
     
     protected QName name;
     protected boolean optional;
@@ -51,8 +52,7 @@ public class PrimitiveAssertion implements Assertion {
     }
     
     public PrimitiveAssertion(QName n, boolean o) {
-        name = n;
-        optional = o;
+        this(n, o, false);
     }
     public PrimitiveAssertion(QName n, boolean o, boolean i) {
         name = n;
@@ -116,7 +116,19 @@ public class PrimitiveAssertion implements Assertion {
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
         String namespace = Constants.findPolicyNamespace(writer);
-        writer.writeEmptyElement(name.getNamespaceURI(), name.getLocalPart());
+        String pfx = writer.getPrefix(name.getNamespaceURI());
+        boolean writeNS = false;
+        if ("".equals(pfx) || pfx == null) {
+            pfx = "";
+            writer.setDefaultNamespace(name.getNamespaceURI());
+            writeNS = true;
+        } else {
+            pfx = pfx + ":";
+        }
+        writer.writeStartElement(name.getNamespaceURI(), pfx + name.getLocalPart());
+        if (writeNS) {
+            writer.writeDefaultNamespace(name.getNamespaceURI());
+        }
         if (optional) {
             writer.writeAttribute(namespace, Constants.ATTR_OPTIONAL, "true");
         }
@@ -128,6 +140,20 @@ public class PrimitiveAssertion implements Assertion {
     
     protected Assertion cloneMandatory() {
         return new PrimitiveAssertion(name, false, ignorable);
+    }
+
+    public boolean isCompatible(Assertion assertion, boolean strict) {
+        if (name.equals(assertion.getName())) {
+            return true;
+        }
+        return false;
+    }
+
+    public Assertion intersect(Assertion assertion, boolean strict) {
+        if (isOptional() == assertion.isOptional()) {
+            return assertion;
+        }
+        return new PrimitiveAssertion(getName(), isOptional() && assertion.isOptional());
     }
 
 }

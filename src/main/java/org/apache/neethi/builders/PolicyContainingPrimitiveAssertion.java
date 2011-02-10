@@ -38,23 +38,23 @@ import org.apache.neethi.Constants;
 import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyComponent;
+import org.apache.neethi.PolicyContainingAssertion;
 import org.apache.neethi.PolicyOperator;
+import org.apache.neethi.util.PolicyIntersector;
 
 /**
  * Implementation of an assertion that required exactly one (possibly empty) child element
  * of type Policy (as does for examples the wsam:Addressing assertion).
  * 
  */
-public class PolicyContainingAssertion extends PrimitiveAssertion {
+public class PolicyContainingPrimitiveAssertion extends PrimitiveAssertion implements PolicyContainingAssertion {
     private Policy nested;
     
-    
-    public PolicyContainingAssertion(QName name, boolean optional, boolean ignorable, Policy p) {
+    public PolicyContainingPrimitiveAssertion(QName name, boolean optional, boolean ignorable, Policy p) {
         super(name, optional, ignorable);
         this.nested = p;
     }
 
-    
     public PolicyComponent normalize() {
         Policy normalisedNested 
             = (Policy)nested.normalize(true);
@@ -71,8 +71,8 @@ public class PolicyContainingAssertion extends PrimitiveAssertion {
             All all = new All();
             List<PolicyComponent> alternative = alternatives.next();
             Policy n = new Policy(nested.getPolicyRegistry(), nested.getNamespace());
-            PolicyContainingAssertion a 
-                = new PolicyContainingAssertion(getName(), false, ignorable, nested);
+            PolicyContainingPrimitiveAssertion a 
+                = new PolicyContainingPrimitiveAssertion(getName(), false, ignorable, n);
             ExactlyOne nea = new ExactlyOne();
             n.addPolicyComponent(nea);
             All na = new All();
@@ -85,11 +85,10 @@ public class PolicyContainingAssertion extends PrimitiveAssertion {
     } 
     
     public boolean equal(PolicyComponent policyComponent) {
-        
         if (!super.equal(policyComponent)) {
             return false;
         }
-        PolicyContainingAssertion other = (PolicyContainingAssertion)policyComponent;
+        PolicyContainingPrimitiveAssertion other = (PolicyContainingPrimitiveAssertion)policyComponent;
         return getPolicy().equal(other.getPolicy());
     }
     
@@ -101,7 +100,19 @@ public class PolicyContainingAssertion extends PrimitiveAssertion {
     }
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
         String namespace = Constants.findPolicyNamespace(writer);
-        writer.writeStartElement(name.getNamespaceURI(), name.getLocalPart());
+        String pfx = writer.getPrefix(name.getNamespaceURI());
+        boolean writeNS = false;
+        if ("".equals(pfx) || pfx == null) {
+            pfx = "";
+            writer.setDefaultNamespace(name.getNamespaceURI());
+            writeNS = true;
+        } else {
+            pfx = pfx + ":";
+        }
+        writer.writeStartElement(name.getNamespaceURI(), pfx + name.getLocalPart());
+        if (writeNS) {
+            writer.writeDefaultNamespace(name.getNamespaceURI());
+        }
         if (optional) {
             writer.writeAttribute(namespace, Constants.ATTR_OPTIONAL, "true");
         }
@@ -112,5 +123,21 @@ public class PolicyContainingAssertion extends PrimitiveAssertion {
         writer.writeEndElement();
     }
     
-    
+    public boolean isCompatible(Assertion assertion, boolean strict) {
+        if (name.equals(assertion.getName())) {
+            PolicyContainingPrimitiveAssertion p2 = (PolicyContainingPrimitiveAssertion)assertion;
+            return new PolicyIntersector(strict).compatiblePolicies(nested, p2.nested);
+        }
+        return false;
+    }
+
+    public Assertion intersect(Assertion assertion, boolean strict) {
+        PolicyContainingPrimitiveAssertion p2 = (PolicyContainingPrimitiveAssertion)assertion;
+        
+        Policy p = new PolicyIntersector(strict).intersect(nested, p2.nested);
+        return new PolicyContainingPrimitiveAssertion(getName(), 
+                                                      isOptional() && assertion.isOptional(),
+                                                      false,
+                                                      p);
+    }
 }

@@ -28,6 +28,8 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.apache.neethi.util.PolicyIntersector;
+
 /**
  * Policy is a PolicyOperator that requires to satisfy all of its
  * PolicyComponents. It is always the outermost component of a Policy.
@@ -106,11 +108,11 @@ public class Policy extends All {
         return result;
     }
 
-    /**
-     * Throws an UnSupportedOpertionException. TODO for a next version.
-     */
     public Policy intersect(Policy policy) {
-        throw new UnsupportedOperationException();
+        return intersect(policy, true);
+    }
+    public Policy intersect(Policy policy, boolean strict) {
+        return new PolicyIntersector(strict).intersect(normalize(true), policy.normalize(true), true);
     }
 
     /**

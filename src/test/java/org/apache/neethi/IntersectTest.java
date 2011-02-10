@@ -20,20 +20,46 @@
 package org.apache.neethi;
 
 import java.io.File;
+import java.io.FileOutputStream;
+
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.neethi.util.PolicyComparator;
 
 public class IntersectTest extends PolicyTestCase {
-
+    int failCount = 0;
+    
     public IntersectTest() {
         super("IntersectTest");
     }
+    public void testOM() throws Exception {
+        doTest("samples2", "intersected", 3);
+    }
+    public void testDOM() throws Exception {
+        doTest("samples2", "intersected", 1);
+    }
+    public void testStax() throws Exception {
+        doTest("samples2", "intersected", 2);
+    }
+    public void testStream() throws Exception {
+        doTest("samples2", "intersected", 3);
+    }
+    
+    public void testW3CDOM() throws Exception {
+        doTest("w3tests", "w3tests" + File.separator + "Intersected", 1);
+    }
 
-    public void test() throws Exception {
-        String r1, r2, r3;
-        Policy p1, p2, p3, p4;
+    /*
+    public void testMyTest() throws Exception {
+        runTest("w3tests", "w3tests" + File.separator + "Intersected",
+                "23", "26", "Policy23-26-lax.xml", false, 1);
+    }
+    */
 
-        File intersected = new File(testResourceDir, "intersected");
+    public void doTest(String base, String intersectedDir, int type) throws Exception {
+
+        File intersected = new File(testResourceDir, intersectedDir);
         File[] files = intersected.listFiles();
 
         String f, f1, f2;
@@ -41,32 +67,58 @@ public class IntersectTest extends PolicyTestCase {
         for (int i = 0; i < files.length; i++) {
             f = files[i].getName();
 
-            if (files[i].isHidden()) { // to ignor .svn files
+            if (files[i].isHidden()) { // to ignore .svn files
                 continue;
             }
-
-            f1 = f.substring(f.indexOf('y') + 1, f.indexOf('-'));
-            f2 = f.substring(f.indexOf('-') + 1, f.indexOf('.'));
-
-            r1 = "samples2" + File.separator + "Policy" + f1 + ".xml";
-            r2 = "samples2" + File.separator + "Policy" + f2 + ".xml";
-            r3 = "intersected" + File.separator + f;
-
-            p1 = getPolicy(r1);
-            p2 = getPolicy(r2);
-            p3 = getPolicy(r3);
-
-            try {
-                // result
-                p4 = (Policy)p1.intersect(p2);
-    
-                if (!PolicyComparator.compare(p4, p3)) {
-    
-                    fail("samples2" + File.separator + " Policy" + f1 + ".intersect(Policy" + f2 + ") FAILED");
-                }
-            } catch (UnsupportedOperationException e) {
-                //expected for now... :-(
+            boolean strict = !f.contains("lax");
+            if (f.contains("-lax")) {
+                f = f.substring(0, f.indexOf("-lax")) + f.substring(f.indexOf("-lax") + 4);
             }
+            if (f.contains("-strict")) {
+                f = f.substring(0, f.indexOf("-strict")) + f.substring(f.indexOf("-strict") + 7);
+            }
+            f1 = f.substring(f.indexOf('y') + 1, f.indexOf('-'));
+            
+            f2 = f.substring(f.indexOf('-') + 1, f.indexOf('.'));
+            
+            runTest(base, intersectedDir, f1, f2, files[i].getName(), strict, type);
+        }
+    }
+    public void runTest(String base, String intersectedDir, 
+                        String f1, String f2, int type) throws Exception {
+        runTest(base, intersectedDir, f1, f2, "Policy" + f1 + "-" + f2 + ".xml", true, type);
+    }
+    public void runTest(String base, String intersectedDir, 
+                        String f1, String f2, String f,
+                        boolean strict,
+                        int type) throws Exception {
+        Policy p1, p2, p3, p4;
+        String r1, r2, r3;
+
+        r1 = base + File.separator + "Policy" + f1 + ".xml";
+        r2 = base + File.separator + "Policy" + f2 + ".xml";
+        r3 = intersectedDir + File.separator + f;
+
+        p1 = getPolicy(r1, type);
+        p2 = getPolicy(r2, type);
+        p3 = getPolicy(r3, type);
+
+        // result
+        p4 = (Policy)p1.intersect(p2, strict);
+
+        if (p4 == null || !PolicyComparator.compare(p4, p3)) {
+            /*
+             System.out.println(++failCount + " Fail: " + base + File.separator + "Policy" 
+                               + f1 + ".intersect(Policy" + f2 + ", "
+                               + strict +")");
+            */
+            fail(base + File.separator + " Policy" + f1 + ".intersect(Policy" 
+                 + f2 + ", " + strict + ") FAILED");
+            /*
+        } else {
+            System.out.println("Pass: " + base + File.separator + "Policy" + f1 + ".intersect(Policy" + f2 + ", "
+                               + strict +")");
+                               */
         }
     }
 }

@@ -45,8 +45,13 @@ public abstract class AbstractOMConverter {
         Iterator it = s.getAllAttributes();
         while (it.hasNext()) {
             OMAttribute attr = (OMAttribute)it.next();
-            mp.put(new QName(attr.getNamespace().getNamespaceURI(), attr.getLocalName()),
+            if (attr.getNamespace() == null) {
+                mp.put(new QName("", attr.getLocalName()),
+                       attr.getAttributeValue());
+            } else {
+                mp.put(new QName(attr.getNamespace().getNamespaceURI(), attr.getLocalName()),
                    attr.getAttributeValue());
+            }
         }
         return mp;
     }

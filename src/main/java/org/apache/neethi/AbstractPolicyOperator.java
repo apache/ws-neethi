@@ -41,6 +41,9 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
     }
 
     public void addPolicyComponent(PolicyComponent component) {
+        if (component == null) {
+            throw new IllegalArgumentException("Component must not be null");
+        }
         policyComponents.add(component);
     }
 

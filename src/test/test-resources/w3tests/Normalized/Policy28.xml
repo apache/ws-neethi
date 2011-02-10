@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsp:Policy xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"
+    xmlns:wsp="http://www.w3.org/ns/ws-policy">
+    <wsp:ExactlyOne>
+        <wsp:All>
+            <sp:OnlySignEntireHeadersAndBody/>
+            <sp:EncryptSignature/>
+            <sp:ProtectTokens/>
+        </wsp:All>
+        <wsp:All>
+            <sp:OnlySignEntireHeadersAndBody/>
+            <sp:EncryptSignature/>
+        </wsp:All>
+        <wsp:All>
+            <sp:OnlySignEntireHeadersAndBody/>
+            <sp:ProtectTokens/>
+        </wsp:All>
+        <wsp:All>
+            <sp:OnlySignEntireHeadersAndBody/>
+        </wsp:All>
+    </wsp:ExactlyOne>
+</wsp:Policy>

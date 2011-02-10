@@ -1,0 +1,6 @@
+<wsp:Policy xmlns:wsp="http://www.w3.org/ns/ws-policy" >
+  <!-- Policy9 -->
+  <wsp:All>
+    <wsp:All />
+  </wsp:All>
+</wsp:Policy>

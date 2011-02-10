@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsp:Policy 
+    xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" 
+    xmlns:wsp="http://www.w3.org/ns/ws-policy"
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+    wsu:Id="Policy1"> 
+    <sp:EncryptSignature wsp:Optional="true" /> 
+    <sp:ProtectTokens wsp:Optional="true" /> 
+</wsp:Policy> 
