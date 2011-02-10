@@ -19,22 +19,18 @@
 
 package org.apache.neethi;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.neethi.builders.AssertionBuilder;
 import org.apache.neethi.builders.converters.ConverterRegistry;
+import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.dom.DOMSource;
-
-import org.w3c.dom.Element;
-
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * PolicyEngine provides set of methods to create a Policy object from an
