@@ -19,7 +19,6 @@
 
 package org.apache.neethi;
 
-import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.builders.AssertionBuilder;
 import org.apache.neethi.builders.converters.ConverterRegistry;
 
