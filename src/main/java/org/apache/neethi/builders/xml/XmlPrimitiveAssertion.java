@@ -63,7 +63,7 @@ public class XmlPrimitiveAssertion implements Assertion {
      *            the Element from which the XmlAssertion is constructed
      */
     public XmlPrimitiveAssertion(Element element) {
-        setValue(element);
+        this.element = element;
         setOptionality(element);
         setIgnorability(element);
     }

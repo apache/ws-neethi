@@ -59,7 +59,7 @@ public class AssertionBuilderFactory {
         for (AssertionBuilder builder : Service.providers(AssertionBuilder.class)) {
             QName[] knownElements = builder.getKnownElements();
             for (int i = 0; i < knownElements.length; i++) {
-                registerBuilder(knownElements[i], builder);
+                registeredBuilders.put(knownElements[i], builder);
             }
         }
         defaultBuilder = new XMLPrimitiveAssertionBuilder();

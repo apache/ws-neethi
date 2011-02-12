@@ -170,7 +170,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                 if (!exactlyOne.isEmpty()) {
                     ExactlyOne currentExactlyOne;
 
-                    for (; iter.hasNext();) {
+                    while (iter.hasNext()) {
                         currentExactlyOne = (ExactlyOne) iter.next();
                         if (currentExactlyOne.isEmpty()) {
                             // if this is empty, this is an not admissible policy and total 
