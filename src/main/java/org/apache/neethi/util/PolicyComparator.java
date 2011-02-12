@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -19,7 +19,6 @@
 
 package org.apache.neethi.util;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.neethi.All;
@@ -33,7 +32,10 @@ import org.apache.neethi.PolicyComponent;
  * PolicyComponents.
  * 
  */
-public class PolicyComparator {
+public final class PolicyComparator {
+    private PolicyComparator() {
+        //utility class
+    }
 
     /**
      * Returns <tt>true</tt> if the two policies have the same semantics

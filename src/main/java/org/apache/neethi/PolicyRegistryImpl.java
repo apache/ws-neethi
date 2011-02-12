@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PolicyRegistryImpl implements PolicyRegistry {
     
-    private PolicyRegistry parent = null;
+    private PolicyRegistry parent;
     
     private Map<String, Policy> reg = new ConcurrentHashMap<String, Policy>();
     

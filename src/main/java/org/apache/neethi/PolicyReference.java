@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -19,18 +19,13 @@
 
 package org.apache.neethi;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
@@ -41,10 +36,10 @@ public class PolicyReference implements PolicyComponent {
     private String uri;
     private PolicyEngine engine;
 
-    public PolicyReference(){
+    public PolicyReference() {
     }
     
-    public PolicyReference(PolicyEngine p){
+    public PolicyReference(PolicyEngine p) {
         engine = p;
     }
     
@@ -52,8 +47,8 @@ public class PolicyReference implements PolicyComponent {
      * Sets the Policy URI
      * @param uri the Policy URI
      */
-    public void setURI(String uri) {
-        this.uri = uri;
+    public void setURI(String ur) {
+        this.uri = ur;
     }
 
     /**
@@ -69,9 +64,9 @@ public class PolicyReference implements PolicyComponent {
             return false;
         }
         
-        String URI = ((PolicyReference) policyComponent).getURI();
-        if (URI != null && URI.length() != 0) {
-            return URI.equals(this.uri);
+        String u = ((PolicyReference)policyComponent).getURI();
+        if (u != null && u.length() != 0) {
+            return u.equals(this.uri);
         } 
         
         return false;
@@ -108,8 +103,8 @@ public class PolicyReference implements PolicyComponent {
         int pos = key.indexOf("#");
         if (pos == 0) {
             key = key.substring(1);
-        }else if(pos > 0){
-        	key = key.substring(0, pos);
+        } else if (pos > 0) {
+            key = key.substring(0, pos);
         }
         
         Policy policy = reg.lookup(key);        
@@ -117,8 +112,8 @@ public class PolicyReference implements PolicyComponent {
         if (policy == null) {
             policy = getRemoteReferencedPolicy(key);
 
-            if (policy == null){
-                throw new RuntimeException(key + " can't be resolved" );
+            if (policy == null) {
+                throw new RuntimeException(key + " can't be resolved");
             }
             reg.register(key, policy);
         }
@@ -142,27 +137,27 @@ public class PolicyReference implements PolicyComponent {
         writer.writeEndElement();
     }
     
-    public Policy getRemoteReferencedPolicy(String uri) {
-    	try {    		    		
-            //create java.net URL pointing to remote resource			
-    	    URL url = new URL(uri);
-    	    URLConnection connection = url.openConnection();
-    	    connection.setDoInput(true);
+    public Policy getRemoteReferencedPolicy(String u) {
+        try {
+            //create java.net URL pointing to remote resource
+            URL url = new URL(u);
+            URLConnection connection = url.openConnection();
+            connection.setDoInput(true);
 
-    	    InputStream in = connection.getInputStream();
-    	    try {
-    	        PolicyEngine pe = engine;
-    	        if (pe == null) {
-    	            pe = new PolicyEngine();
-    	        }
-    	        return pe.getPolicy(connection.getInputStream());
-    	    } finally {
-    	        in.close();
-    	    }
-        } catch(MalformedURLException mue) {        	
-        	throw new RuntimeException("Malformed uri: " + uri);
-        } catch(IOException ioe) {        
-        	throw new RuntimeException("Cannot reach remote resource: " + uri);
-        }       		
+            InputStream in = connection.getInputStream();
+            try {
+                PolicyEngine pe = engine;
+                if (pe == null) {
+                    pe = new PolicyEngine();
+                }
+                return pe.getPolicy(connection.getInputStream());
+            } finally {
+                in.close();
+            }
+        } catch (MalformedURLException mue) {
+            throw new RuntimeException("Malformed uri: " + u);
+        } catch (IOException ioe) {        
+            throw new RuntimeException("Cannot reach remote resource: " + u);
+        }
     }
 }

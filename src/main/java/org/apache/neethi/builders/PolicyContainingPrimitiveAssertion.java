@@ -20,17 +20,12 @@
 package org.apache.neethi.builders;
 
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import org.apache.neethi.All;
 import org.apache.neethi.Assertion;
@@ -39,7 +34,6 @@ import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyComponent;
 import org.apache.neethi.PolicyContainingAssertion;
-import org.apache.neethi.PolicyOperator;
 import org.apache.neethi.util.PolicyIntersector;
 
 /**
@@ -47,7 +41,10 @@ import org.apache.neethi.util.PolicyIntersector;
  * of type Policy (as does for examples the wsam:Addressing assertion).
  * 
  */
-public class PolicyContainingPrimitiveAssertion extends PrimitiveAssertion implements PolicyContainingAssertion {
+public class PolicyContainingPrimitiveAssertion
+    extends PrimitiveAssertion 
+    implements PolicyContainingAssertion {
+    
     private Policy nested;
     
     public PolicyContainingPrimitiveAssertion(QName name, boolean optional, boolean ignorable, Policy p) {

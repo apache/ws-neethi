@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -19,18 +19,20 @@
 
 package org.apache.neethi;
 
+
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.Map;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
+
+import org.w3c.dom.Element;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.neethi.builders.AssertionBuilder;
 import org.apache.neethi.builders.converters.ConverterRegistry;
-import org.w3c.dom.Element;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * PolicyEngine provides set of methods to create a Policy object from an
@@ -41,7 +43,7 @@ import java.util.Map;
  */
 public class PolicyEngine {
 
-    private static final Log log = LogFactory.getLog(PolicyEngine.class);
+    private static final Log LOG = LogFactory.getLog(PolicyEngine.class);
 
     private ConverterRegistry converters = new ConverterRegistry();
     private AssertionBuilderFactory factory = new AssertionBuilderFactory(this, converters);
@@ -195,8 +197,8 @@ public class PolicyEngine {
             
             if (childElement == null || qn == null 
                 || qn.getNamespaceURI() == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Skipping bad policy element " + childElement);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Skipping bad policy element " + childElement);
                 }
             } else if (Constants.isInPolicyNS(qn)) {
                 if (Constants.ELEM_POLICY.equals(qn.getLocalPart())) {

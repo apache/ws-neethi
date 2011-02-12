@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -19,8 +19,6 @@
 
 package org.apache.neethi.builders.xml;
 
-import java.util.Iterator;
-
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Attr;
@@ -30,8 +28,6 @@ import org.w3c.dom.Node;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.AssertionBuilderFactory;
 import org.apache.neethi.Constants;
-import org.apache.neethi.Policy;
-import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.builders.AssertionBuilder;
 import org.apache.neethi.builders.PolicyContainingPrimitiveAssertion;
 import org.apache.neethi.builders.PrimitiveAssertion;
@@ -39,7 +35,8 @@ import org.apache.neethi.builders.PrimitiveAssertion;
 public class XMLPrimitiveAssertionBuilder implements AssertionBuilder<Element> {
 
     public Assertion build(Element element, AssertionBuilderFactory factory)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
+        
         Node nd = element.getFirstChild();
         int count = 0;
         int policyCount = 0;
@@ -60,7 +57,8 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder<Element> {
                                          isOptional(element), isIgnorable(element));
 
         } else if (policyCount == 1 && count == 1) {
-            return new PolicyContainingPrimitiveAssertion(new QName(element.getNamespaceURI(), element.getLocalName()),
+            return new PolicyContainingPrimitiveAssertion(new QName(element.getNamespaceURI(),
+                                                                    element.getLocalName()),
                                           isOptional(element), isIgnorable(element),
                                           factory.getPolicyEngine().getPolicy(policyEl));
         }
@@ -81,7 +79,7 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder<Element> {
     }
     
     public QName[] getKnownElements() {
-        return new QName[] { new QName("UnknownElement") };
+        return new QName[] {new QName("UnknownElement")};
     }
 
 }

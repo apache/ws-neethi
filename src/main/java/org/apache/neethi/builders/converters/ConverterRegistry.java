@@ -37,9 +37,9 @@ import javax.xml.namespace.QName;
  */
 public class ConverterRegistry {
     private static class ConverterKey {
-        public Class<?> src;
-        public Class<?> target;
-        public Converter converter;
+        Class<?> src;
+        Class<?> target;
+        Converter converter;
     }
 
     private List<ConverterKey> registeredConverters = new CopyOnWriteArrayList<ConverterKey>();
@@ -61,7 +61,8 @@ public class ConverterRegistry {
 
     private void registerConverter(String name) {
         try {
-            Converter c = (Converter)Class.forName(name, true, Converter.class.getClassLoader()).newInstance();
+            Converter c = (Converter)Class.forName(name, true,
+                                                   Converter.class.getClassLoader()).newInstance();
             registerConverter(c);
         } catch (Throwable e) {
             //likely due to Axiom not available, we're OK with that.  There

@@ -25,12 +25,8 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.w3c.dom.Element;
-
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axiom.om.impl.dom.DOOMAbstractFactory;
 
 /**
  * 
@@ -50,7 +46,7 @@ public abstract class AbstractOMConverter {
                        attr.getAttributeValue());
             } else {
                 mp.put(new QName(attr.getNamespace().getNamespaceURI(), attr.getLocalName()),
-                   attr.getAttributeValue());
+                       attr.getAttributeValue());
             }
         }
         return mp;

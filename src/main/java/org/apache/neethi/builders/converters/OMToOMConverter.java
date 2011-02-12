@@ -19,11 +19,8 @@
 
 package org.apache.neethi.builders.converters;
 
-import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axiom.om.impl.dom.DOOMAbstractFactory;
 
 /**
  * 

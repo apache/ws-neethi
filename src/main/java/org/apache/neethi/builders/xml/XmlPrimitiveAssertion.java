@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -23,7 +23,6 @@ import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -44,7 +43,6 @@ import org.apache.neethi.Constants;
 import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyComponent;
-import org.apache.neethi.PolicyRegistry;
 
 /**
  * XmlPrimitiveAssertion wraps an Element s.t. any unknown elements can be
@@ -84,8 +82,8 @@ public class XmlPrimitiveAssertion implements Assertion {
      * @param element
      *            the Element to be set as wrapped
      */
-    public void setValue(Element element) {
-        this.element = element;
+    public void setValue(Element el) {
+        this.element = el;
     }
 
     /**
@@ -122,16 +120,16 @@ public class XmlPrimitiveAssertion implements Assertion {
             ExactlyOne exactlyOne = new ExactlyOne();
 
             All all = new All();
-            Element element = (Element)this.element.cloneNode(true);
-            Attr attr = element.getAttributeNodeNS(Constants.URI_POLICY_NS, Constants.ATTR_OPTIONAL);
+            Element el = (Element)this.element.cloneNode(true);
+            Attr attr = el.getAttributeNodeNS(Constants.URI_POLICY_NS, Constants.ATTR_OPTIONAL);
             if (attr != null) {
-                element.removeAttributeNode(attr);
+                el.removeAttributeNode(attr);
             }
-            attr = element.getAttributeNodeNS(Constants.URI_POLICY_15_NS, Constants.ATTR_OPTIONAL);
+            attr = el.getAttributeNodeNS(Constants.URI_POLICY_15_NS, Constants.ATTR_OPTIONAL);
             if (attr != null) {
-                element.removeAttributeNode(attr);
+                el.removeAttributeNode(attr);
             }
-            all.addPolicyComponent(new XmlPrimitiveAssertion(element));
+            all.addPolicyComponent(new XmlPrimitiveAssertion(el));
             exactlyOne.addPolicyComponent(all);
 
             exactlyOne.addPolicyComponent(new All());
@@ -172,8 +170,7 @@ public class XmlPrimitiveAssertion implements Assertion {
             attribute = element2.getAttributeNodeNS(Constants.URI_POLICY_15_NS, Constants.ATTR_OPTIONAL);
         }
         if (attribute != null) {
-            this.optional = (new Boolean(attribute.getValue())
-                    .booleanValue());
+            this.optional = Boolean.parseBoolean(attribute.getValue());
 
         } else {
             this.optional = false;
@@ -182,9 +179,7 @@ public class XmlPrimitiveAssertion implements Assertion {
     private void setIgnorability(Element element2) {
         Attr attribute = element2.getAttributeNodeNS(Constants.URI_POLICY_15_NS, Constants.ATTR_IGNORABLE);
         if (attribute != null) {
-            this.ignorable = (new Boolean(attribute.getValue())
-                    .booleanValue());
-        
+            this.ignorable = Boolean.parseBoolean(attribute.getValue());
         } else {
             this.ignorable = false;
         }
@@ -244,8 +239,8 @@ public class XmlPrimitiveAssertion implements Assertion {
                     writer.writeAttribute(name.getPrefix(), name.getNamespaceURI(),
                                            name.getLocalPart(), attr.getValue());
                 }
+                break;
             }
-            break;
            
             case XMLEvent.CHARACTERS: {
                 Characters ch = event.asCharacters();
@@ -255,16 +250,16 @@ public class XmlPrimitiveAssertion implements Assertion {
                 } else {
                     writer.writeCharacters(text);
                 }
-            }
-            break;
-
+                break;
+            }            
             case XMLEvent.CDATA:
                 writer.writeCData(event.asCharacters().getData());
                 break;
             
             case XMLEvent.COMMENT:
                 writer.writeComment(((Comment) event).getText());
-            break;
+                break;
+            default:
             }
         }
     }

@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -55,7 +55,7 @@ public interface AssertionBuilder<T> {
      *             if the given element is malformed
      */
     Assertion build(T element, AssertionBuilderFactory factory)
-            throws IllegalArgumentException;
+        throws IllegalArgumentException;
 
     /**
      * Returns an array of QNames of elements from which assertion can be

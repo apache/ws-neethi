@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -34,7 +34,7 @@ public interface PolicyRegistry {
      * @param policy
      *            the policy to be associated with the key
      */
-    public void register(String key, Policy policy);
+    void register(String key, Policy policy);
 
     /**
      * Returns the Policy that the specified key is mapped. Returns null if no
@@ -44,7 +44,7 @@ public interface PolicyRegistry {
      *            the key whose associated Policy is to be returned.
      * @return the policy associated with the specified key.
      */
-    public Policy lookup(String key);
+    Policy lookup(String key);
 
     /**
      * Removes the mapping for this key if present.
@@ -52,6 +52,6 @@ public interface PolicyRegistry {
      * @param key
      *            the key whose mapping is to be removed
      */
-    public void remove(String key);
+    void remove(String key);
 
 }

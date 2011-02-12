@@ -19,8 +19,6 @@
 
 package org.apache.neethi.builders.converters;
 
-import javax.xml.namespace.QName;
-
 import org.w3c.dom.Element;
 
 import org.apache.axiom.om.OMElement;

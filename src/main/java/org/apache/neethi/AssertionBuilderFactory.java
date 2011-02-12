@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -19,25 +19,14 @@
 
 package org.apache.neethi;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.xml.namespace.QName;
 
 import org.apache.neethi.builders.AssertionBuilder;
-import org.apache.neethi.builders.converters.Converter;
 import org.apache.neethi.builders.converters.ConverterRegistry;
-import org.apache.neethi.builders.converters.DOMToDOMConverter;
-import org.apache.neethi.builders.converters.DOMToStaxConverter;
-import org.apache.neethi.builders.converters.StaxToDOMConverter;
-import org.apache.neethi.builders.converters.StaxToStaxConverter;
 import org.apache.neethi.builders.xml.XMLPrimitiveAssertionBuilder;
 import org.apache.neethi.util.Service;
 
@@ -57,7 +46,8 @@ public class AssertionBuilderFactory {
 
     public static final String ALL = "All";
     
-    private Map<QName, AssertionBuilder> registeredBuilders = new ConcurrentHashMap<QName, AssertionBuilder>();
+    private Map<QName, AssertionBuilder> registeredBuilders 
+        = new ConcurrentHashMap<QName, AssertionBuilder>();
     private AssertionBuilder defaultBuilder;
     private final ConverterRegistry converters;
     private final PolicyEngine engine;

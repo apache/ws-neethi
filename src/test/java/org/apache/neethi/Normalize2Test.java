@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -42,18 +42,16 @@ public class Normalize2Test extends PolicyTestCase {
     }
 
     public void doTest(int type) throws Exception {
-        String r1, r2;
-        Policy p1, p2;
 
         for (int i = 1; i < 21; i++) {
 
-            r1 = "samples2" + File.separator + "Policy" + i + ".xml";
-            r2 = "normalized2" + File.separator + "Policy" + i + ".xml";
+            String r1 = "samples2" + File.separator + "Policy" + i + ".xml";
+            String r2 = "normalized2" + File.separator + "Policy" + i + ".xml";
 
-            p1 = getPolicy(r1, type);
+            Policy p1 = getPolicy(r1, type);
             p1 = (Policy)p1.normalize(true);
 
-            p2 = getPolicy(r2, type);
+            Policy p2 = getPolicy(r2, type);
 
             if (!PolicyComparator.compare(p1, p2)) {
                 fail("samples2" + File.separator + "Policy" + i + ".normalize() FAILED");

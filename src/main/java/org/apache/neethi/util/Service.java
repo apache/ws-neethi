@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -28,7 +28,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -44,10 +43,14 @@ import java.util.Map;
  * @author <a href="mailto:Thomas.DeWeeese@Kodak.com">Thomas DeWeese</a>
  * @version $Id$
  */
-public class Service {
+public final class Service {
 
     // Remember providers we have looked up before.
     static Map<String, List<?>> instanceMap = new HashMap<String, List<?>>();
+    
+    private Service() {
+        //not constructed
+    }
     
     @SuppressWarnings("unchecked")
     private static <T> List<T> cast(List<?> p) {
@@ -84,11 +87,17 @@ public class Service {
             // Ooops! can't get his class loader.
         }
         // Can always request your own class loader. But it might be 'null'.
-        if (cl == null) cl = Service.class.getClassLoader();
-        if (cl == null) cl = ClassLoader.getSystemClassLoader();
+        if (cl == null) {
+            cl = Service.class.getClassLoader();
+        }
+        if (cl == null) {
+            cl = ClassLoader.getSystemClassLoader();
+        }
 
         // No class loader so we can't find 'serviceFile'.
-        if (cl == null) return l;
+        if (cl == null) {
+            return l;
+        }
 
         Enumeration<URL> e;
         try {
@@ -112,8 +121,9 @@ public class Service {
                     try {
                         // First strip any comment...
                         int idx = line.indexOf('#');
-                        if (idx != -1)
+                        if (idx != -1) {
                             line = line.substring(0, idx);
+                        }
 
                         // Trim whitespace.
                         line = line.trim();

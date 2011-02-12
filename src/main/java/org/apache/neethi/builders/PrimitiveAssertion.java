@@ -20,8 +20,6 @@
 package org.apache.neethi.builders;
 
 
-import java.util.Collection;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;

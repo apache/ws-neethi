@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -34,19 +34,19 @@ public interface PolicyOperator extends PolicyComponent {
      * 
      * @param component
      */
-    public void addPolicyComponent(PolicyComponent component);
+    void addPolicyComponent(PolicyComponent component);
 
     /**
      * Returns a List of PolicyComponents which this PolicyOperator contains.
      * 
      * @return the List of PolicyComponents that this PolicyOperator contains.
      */
-    public List<PolicyComponent> getPolicyComponents();
+    List<PolicyComponent> getPolicyComponents();
 
     /**
      * Returns true if the PolicyOperator doesn't contain any PolicyComponents.
      * 
      * @return true if this PolicyOperator doesn't contain any PolicyComponenets
      */
-    public boolean isEmpty();
+    boolean isEmpty();
 }

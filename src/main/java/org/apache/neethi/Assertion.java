@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -35,14 +35,14 @@ public interface Assertion extends PolicyComponent {
      *  
      * @return QName the QName of the Root Element of this Assertion.
      */
-    public QName getName();
+    QName getName();
     
     /**
      * Returns true if this Assertion is optional. Returns false otherwise. 
      * 
      * @return true if the assertion is optional.
      */
-    public boolean isOptional();
+    boolean isOptional();
     
     
     /**
@@ -50,15 +50,15 @@ public interface Assertion extends PolicyComponent {
      * 
      * @return true if the assertion is ignorable.
      */
-    public boolean isIgnorable();
+    boolean isIgnorable();
     
     /**
      * Serialize this Assertion into its XML infoset using XMLStreamWriter.
      */
-    public void serialize(XMLStreamWriter writer) throws XMLStreamException;
+    void serialize(XMLStreamWriter writer) throws XMLStreamException;
     
     /**
      * Returns a new PolicyComponent that is the normalized version of this. 
      */
-    public PolicyComponent normalize();
+    PolicyComponent normalize();
 }

@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -44,7 +44,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMXMLBuilderFactory;
 
 
-public abstract class PolicyTestCase extends TestCase{
+public abstract class PolicyTestCase extends TestCase {
     
     protected String baseDir = System.getProperty("basedir");
     protected String testResourceDir = "src" + File.separator + "test" + File.separator + "test-resources";

@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -22,8 +22,6 @@ package org.apache.neethi;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -66,9 +64,6 @@ public class NormalizeTest extends PolicyTestCase {
     }
     public void doTest(String base, String normalized, int type,
                        List<String> excludes) throws Exception {
-        String r1, r2;
-        Policy p1, p2;
-        
         File file = new File(testResourceDir + File.separator + normalized);
         for (String name : file.list()) {
             if (excludes.contains(name)) {
@@ -78,12 +73,12 @@ public class NormalizeTest extends PolicyTestCase {
                 continue;
             }
             
-            r1 = base + File.separator + name;
-            r2 = normalized + File.separator + name;
+            String r1 = base + File.separator + name;
+            String r2 = normalized + File.separator + name;
             
-            p1 = getPolicy(r1, type);
+            Policy p1 = getPolicy(r1, type);
             p1 = (Policy) p1.normalize(true);
-            p2 = getPolicy(r2, type);
+            Policy p2 = getPolicy(r2, type);
             
             if (!PolicyComparator.compare(p1, p2)) {
                 XMLStreamWriter writer;

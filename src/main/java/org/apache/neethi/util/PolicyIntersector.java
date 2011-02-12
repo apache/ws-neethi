@@ -26,12 +26,10 @@ import java.util.List;
 
 import org.apache.neethi.All;
 import org.apache.neethi.Assertion;
-import org.apache.neethi.AssertionBuilderFactory;
 import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.IntersectableAssertion;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyComponent;
-import org.apache.neethi.builders.AssertionBuilder;
 
 /**
  * This class contains methods dealing with policy intersection.
@@ -124,7 +122,7 @@ public class PolicyIntersector {
                     all.addPolicyComponent(assertion);
                 } else if (!strict && ((Assertion)a1).isIgnorable()) {
                     all.addPolicyComponent(a1);
-                } else if (strict || !((Assertion)a1).isIgnorable()){
+                } else if (strict || !((Assertion)a1).isIgnorable()) {
                     return null;
                 }
             }
@@ -138,7 +136,7 @@ public class PolicyIntersector {
                     all.addPolicyComponent(assertion);
                 } else if (!strict && ((Assertion)a2).isIgnorable()) {
                     all.addPolicyComponent(a2);
-                } else if (strict || !((Assertion)a2).isIgnorable()){
+                } else if (strict || !((Assertion)a2).isIgnorable()) {
                     return null;
                 }
             }

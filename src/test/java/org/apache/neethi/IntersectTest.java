@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -20,15 +20,11 @@
 package org.apache.neethi;
 
 import java.io.File;
-import java.io.FileOutputStream;
-
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.neethi.util.PolicyComparator;
 
 public class IntersectTest extends PolicyTestCase {
-    int failCount = 0;
+    int failCount;
     
     public IntersectTest() {
         super("IntersectTest");
@@ -62,7 +58,9 @@ public class IntersectTest extends PolicyTestCase {
         File intersected = new File(testResourceDir, intersectedDir);
         File[] files = intersected.listFiles();
 
-        String f, f1, f2;
+        String f;
+        String f1;
+        String f2;
 
         for (int i = 0; i < files.length; i++) {
             f = files[i].getName();
@@ -97,19 +95,16 @@ public class IntersectTest extends PolicyTestCase {
                         String f1, String f2, String f,
                         boolean strict,
                         int type) throws Exception {
-        Policy p1, p2, p3, p4;
-        String r1, r2, r3;
+        String r1 = base + File.separator + "Policy" + f1 + ".xml";
+        String r2 = base + File.separator + "Policy" + f2 + ".xml";
+        String r3 = intersectedDir + File.separator + f;
 
-        r1 = base + File.separator + "Policy" + f1 + ".xml";
-        r2 = base + File.separator + "Policy" + f2 + ".xml";
-        r3 = intersectedDir + File.separator + f;
-
-        p1 = getPolicy(r1, type);
-        p2 = getPolicy(r2, type);
-        p3 = getPolicy(r3, type);
+        Policy p1 = getPolicy(r1, type);
+        Policy p2 = getPolicy(r2, type);
+        Policy p3 = getPolicy(r3, type);
 
         // result
-        p4 = (Policy)p1.intersect(p2, strict);
+        Policy p4 = (Policy)p1.intersect(p2, strict);
 
         if (p4 == null || !PolicyComparator.compare(p4, p3)) {
             /*
@@ -121,7 +116,8 @@ public class IntersectTest extends PolicyTestCase {
                  + f2 + ", " + strict + ") FAILED");
             /*
         } else {
-            System.out.println("Pass: " + base + File.separator + "Policy" + f1 + ".intersect(Policy" + f2 + ", "
+            System.out.println("Pass: " + base + File.separator + "Policy" + f1 
+                               + ".intersect(Policy" + f2 + ", "
                                + strict +")");
                                */
         }

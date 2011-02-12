@@ -26,10 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.dom.DOMSource;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -50,7 +46,7 @@ public abstract class AbstractDOMConverter {
     public Map<QName, String> getAttributes(Element s) {
         Map<QName, String> mp = new HashMap<QName, String>();
         NamedNodeMap attrs = s.getAttributes();
-        for (int x = 0 ; x < attrs.getLength(); x++) {
+        for (int x = 0; x < attrs.getLength(); x++) {
             Attr attr = (Attr)attrs.item(x);
             mp.put(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getValue());
         }

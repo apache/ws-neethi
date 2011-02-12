@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -28,7 +28,7 @@ import javax.xml.stream.XMLStreamWriter;
  * framework.
  * 
  */
-public class Constants {
+public final class Constants {
 
     public static final String ATTR_NAME = "Name";
 
@@ -43,7 +43,8 @@ public class Constants {
     public static final String URI_POLICY_NS = "http://schemas.xmlsoap.org/ws/2004/09/policy";
     public static final String URI_POLICY_15_NS = "http://www.w3.org/ns/ws-policy";
 
-    public static final String URI_WSU_NS = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
+    public static final String URI_WSU_NS 
+        = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
 
     public static final String ELEM_POLICY = "Policy";
 
@@ -79,6 +80,10 @@ public class Constants {
 
     public static final QName Q_ELEM_IGNORABLE_15_ATTR
         = new QName(Constants.URI_POLICY_15_NS, "Ignorable", Constants.ATTR_WSP);
+    
+    private Constants() {
+        //utility class, never constructed
+    }
     
     public static boolean isInPolicyNS(QName q) {
         String ns = q.getNamespaceURI();

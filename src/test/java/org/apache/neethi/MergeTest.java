@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -47,13 +47,9 @@ public class MergeTest extends PolicyTestCase {
     }
 
     public void doTest(String base, String merged, int type) throws Exception {
-        String r1, r2, r3;
-        Policy p1, p2, p3, p4;
 
         File samples2 = new File(testResourceDir, merged);
         File[] files = samples2.listFiles();
-
-        String f, f1, f2;
 
         for (int i = 0; i < files.length; i++) {
 
@@ -61,25 +57,25 @@ public class MergeTest extends PolicyTestCase {
                 continue;
             }
 
-            f = files[i].getName();
+            String f = files[i].getName();
             if (f.startsWith(".")) {
                 continue;
             }
 
             
-            f1 = f.substring(f.indexOf('y') + 1, f.indexOf('-'));
-            f2 = f.substring(f.indexOf('-') + 1, f.indexOf('.'));
+            String f1 = f.substring(f.indexOf('y') + 1, f.indexOf('-'));
+            String f2 = f.substring(f.indexOf('-') + 1, f.indexOf('.'));
 
-            r1 = base + File.separator + "Policy" + f1 + ".xml";
-            r2 = base + File.separator + "Policy" + f2 + ".xml";
-            r3 = merged + File.separator + f;
+            String r1 = base + File.separator + "Policy" + f1 + ".xml";
+            String r2 = base + File.separator + "Policy" + f2 + ".xml";
+            String r3 = merged + File.separator + f;
 
-            p1 = getPolicy(r1, type);
-            p2 = getPolicy(r2, type);
-            p3 = getPolicy(r3, type);
+            Policy p1 = getPolicy(r1, type);
+            Policy p2 = getPolicy(r2, type);
+            Policy p3 = getPolicy(r3, type);
 
             // result
-            p4 = (Policy)p1.merge(p2);
+            Policy p4 = (Policy)p1.merge(p2);
             
             p4 = (Policy)p4.normalize(true);
 

@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -84,11 +84,12 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         }
         
         
-        result.addPolicyComponent(normalizeOperator(policy,reg, deep));
+        result.addPolicyComponent(normalizeOperator(policy, reg, deep));
         return result;
     }
     
-    private static PolicyComponent normalizeOperator(PolicyOperator operator, PolicyRegistry reg, boolean deep) {
+    private static PolicyComponent normalizeOperator(PolicyOperator operator, 
+                                                     PolicyRegistry reg, boolean deep) {
                         
         short type = operator.getType();
                 
@@ -139,7 +140,8 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                 childComponentsList.add(AbstractPolicyOperator.normalizeOperator(all, reg, deep));
                 
             } else {
-                childComponentsList.add(AbstractPolicyOperator.normalizeOperator((PolicyOperator) policyComponent, reg, deep));
+                childComponentsList.add(AbstractPolicyOperator
+                                            .normalizeOperator((PolicyOperator)policyComponent, reg, deep));
             }            
         }
         
@@ -171,7 +173,8 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                     for (; iter.hasNext();) {
                         currentExactlyOne = (ExactlyOne) iter.next();
                         if (currentExactlyOne.isEmpty()) {
-                            // if this is empty, this is an not admissible policy and total result is equivalent to that
+                            // if this is empty, this is an not admissible policy and total 
+                            // result is equivalent to that
                             exactlyOne = currentExactlyOne;
                             break;
                         } else {

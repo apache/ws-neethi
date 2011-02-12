@@ -19,9 +19,6 @@
 
 package org.apache.neethi.builders.converters;
 
-import java.util.Map;
-
-import javax.xml.namespace.QName;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;

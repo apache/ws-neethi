@@ -1,4 +1,4 @@
-/*
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -34,7 +34,7 @@ public interface PolicyComponent {
      * @throws XMLStreamException if an errors in the process of serialization of the
      *                            PolicyComponent.
      */
-    public void serialize(XMLStreamWriter writer) throws XMLStreamException;
+    void serialize(XMLStreamWriter writer) throws XMLStreamException;
 
     /**
      * Returns a short value which uniquely identify the type of the
@@ -45,7 +45,7 @@ public interface PolicyComponent {
      *         Constants.TYPE_ALL for All type PolicyComponent
      *         Constants.TYPE_ASSERTION for Assertion type PolicyComponent
      */
-    public short getType();
+    short getType();
 
     /**
      * Returns true if the argument is equal to self.
@@ -54,5 +54,5 @@ public interface PolicyComponent {
      *      logically equal or not 
      * @return true if the argument is equal to self.
      */
-    public boolean equal(PolicyComponent policyComponent);
+    boolean equal(PolicyComponent policyComponent);
 }
