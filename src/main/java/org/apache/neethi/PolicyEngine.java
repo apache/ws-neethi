@@ -60,7 +60,6 @@ public class PolicyEngine {
      *            the AssertionBuilder that can build assertions that of 'qname'
      *            type
      */
-    @SuppressWarnings({"UnusedDeclaration"})
     public void registerBuilder(QName qname, AssertionBuilder builder) {
         factory.registerBuilder(qname, builder);
     }
@@ -72,7 +71,6 @@ public class PolicyEngine {
      * PolicyRegistry.   
      * @return the default PolicyRegistry
      */
-    @SuppressWarnings({"UnusedDeclaration"})
     public PolicyRegistry getPolicyRegistry() {
         return defaultPolicyRegistry;
     }
@@ -127,7 +125,6 @@ public class PolicyEngine {
      *            the InputStream of the PolicyReference
      * @return a PolicyReference object of the PolicyReference
      */
-    @SuppressWarnings({"UnusedDeclaration"})
     public PolicyReference getPolicyReference(InputStream inputStream) {
         try {
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
