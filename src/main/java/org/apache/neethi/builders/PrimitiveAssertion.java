@@ -101,7 +101,7 @@ public class PrimitiveAssertion implements IntersectableAssertion {
             ExactlyOne exactlyOne = new ExactlyOne();
 
             All all = new All();
-            all.addPolicyComponent(cloneMandatory());
+            all.addPolicyComponent(clone(false));
             exactlyOne.addPolicyComponent(all);
             exactlyOne.addPolicyComponent(new All());
             policy.addPolicyComponent(exactlyOne);
@@ -109,7 +109,7 @@ public class PrimitiveAssertion implements IntersectableAssertion {
             return policy;
         }
 
-        return cloneMandatory();
+        return clone(false);
     }
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
@@ -136,8 +136,8 @@ public class PrimitiveAssertion implements IntersectableAssertion {
         writer.writeEndElement();
     }
     
-    protected Assertion cloneMandatory() {
-        return new PrimitiveAssertion(name, false, ignorable);
+    protected Assertion clone(boolean optional) {
+        return new PrimitiveAssertion(name, optional, ignorable);
     }
 
     public boolean isCompatible(Assertion assertion, boolean strict) {
@@ -151,7 +151,7 @@ public class PrimitiveAssertion implements IntersectableAssertion {
         if (isOptional() == assertion.isOptional()) {
             return assertion;
         }
-        return new PrimitiveAssertion(getName(), isOptional() && assertion.isOptional());
+        return clone(isOptional() && assertion.isOptional());
     }
 
 }

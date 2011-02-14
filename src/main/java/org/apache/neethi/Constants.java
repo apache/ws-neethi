@@ -39,8 +39,8 @@ public final class Constants {
     public static final String ATTR_WSU = "wsu";
     
     public static final String ATTR_URI = "URI";
-
     public static final String URI_POLICY_NS = "http://schemas.xmlsoap.org/ws/2004/09/policy";
+    public static final String URI_POLICY_15_DEPRECATED_NS = "http://www.w3.org/2006/07/ws-policy";
     public static final String URI_POLICY_15_NS = "http://www.w3.org/ns/ws-policy";
 
     public static final String URI_WSU_NS 
@@ -87,11 +87,13 @@ public final class Constants {
     
     public static boolean isInPolicyNS(QName q) {
         String ns = q.getNamespaceURI();
-        return URI_POLICY_NS.equals(ns) 
+        return URI_POLICY_NS.equals(ns)
+            || URI_POLICY_15_DEPRECATED_NS.equals(ns)
             || URI_POLICY_15_NS.equals(ns);
     }
     public static boolean isPolicyElement(String ns, String local) {
         return (URI_POLICY_NS.equals(ns) 
+            || URI_POLICY_15_DEPRECATED_NS.equals(ns)
             || URI_POLICY_15_NS.equals(ns)) && ELEM_POLICY.equals(local);
     }
     public static boolean isPolicyElement(QName q) {
@@ -106,6 +108,9 @@ public final class Constants {
     //but that would be incompatible
     public static String findPolicyNamespace(XMLStreamWriter writer) throws XMLStreamException {
         String prefix = writer.getPrefix(Constants.URI_POLICY_15_NS);
+        if (prefix == null || "".equals(prefix)) {
+            prefix = writer.getPrefix(Constants.URI_POLICY_15_DEPRECATED_NS);
+        }
         if (prefix == null || "".equals(prefix)) {
             return Constants.URI_POLICY_NS;
         }

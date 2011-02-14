@@ -28,6 +28,7 @@ import org.w3c.dom.Node;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.AssertionBuilderFactory;
 import org.apache.neethi.Constants;
+import org.apache.neethi.Policy;
 import org.apache.neethi.builders.AssertionBuilder;
 import org.apache.neethi.builders.PolicyContainingPrimitiveAssertion;
 import org.apache.neethi.builders.PrimitiveAssertion;
@@ -53,28 +54,41 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder<Element> {
             nd = nd.getNextSibling();
         }
         if (count == 0) {
-            return new PrimitiveAssertion(new QName(element.getNamespaceURI(), element.getLocalName()),
-                                         isOptional(element), isIgnorable(element));
-
+            return newPrimitiveAssertion(element);
         } else if (policyCount == 1 && count == 1) {
-            return new PolicyContainingPrimitiveAssertion(new QName(element.getNamespaceURI(),
-                                                                    element.getLocalName()),
-                                          isOptional(element), isIgnorable(element),
-                                          factory.getPolicyEngine().getPolicy(policyEl));
+            Policy policy = factory.getPolicyEngine().getPolicy(policyEl);
+            return newPolicyContainingAssertion(element, policy);
         }
         return new XmlPrimitiveAssertion(element);
     }
     
-    private boolean isOptional(Element el) {
+    public Assertion newPrimitiveAssertion(Element element) {
+        return new PrimitiveAssertion(new QName(element.getNamespaceURI(), element.getLocalName()),
+                                      isOptional(element), isIgnorable(element));        
+    }
+    public Assertion newPolicyContainingAssertion(Element element, Policy policy) {
+        return new PolicyContainingPrimitiveAssertion(new QName(element.getNamespaceURI(),
+                                                                element.getLocalName()),
+                                      isOptional(element), isIgnorable(element),
+                                      policy);
+    }
+    
+    public static boolean isOptional(Element el) {
         Attr optional = el.getAttributeNodeNS(Constants.URI_POLICY_NS, Constants.ATTR_OPTIONAL);
         if (optional == null) {
             optional = el.getAttributeNodeNS(Constants.URI_POLICY_15_NS, Constants.ATTR_OPTIONAL);
         }
+        if (optional == null) {
+            optional = el.getAttributeNodeNS(Constants.URI_POLICY_15_DEPRECATED_NS, Constants.ATTR_OPTIONAL);
+        }
         return optional == null ? false : Boolean.parseBoolean(optional.getValue());
     }
 
-    private boolean isIgnorable(Element el) {
+    public static boolean isIgnorable(Element el) {
         Attr ignorable = el.getAttributeNodeNS(Constants.URI_POLICY_15_NS, Constants.ATTR_IGNORABLE);
+        if (ignorable == null) {
+            ignorable = el.getAttributeNodeNS(Constants.URI_POLICY_15_DEPRECATED_NS, Constants.ATTR_IGNORABLE);
+        }
         return ignorable == null ? false : Boolean.parseBoolean(ignorable.getValue());
     }
     

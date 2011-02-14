@@ -45,9 +45,12 @@ public class PolicyContainingPrimitiveAssertion
     extends PrimitiveAssertion 
     implements PolicyContainingAssertion {
     
-    private Policy nested;
+    protected Policy nested;
     
-    public PolicyContainingPrimitiveAssertion(QName name, boolean optional, boolean ignorable, Policy p) {
+    public PolicyContainingPrimitiveAssertion(QName name, 
+                                              boolean optional,
+                                              boolean ignorable, 
+                                              Policy p) {
         super(name, optional, ignorable);
         this.nested = p;
     }
@@ -68,8 +71,7 @@ public class PolicyContainingPrimitiveAssertion
             All all = new All();
             List<PolicyComponent> alternative = alternatives.next();
             Policy n = new Policy(nested.getPolicyRegistry(), nested.getNamespace());
-            PolicyContainingPrimitiveAssertion a 
-                = new PolicyContainingPrimitiveAssertion(getName(), false, ignorable, n);
+            Assertion a = clone(false, n);
             ExactlyOne nea = new ExactlyOne();
             n.addPolicyComponent(nea);
             All na = new All();
@@ -80,7 +82,10 @@ public class PolicyContainingPrimitiveAssertion
         } 
         return p;      
     } 
-    
+    protected Assertion clone(boolean optional, Policy n) {
+        return new PolicyContainingPrimitiveAssertion(name, optional, ignorable, n);
+    }
+
     public boolean equal(PolicyComponent policyComponent) {
         if (!super.equal(policyComponent)) {
             return false;
@@ -132,9 +137,6 @@ public class PolicyContainingPrimitiveAssertion
         PolicyContainingPrimitiveAssertion p2 = (PolicyContainingPrimitiveAssertion)assertion;
         
         Policy p = new PolicyIntersector(strict).intersect(nested, p2.nested);
-        return new PolicyContainingPrimitiveAssertion(getName(), 
-                                                      isOptional() && assertion.isOptional(),
-                                                      false,
-                                                      p);
+        return clone(isOptional() && assertion.isOptional(), p);
     }
 }
