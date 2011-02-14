@@ -19,7 +19,6 @@
 
 package org.apache.neethi;
 
-
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
@@ -61,6 +60,7 @@ public class PolicyEngine {
      *            the AssertionBuilder that can build assertions that of 'qname'
      *            type
      */
+    @SuppressWarnings({"UnusedDeclaration"})
     public void registerBuilder(QName qname, AssertionBuilder builder) {
         factory.registerBuilder(qname, builder);
     }
@@ -72,9 +72,11 @@ public class PolicyEngine {
      * PolicyRegistry.   
      * @return the default PolicyRegistry
      */
+    @SuppressWarnings({"UnusedDeclaration"})
     public PolicyRegistry getPolicyRegistry() {
         return defaultPolicyRegistry;
     }
+
     public void setPolicyRegistry(PolicyRegistry reg) {
         defaultPolicyRegistry = reg;
     }
@@ -97,6 +99,7 @@ public class PolicyEngine {
         // TODO throw an IllegalArgumentException
         return null;
     }
+
     public Policy getPolicy(Element el) {
         return getPolicyOperator(el);
     }
@@ -105,7 +108,6 @@ public class PolicyEngine {
     public Policy getPolicy(XMLStreamReader reader) {
         return getPolicyOperator(reader);
     }
-    
 
     /**
      * Creates a Policy object from an element.
@@ -117,8 +119,7 @@ public class PolicyEngine {
     public Policy getPolicy(Object element) {
         return getPolicyOperator(element);
     }
-    
-    
+
     /**
      * Creates a PolicyReference object.
      * 
@@ -126,6 +127,7 @@ public class PolicyEngine {
      *            the InputStream of the PolicyReference
      * @return a PolicyReference object of the PolicyReference
      */
+    @SuppressWarnings({"UnusedDeclaration"})
     public PolicyReference getPolicyReference(InputStream inputStream) {
         try {
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
@@ -136,7 +138,6 @@ public class PolicyEngine {
         // TODO throw an IllegalArgumentException
         return null;
     }
-
 
     /**
      * Creates a PolicyReference object from an element.
@@ -155,10 +156,10 @@ public class PolicyEngine {
 
         PolicyReference reference = new PolicyReference(this);
 
-        Map<QName, String> attrs = converters.getAttributes(element);
+        Map<QName, String> attributes = converters.getAttributes(element);
 
         // setting the URI value
-        reference.setURI(attrs.get(new QName("URI")));
+        reference.setURI(attributes.get(new QName("URI")));
         return reference;
     }
 
@@ -181,9 +182,9 @@ public class PolicyEngine {
         if (Constants.TYPE_POLICY == operator.getType()) {
             Policy policyOperator = (Policy) operator;
 
-            Map<QName, String> attrs = converters.getAttributes(operationElement);
+            Map<QName, String> attributes = converters.getAttributes(operationElement);
             
-            for (Map.Entry<QName, String> ent : attrs.entrySet()) {
+            for (Map.Entry<QName, String> ent : attributes.entrySet()) {
                 policyOperator.addAttribute(ent.getKey(), ent.getValue());
             }
         }
