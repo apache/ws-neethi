@@ -47,8 +47,8 @@ public class PolicyReference implements PolicyComponent {
      * Sets the Policy URI
      * @param uri the Policy URI
      */
-    public void setURI(String ur) {
-        this.uri = ur;
+    public void setURI(String uri) {
+        this.uri = uri;
     }
 
     /**
@@ -65,11 +65,8 @@ public class PolicyReference implements PolicyComponent {
         }
         
         String u = ((PolicyReference)policyComponent).getURI();
-        if (u != null && u.length() != 0) {
-            return u.equals(this.uri);
-        } 
-        
-        return false;
+        return u != null && u.length() != 0 && u.equals(this.uri);
+
     }
 
 
