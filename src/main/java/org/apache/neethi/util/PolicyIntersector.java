@@ -30,6 +30,7 @@ import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.IntersectableAssertion;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyComponent;
+import org.apache.neethi.PolicyContainingAssertion;
 
 /**
  * This class contains methods dealing with policy intersection.
@@ -63,7 +64,23 @@ public class PolicyIntersector {
             }
             return ((IntersectableAssertion)a1).intersect(a2, strict);
         }
-        //fixme - how to  intersect basic assertions?
+        //the assertion doesn't implement IntersectableAssertion so we
+        //need to try doing a basic intersect ourself
+        if (a1.getName().equals(a2.getName())) {
+            if (a1 instanceof PolicyContainingAssertion 
+                && a2 instanceof PolicyContainingAssertion) {
+                PolicyContainingAssertion pc1 = (PolicyContainingAssertion)a1;
+                PolicyContainingAssertion pc2 = (PolicyContainingAssertion)a2;
+                Policy p1 = pc1.getPolicy();
+                Policy p2 = pc2.getPolicy();
+                PolicyIntersector pi = new PolicyIntersector(strict);
+                if (pi.compatiblePolicies(p1, p2)) {
+                    return a1;
+                }
+            } else {
+                return a1;
+            }
+        }
         return null;
     }
     private Assertion findCompatibleAssertion(Assertion assertion, 
