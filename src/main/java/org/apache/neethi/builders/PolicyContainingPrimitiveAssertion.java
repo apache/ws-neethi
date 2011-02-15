@@ -34,7 +34,6 @@ import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyComponent;
 import org.apache.neethi.PolicyContainingAssertion;
-import org.apache.neethi.util.PolicyIntersector;
 
 /**
  * Implementation of an assertion that required exactly one (possibly empty) child element
@@ -124,19 +123,5 @@ public class PolicyContainingPrimitiveAssertion
         nested.serialize(writer);
         writer.writeEndElement();
     }
-    
-    public boolean isCompatible(Assertion assertion, boolean strict) {
-        if (name.equals(assertion.getName())) {
-            PolicyContainingPrimitiveAssertion p2 = (PolicyContainingPrimitiveAssertion)assertion;
-            return new PolicyIntersector(strict).compatiblePolicies(nested, p2.nested);
-        }
-        return false;
-    }
 
-    public Assertion intersect(Assertion assertion, boolean strict) {
-        PolicyContainingPrimitiveAssertion p2 = (PolicyContainingPrimitiveAssertion)assertion;
-        
-        Policy p = new PolicyIntersector(strict).intersect(nested, p2.nested);
-        return clone(isOptional() && assertion.isOptional(), p);
-    }
 }

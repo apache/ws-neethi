@@ -28,15 +28,13 @@ import org.apache.neethi.All;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.Constants;
 import org.apache.neethi.ExactlyOne;
-import org.apache.neethi.IntersectableAssertion;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyComponent;
 
 /**
  * 
  */
-public class PrimitiveAssertion implements IntersectableAssertion {
-    
+public class PrimitiveAssertion implements Assertion {
     protected QName name;
     protected boolean optional;
     protected boolean ignorable;
@@ -136,22 +134,8 @@ public class PrimitiveAssertion implements IntersectableAssertion {
         writer.writeEndElement();
     }
     
-    protected Assertion clone(boolean optional) {
-        return new PrimitiveAssertion(name, optional, ignorable);
-    }
-
-    public boolean isCompatible(Assertion assertion, boolean strict) {
-        if (name.equals(assertion.getName())) {
-            return true;
-        }
-        return false;
-    }
-
-    public Assertion intersect(Assertion assertion, boolean strict) {
-        if (isOptional() == assertion.isOptional()) {
-            return assertion;
-        }
-        return clone(isOptional() && assertion.isOptional());
+    protected Assertion clone(boolean isoptional) {
+        return new PrimitiveAssertion(name, isoptional, ignorable);
     }
 
 }

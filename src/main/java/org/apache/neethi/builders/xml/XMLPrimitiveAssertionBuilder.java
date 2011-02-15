@@ -87,7 +87,8 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder<Element> {
     public static boolean isIgnorable(Element el) {
         Attr ignorable = el.getAttributeNodeNS(Constants.URI_POLICY_15_NS, Constants.ATTR_IGNORABLE);
         if (ignorable == null) {
-            ignorable = el.getAttributeNodeNS(Constants.URI_POLICY_15_DEPRECATED_NS, Constants.ATTR_IGNORABLE);
+            ignorable = el.getAttributeNodeNS(Constants.URI_POLICY_15_DEPRECATED_NS,
+                                              Constants.ATTR_IGNORABLE);
         }
         return ignorable == null ? false : Boolean.parseBoolean(ignorable.getValue());
     }
