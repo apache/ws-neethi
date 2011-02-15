@@ -22,6 +22,15 @@ package org.apache.neethi;
 /**
  * Assertions that need special consideration to implement
  * the intersection algorithms should implement this interface.
+ * 
+ * If an assertion does not implement this interface, the 
+ * intersection algorithm will just check the qname of the
+ * assertion as well as the contained policy if the assertion
+ * implements the PolicyContainingAssertion interface.  This 
+ * is adequate for most use cases and per spec, but this
+ * interface allows an assertion to possibly consider special
+ * attributes or other details to determine the behavior
+ * for the intersection.
  */
 public interface IntersectableAssertion extends Assertion {
     
