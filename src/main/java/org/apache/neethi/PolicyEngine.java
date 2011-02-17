@@ -44,9 +44,17 @@ public class PolicyEngine {
 
     private static final Log LOG = LogFactory.getLog(PolicyEngine.class);
 
-    private ConverterRegistry converters = new ConverterRegistry();
-    private AssertionBuilderFactory factory = new AssertionBuilderFactory(this, converters);
-    private PolicyRegistry defaultPolicyRegistry;
+    protected AssertionBuilderFactory factory = new AssertionBuilderFactoryImpl(this);
+    protected PolicyRegistry defaultPolicyRegistry;
+    
+    public PolicyEngine() {
+        factory = new AssertionBuilderFactoryImpl(this);
+    }
+    
+    public PolicyEngine(AssertionBuilderFactory factory) {
+        this.factory = factory;
+    }
+    
     
     /**
      * Registers an AssertionBuilder instances and associates it with a QName.
@@ -78,6 +86,10 @@ public class PolicyEngine {
     public void setPolicyRegistry(PolicyRegistry reg) {
         defaultPolicyRegistry = reg;
     }
+    
+    public AssertionBuilderFactory getAssertionBuilderFactory() {
+        return factory;
+    }
 
     /**
      * Creates a Policy object from an InputStream.
@@ -90,12 +102,11 @@ public class PolicyEngine {
         try {
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
             return getPolicy(reader);
+        } catch (RuntimeException ex) {
+            throw ex;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw new RuntimeException("Could not load policy.", ex); 
         }
-
-        // TODO throw an IllegalArgumentException
-        return null;
     }
 
     public Policy getPolicy(Element el) {
@@ -129,11 +140,11 @@ public class PolicyEngine {
         try {
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
             return getPolicyReference(reader);
+        } catch (RuntimeException ex) {
+            throw ex;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw new RuntimeException("Could not load policy reference.", ex); 
         }
-        // TODO throw an IllegalArgumentException
-        return null;
     }
 
     /**
@@ -144,7 +155,7 @@ public class PolicyEngine {
      * @return a PolicyReference object of the PolicyReference element
      */
     public PolicyReference getPolicyReference(Object element) {
-        QName qn = converters.findQName(element);
+        QName qn = factory.getConverterRegistry().findQName(element);
 
         if (!Constants.isPolicyRef(qn)) {
             throw new RuntimeException(
@@ -153,7 +164,7 @@ public class PolicyEngine {
 
         PolicyReference reference = new PolicyReference(this);
 
-        Map<QName, String> attributes = converters.getAttributes(element);
+        Map<QName, String> attributes = factory.getConverterRegistry().getAttributes(element);
 
         // setting the URI value
         reference.setURI(attributes.get(new QName("URI")));
@@ -161,7 +172,7 @@ public class PolicyEngine {
     }
 
     private Policy getPolicyOperator(Object element) {
-        String ns = converters.findQName(element).getNamespaceURI();
+        String ns = factory.getConverterRegistry().findQName(element).getNamespaceURI();
         return (Policy) processOperationElement(element, new Policy(defaultPolicyRegistry, ns));
     }
 
@@ -179,7 +190,7 @@ public class PolicyEngine {
         if (Constants.TYPE_POLICY == operator.getType()) {
             Policy policyOperator = (Policy) operator;
 
-            Map<QName, String> attributes = converters.getAttributes(operationElement);
+            Map<QName, String> attributes = factory.getConverterRegistry().getAttributes(operationElement);
             
             for (Map.Entry<QName, String> ent : attributes.entrySet()) {
                 policyOperator.addAttribute(ent.getKey(), ent.getValue());
@@ -187,11 +198,11 @@ public class PolicyEngine {
         }
 
 
-        for (Iterator iterator = converters.getChildElements(operationElement); 
+        for (Iterator iterator = factory.getConverterRegistry().getChildElements(operationElement); 
             iterator.hasNext();) {
             
             Object childElement = iterator.next();
-            QName qn = converters.findQName(childElement);
+            QName qn = factory.getConverterRegistry().findQName(childElement);
             
             if (childElement == null || qn == null 
                 || qn.getNamespaceURI() == null) {

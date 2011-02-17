@@ -19,16 +19,10 @@
 
 package org.apache.neethi;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import javax.xml.namespace.QName;
 
 import org.apache.neethi.builders.AssertionBuilder;
 import org.apache.neethi.builders.converters.ConverterRegistry;
-import org.apache.neethi.builders.xml.XMLPrimitiveAssertionBuilder;
-import org.apache.neethi.util.Service;
 
 /**
  * AssertionFactory is used to create an Assertion from an Element. It uses an
@@ -36,38 +30,21 @@ import org.apache.neethi.util.Service;
  * QName of the given element. Domain Policy authors could right custom
  * AssertionBuilders to build Assertions for domain specific assertions.
  */
-public class AssertionBuilderFactory {
+public interface AssertionBuilderFactory {
 
-    public static final String POLICY_NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/09/policy";
+    /**
+     * Returns the PolicyEngine associated with this factory
+     * @return
+     */
+    PolicyEngine getPolicyEngine();
 
-    public static final String POLICY = "Policy";
-
-    public static final String EXACTLY_ONE = "ExactlyOne";
-
-    public static final String ALL = "All";
-    
-    private Map<QName, AssertionBuilder> registeredBuilders 
-        = new ConcurrentHashMap<QName, AssertionBuilder>();
-    private AssertionBuilder defaultBuilder;
-    private final ConverterRegistry converters;
-    private final PolicyEngine engine;
-    
-    public AssertionBuilderFactory(PolicyEngine eng, ConverterRegistry reg) {
-        converters = reg;
-        engine = eng;
-
-        for (AssertionBuilder builder : Service.providers(AssertionBuilder.class)) {
-            QName[] knownElements = builder.getKnownElements();
-            for (int i = 0; i < knownElements.length; i++) {
-                registeredBuilders.put(knownElements[i], builder);
-            }
-        }
-        defaultBuilder = new XMLPrimitiveAssertionBuilder();
-    }
-    
-    public PolicyEngine getPolicyEngine() {
-        return engine;
-    }
+    /**
+     * Returns the ConverterRegistry that the builder 
+     * uses for converting the object to the types
+     * needed for the AssertionBuilders
+     * @return
+     */
+    ConverterRegistry getConverterRegistry();
 
     /**
      * Registers an AssertionBuilder with a specified QName.
@@ -76,9 +53,15 @@ public class AssertionBuilderFactory {
      * @param builder the AssertionBuilder that can build an Assertion from
      *            an element of specified type
      */
-    public void registerBuilder(QName key, AssertionBuilder builder) {
-        registeredBuilders.put(key, builder);
-    }
+    void registerBuilder(QName key, AssertionBuilder builder);
+
+    /**
+     * Registers an AssertionBuilder with all the builder's known elements.
+     * 
+     * @param builder the AssertionBuilder that can build an Assertion from
+     *            an element of specified type
+     */
+    void registerBuilder(AssertionBuilder builder);
 
     
     /**
@@ -88,40 +71,7 @@ public class AssertionBuilderFactory {
      *            Assertion.
      * @return an Assertion that is built using the specified element.
      */
-    public Assertion build(Object element) {
-        AssertionBuilder builder;
-
-        QName qname = converters.findQName(element);
-        builder = registeredBuilders.get(qname);
-        if (builder == null) {
-            /*
-             * if we can't locate an appropriate AssertionBuilder, we always use the
-             * XMLPrimitiveAssertionBuilder
-             */
-            builder = defaultBuilder;
-        }
-        return invokeBuilder(element, builder);
-    }
-
-    @SuppressWarnings("unchecked")
-    private Assertion invokeBuilder(Object element, AssertionBuilder builder) {
-        Class<?> type = findAssertionBuilderTarget(builder.getClass());
-        return builder.build(converters.convert(element, type), this);
-    }
-
-    private Class<?> findAssertionBuilderTarget(Class<?> c) {
-        Class interfaces[] = c.getInterfaces();
-        for (int x = 0; x < interfaces.length; x++) {
-            if (interfaces[x] == AssertionBuilder.class) {
-                ParameterizedType pt = (ParameterizedType)c.getGenericInterfaces()[x];
-                return (Class)pt.getActualTypeArguments()[0];
-            }
-        }
-        if (c.getClass().getSuperclass() != null) {
-            return findAssertionBuilderTarget(c.getSuperclass());
-        }
-        return null;
-    }
+    Assertion build(Object element);
 
 
     /**
@@ -132,7 +82,5 @@ public class AssertionBuilderFactory {
      *            Assertion from
      * @return an AssertionBuilder that understands qname type
      */
-    public AssertionBuilder getBuilder(QName qname) {
-        return registeredBuilders.get(qname);
-    }
+    public AssertionBuilder getBuilder(QName qname);
 }
