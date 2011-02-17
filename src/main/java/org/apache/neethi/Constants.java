@@ -39,9 +39,13 @@ public final class Constants {
     public static final String ATTR_WSU = "wsu";
     
     public static final String ATTR_URI = "URI";
-    public static final String URI_POLICY_NS = "http://schemas.xmlsoap.org/ws/2004/09/policy";
+    
+    // The WS-Policy namespaces that we support
+    public static final String URI_POLICY_13_NS = "http://schemas.xmlsoap.org/ws/2004/09/policy";
     public static final String URI_POLICY_15_DEPRECATED_NS = "http://www.w3.org/2006/07/ws-policy";
     public static final String URI_POLICY_15_NS = "http://www.w3.org/ns/ws-policy";
+    // Default will be WS-Policy 1.5
+    public static final String URI_POLICY_NS = URI_POLICY_15_NS;
 
     public static final String URI_WSU_NS 
         = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
@@ -53,6 +57,7 @@ public final class Constants {
     public static final String ELEM_ALL = "All";
 
     public static final String ELEM_POLICY_REF = "PolicyReference";
+    public static final String ELEM_POLICY_ATTACHMENT = "PolicyAttachment";
 
     public static final short TYPE_POLICY = 0x1;
 
@@ -67,14 +72,18 @@ public final class Constants {
     
     public static final String ATTR_OPTIONAL = "Optional";
     public static final String ATTR_IGNORABLE = "Ignorable";
+    public static final String ATTR_POLICYURIS = "PolicyURIs";
+
+    public static final String ELEM_POLICY_APPLIES_TO = "AppliesTo";
+    
 
     public static final QName Q_ELEM_POLICY 
-        = new QName(Constants.URI_POLICY_NS, Constants.ELEM_POLICY, Constants.ATTR_WSP);
+        = new QName(Constants.URI_POLICY_13_NS, Constants.ELEM_POLICY, Constants.ATTR_WSP);
     public static final QName Q_ELEM_POLICY_15 
         = new QName(Constants.URI_POLICY_15_NS, Constants.ELEM_POLICY, Constants.ATTR_WSP);
 
     public static final QName Q_ELEM_OPTIONAL_ATTR 
-        = new QName(Constants.URI_POLICY_NS, "Optional", Constants.ATTR_WSP);
+        = new QName(Constants.URI_POLICY_13_NS, "Optional", Constants.ATTR_WSP);
     public static final QName Q_ELEM_OPTIONAL_15_ATTR
         = new QName(Constants.URI_POLICY_15_NS, "Optional", Constants.ATTR_WSP);
 
@@ -87,12 +96,12 @@ public final class Constants {
     
     public static boolean isInPolicyNS(QName q) {
         String ns = q.getNamespaceURI();
-        return URI_POLICY_NS.equals(ns)
+        return URI_POLICY_13_NS.equals(ns)
             || URI_POLICY_15_DEPRECATED_NS.equals(ns)
             || URI_POLICY_15_NS.equals(ns);
     }
     public static boolean isPolicyElement(String ns, String local) {
-        return (URI_POLICY_NS.equals(ns) 
+        return (URI_POLICY_13_NS.equals(ns) 
             || URI_POLICY_15_DEPRECATED_NS.equals(ns)
             || URI_POLICY_15_NS.equals(ns)) && ELEM_POLICY.equals(local);
     }
@@ -103,6 +112,26 @@ public final class Constants {
         return isInPolicyNS(q) && ELEM_POLICY_REF.equals(q.getLocalPart());
     }
     
+    public static boolean isOptionalAttribute(QName qn) {
+        return ATTR_OPTIONAL.equals(qn.getLocalPart())
+            && Constants.isInPolicyNS(qn);
+    }
+    public static boolean isIgnorableAttribute(QName qn) {
+        return ATTR_IGNORABLE.equals(qn.getLocalPart())
+            && Constants.isInPolicyNS(qn);
+    }
+    public static boolean isAppliesToElem(QName qn) {
+        return ELEM_POLICY_APPLIES_TO.equals(qn.getLocalPart())
+            && Constants.isInPolicyNS(qn);
+    }
+    public static boolean isPolicyURIsAttr(QName qn) {
+        return ATTR_POLICYURIS.equals(qn.getLocalPart())
+            && Constants.isInPolicyNS(qn);
+    }
+
+    
+    
+    
     //Try and figure out if we are outputting 1.5 or 1.2 policy
     //kind of a hack.  Would be better to add a "version" to the serialize method,
     //but that would be incompatible
@@ -112,8 +141,8 @@ public final class Constants {
             prefix = writer.getPrefix(Constants.URI_POLICY_15_DEPRECATED_NS);
         }
         if (prefix == null || "".equals(prefix)) {
-            return Constants.URI_POLICY_NS;
+            return Constants.URI_POLICY_13_NS;
         }
-        return Constants.URI_POLICY_15_NS;
+        return Constants.URI_POLICY_NS;
     }
 }

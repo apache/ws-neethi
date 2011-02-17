@@ -74,7 +74,7 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder<Element> {
     }
     
     public static boolean isOptional(Element el) {
-        Attr optional = el.getAttributeNodeNS(Constants.URI_POLICY_NS, Constants.ATTR_OPTIONAL);
+        Attr optional = el.getAttributeNodeNS(Constants.URI_POLICY_13_NS, Constants.ATTR_OPTIONAL);
         if (optional == null) {
             optional = el.getAttributeNodeNS(Constants.URI_POLICY_15_NS, Constants.ATTR_OPTIONAL);
         }

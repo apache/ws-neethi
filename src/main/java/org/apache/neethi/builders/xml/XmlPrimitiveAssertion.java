@@ -121,7 +121,7 @@ public class XmlPrimitiveAssertion implements Assertion {
 
             All all = new All();
             Element el = (Element)this.element.cloneNode(true);
-            Attr attr = el.getAttributeNodeNS(Constants.URI_POLICY_NS, Constants.ATTR_OPTIONAL);
+            Attr attr = el.getAttributeNodeNS(Constants.URI_POLICY_13_NS, Constants.ATTR_OPTIONAL);
             if (attr != null) {
                 el.removeAttributeNode(attr);
             }
@@ -165,7 +165,7 @@ public class XmlPrimitiveAssertion implements Assertion {
     }
 
     private void setOptionality(Element element2) {
-        Attr attribute = element2.getAttributeNodeNS(Constants.URI_POLICY_NS, Constants.ATTR_OPTIONAL);
+        Attr attribute = element2.getAttributeNodeNS(Constants.URI_POLICY_13_NS, Constants.ATTR_OPTIONAL);
         if (attribute == null) {
             attribute = element2.getAttributeNodeNS(Constants.URI_POLICY_15_NS, Constants.ATTR_OPTIONAL);
         }
