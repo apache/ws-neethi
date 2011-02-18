@@ -22,6 +22,7 @@ package org.apache.neethi.builders;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -53,6 +54,14 @@ public class PolicyContainingPrimitiveAssertion
         super(name, optional, ignorable);
         this.nested = p;
     }
+    public PolicyContainingPrimitiveAssertion(QName name, 
+                                              boolean optional,
+                                              boolean ignorable,
+                                              Map<QName, String> atts,
+                                              Policy p) {
+        super(name, optional, ignorable, atts);
+        this.nested = p;
+    }
 
     public PolicyComponent normalize() {
         Policy normalisedNested 
@@ -82,7 +91,7 @@ public class PolicyContainingPrimitiveAssertion
         return p;      
     } 
     protected Assertion clone(boolean optional, Policy n) {
-        return new PolicyContainingPrimitiveAssertion(name, optional, ignorable, n);
+        return new PolicyContainingPrimitiveAssertion(name, optional, ignorable, attributes, n);
     }
 
     public boolean equal(PolicyComponent policyComponent) {

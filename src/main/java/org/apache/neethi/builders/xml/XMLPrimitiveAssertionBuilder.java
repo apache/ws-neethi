@@ -19,10 +19,14 @@
 
 package org.apache.neethi.builders.xml;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import org.apache.neethi.Assertion;
@@ -53,20 +57,27 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder<Element> {
             }
             nd = nd.getNextSibling();
         }
+        Map<QName, String> atts = new HashMap<QName, String>();
+        NamedNodeMap attrs = element.getAttributes();
+        for (int x = 0; x < attrs.getLength(); x++) {
+            Attr attr = (Attr)attrs.item(x);
+            atts.put(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getValue());
+        }
+
         if (count == 0) {
-            return newPrimitiveAssertion(element);
+            return newPrimitiveAssertion(element, atts.isEmpty() ? null : atts);
         } else if (policyCount == 1 && count == 1) {
             Policy policy = factory.getPolicyEngine().getPolicy(policyEl);
-            return newPolicyContainingAssertion(element, policy);
+            return newPolicyContainingAssertion(element, atts.isEmpty() ? null : atts, policy);
         }
         return new XmlPrimitiveAssertion(element);
     }
     
-    public Assertion newPrimitiveAssertion(Element element) {
+    public Assertion newPrimitiveAssertion(Element element, Map<QName, String> atts) {
         return new PrimitiveAssertion(new QName(element.getNamespaceURI(), element.getLocalName()),
                                       isOptional(element), isIgnorable(element));        
     }
-    public Assertion newPolicyContainingAssertion(Element element, Policy policy) {
+    public Assertion newPolicyContainingAssertion(Element element, Map<QName, String> atts, Policy policy) {
         return new PolicyContainingPrimitiveAssertion(new QName(element.getNamespaceURI(),
                                                                 element.getLocalName()),
                                       isOptional(element), isIgnorable(element),

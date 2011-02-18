@@ -20,6 +20,9 @@
 package org.apache.neethi.builders;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -38,6 +41,7 @@ public class PrimitiveAssertion implements Assertion {
     protected QName name;
     protected boolean optional;
     protected boolean ignorable;
+    protected Map<QName, String> attributes;
     
     public PrimitiveAssertion() {
         this((QName)null);
@@ -55,7 +59,33 @@ public class PrimitiveAssertion implements Assertion {
         optional = o;
         ignorable = i;
     }
-
+    public PrimitiveAssertion(QName n, boolean o, boolean i, Map<QName, String> atts) {
+        name = n;
+        optional = o;
+        ignorable = i;
+        if (atts != null) {
+            attributes = new HashMap<QName, String>(atts);
+        }
+    }
+    public String getAttribute(QName n) {
+        if (attributes != null) {
+            return attributes.get(n);
+        }
+        return null;
+    }
+    public synchronized void addAttribute(QName n, String value) {
+        if (attributes == null) {
+            attributes = new HashMap<QName, String>();
+        }
+        attributes.put(n, value);
+    }
+    public synchronized void addAttributes(Map<QName, String> atts) {
+        if (attributes == null) {
+            attributes = new HashMap<QName, String>(atts);
+        } else {
+            attributes.putAll(atts);
+        }
+    }
     public String toString() {
         return name.toString();
     }
@@ -138,7 +168,7 @@ public class PrimitiveAssertion implements Assertion {
     }
     
     protected Assertion clone(boolean isoptional) {
-        return new PrimitiveAssertion(name, isoptional, ignorable);
+        return new PrimitiveAssertion(name, isoptional, ignorable, attributes);
     }
 
 }
