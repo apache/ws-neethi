@@ -32,9 +32,13 @@ public class OMToDOMConverter extends AbstractOMConverter implements Converter<O
 
     public Element convert(OMElement s) {
         
-        return (Element) new StAXOMBuilder(DOOMAbstractFactory.getOMFactory(),
+        try {
+            return (Element) new StAXOMBuilder(DOOMAbstractFactory.getOMFactory(),
                                            s.getXMLStreamReader()).getDocumentElement();
-
+        } catch (NoClassDefFoundError err) {
+            // likely no DOOM
+            return new StaxToDOMConverter().convert(s.getXMLStreamReader());
+        }
     }
 
 }
