@@ -132,6 +132,7 @@ public class PolicyContainingPrimitiveAssertion
         if (ignorable) {
             writer.writeAttribute(namespace, Constants.ATTR_IGNORABLE, "true");
         }
+        writeAttributes(writer);
         nested.serialize(writer);
         writer.writeEndElement();
     }

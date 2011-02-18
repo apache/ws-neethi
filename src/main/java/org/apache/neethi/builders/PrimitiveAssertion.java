@@ -164,7 +164,41 @@ public class PrimitiveAssertion implements Assertion {
         if (ignorable) {
             writer.writeAttribute(namespace, Constants.ATTR_IGNORABLE, "true");
         }
+        writeAttributes(writer);
         writer.writeEndElement();
+    }
+    protected void writeAttributes(XMLStreamWriter writer) throws XMLStreamException {
+        if (attributes != null) {
+            for (Map.Entry<QName, String> att : attributes.entrySet()) {
+                if (Constants.isIgnorableAttribute(att.getKey())) {
+                    //already handled
+                    continue;
+                }
+                if (Constants.isOptionalAttribute(att.getKey())) {
+                    //already handled
+                    continue;
+                }
+                String prefix = getOrCreatePrefix(att.getKey().getNamespaceURI(), writer);
+                writer.writeAttribute(prefix, att.getKey().getNamespaceURI(),
+                                      att.getKey().getLocalPart(),
+                                      att.getValue());
+            }
+        }
+    }
+    protected String getOrCreatePrefix(String ns, XMLStreamWriter writer) throws XMLStreamException {
+        String prefix = writer.getPrefix(ns);
+        int count = 1;
+        while (prefix == null || "".equals(prefix)) {
+            prefix = "ns" + count++;
+            String ns2 =  writer.getNamespaceContext().getNamespaceURI(prefix);
+            if (ns2 == null || "".equals(ns2)) {
+                //found one that will work
+                writer.writeNamespace(prefix, ns);
+            } else {
+                prefix = null;
+            }
+        }
+        return prefix;
     }
     
     protected Assertion clone(boolean isoptional) {
