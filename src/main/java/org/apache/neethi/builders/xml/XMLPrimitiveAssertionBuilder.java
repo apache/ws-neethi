@@ -59,9 +59,11 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder<Element> {
         }
         Map<QName, String> atts = new HashMap<QName, String>();
         NamedNodeMap attrs = element.getAttributes();
-        for (int x = 0; x < attrs.getLength(); x++) {
-            Attr attr = (Attr)attrs.item(x);
-            atts.put(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getValue());
+        if (attrs != null) {
+            for (int x = 0; x < attrs.getLength(); x++) {
+                Attr attr = (Attr)attrs.item(x);
+                atts.put(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getValue());
+            }
         }
 
         if (count == 0) {
