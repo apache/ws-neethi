@@ -65,10 +65,10 @@ public class PolicyContainingPrimitiveAssertion
             ea.addPolicyComponent(new All());
         }
         // for all alternatives in normalized nested policy
-        Iterator<List<PolicyComponent>> alternatives = normalisedNested.getAlternatives();
+        Iterator<List<Assertion>> alternatives = normalisedNested.getAlternatives();
         while (alternatives.hasNext()) {
             All all = new All();
-            List<PolicyComponent> alternative = alternatives.next();
+            List<Assertion> alternative = alternatives.next();
             Policy n = new Policy(nested.getPolicyRegistry(), nested.getNamespace());
             Assertion a = clone(false, n);
             ExactlyOne nea = new ExactlyOne();
@@ -86,6 +86,9 @@ public class PolicyContainingPrimitiveAssertion
     }
 
     public boolean equal(PolicyComponent policyComponent) {
+        if (this == policyComponent) {
+            return true;
+        }
         if (!super.equal(policyComponent)) {
             return false;
         }

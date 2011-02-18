@@ -34,12 +34,12 @@ import javax.xml.stream.XMLStreamWriter;
 public class PolicyReference implements PolicyComponent {
 
     private String uri;
-    private PolicyEngine engine;
+    private PolicyBuilder engine;
 
     public PolicyReference() {
     }
     
-    public PolicyReference(PolicyEngine p) {
+    public PolicyReference(PolicyBuilder p) {
         engine = p;
     }
     
@@ -143,9 +143,9 @@ public class PolicyReference implements PolicyComponent {
 
             InputStream in = connection.getInputStream();
             try {
-                PolicyEngine pe = engine;
+                PolicyBuilder pe = engine;
                 if (pe == null) {
-                    pe = new PolicyEngine();
+                    pe = new PolicyBuilder();
                 }
                 return pe.getPolicy(connection.getInputStream());
             } finally {

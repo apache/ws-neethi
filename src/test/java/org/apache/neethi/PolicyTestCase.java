@@ -48,7 +48,7 @@ public abstract class PolicyTestCase extends TestCase {
     
     protected String baseDir = System.getProperty("basedir");
     protected String testResourceDir = "src" + File.separator + "test" + File.separator + "test-resources";
-    protected PolicyEngine policyEngine = new PolicyEngine();
+    protected PolicyBuilder policyEngine = new PolicyBuilder();
     protected PolicyRegistry registry = new PolicyRegistryImpl();
     
     public PolicyTestCase(String name) {

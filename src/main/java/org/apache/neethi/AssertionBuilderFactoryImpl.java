@@ -43,9 +43,9 @@ public class AssertionBuilderFactoryImpl implements AssertionBuilderFactory {
     
     protected AssertionBuilder defaultBuilder;
     protected ConverterRegistry converters = new ConverterRegistry();
-    protected PolicyEngine engine;
+    protected PolicyBuilder engine;
     
-    public AssertionBuilderFactoryImpl(PolicyEngine eng) {
+    public AssertionBuilderFactoryImpl(PolicyBuilder eng) {
         engine = eng;
 
         for (AssertionBuilder builder : Service.providers(AssertionBuilder.class)) {
@@ -61,7 +61,7 @@ public class AssertionBuilderFactoryImpl implements AssertionBuilderFactory {
         return converters;
     }
     
-    public PolicyEngine getPolicyEngine() {
+    public PolicyBuilder getPolicyEngine() {
         return engine;
     }
     

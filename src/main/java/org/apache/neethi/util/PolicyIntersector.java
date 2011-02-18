@@ -162,15 +162,15 @@ public class PolicyIntersector {
     }
     
     public boolean compatiblePolicies(Policy p1, Policy p2) {       
-        Iterator<List<PolicyComponent>> i1 = p1.getAlternatives();
+        Iterator<List<Assertion>> i1 = p1.getAlternatives();
         while (i1.hasNext()) {
-            List<PolicyComponent> alt1 = i1.next();
-            Iterator<List<PolicyComponent>> i2 = p2.getAlternatives();
+            List<Assertion> alt1 = i1.next();
+            Iterator<List<Assertion>> i2 = p2.getAlternatives();
             if (!i2.hasNext() && alt1.isEmpty()) {
                 return true;
             }
             while (i2.hasNext()) {                
-                List<PolicyComponent> alt2 = i2.next();
+                List<Assertion> alt2 = i2.next();
                 if (compatibleAlternatives(alt1, alt2)) {
                     return true;                    
                 }
@@ -189,12 +189,12 @@ public class PolicyIntersector {
         if (!compatiblePolicies(p1, p2)) {
             return compatible;
         }
-        Iterator<List<PolicyComponent>> i1 = p1.getAlternatives();
+        Iterator<List<Assertion>> i1 = p1.getAlternatives();
         while (i1.hasNext()) {
-            List<PolicyComponent> alt1 = i1.next();
-            Iterator<List<PolicyComponent>> i2 = p2.getAlternatives();
+            List<Assertion> alt1 = i1.next();
+            Iterator<List<Assertion>> i2 = p2.getAlternatives();
             while (i2.hasNext()) {                
-                List<PolicyComponent> alt2 = i2.next();
+                List<Assertion> alt2 = i2.next();
                 All all = createCompatibleAlternatives(alt1, alt2, !allowDups);
                 if (all != null) {
                     eo.addPolicyComponent(all);

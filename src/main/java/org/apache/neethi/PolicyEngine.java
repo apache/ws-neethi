@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -19,48 +19,45 @@
 
 package org.apache.neethi;
 
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.Map;
+import org.apache.axiom.om.OMElement;
+import org.apache.neethi.builders.AssertionBuilder;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-
-import org.w3c.dom.Element;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.neethi.builders.AssertionBuilder;
-import org.apache.neethi.builders.converters.ConverterRegistry;
+import java.io.InputStream;
+import java.util.Iterator;
 
 /**
- * PolicyEngine provides set of methods to create a Policy object from an
- * InputStream, Element, XMLStreamReader, OMElement, etc.. It maintains an instance of
- * AssertionBuilderFactory that can return AssertionBuilders that can create a
- * Domain Assertion out of an element. These AssertionBuilders are used when
- * constructing a Policy object.
+ * PolicyEngine provides set of static methods to create a Policy object from an
+ * InputStream, OMElement, .. etc.  It wrappers a static PolicyBuilder to actually
+ * do the building.   This class is provided to ease transition from Neethi 2.x to 
+ * Neethi 3.x  
  */
 public class PolicyEngine {
 
-    private static final Log LOG = LogFactory.getLog(PolicyEngine.class);
+    public static final String POLICY_NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/09/policy";
 
-    protected AssertionBuilderFactory factory = new AssertionBuilderFactoryImpl(this);
-    protected PolicyRegistry defaultPolicyRegistry;
+    public static final String POLICY = "Policy";
+
+    public static final String EXACTLY_ONE = "ExactlyOne";
+
+    public static final String ALL = "All";
+
+    public static final String POLICY_REF = "PolicyReference";
+
+    private static PolicyBuilder builder;
     
-    public PolicyEngine() {
-        factory = new AssertionBuilderFactoryImpl(this);
+    private static synchronized PolicyBuilder getBuilder() {
+        if (builder == null) {
+            builder = new PolicyBuilder();
+        }
+        return builder;
     }
-    
-    public PolicyEngine(AssertionBuilderFactory factory) {
-        this.factory = factory;
-    }
-    
-    
+
     /**
      * Registers an AssertionBuilder instances and associates it with a QName.
      * PolicyManager or other AssertionBuilders instances can use this
      * AssertionBuilder instance to process and build an Assertion from a
-     * element with the specified QName.
+     * OMElement with the specified QName.
      * 
      * @param qname
      *            the QName of the Assertion that the Builder can build
@@ -68,27 +65,8 @@ public class PolicyEngine {
      *            the AssertionBuilder that can build assertions that of 'qname'
      *            type
      */
-    public void registerBuilder(QName qname, AssertionBuilder builder) {
-        factory.registerBuilder(qname, builder);
-    }
-    
-    
-    /**
-     * The PolicyEngine can have a default PolicyRegistry that the Policy objects
-     * that it creates are setup to use when normalize is called without the 
-     * PolicyRegistry.   
-     * @return the default PolicyRegistry
-     */
-    public PolicyRegistry getPolicyRegistry() {
-        return defaultPolicyRegistry;
-    }
-
-    public void setPolicyRegistry(PolicyRegistry reg) {
-        defaultPolicyRegistry = reg;
-    }
-    
-    public AssertionBuilderFactory getAssertionBuilderFactory() {
-        return factory;
+    public static void registerBuilder(QName qname, AssertionBuilder builder) {
+        getBuilder().getAssertionBuilderFactory().registerBuilder(qname, builder);
     }
 
     /**
@@ -98,35 +76,8 @@ public class PolicyEngine {
      *            the InputStream of the Policy
      * @return a Policy object of the Policy that is fed as a InputStream
      */
-    public Policy getPolicy(InputStream inputStream) {
-        try {
-            XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
-            return getPolicy(reader);
-        } catch (RuntimeException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new RuntimeException("Could not load policy.", ex); 
-        }
-    }
-
-    public Policy getPolicy(Element el) {
-        return getPolicyOperator(el);
-    }
-    
-    
-    public Policy getPolicy(XMLStreamReader reader) {
-        return getPolicyOperator(reader);
-    }
-
-    /**
-     * Creates a Policy object from an element.
-     * 
-     * @param element
-     *            the Policy element
-     * @return a Policy object of the Policy element
-     */
-    public Policy getPolicy(Object element) {
-        return getPolicyOperator(element);
+    public static Policy getPolicy(InputStream inputStream) {
+        return getBuilder().getPolicy(inputStream);
     }
 
     /**
@@ -136,95 +87,51 @@ public class PolicyEngine {
      *            the InputStream of the PolicyReference
      * @return a PolicyReference object of the PolicyReference
      */
-    public PolicyReference getPolicyReference(InputStream inputStream) {
-        try {
-            XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
-            return getPolicyReference(reader);
-        } catch (RuntimeException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new RuntimeException("Could not load policy reference.", ex); 
-        }
+    public static PolicyReference getPolicyReferene(InputStream inputStream) {
+        return getBuilder().getPolicyReference(inputStream);
     }
 
     /**
-     * Creates a PolicyReference object from an element.
+     * Creates a Policy object from an OMElement.
+     * 
+     * @param element
+     *            the Policy element
+     * @retun a Policy object of the Policy element
+     */
+    public static Policy getPolicy(OMElement element) {
+        return getBuilder().getPolicy(element);
+    }
+
+    /**
+     * Creates a Policy object from an Element.
+     * 
+     * @param element
+     *            the Policy element
+     * @retun a Policy object of the Policy element
+     */
+    public static Policy getPolicy(Object element) {
+        return getBuilder().getPolicy(element);
+    }
+    
+    /**
+     * Creates a PolicyReference object from an OMElement.
      * 
      * @param element
      *            the PolicyReference element
      * @return a PolicyReference object of the PolicyReference element
      */
-    public PolicyReference getPolicyReference(Object element) {
-        QName qn = factory.getConverterRegistry().findQName(element);
-
-        if (!Constants.isPolicyRef(qn)) {
-            throw new RuntimeException(
-                    "Specified element is not a <wsp:PolicyReference .. />  element");
-        }
-
-        PolicyReference reference = new PolicyReference(this);
-
-        Map<QName, String> attributes = factory.getConverterRegistry().getAttributes(element);
-
-        // setting the URI value
-        reference.setURI(attributes.get(new QName("URI")));
-        return reference;
+    public static PolicyReference getPolicyReference(OMElement element) {
+        return getBuilder().getPolicyReference(element);
     }
 
-    private Policy getPolicyOperator(Object element) {
-        String ns = factory.getConverterRegistry().findQName(element).getNamespaceURI();
-        return (Policy) processOperationElement(element, new Policy(defaultPolicyRegistry, ns));
-    }
-
-    private ExactlyOne getExactlyOneOperator(Object element) {
-        return (ExactlyOne) processOperationElement(element, new ExactlyOne());
-    }
-
-    private All getAllOperator(Object element) {
-        return (All) processOperationElement(element, new All());
-    }
-
-    private PolicyOperator processOperationElement(Object operationElement,
-                                                          PolicyOperator operator) {
-
-        if (Constants.TYPE_POLICY == operator.getType()) {
-            Policy policyOperator = (Policy) operator;
-
-            Map<QName, String> attributes = factory.getConverterRegistry().getAttributes(operationElement);
-            
-            for (Map.Entry<QName, String> ent : attributes.entrySet()) {
-                policyOperator.addAttribute(ent.getKey(), ent.getValue());
-            }
-        }
-
-
-        for (Iterator iterator = factory.getConverterRegistry().getChildElements(operationElement); 
-            iterator.hasNext();) {
-            
-            Object childElement = iterator.next();
-            QName qn = factory.getConverterRegistry().findQName(childElement);
-            
-            if (childElement == null || qn == null 
-                || qn.getNamespaceURI() == null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Skipping bad policy element " + childElement);
-                }
-            } else if (Constants.isInPolicyNS(qn)) {
-                if (Constants.ELEM_POLICY.equals(qn.getLocalPart())) {
-                    operator.addPolicyComponent(getPolicyOperator(childElement));
-                } else if (Constants.ELEM_EXACTLYONE.equals(qn.getLocalPart())) {
-                    operator.addPolicyComponent(getExactlyOneOperator(childElement));
-                } else if (Constants.ELEM_ALL.equals(qn.getLocalPart())) {
-                    operator.addPolicyComponent(getAllOperator(childElement));
-                } else if (Constants.ELEM_POLICY_REF.equals(qn.getLocalPart())) {
-                    operator.addPolicyComponent(getPolicyReference(childElement));
-                } else {
-                    operator.addPolicyComponent(factory.build(childElement));
-                }
-            } else {
-                operator.addPolicyComponent(factory.build(childElement));
-            }
-        }
-        return operator;
+    /**
+     * Creates a PolicyReference object from an Element.
+     * 
+     * @param element
+     *            the PolicyReference element
+     * @return a PolicyReference object of the PolicyReference element
+     */
+    public static PolicyReference getPolicyReference(Object element) {
+        return getBuilder().getPolicyReference(element);
     }
 }

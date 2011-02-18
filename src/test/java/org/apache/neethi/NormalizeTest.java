@@ -31,7 +31,7 @@ import org.apache.neethi.util.PolicyComparator;
 
 public class NormalizeTest extends PolicyTestCase {
     
-    PolicyEngine mgr;
+    PolicyBuilder mgr;
 
     public NormalizeTest() {
         super("NormalizeTest");

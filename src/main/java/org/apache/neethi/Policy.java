@@ -19,6 +19,7 @@
 
 package org.apache.neethi;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -223,14 +224,14 @@ public class Policy extends All {
      * 
      * @return
      */
-    public Iterator<List<PolicyComponent>> getAlternatives() {
+    public Iterator<List<Assertion>> getAlternatives() {
         return new PolicyIterator(this, registry);
     }
-    public Iterator<List<PolicyComponent>> getAlternatives(PolicyRegistry reg) {
+    public Iterator<List<Assertion>> getAlternatives(PolicyRegistry reg) {
         return new PolicyIterator(this, reg);
     }
 
-    private class PolicyIterator implements Iterator<List<PolicyComponent>> {
+    private class PolicyIterator implements Iterator<List<Assertion>> {
         Iterator<PolicyComponent> alternatives;
 
         public PolicyIterator(Policy policy, PolicyRegistry reg) {
@@ -244,8 +245,15 @@ public class Policy extends All {
             return alternatives.hasNext();
         }
 
-        public List<PolicyComponent> next() {
-            return ((All) alternatives.next()).getPolicyComponents();
+        public List<Assertion> next() {
+            List<PolicyComponent> pcs = ((All) alternatives.next()).getPolicyComponents();
+            List<Assertion> asserts = new ArrayList<Assertion>(pcs.size());
+            for (PolicyComponent pc : pcs) {
+                if (pc instanceof Assertion) {
+                    asserts.add((Assertion)pc);
+                }
+            }
+            return asserts;
         }
 
         public void remove() {
