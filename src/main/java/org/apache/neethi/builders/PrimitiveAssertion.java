@@ -23,6 +23,7 @@ package org.apache.neethi.builders;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -41,6 +42,7 @@ public class PrimitiveAssertion implements Assertion {
     protected QName name;
     protected boolean optional;
     protected boolean ignorable;
+    protected String textValue;
     protected Map<QName, String> attributes;
     
     public PrimitiveAssertion() {
@@ -55,17 +57,22 @@ public class PrimitiveAssertion implements Assertion {
         this(n, o, false);
     }
     public PrimitiveAssertion(QName n, boolean o, boolean i) {
-        name = n;
-        optional = o;
-        ignorable = i;
+        this(n, o, i, null, null);
     }
-    public PrimitiveAssertion(QName n, boolean o, boolean i, Map<QName, String> atts) {
+    public PrimitiveAssertion(QName n, boolean o, boolean i,
+                              Map<QName, String> atts) {
+        this(n, o, i, atts, null);
+    }
+    public PrimitiveAssertion(QName n, boolean o, boolean i,
+                              Map<QName, String> atts,
+                              String value) {
         name = n;
         optional = o;
         ignorable = i;
         if (atts != null) {
             attributes = new HashMap<QName, String>(atts);
         }
+        textValue = value;
     }
     public String getAttribute(QName n) {
         if (attributes != null) {
@@ -86,6 +93,13 @@ public class PrimitiveAssertion implements Assertion {
             attributes.putAll(atts);
         }
     }
+    public String getTextValue() {
+        return textValue;
+    }
+    public void setTextValue(String s) {
+        textValue = s;
+    }
+    
     public String toString() {
         return name.toString();
     }
@@ -147,17 +161,31 @@ public class PrimitiveAssertion implements Assertion {
         String namespace = Constants.findPolicyNamespace(writer);
         String pfx = writer.getPrefix(name.getNamespaceURI());
         boolean writeNS = false;
+        if (pfx == null && name.getPrefix() != null && !"".equals(name.getPrefix())) {
+            pfx = name.getPrefix();
+            writeNS = true;
+        }
         if ("".equals(pfx) || pfx == null) {
             pfx = "";
-            writer.setDefaultNamespace(name.getNamespaceURI());
             writeNS = true;
-        } else {
-            pfx = pfx + ":";
         }
-        writer.writeStartElement(name.getNamespaceURI(), pfx + name.getLocalPart());
+        
+        if (!hasContents() && attributes == null && !writeNS) {
+            writer.writeEmptyElement(pfx, name.getLocalPart(), name.getNamespaceURI());
+            return;
+        }
+        
+        writer.writeStartElement(pfx, name.getLocalPart(), name.getNamespaceURI());
+        
         if (writeNS) {
-            writer.writeDefaultNamespace(name.getNamespaceURI());
+            if ("".equals(pfx) || pfx == null) {
+                writer.writeDefaultNamespace(name.getNamespaceURI());
+            } else if (attributes == null 
+                || !attributes.containsKey(new QName(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, pfx))) {
+                writer.writeNamespace(pfx, name.getNamespaceURI());
+            }
         }
+        
         if (optional) {
             writer.writeAttribute(namespace, Constants.ATTR_OPTIONAL, "true");
         }
@@ -165,8 +193,19 @@ public class PrimitiveAssertion implements Assertion {
             writer.writeAttribute(namespace, Constants.ATTR_IGNORABLE, "true");
         }
         writeAttributes(writer);
+        writeContents(writer);
         writer.writeEndElement();
     }
+    protected void writeContents(XMLStreamWriter writer) throws XMLStreamException {
+        if (textValue != null) {
+            writer.writeCharacters(textValue);
+        }
+    }    
+    protected boolean hasContents() {
+        return textValue != null && !"".equals(textValue);
+    }
+
+    
     protected void writeAttributes(XMLStreamWriter writer) throws XMLStreamException {
         if (attributes != null) {
             for (Map.Entry<QName, String> att : attributes.entrySet()) {
@@ -178,14 +217,26 @@ public class PrimitiveAssertion implements Assertion {
                     //already handled
                     continue;
                 }
-                String prefix = getOrCreatePrefix(att.getKey().getNamespaceURI(), writer);
-                writer.writeAttribute(prefix, att.getKey().getNamespaceURI(),
-                                      att.getKey().getLocalPart(),
-                                      att.getValue());
+                if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(att.getKey().getNamespaceURI())) {
+                    writer.writeNamespace(att.getKey().getLocalPart(), att.getValue());
+                    continue;
+                }
+                String ns = att.getKey().getNamespaceURI();
+                if (ns != null && !"".equals(ns)) {
+                    String prefix = getOrCreatePrefix(att.getKey().getNamespaceURI(), writer);
+                    writer.writeAttribute(prefix, att.getKey().getNamespaceURI(),
+                                          att.getKey().getLocalPart(),
+                                          att.getValue());
+                } else {
+                    writer.writeAttribute(att.getKey().getLocalPart(), att.getValue());
+                }
             }
         }
     }
     protected String getOrCreatePrefix(String ns, XMLStreamWriter writer) throws XMLStreamException {
+        if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(ns)) {
+            return null;
+        }
         String prefix = writer.getPrefix(ns);
         int count = 1;
         while (prefix == null || "".equals(prefix)) {
@@ -202,7 +253,7 @@ public class PrimitiveAssertion implements Assertion {
     }
     
     protected Assertion clone(boolean isoptional) {
-        return new PrimitiveAssertion(name, isoptional, ignorable, attributes);
+        return new PrimitiveAssertion(name, isoptional, ignorable, attributes, textValue);
     }
 
 }

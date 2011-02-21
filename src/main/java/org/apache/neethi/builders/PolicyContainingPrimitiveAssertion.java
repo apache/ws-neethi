@@ -111,30 +111,11 @@ public class PolicyContainingPrimitiveAssertion
     public Policy getPolicy() {
         return nested;
     }
-    public void serialize(XMLStreamWriter writer) throws XMLStreamException {
-        String namespace = Constants.findPolicyNamespace(writer);
-        String pfx = writer.getPrefix(name.getNamespaceURI());
-        boolean writeNS = false;
-        if ("".equals(pfx) || pfx == null) {
-            pfx = "";
-            writer.setDefaultNamespace(name.getNamespaceURI());
-            writeNS = true;
-        } else {
-            pfx = pfx + ":";
-        }
-        writer.writeStartElement(name.getNamespaceURI(), pfx + name.getLocalPart());
-        if (writeNS) {
-            writer.writeDefaultNamespace(name.getNamespaceURI());
-        }
-        if (optional) {
-            writer.writeAttribute(namespace, Constants.ATTR_OPTIONAL, "true");
-        }
-        if (ignorable) {
-            writer.writeAttribute(namespace, Constants.ATTR_IGNORABLE, "true");
-        }
-        writeAttributes(writer);
+    protected void writeContents(XMLStreamWriter writer) throws XMLStreamException {
         nested.serialize(writer);
-        writer.writeEndElement();
+    }
+    protected boolean hasContents() {
+        return true;
     }
 
 }

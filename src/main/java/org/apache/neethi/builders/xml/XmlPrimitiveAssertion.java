@@ -43,6 +43,7 @@ import org.apache.neethi.Constants;
 import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyComponent;
+import org.apache.neethi.builders.PrimitiveAssertion;
 
 /**
  * XmlPrimitiveAssertion wraps an Element s.t. any unknown elements can be
@@ -50,11 +51,8 @@ import org.apache.neethi.PolicyComponent;
  * assertion from that Element.
  * 
  */
-public class XmlPrimitiveAssertion implements Assertion {
-
+public class XmlPrimitiveAssertion extends PrimitiveAssertion implements Assertion {
     protected Element element;
-    protected boolean optional;
-    protected boolean ignorable;
 
     /**
      * Constructs a XmlPrimitiveAssertion from an Element.
@@ -63,9 +61,10 @@ public class XmlPrimitiveAssertion implements Assertion {
      *            the Element from which the XmlAssertion is constructed
      */
     public XmlPrimitiveAssertion(Element element) {
+        super(new QName(element.getNamespaceURI(), element.getLocalName(), element.getPrefix()),
+              XMLPrimitiveAssertionBuilder.isOptional(element), 
+              XMLPrimitiveAssertionBuilder.isIgnorable(element));
         this.element = element;
-        setOptionality(element);
-        setIgnorability(element);
     }
 
 
@@ -95,20 +94,6 @@ public class XmlPrimitiveAssertion implements Assertion {
         return element;
     }
 
-    /**
-     * Returns <tt>true</tt> if the wrapped element that assumed to be an
-     * assertion, is optional.
-     */
-    public boolean isOptional() {
-        return optional;
-    }
-    /**
-     * Returns <tt>true</tt> if the wrapped element that assumed to be an
-     * assertion, is ignorable.
-     */
-    public boolean isIgnorable() {
-        return ignorable;
-    }
 
     /**
      * Returns the partial normalized version of the wrapped Element, that is
@@ -141,13 +126,6 @@ public class XmlPrimitiveAssertion implements Assertion {
         return this;
     }
 
-    /**
-     * Throws an UnsupportedOperationException since an assertion of an unknown
-     * element can't be fully normalized due to it's unkonwn composite.
-     */
-    public PolicyComponent normalize(boolean isDeep) {
-        throw new UnsupportedOperationException();
-    }
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
         if (element != null) {
@@ -162,28 +140,6 @@ public class XmlPrimitiveAssertion implements Assertion {
      */
     public final short getType() {
         return Constants.TYPE_ASSERTION;
-    }
-
-    private void setOptionality(Element element2) {
-        Attr attribute = element2.getAttributeNodeNS(Constants.URI_POLICY_13_NS, Constants.ATTR_OPTIONAL);
-        if (attribute == null) {
-            attribute = element2.getAttributeNodeNS(Constants.URI_POLICY_15_NS, Constants.ATTR_OPTIONAL);
-        }
-        if (attribute != null) {
-            this.optional = Boolean.parseBoolean(attribute.getValue());
-
-        } else {
-            this.optional = false;
-        }
-    }
-    private void setIgnorability(Element element2) {
-        Attr attribute = element2.getAttributeNodeNS(Constants.URI_POLICY_15_NS, Constants.ATTR_IGNORABLE);
-        if (attribute != null) {
-            this.ignorable = Boolean.parseBoolean(attribute.getValue());
-        } else {
-            this.ignorable = false;
-        }
-        
     }
 
     public boolean equal(PolicyComponent policyComponent) {
@@ -210,7 +166,7 @@ public class XmlPrimitiveAssertion implements Assertion {
             case XMLEvent.START_DOCUMENT:
             case XMLEvent.END_DOCUMENT:
                 //not doing this as we're in a partial write mode
-                return;
+                break;
 
             case XMLEvent.END_ELEMENT:
                 writer.writeEndElement();

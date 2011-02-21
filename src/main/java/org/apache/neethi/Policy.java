@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -147,18 +148,22 @@ public class Policy extends All {
         String localName = null;
 
         Map<String, String> prefix2ns = new HashMap<String, String>();
+        boolean writeNS = true;
 
-        for (Iterator iterator = getAttributes().keySet().iterator(); iterator
-                .hasNext();) {
+        for (Map.Entry<QName, String> ents : attributes.entrySet()) {
             
-            key = (QName) iterator.next();
+            key = ents.getKey();
             localName = key.getLocalPart();
             
             namespaceURI = key.getNamespaceURI();
             namespaceURI = (namespaceURI == null || namespaceURI.length() == 0) ? null : namespaceURI;
                         
-            if (namespaceURI != null) {
-                
+            if (namespaceURI != null && XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceURI)) {
+                writer.writeNamespace(localName, ents.getValue());
+                if (nspace.equals(ents.getValue())) {
+                    writeNS = false;
+                }
+            } else if (namespaceURI != null) {
                 String writerPrefix = writer.getPrefix(namespaceURI);
                 writerPrefix = (writerPrefix == null || writerPrefix.length() == 0) ? null : writerPrefix;
                 
@@ -171,11 +176,11 @@ public class Policy extends All {
                 }
                 
                 if (prefix != null) {
-                    writer.writeAttribute(prefix, namespaceURI, localName, getAttribute(key));
+                    writer.writeAttribute(prefix, namespaceURI, localName, ents.getValue());
                     prefix2ns.put(prefix, key.getNamespaceURI());
 
                 } else {
-                    writer.writeAttribute(namespaceURI, localName, getAttribute(key));
+                    writer.writeAttribute(namespaceURI, localName, ents.getValue());
                 }
                     
             } else {
@@ -185,8 +190,10 @@ public class Policy extends All {
             
         }
 
-        // writes xmlns:wsp=".."
-        writer.writeNamespace(wspPrefix, nspace);
+        if (writeNS) {
+            // writes xmlns:wsp=".."
+            writer.writeNamespace(wspPrefix, nspace);
+        }
 
         String prefiX;
 

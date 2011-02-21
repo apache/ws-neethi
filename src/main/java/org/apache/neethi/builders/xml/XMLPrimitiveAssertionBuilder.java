@@ -76,12 +76,15 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder<Element> {
     }
     
     public Assertion newPrimitiveAssertion(Element element, Map<QName, String> atts) {
-        return new PrimitiveAssertion(new QName(element.getNamespaceURI(), element.getLocalName()),
-                                      isOptional(element), isIgnorable(element));        
+        return new PrimitiveAssertion(new QName(element.getNamespaceURI(), element.getLocalName(), element.getPrefix()),
+                                      isOptional(element), isIgnorable(element),
+                                      atts,
+                                      element.getTextContent());
     }
     public Assertion newPolicyContainingAssertion(Element element, Map<QName, String> atts, Policy policy) {
         return new PolicyContainingPrimitiveAssertion(new QName(element.getNamespaceURI(),
-                                                                element.getLocalName()),
+                                                                element.getLocalName(),
+                                                                element.getPrefix()),
                                       isOptional(element), isIgnorable(element),
                                       policy);
     }
