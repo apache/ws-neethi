@@ -61,18 +61,10 @@ public class XmlPrimitiveAssertion extends PrimitiveAssertion implements Asserti
      *            the Element from which the XmlAssertion is constructed
      */
     public XmlPrimitiveAssertion(Element element) {
-        super(new QName(element.getNamespaceURI(), element.getLocalName(), element.getPrefix()),
+        super(new QName(element.getNamespaceURI(), element.getLocalName()),
               XMLPrimitiveAssertionBuilder.isOptional(element), 
               XMLPrimitiveAssertionBuilder.isIgnorable(element));
         this.element = element;
-    }
-
-
-    /**
-     * Returns the QName of the wrapped Element.
-     */
-    public QName getName() {
-        return (element != null) ? new QName(element.getNamespaceURI(), element.getLocalName()) : null;
     }
 
     /**
