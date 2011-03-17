@@ -1,0 +1,53 @@
+           -----------------------------------
+           Apache Neethi - Migration Guide
+           -----------------------------------
+
+Migrating from Apache Neethi 2 to 3
+
+    Neethi 3 is a major upgrade from Neethi 2 providing several new features 
+    and enhanced capabilities.  While effort was made to make it easy to 
+    transition from Neeth 2 to Neethi 3, some changes are required.
+
+    * Java 5 collections - all the collections and iterators have been 
+    updated to specify the proper types they contain.  Upgrading to Neethi
+    3 will likely require proper typing in existing code to reduce warnings.
+
+    * Assertion.isIgnorable() - to support WS-Policy 1.5, an isIgnorable 
+    method was added to the Assertion interface and any policy assertions
+    that implement that interface must be updated to add that method.
+    In addition, it is recommend that all AssertionBuilders builders be
+    updated to look for the ignorable attribute and set it appropriately.
+
+    * AssertionBuilders - AssertionBuilders are no longer tied to Axiom.  
+    The AssertionBuilder interface is now typed to specify the object model
+    the builder expects for the first parameter for the build method.  The
+    type can be any type for which there is a Converter registered.  By 
+    default, there are converters for DOM Elements and XMLStreamReaders. 
+    If the Axiom jars are available, there are Converters for OMElement as 
+    well.  The easiest migration path is to make your builders implement 
+    "AssertionBuilder<OMElement>".   
+
+    * The default assertion implement has changed.  In 2.x, the default
+    implementation was the XmlPrimitiveAssertion which just wrappered
+    the OMElement.  With 3.x, the default depends on the assertion
+    being built.   If its a single element with either no content or 
+    text content, it will be a PrimitiveAssertion.   If it contains
+    a single child Policy element, it will be a 
+    PolicyContainingPrimitiveAssertion.  Otherwise it will be a 
+    XmlPrimitiveAssertion. These changes to the default assertions allows 
+    the runtime to know more about the policy so methods like intersect 
+    could be added.   
+
+    * Two new interfaces were added that Assertions can (optionally) 
+    implement.  The PolicyContainingAssertion interface is used
+    to mark assertions that contain an internal Policy.  This allows
+    the normalization and intersect operations to examine the internal
+    policy as well.  The IntersectableAssertion interface adds methods
+    that an Assertion can override algorithms in the intersection
+    process to provide custom behavoir.  For example, per spec, the
+    intersection algorithm should not consider attributes.   However,
+    an application internal policy may want to consider them for 
+    various reasons. 
+
+
+  

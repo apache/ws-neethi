@@ -53,7 +53,7 @@ public interface AssertionBuilderFactory {
      * @param builder the AssertionBuilder that can build an Assertion from
      *            an element of specified type
      */
-    void registerBuilder(QName key, AssertionBuilder builder);
+    void registerBuilder(QName key, AssertionBuilder<?> builder);
 
     /**
      * Registers an AssertionBuilder with all the builder's known elements.
@@ -61,7 +61,7 @@ public interface AssertionBuilderFactory {
      * @param builder the AssertionBuilder that can build an Assertion from
      *            an element of specified type
      */
-    void registerBuilder(AssertionBuilder builder);
+    void registerBuilder(AssertionBuilder<?> builder);
 
     
     /**
@@ -82,5 +82,5 @@ public interface AssertionBuilderFactory {
      *            Assertion from
      * @return an AssertionBuilder that understands qname type
      */
-    public AssertionBuilder getBuilder(QName qname);
+    public AssertionBuilder<?> getBuilder(QName qname);
 }

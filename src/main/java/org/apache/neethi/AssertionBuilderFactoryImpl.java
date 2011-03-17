@@ -38,8 +38,8 @@ import org.apache.neethi.util.Service;
  */
 public class AssertionBuilderFactoryImpl implements AssertionBuilderFactory {
 
-    private Map<QName, AssertionBuilder> registeredBuilders 
-        = new ConcurrentHashMap<QName, AssertionBuilder>();
+    private Map<QName, AssertionBuilder<?>> registeredBuilders 
+        = new ConcurrentHashMap<QName, AssertionBuilder<?>>();
     
     protected AssertionBuilder defaultBuilder;
     protected ConverterRegistry converters = new ConverterRegistry();
@@ -79,12 +79,12 @@ public class AssertionBuilderFactoryImpl implements AssertionBuilderFactory {
      * @param builder the AssertionBuilder that can build an Assertion from
      *            an element of specified type
      */
-    public void registerBuilder(QName key, AssertionBuilder builder) {
+    public void registerBuilder(QName key, AssertionBuilder<?> builder) {
         loadDynamic();
         registeredBuilders.put(key, builder);
     }
 
-    public void registerBuilder(AssertionBuilder builder) {
+    public void registerBuilder(AssertionBuilder<?> builder) {
         loadDynamic();
         for (QName q : builder.getKnownElements()) {
             registeredBuilders.put(q, builder);
@@ -152,7 +152,7 @@ public class AssertionBuilderFactoryImpl implements AssertionBuilderFactory {
      *            Assertion from
      * @return an AssertionBuilder that understands qname type
      */
-    public AssertionBuilder getBuilder(QName qname) {
+    public AssertionBuilder<?> getBuilder(QName qname) {
         loadDynamic();
         return registeredBuilders.get(qname);
     }

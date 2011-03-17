@@ -286,7 +286,7 @@
 		</site>
 	</distributionManagement>
 	<properties>
-        <axiom.version>1.2.12-SNAPSHOT</axiom.version>
+        <axiom.version>1.2.11</axiom.version>
         <neethi.osgi.version>${project.version}</neethi.osgi.version>
         <bundle.plugin.version>2.1.0</bundle.plugin.version>
         <failIfNoTests>false</failIfNoTests>

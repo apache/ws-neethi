@@ -21,14 +21,12 @@
   <bannerLeft>
     <name>Apache Neethi</name>
     <src>http://ws.apache.org/images/project-logo.jpg</src>
-    <href>http://ws.apache.org/</href>
+    <href>http://ws.apache.org/commons/neethi/</href>
   </bannerLeft>
   <body>
     <links>
       <item name="Apache" href="http://www.apache.org/" />
       <item name="WebServices" href="http://ws.apache.org/"/>
-      <item name="Commons" href="http://ws.apache.org/commons/"/>
-      <item name="Axiom" href="http://ws.apache.org/commons/axiom/"/>
     </links>
 
     <menu name="Apache Neethi">
@@ -38,6 +36,7 @@
       </item>
       <item name="Documentation">
         <item name="Javadocs" href="/apidocs/index.html"/>
+        <item name="Migration Guide" href="/migration.html"/>
       </item>
     </menu>
     
