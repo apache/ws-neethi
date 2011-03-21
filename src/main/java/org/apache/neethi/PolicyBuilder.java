@@ -28,10 +28,10 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.w3c.dom.Element;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.neethi.builders.AssertionBuilder;
 import org.apache.neethi.builders.converters.ConverterRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * PolicyBuilder provides set of methods to create a Policy object from an
@@ -42,7 +42,7 @@ import org.apache.neethi.builders.converters.ConverterRegistry;
  */
 public class PolicyBuilder {
 
-    private static final Log LOG = LogFactory.getLog(PolicyBuilder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PolicyBuilder.class);
 
     protected AssertionBuilderFactory factory = new AssertionBuilderFactoryImpl(this);
     protected PolicyRegistry defaultPolicyRegistry;
