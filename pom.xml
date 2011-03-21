@@ -27,8 +27,9 @@
     </parent>
 	<groupId>org.apache.neethi</groupId>
 	<artifactId>neethi</artifactId>
-	<name>Neethi</name>
+	<name>Apache Neethi</name>
 	<version>2.0.5-SNAPSHOT</version>
+    <packaging>bundle</packaging>
 	<description>Apache Neethi provides general framework for the programmers to use WS Policy. It is compliant with latest WS Policy specification which was published in March 2006. This framework is specifically written to enable the Apache Web services stack to use WS Policy as a way of expressing it's requirements and capabilities.</description>
 	<url>http://ws.apache.org/commons/neethi/</url>
 	<issueManagement>
@@ -70,6 +71,11 @@
 			<organization>WSO2 Inc.</organization>
 			<email>sanka@apache.org</email>
 		</developer>
+        <developer>
+            <name>Daniel Kulp</name>
+            <id>dkulp</id>
+            <email>dkulp@apache.org</email>
+        </developer>
 		<developer>
             <!-- Documentation -->
 			<name>Chatra Nakkawita</name>
@@ -101,15 +107,6 @@
            </resource>
         </resources>
 		<plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-                    </archive>
-                </configuration>
-            </plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -159,6 +156,35 @@
 					<attach>true</attach>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.1.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Implementation-Title>Apache Neethi</Implementation-Title>
+                        <Implementation-Vendor>The Apache Software Foundation</Implementation-Vendor>
+                        <Implementation-Vendor-Id>org.apache</Implementation-Vendor-Id>
+                        <Implementation-Version>${project.version}</Implementation-Version>
+                        <Specification-Title>Apache Neethi</Specification-Title>
+                        <Specification-Vendor>The Apache Software Foundation</Specification-Vendor>
+                        <Specification-Version>${project.version}</Specification-Version>
+                        <Export-Package>
+                              org.apache.neethi.*;version="${project.version}",
+                        </Export-Package>
+                        <Import-Package>
+                              org.apache.axiom.*;resolution:=optional,
+                              javax.xml.stream;version="[0.0,2)",
+                              *
+                        </Import-Package>
+                        <_failok>true</_failok>
+                        <_nouses>true</_nouses>
+                        <_versionpolicy>[$(version;==;$(@)),$(version;+;$(@)))</_versionpolicy>
+                    </instructions>
+                </configuration>
+            </plugin>
+
 		</plugins>
 	</build>
 	<profiles>
@@ -174,6 +200,7 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.7</version>
 						<executions>
 							<execution>
 								<goals>
@@ -225,6 +252,7 @@
 			<plugin>
 				 <groupId>org.apache.maven.plugins</groupId>
 				 <artifactId>maven-javadoc-plugin</artifactId>
+                 <version>2.7</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
@@ -240,7 +268,6 @@
 	<properties>
         <axiom.version>1.2.11</axiom.version>
         <neethi.osgi.version>${project.version}</neethi.osgi.version>
-        <bundle.plugin.version>1.4.0</bundle.plugin.version>
         <failIfNoTests>false</failIfNoTests>
 	</properties>
 </project>
