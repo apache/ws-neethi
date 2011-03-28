@@ -176,7 +176,6 @@
                         <Import-Package>
                               org.apache.axiom.*;resolution:=optional,
                               javax.xml.stream;version="[0.0,2)",
-                              org.slf4j*;resolution:=optional;version="[1.5,2)",
                               *
                         </Import-Package>
                         <_failok>true</_failok>
@@ -266,17 +265,6 @@
             <artifactId>woodstox-core-asl</artifactId>
             <version>4.0.8</version>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
-            <version>${slf4j-version}</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
     <reporting>
         <plugins>
@@ -300,7 +288,6 @@
         <axiom.version>1.2.11</axiom.version>
         <neethi.osgi.version>${project.version}</neethi.osgi.version>
         <bundle.plugin.version>2.1.0</bundle.plugin.version>
-        <slf4j-version>1.6.1</slf4j-version>
         <failIfNoTests>false</failIfNoTests>
     </properties>
 </project>

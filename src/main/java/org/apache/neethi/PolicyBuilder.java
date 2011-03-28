@@ -30,8 +30,6 @@ import org.w3c.dom.Element;
 
 import org.apache.neethi.builders.AssertionBuilder;
 import org.apache.neethi.builders.converters.ConverterRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * PolicyBuilder provides set of methods to create a Policy object from an
@@ -41,8 +39,6 @@ import org.slf4j.LoggerFactory;
  * constructing a Policy object.
  */
 public class PolicyBuilder {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PolicyBuilder.class);
 
     protected AssertionBuilderFactory factory = new AssertionBuilderFactoryImpl(this);
     protected PolicyRegistry defaultPolicyRegistry;
@@ -185,7 +181,7 @@ public class PolicyBuilder {
     }
 
     private PolicyOperator processOperationElement(Object operationElement,
-                                                          PolicyOperator operator) {
+                                                   PolicyOperator operator) {
 
         if (Constants.TYPE_POLICY == operator.getType()) {
             Policy policyOperator = (Policy) operator;
@@ -197,7 +193,6 @@ public class PolicyBuilder {
             }
         }
 
-
         for (Iterator iterator = factory.getConverterRegistry().getChildElements(operationElement); 
             iterator.hasNext();) {
             
@@ -206,9 +201,9 @@ public class PolicyBuilder {
             
             if (childElement == null || qn == null 
                 || qn.getNamespaceURI() == null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Skipping bad policy element " + childElement);
-                }
+                
+                notifyUnknownPolicyElement(childElement);
+                
             } else if (Constants.isInPolicyNS(qn)) {
                 if (Constants.ELEM_POLICY.equals(qn.getLocalPart())) {
                     operator.addPolicyComponent(getPolicyOperator(childElement));
@@ -226,5 +221,9 @@ public class PolicyBuilder {
             }
         }
         return operator;
+    } 
+    
+    protected void notifyUnknownPolicyElement(Object childElement) {
+        //NO-Op - subclass could log or throw exception or something
     }
 }
