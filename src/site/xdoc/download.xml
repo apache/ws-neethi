@@ -39,11 +39,11 @@
     <section>
             <h2>Releases</h2>
             <div align="left">
-                <p>Please select the Apache Neethi version you want to download. Latest release is 2.0.3. You can download both the binary distribution and the source distribution.  All the releases are available for download as source or binary. For more information,
+                <p>Please select the Apache Neethi version you want to download. Latest release is 3.0.0. You can download both the binary distribution and the source distribution.  All the releases are available for download as source or binary. For more information,
                     please see
                     <a href="http://www.apache.org/dev/release.html">Apache Release FAQ</a>
                 </p>
-                <p>Please select the AXIOM version you want to download.</p>
+                <p>Please select the Neethi version you want to download.</p>
             </div>
             <div align="center">
 
@@ -56,18 +56,56 @@
 							<td>Date</td>
 							<td>Description</td>
 						</tr>
+
+						<tr class="b">
+							<td>
+								<a name="3_0_0"></a>3.0.0</td>
+							<td>Release</td>
+							<td>Source Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/3.0.0/neethi-3.0.0-src.zip" onClick="javascript:urchinTracker ('/downloads/neethi-3.0.0-src.zip');">zip</a>
+								
+								<a href="http://www.apache.org/dist/ws/commons/neethi/3.0.0/neethi-3.0.0-src.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/3.0.0/neethi-3.0.0-src.zip.asc">PGP</a>
+								<br></br>
+								Binary Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/3.0.0/neethi-3.0.0-bin.zip" onClick="javascript:urchinTracker ('/downloads/neethi-3.0.0-bin.zip');">zip</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/3.0.0/neethi-3.0.0-bin.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/3.0.0/neethi-3.0.0-bin.zip.asc">PGP</a>
+								
+								<br></br>
+							</td>
+                            <td>04 - 06  - 2011</td>
+                            <td>3.0.0 Release (Mirrored)</td>
+						</tr>
+						<tr class="b">
+							<td>
+								<a name="2_0_5"></a>2.0.5</td>
+							<td>Release</td>
+							<td>Source Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/2.0.5/neethi-2.0.5-src.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.5-src.zip');">zip</a>
+								
+								<a href="http://www.apache.org/dist/ws/commons/neethi/2.0.5/neethi-2.0.5-src.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/2.0.5/neethi-2.0.5-src.zip.asc">PGP</a>
+								<br></br>
+								Binary Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/2.0.5/neethi-2.0.5-bin.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.5-bin.zip');">zip</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/2.0.5/neethi-2.0.5-bin.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/commons/neethi/2.0.5/neethi-2.0.5-bin.zip.asc">PGP</a>
+								
+								<br></br>
+							</td>
+							<td>04 - 06  - 2011</td>
+							<td>2.0.5 Release (Mirrored)</td>
+						</tr>
+
 						<tr class="b">
 							<td>
 								<a name="2_0_4"></a>2.0.4</td>
 							<td>Release</td>
-							<td>Source Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/2_0_4/neethi-2.0.4-src.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.4-src.zip');">zip</a>
+							<td>Source Distribution <a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_4/neethi-2.0.4-src.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.4-src.zip');">zip</a>
 								
-								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_4/neethi-2.0.4-src.zip.md5">MD5</a>
-								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_4/neethi-2.0.4-src.zip.asc">PGP</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_4/neethi-2.0.4-src.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_4/neethi-2.0.4-src.zip.asc">PGP</a>
 								<br></br>
-								Binary Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/2_0_4/neethi-2.0.4-bin.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.4-bin.zip');">zip</a>
-								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_4/neethi-2.0.4-bin.zip.md5">MD5</a>
-								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_4/neethi-2.0.4-bin.zip.asc">PGP</a>
+								Binary Distribution <a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_4/neethi-2.0.4-bin.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.4-bin.zip');">zip</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_4/neethi-2.0.4-bin.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_4/neethi-2.0.4-bin.zip.asc">PGP</a>
 								
 								<br></br>
 							</td>
@@ -78,14 +116,14 @@
 							<td>
 								<a name="2_0_3"></a>2.0.3</td>
 							<td>Release</td>
-							<td>Source Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/2_0_3/neethi-2.0.3-src.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.3-src.zip');">zip</a>
+							<td>Source Distribution <a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-src.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.3-src.zip');">zip</a>
 								
-								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-src.zip.md5">MD5</a>
-								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-src.zip.asc">PGP</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-src.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-src.zip.asc">PGP</a>
 								<br></br>
-								Binary Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/2_0_3/neethi-2.0.3-bin.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.3-bin.zip');">zip</a>
-								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-bin.zip.md5">MD5</a>
-								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-bin.zip.asc">PGP</a>
+								Binary Distribution <a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-bin.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.3-bin.zip');">zip</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-bin.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_3/neethi-2.0.3-bin.zip.asc">PGP</a>
 								
 								<br></br>
 							</td>
@@ -96,14 +134,14 @@
 							<td>
 								<a name="2_0_2"></a>2.0.2</td>
 							<td>Release</td>
-							<td>Source Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/2_0_2/neethi-2.0.2-src.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.2-src.zip');">zip</a>
+							<td>Source Distribution <a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-src.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.2-src.zip');">zip</a>
 								
-								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-src.zip.md5">MD5</a>
-								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-src.zip.asc">PGP</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-src.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-src.zip.asc">PGP</a>
 								<br></br>
-								Binary Distribution <a href="http://www.apache.org/dyn/closer.cgi/ws/commons/neethi/2_0_2/neethi-2.0.2-bin.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.2-bin.zip');">zip</a>
-								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-bin.zip.md5">MD5</a>
-								<a href="http://www.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-bin.zip.asc">PGP</a>
+								Binary Distribution <a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-bin.zip" onClick="javascript:urchinTracker ('/downloads/neethi-2.0.2-bin.zip');">zip</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-bin.zip.md5">MD5</a>
+								<a href="http://archive.apache.org/dist/ws/commons/neethi/2_0_2/neethi-2.0.2-bin.zip.asc">PGP</a>
 								
 								<br></br>
 							</td>
@@ -252,7 +290,7 @@
                     compatible signature from the main Apache site. These can be downloaded by
                     following the links above. This
                     <a
-                            href="http://www.apache.org/dist/ws/commons/axiom/KEYS">KEYS</a>
+                            href="http://archive.apache.org/dist/ws/commons/axiom/KEYS">KEYS</a>
                     file contains the
                     public keys used for signing release. It is recommended that (when possible)
                     a
