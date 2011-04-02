@@ -2,6 +2,7 @@
 Apache Commons Neethi-2.0.5 Release Note:
 
 Contains the fix for :
+* Removed unnecessary repository references from the POM file.
 * OSGi manifest should be more usable in OSGi without requiring the servicemix 
 wrapper.
 * Make sure that Neethi only uses Axiom classes that are part of the public 
