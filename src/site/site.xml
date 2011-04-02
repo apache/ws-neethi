@@ -30,6 +30,7 @@
     </links>
 
     <menu name="Apache Neethi">
+      <item name="About" href="index.html"/>
       <item name="Downloads">
         <item name="Releases" href="download.cgi"/>
         <item name="Source Code" href="/source-repository.html"/>
@@ -38,9 +39,15 @@
         <item name="Javadocs" href="/apidocs/index.html"/>
         <item name="Migration Guide" href="/migration.html"/>
       </item>
+      <item name="Project Information">
+        <item name="Mailing Lists" href="/mail-lists.html"/>
+        <item name="Project Team" href="/team-list.html"/>
+        <item name="Issue Tracking" href="issue-tracking.html"/>
+      </item>
+      <item name="License" href="http://www.apache.org/licenses/"/>
+      <item name="Sponsorship" href="http://www.apache.org/foundation/sponsorship.html"/>
+      <item name="Thanks" href="http://www.apache.org/foundation/thanks.html"/>
+      <item name="Security" href="http://apache.org/security/"/>
     </menu>
-    
-    <menu ref="reports"/>
-    
   </body>
 </project>

@@ -4,7 +4,7 @@
 
 Welcome to Apache Neethi
 
-  Apache Neethi provides general framework for the programmers to use WS Policy. 
+  Apache Neethi\u2122 provides general framework for the programmers to use WS Policy. 
   It is compliant with latest WS Policy specification which was published in 
   March 2006. This framework is specifically written to enable the Apache Web 
   services stack to use WS Policy as a way of expressing it's requirements and 
@@ -30,3 +30,10 @@ Key Features
     * Provides a mechanism to provide custom serialization / de-serialization of assertions 
 
     * More provision for the domain authors to determine the behavior of the assertions 
+
+    []
+
+====
+
+  Apache Neethi, Neethi, Apache, the Apache feather logo, and the Apache Neethi project
+  logo are trademarks of The Apache Software Foundation.
