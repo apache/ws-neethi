@@ -9,4 +9,4 @@ runtime and an extension model for serailization and de-serialization of
 domain specific Assertions. 
 
 
-Please visit : http://ws.apache.org/commons/neethi/ for further infomation.
+Please visit : http://ws.apache.org/neethi/ for further infomation.

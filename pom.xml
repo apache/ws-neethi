@@ -31,7 +31,7 @@
     <version>3.0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <description>Apache Neethi provides general framework for the programmers to use WS Policy. It is compliant with latest WS Policy specification which was published in March 2006. This framework is specifically written to enable the Apache Web services stack to use WS Policy as a way of expressing it's requirements and capabilities.</description>
-    <url>http://ws.apache.org/neethi/${project.version}</url>
+    <url>http://ws.apache.org/neethi/</url>
     <issueManagement>
         <url>http://issues.apache.org/jira/browse/NEETHI</url>
     </issueManagement>
