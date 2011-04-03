@@ -31,7 +31,7 @@
     <version>3.0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <description>Apache Neethi provides general framework for the programmers to use WS Policy. It is compliant with latest WS Policy specification which was published in March 2006. This framework is specifically written to enable the Apache Web services stack to use WS Policy as a way of expressing it's requirements and capabilities.</description>
-    <url>http://ws.apache.org/commons/neethi/</url>
+    <url>http://ws.apache.org/neethi/${project.version}</url>
     <issueManagement>
         <url>http://issues.apache.org/jira/browse/NEETHI</url>
     </issueManagement>
@@ -101,11 +101,6 @@
         <url>http://www.apache.org/</url>
     </organization>
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -183,10 +178,30 @@
                     </instructions>
                 </configuration>
             </plugin>
-
         </plugins>
+	<pluginManagement>
+	  <plugins>
+	    <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+	      <artifactId>maven-site-plugin</artifactId>
+	      <version>${sitePluginVersion}</version>
+	    </plugin>
+	  </plugins>
+	</pluginManagement>
     </build>
     <profiles>
+      <profile>
+	<id>maven-3</id>
+	<activation>
+	  <file>
+	    <!-- This employs that the basedir expression is only recognized by Maven 3.x (see MNG-2363) -->
+	    <exists>${basedir}</exists>
+	  </file>
+	</activation>
+	<properties>
+	  <sitePluginVersion>3.0-beta-2</sitePluginVersion>
+	</properties>
+      </profile>
         <profile>
             <id>release</id>
             <activation>
@@ -290,8 +305,8 @@
     </reporting>
     <distributionManagement>
         <site>
-            <id>website</id>
-            <url>scpexe://people.apache.org/www/ws.apache.org/commons/neethi</url>
+            <id>neethi-website</id>
+            <url>scpexe://people.apache.org/www/ws.apache.org/neethi/${project.version}</url>
         </site>
     </distributionManagement>
     <properties>
@@ -299,5 +314,6 @@
         <neethi.osgi.version>${project.version}</neethi.osgi.version>
         <bundle.plugin.version>2.1.0</bundle.plugin.version>
         <failIfNoTests>false</failIfNoTests>
+	<sitePluginVersion>2.1</sitePluginVersion>
     </properties>
 </project>
