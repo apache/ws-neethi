@@ -94,20 +94,36 @@ public final class Constants {
         //utility class, never constructed
     }
     
-    public static boolean isInPolicyNS(QName q) {
-        String ns = q.getNamespaceURI();
+    /**
+     * Check if the given namespace URI refers to one of the supported WS-Policy versions.
+     * 
+     * @param ns
+     *            the namespace URI
+     * @return <code>true</code> if the specification identified by the namespace URI is supported
+     *         by Neethi, <code>false</code> if it is <code>null</code> or not supported
+     */
+    public static boolean isPolicyNS(String ns) {
         return URI_POLICY_13_NS.equals(ns)
             || URI_POLICY_15_DEPRECATED_NS.equals(ns)
             || URI_POLICY_15_NS.equals(ns);
     }
-    public static boolean isPolicyElement(String ns, String local) {
-        return (URI_POLICY_13_NS.equals(ns) 
-            || URI_POLICY_15_DEPRECATED_NS.equals(ns)
-            || URI_POLICY_15_NS.equals(ns)) && ELEM_POLICY.equals(local);
+    
+    public static boolean isInPolicyNS(QName q) {
+        return isPolicyNS(q.getNamespaceURI());
     }
+    
+    public static boolean isPolicyElement(String ns, String local) {
+        return isPolicyNS(ns) && ELEM_POLICY.equals(local);
+    }
+    
     public static boolean isPolicyElement(QName q) {
         return isInPolicyNS(q) && ELEM_POLICY.equals(q.getLocalPart());
     }
+    
+    public static boolean isPolicyRef(String ns, String local) {
+        return isPolicyNS(ns) && ELEM_POLICY_REF.equals(local);
+    }
+    
     public static boolean isPolicyRef(QName q) {
         return isInPolicyNS(q) && ELEM_POLICY_REF.equals(q.getLocalPart());
     }
