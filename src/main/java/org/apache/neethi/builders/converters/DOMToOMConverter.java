@@ -19,14 +19,10 @@
 
 package org.apache.neethi.builders.converters;
 
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.dom.DOMSource;
 
 import org.w3c.dom.Element;
 
-import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMXMLBuilderFactory;
 
@@ -37,17 +33,6 @@ public class DOMToOMConverter extends AbstractDOMConverter
     implements Converter<Element, OMElement> {
 
     public OMElement convert(Element s) {
-        try {
-            return OMXMLBuilderFactory
-                .createStAXOMBuilder(OMAbstractFactory.getOMFactory(),
-                                     XMLInputFactory.newInstance().createXMLStreamReader(new DOMSource(s)))
-                                     .getDocumentElement();
-        } catch (XMLStreamException e) {
-            //ignore - will deal with it in the builder
-        } catch (FactoryConfigurationError e) {
-            //ignore - will deal with it in the builder
-        }
-        return null;
-
+        return OMXMLBuilderFactory.createOMBuilder(new DOMSource(s)).getDocumentElement();
     }
 }
