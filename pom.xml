@@ -169,7 +169,7 @@
                         </Export-Package>
                         <Import-Package>
                               org.apache.axiom.*;resolution:=optional,
-                              javax.xml.stream;version="[0.0,2)",
+                              javax.xml.stream.*;version="[0.0,2)",
                               *
                         </Import-Package>
                         <_failok>true</_failok>
