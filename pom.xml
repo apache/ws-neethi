@@ -168,6 +168,7 @@
                               org.apache.neethi.*;version="${project.version}",
                         </Export-Package>
                         <Import-Package>
+                              !org.apache.neethi.*,
                               org.apache.axiom.*;resolution:=optional,
                               javax.xml.stream.*;version="[0.0,2)",
                               *
