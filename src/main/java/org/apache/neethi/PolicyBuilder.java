@@ -168,8 +168,13 @@ public class PolicyBuilder {
     }
 
     private Policy getPolicyOperator(Object element) {
-        String ns = factory.getConverterRegistry().findQName(element).getNamespaceURI();
-        return (Policy) processOperationElement(element, new Policy(defaultPolicyRegistry, ns));
+        QName qn = factory.getConverterRegistry().findQName(element);
+        String ns = qn.getNamespaceURI();
+        
+        if (Constants.isPolicyNS(ns)) {
+            return (Policy) processOperationElement(element, new Policy(defaultPolicyRegistry, ns));
+        }
+        throw new IllegalArgumentException(qn + " is not a <wsp:Policy> element."); 
     }
 
     private ExactlyOne getExactlyOneOperator(Object element) {

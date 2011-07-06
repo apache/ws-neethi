@@ -34,6 +34,9 @@ import org.apache.axiom.om.OMElement;
 public abstract class AbstractOMConverter {
 
     public QName getQName(OMElement s) {
+        if (s.getNamespace() == null) {
+            return new QName(s.getLocalName());
+        }
         return new QName(s.getNamespace().getNamespaceURI(), s.getLocalName());
     }
     public Map<QName, String> getAttributes(OMElement s) {

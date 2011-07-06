@@ -52,6 +52,7 @@ public abstract class AbstractStaxConverter {
         return mp;
     }
     public Iterator<XMLStreamReader> getChildren(final XMLStreamReader s) {
+        final QName base = s.getName();
         try {
             int evt = s.getEventType();
             if (s.hasNext()) {
@@ -78,6 +79,15 @@ public abstract class AbstractStaxConverter {
                         && evt != XMLStreamReader.END_ELEMENT 
                         && evt != XMLStreamReader.START_ELEMENT) {
                         evt = s.next();
+                    }
+                    if (evt == XMLStreamReader.END_ELEMENT
+                        && !s.getName().equals(base)) {
+                        evt = s.next();
+                        while (s.hasNext() 
+                            && evt != XMLStreamReader.END_ELEMENT 
+                            && evt != XMLStreamReader.START_ELEMENT) {
+                            evt = s.next();
+                        }
                     }
                     return evt == XMLStreamReader.START_ELEMENT;
                 } catch (Exception ex) {

@@ -58,7 +58,7 @@ public abstract class PolicyTestCase extends Assert {
     }
 
     public Policy getPolicy(String name) throws Exception {
-        return getPolicy(name, 3);
+        return getPolicy(name, 0);
     }
     public Policy getPolicy(String name, int type) throws Exception {
         switch (type) {

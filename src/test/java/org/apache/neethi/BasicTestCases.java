@@ -22,6 +22,8 @@ package org.apache.neethi;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -31,6 +33,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -44,9 +47,8 @@ import org.junit.Test;
 /**
  * 
  */
-public class BasicTestCases extends Assert {
-    PolicyBuilder pb = new PolicyBuilder();
-    
+public class BasicTestCases extends PolicyTestCase {
+
     @Test
     public void testPrimitiveBuilder() throws Exception {
         String text = "<ns1:MaximumRetransmissionCount FooAtt=\"blah\" xmlns:ns1=\"http://foo\">10"
@@ -54,7 +56,7 @@ public class BasicTestCases extends Assert {
         
         
         Assertion as = new XMLPrimitiveAssertionBuilder().build(getElementFromString(text),
-                                                                pb.getAssertionBuilderFactory());
+                                                                policyEngine.getAssertionBuilderFactory());
         assertNotNull(as);
         PrimitiveAssertion pas = (PrimitiveAssertion)as;
         assertEquals("10", pas.getTextValue());
@@ -81,7 +83,7 @@ public class BasicTestCases extends Assert {
                                                                                         
 
         Assertion as = new XMLPrimitiveAssertionBuilder().build(getElementFromString(text),
-                                                                pb.getAssertionBuilderFactory());
+                                                                policyEngine.getAssertionBuilderFactory());
         assertNotNull(as);
         
         
@@ -109,7 +111,7 @@ public class BasicTestCases extends Assert {
             + "</sp:SignedParts>";
 
         Assertion as = new XMLPrimitiveAssertionBuilder().build(getElementFromString(text),
-                                                                pb.getAssertionBuilderFactory());
+                                                                policyEngine.getAssertionBuilderFactory());
         assertNotNull(as);
         
         
@@ -143,5 +145,35 @@ public class BasicTestCases extends Assert {
 
         
         return db.parse(new InputSource(new StringReader(s))).getDocumentElement();
+    }
+    
+    @Test
+    public void testInvalidPolicyElementName() throws Exception {
+        for (int x = 0; x < 4; x++) {
+            try {
+                getPolicy("samples/test28.xml", x);
+            } catch (IllegalArgumentException ex) {
+                //expected
+                assertTrue(ex.getMessage().contains("Policies"));
+            }
+        }
+        Element d = getResourceAsDOM("samples/test28.xml");
+        assertNotNull(d);
+        Node nd = d.getFirstChild();
+        Policy first = null;
+        while (nd != null) {
+            if (nd instanceof Element) {
+                Policy p = policyEngine.getPolicy(nd);
+                if (p.getId() != null) {
+                    policyEngine.getPolicyRegistry().register(p.getId(), p);
+                }
+                if (first == null) {
+                    first = p;
+                }
+            }
+            nd = nd.getNextSibling();
+        }
+        first.normalize(true);
+        
     }
 }
