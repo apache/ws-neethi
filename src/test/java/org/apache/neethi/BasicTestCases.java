@@ -35,17 +35,19 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import junit.framework.TestCase;
-
 import org.apache.neethi.builders.PrimitiveAssertion;
 import org.apache.neethi.builders.xml.XMLPrimitiveAssertionBuilder;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * 
  */
-public class BasicTestCases extends TestCase {
+public class BasicTestCases extends Assert {
     PolicyBuilder pb = new PolicyBuilder();
     
+    @Test
     public void testPrimitiveBuilder() throws Exception {
         String text = "<ns1:MaximumRetransmissionCount FooAtt=\"blah\" xmlns:ns1=\"http://foo\">10"
             + "</ns1:MaximumRetransmissionCount>";
@@ -67,6 +69,7 @@ public class BasicTestCases extends TestCase {
         assertEquals("blah", el.getAttribute("FooAtt"));
         assertEquals("10", el.getTextContent());
     }
+    @Test
     public void testPolicyChildren() throws Exception {
         String text = "<sp:Wss11 xmlns:sp=\"http://schemas.xmlsoap.org/ws/2005/07/securitypolicy\">"
                       + "<wsp:Policy xmlns:wsp=\"http://schemas.xmlsoap.org/ws/2004/09/policy\">"
@@ -97,6 +100,7 @@ public class BasicTestCases extends TestCase {
     }
 
     
+    @Test
     public void testMultiChildren() throws Exception {
         String text = "<sp:SignedParts xmlns:sp=\"http://schemas.xmlsoap.org/ws/2005/07/securitypolicy\">"
             + "<sp:Body />"

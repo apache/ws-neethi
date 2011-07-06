@@ -23,25 +23,32 @@ import java.io.File;
 
 import org.apache.neethi.util.PolicyComparator;
 
+import org.junit.Test;
+
 public class MergeTest extends PolicyTestCase {
     public MergeTest() {
-        super("MergeTest");
     }
+    @Test
     public void testOM() throws Exception {
         doTest("samples2", "merged", 3);
     }
+    @Test
     public void testDOM() throws Exception {
         doTest("samples2", "merged", 1);
     }
+    @Test
     public void testStax() throws Exception {
         doTest("samples2", "merged", 2);
     }
+    @Test
     public void testStream() throws Exception {
         doTest("samples2", "merged", 3);
     }
+    @Test
     public void testW3CDOM() throws Exception {
         doTest("w3tests", "w3tests" + File.separator + "Merged", 1);
     }
+    @Test
     public void testW3COM() throws Exception {
         doTest("w3tests", "w3tests" + File.separator + "Merged", 3);
     }

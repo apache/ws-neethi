@@ -23,35 +23,41 @@ import java.io.File;
 
 import org.apache.neethi.util.PolicyComparator;
 
+import org.junit.Test;
+
 public class IntersectTest extends PolicyTestCase {
     int failCount;
     
     public IntersectTest() {
-        super("IntersectTest");
     }
+    
+    @Test
     public void testOM() throws Exception {
         doTest("samples2", "intersected", 3);
     }
+    @Test
     public void testDOM() throws Exception {
         doTest("samples2", "intersected", 1);
     }
+    @Test
     public void testStax() throws Exception {
         doTest("samples2", "intersected", 2);
     }
+    @Test
     public void testStream() throws Exception {
         doTest("samples2", "intersected", 3);
     }
     
+    @Test
     public void testW3CDOM() throws Exception {
         doTest("w3tests", "w3tests" + File.separator + "Intersected", 1);
     }
 
-    /*
+    @Test
     public void testMyTest() throws Exception {
         runTest("w3tests", "w3tests" + File.separator + "Intersected",
                 "23", "26", "Policy23-26-lax.xml", false, 1);
     }
-    */
 
     public void doTest(String base, String intersectedDir, int type) throws Exception {
 

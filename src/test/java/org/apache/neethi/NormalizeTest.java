@@ -29,31 +29,38 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.neethi.util.PolicyComparator;
 
+import org.junit.Test;
+
 public class NormalizeTest extends PolicyTestCase {
     
     PolicyBuilder mgr;
 
     public NormalizeTest() {
-        super("NormalizeTest");
     }
 
+    @Test
     public void testOM() throws Exception {
         doTest("samples", "normalized", 3);
     }
+    @Test
     public void testDOM() throws Exception {
         doTest("samples", "normalized", 1);
     }
+    @Test
     public void testStax() throws Exception {
         doTest("samples", "normalized", 2);
     }
+    @Test
     public void testStream() throws Exception {
         doTest("samples", "normalized", 3);
     }
+    @Test
     public void testDOMW3C() throws Exception {
         registry.register("#Policy1",
                           getPolicy("w3tests" + File.separator + "Common/Protection.xml", 1));
         doTest("w3tests", "w3tests" + File.separator + "Normalized", 1);
     }
+    @Test
     public void testOMW3C() throws Exception {
         registry.register("#Policy1", getPolicy("w3tests" + File.separator + "Common/Protection.xml", 1));
         doTest("w3tests", "w3tests" + File.separator + "Normalized", 3);

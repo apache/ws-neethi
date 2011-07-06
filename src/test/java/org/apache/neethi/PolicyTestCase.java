@@ -37,22 +37,20 @@ import org.w3c.dom.Element;
 
 import org.xml.sax.SAXException;
 
-import junit.framework.TestCase;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMXMLBuilderFactory;
 
+import org.junit.Assert;
 
-public abstract class PolicyTestCase extends TestCase {
+public abstract class PolicyTestCase extends Assert {
     
     protected String baseDir = System.getProperty("basedir");
     protected String testResourceDir = "src" + File.separator + "test" + File.separator + "test-resources";
     protected PolicyBuilder policyEngine = new PolicyBuilder();
     protected PolicyRegistry registry = new PolicyRegistryImpl();
     
-    public PolicyTestCase(String name) {
-        super(name);
+    public PolicyTestCase() {
         if (baseDir == null) {
             baseDir = (String) new File(".").getAbsolutePath();
         }

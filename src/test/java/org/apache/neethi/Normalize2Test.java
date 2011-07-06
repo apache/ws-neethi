@@ -23,20 +23,25 @@ import java.io.File;
 
 import org.apache.neethi.util.PolicyComparator;
 
+import org.junit.Test;
+
 public class Normalize2Test extends PolicyTestCase {
 
     public Normalize2Test() {
-        super("Normalize2Test");
     }
+    @Test
     public void testOM() throws Exception {
         doTest(3);
     }
+    @Test
     public void testDOM() throws Exception {
         doTest(1);
     }
+    @Test
     public void testStax() throws Exception {
         doTest(2);
     }
+    @Test
     public void testStream() throws Exception {
         doTest(3);
     }
