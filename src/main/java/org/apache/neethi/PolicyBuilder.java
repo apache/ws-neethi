@@ -169,9 +169,9 @@ public class PolicyBuilder {
 
     private Policy getPolicyOperator(Object element) {
         QName qn = factory.getConverterRegistry().findQName(element);
-        String ns = qn.getNamespaceURI();
         
-        if (Constants.isPolicyNS(ns)) {
+        if (Constants.isPolicyElement(qn)) {
+            String ns = qn.getNamespaceURI();
             return (Policy) processOperationElement(element, new Policy(defaultPolicyRegistry, ns));
         }
         throw new IllegalArgumentException(qn + " is not a <wsp:Policy> element."); 
