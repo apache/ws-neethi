@@ -77,6 +77,11 @@
             <email>dkulp@apache.org</email>
         </developer>
         <developer>
+            <name>Andreas Veithen</name>
+            <id>veithen</id>
+            <email>veithen@apache.org</email>
+        </developer>
+        <developer>
             <!-- Documentation -->
             <name>Chatra Nakkawita</name>
             <id>chatra</id>
