@@ -22,6 +22,7 @@ package org.apache.neethi.builders.converters;
 import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -42,8 +43,10 @@ public class StaxToDOMConverter extends AbstractStaxConverter
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
             readDocElements(doc, doc, reader);
             return doc.getDocumentElement();
-        } catch (Exception e) {
-            return null;
+        } catch (ParserConfigurationException ex) {
+            throw new ConverterException(ex);
+        } catch (XMLStreamException ex) {
+            throw new ConverterException(ex);
         }
     }
 

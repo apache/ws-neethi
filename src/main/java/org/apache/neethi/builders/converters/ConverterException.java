@@ -16,28 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.neethi.builders.converters;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.dom.DOMSource;
-
-import org.w3c.dom.Element;
-
 /**
- * 
+ * Thrown to indicate that conversion from one XML object model to another failed.
  */
-public class DOMToStaxConverter extends AbstractDOMConverter 
-    implements Converter<Element, XMLStreamReader> {
+public class ConverterException extends RuntimeException {
+    private static final long serialVersionUID = 1156276815855954750L;
 
-    public XMLStreamReader convert(Element s) {
-        try {
-            return XMLInputFactory.newInstance().createXMLStreamReader(new DOMSource(s));
-        } catch (XMLStreamException ex) {
-            throw new ConverterException(ex);
-        }
+    public ConverterException(String message, Throwable cause) {
+        super(message, cause);
     }
 
+    public ConverterException(String message) {
+        super(message);
+    }
+
+    public ConverterException(Throwable cause) {
+        super(cause);
+    }
 }

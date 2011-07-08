@@ -37,6 +37,13 @@ public interface Converter<S, T> {
     Map<QName, String> getAttributes(S s);
     Iterator<S> getChildren(S s);
 
-    
+    /**
+     * 
+     * @param s
+     * @return the result of the conversion; may not be <code>null</code>
+     * @throws ConverterException
+     *             if the conversion fails; note that to indicate a failure, the method may throw
+     *             other unchecked exceptions specific to the APIs involved in the conversion
+     */
     T convert(S s);
 }
