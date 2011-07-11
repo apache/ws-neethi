@@ -1,4 +1,13 @@
 
+Apache Neethi-3.0.1 Release Notes:
+3.0.1 is a maintenence release that fixes 4 bugs that were found in 3.0.0:
+
+    * [NEETHI-9] - Errors in XML object model conversions are not handled properly
+    * [NEETHI-10] - Packages javax.xml.stream and javax.xml.stream.events cannot be resolved
+    * [NEETHI-11] - OSGi imports two separate javax.xml.stream ranges.
+    * [NEETHI-12] - Problems if root element is not a policy element
+
+
 Apache Neethi-3.0.0 Release Notes:
 
 This is a "major" upgrade to Neethi that completely revamps the Neethi 

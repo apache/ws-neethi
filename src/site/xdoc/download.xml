@@ -33,7 +33,7 @@
     <section>
             <h2>Releases</h2>
             <div align="left">
-                <p>Please select the Apache Neethi version you want to download. Latest release is 3.0.0. You can download both the binary distribution and the source distribution.  All the releases are available for download as source or binary. For more information,
+                <p>Please select the Apache Neethi version you want to download. Latest release is 3.0.1. You can download both the binary distribution and the source distribution.  All the releases are available for download as source or binary. For more information,
                     please see
                     <a href="http://www.apache.org/dev/release.html">Apache Release FAQ</a>
                 </p>
@@ -50,24 +50,23 @@
 							<td>Date</td>
 							<td>Description</td>
 						</tr>
-
 						<tr class="b">
 							<td>
-								<a name="3_0_0"></a>3.0.0</td>
+								<a name="3_0_1"></a>3.0.1</td>
 							<td>Release</td>
-							<td>Source Distribution <a href="[preferred]/ws/neethi/3.0.0/neethi-3.0.0-source-release.zip">zip</a>
+							<td>Source Distribution <a href="[preferred]/ws/neethi/3.0.1/neethi-3.0.1-source-release.zip">zip</a>
 								
-								<a href="http://www.apache.org/dist/ws/neethi/3.0.0/neethi-3.0.0-source-release.zip.md5">MD5</a>
-								<a href="http://www.apache.org/dist/ws/neethi/3.0.0/neethi-3.0.0-source-release.zip.asc">PGP</a>
+								<a href="http://www.apache.org/dist/ws/neethi/3.0.1/neethi-3.0.1-source-release.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/neethi/3.0.1/neethi-3.0.1-source-release.zip.asc">PGP</a>
 								<br></br>
-								Binary Distribution <a href="[preferred]/ws/neethi/3.0.0/neethi-3.0.0-bin.zip">zip</a>
-								<a href="http://www.apache.org/dist/ws/neethi/3.0.0/neethi-3.0.0-bin.zip.md5">MD5</a>
-								<a href="http://www.apache.org/dist/ws/neethi/3.0.0/neethi-3.0.0-bin.zip.asc">PGP</a>
+								Binary Distribution <a href="[preferred]/ws/neethi/3.0.1/neethi-3.0.1-bin.zip">zip</a>
+								<a href="http://www.apache.org/dist/ws/neethi/3.0.1/neethi-3.0.1-bin.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/neethi/3.0.1/neethi-3.0.1-bin.zip.asc">PGP</a>
 								
 								<br></br>
 							</td>
-                            <td>06 - Apr - 2011</td>
-                            <td>3.0.0 Release (Mirrored)</td>
+                            <td>18 - July - 2011</td>
+                            <td>3.0.1 Release (Mirrored)</td>
 						</tr>
 						<tr class="b">
 							<td>
@@ -87,7 +86,24 @@
 							<td>06 - Apr - 2011</td>
 							<td>2.0.5 Release (Mirrored)</td>
 						</tr>
+                        <tr class="b">
+                            <td>
+                                <a name="3_0_0"></a>3.0.0</td>
+                            <td>Release</td>
+                            <td>Source Distribution <a href="http://archive.apache.org/ws/neethi/3.0.0/neethi-3.0.0-source-release.zip">zip</a>
 
+                                <a href="http://archive.apache.org/dist/ws/neethi/3.0.0/neethi-3.0.0-source-release.zip.md5">MD5</a>
+                                <a href="http://archive.apache.org/dist/ws/neethi/3.0.0/neethi-3.0.0-source-release.zip.asc">PGP</a>
+                                <br></br>
+                                Binary Distribution <a href="http://archive.apache.org/ws/neethi/3.0.0/neethi-3.0.0-bin.zip">zip</a>
+                                <a href="http://archive.apache.org/dist/ws/neethi/3.0.0/neethi-3.0.0-bin.zip.md5">MD5</a>
+                                <a href="http://archice.apache.org/dist/ws/neethi/3.0.0/neethi-3.0.0-bin.zip.asc">PGP</a>
+
+                                <br></br>
+                            </td>
+                            <td>06 - Apr - 2011</td>
+                            <td>3.0.0 Release (Archived)</td>
+                        </tr>
 						<tr class="b">
 							<td>
 								<a name="2_0_4"></a>2.0.4</td>
@@ -104,7 +120,7 @@
 								<br></br>
 							</td>
 							<td>21 - Apr - 2008</td>
-							<td>2.0.4 Release (Mirrored)</td>
+							<td>2.0.4 Release (Archived)</td>
 						</tr>
 						<tr class="b">
 							<td>
@@ -122,7 +138,7 @@
 								<br></br>
 							</td>
 							<td>09 - Apr - 2008</td>
-							<td>2.0.3 Release (Mirrored)</td>
+							<td>2.0.3 Release (Archived)</td>
 						</tr>
 						<tr class="b">
 							<td>
@@ -140,7 +156,7 @@
 								<br></br>
 							</td>
 							<td>30 - Jul - 2007</td>
-							<td>2.0.2 Release (Mirrored)</td>
+							<td>2.0.2 Release (Archived)</td>
 						</tr>
 						<tr class="b">
 							<td>
