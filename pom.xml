@@ -198,6 +198,9 @@
                 <configuration>
                     <excludes>
                         <exclude>.gitignore</exclude>
+                        <exclude>.git/**</exclude>
+                        <exclude>.pmd/**</exclude>
+                        <exclude>.checkstyle/**</exclude>
                         <!-- RAT doesn't recognize this one as notes file -->
                         <exclude>RELEASE-NOTE.txt</exclude>
                         <!-- Files licensed by the W3C, as mentioned in the NOTICE file -->
