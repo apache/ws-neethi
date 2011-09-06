@@ -45,16 +45,19 @@ public class ConverterRegistry {
     private List<ConverterKey> registeredConverters = new CopyOnWriteArrayList<ConverterKey>();
     
     public ConverterRegistry() {
-        //built into JDK stuff, should have no problem
+        // Register the identity converters first to avoid unnecessary conversions
+        // if the supplied element implements both the DOM and Axiom APIs.
         registerConverter(new DOMToDOMConverter());
         registerConverter(new StaxToStaxConverter());
+        registerConverter("org.apache.neethi.builders.converters.OMToOMConverter");
+        
+        //built into JDK stuff, should have no problem
         registerConverter(new StaxToDOMConverter());
         registerConverter(new DOMToStaxConverter());
 
         //requires Axiom, may have an issue
         registerConverter("org.apache.neethi.builders.converters.DOMToOMConverter");
         registerConverter("org.apache.neethi.builders.converters.OMToDOMConverter");
-        registerConverter("org.apache.neethi.builders.converters.OMToOMConverter");
         registerConverter("org.apache.neethi.builders.converters.StaxToOMConverter");
         registerConverter("org.apache.neethi.builders.converters.OMToStaxConverter");
     }
