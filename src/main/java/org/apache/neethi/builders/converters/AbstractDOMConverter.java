@@ -40,7 +40,11 @@ public abstract class AbstractDOMConverter {
 
 
     public QName getQName(Element s) {
-        return new QName(s.getNamespaceURI(), s.getLocalName());
+        String name = s.getLocalName();
+        if (name == null) {
+            name = s.getTagName();
+        }
+        return new QName(s.getNamespaceURI(), name);
     }
 
     public Map<QName, String> getAttributes(Element s) {
@@ -48,7 +52,11 @@ public abstract class AbstractDOMConverter {
         NamedNodeMap attrs = s.getAttributes();
         for (int x = 0; x < attrs.getLength(); x++) {
             Attr attr = (Attr)attrs.item(x);
-            mp.put(new QName(attr.getNamespaceURI(), attr.getLocalName()), attr.getValue());
+            String name = attr.getLocalName();
+            if (name == null) {
+                name = attr.getName();
+            }
+            mp.put(new QName(attr.getNamespaceURI(), name), attr.getValue());
         }
         return mp;
     }
