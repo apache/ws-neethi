@@ -21,9 +21,10 @@ package org.apache.neethi.builders.converters;
 
 import org.w3c.dom.Element;
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axiom.om.impl.dom.DOOMAbstractFactory;
+import org.apache.axiom.om.OMException;
+import org.apache.axiom.om.OMXMLBuilderFactory;
 
 /**
  * 
@@ -33,9 +34,10 @@ public class OMToDOMConverter extends AbstractOMConverter implements Converter<O
     public Element convert(OMElement s) {
         
         try {
-            return (Element) new StAXOMBuilder(DOOMAbstractFactory.getOMFactory(),
-                                           s.getXMLStreamReader()).getDocumentElement();
-        } catch (NoClassDefFoundError err) {
+            return (Element) OMXMLBuilderFactory.createStAXOMBuilder(
+                    OMAbstractFactory.getMetaFactory(OMAbstractFactory.FEATURE_DOM).getOMFactory(),
+                    s.getXMLStreamReader()).getDocumentElement();
+        } catch (OMException err) {
             // likely no DOOM
             return new StaxToDOMConverter().convert(s.getXMLStreamReader());
         }

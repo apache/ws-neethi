@@ -273,7 +273,7 @@
             <groupId>org.apache.ws.commons.axiom</groupId>
             <artifactId>axiom-impl</artifactId>
             <version>${axiom.version}</version>
-            <scope>provided</scope>
+            <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.codehaus.woodstox</groupId>
@@ -285,7 +285,7 @@
             <groupId>org.apache.ws.commons.axiom</groupId>
             <artifactId>axiom-dom</artifactId>
             <version>${axiom.version}</version>
-            <scope>provided</scope>
+            <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.codehaus.woodstox</groupId>
@@ -335,7 +335,7 @@
         </site>
     </distributionManagement>
     <properties>
-        <axiom.version>1.2.12</axiom.version>
+        <axiom.version>1.2.13-SNAPSHOT</axiom.version>
         <neethi.osgi.version>${project.version}</neethi.osgi.version>
         <bundle.plugin.version>2.1.0</bundle.plugin.version>
         <failIfNoTests>false</failIfNoTests>
