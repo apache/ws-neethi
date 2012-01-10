@@ -41,14 +41,14 @@ public class AssertionBuilderFactoryImpl implements AssertionBuilderFactory {
     private Map<QName, AssertionBuilder<?>> registeredBuilders 
         = new ConcurrentHashMap<QName, AssertionBuilder<?>>();
     
-    protected AssertionBuilder defaultBuilder;
+    protected AssertionBuilder<?> defaultBuilder;
     protected ConverterRegistry converters = new ConverterRegistry();
     protected PolicyBuilder engine;
     
     public AssertionBuilderFactoryImpl(PolicyBuilder eng) {
         engine = eng;
 
-        for (AssertionBuilder builder : Service.providers(AssertionBuilder.class)) {
+        for (AssertionBuilder<?> builder : Service.providers(AssertionBuilder.class)) {
             QName[] knownElements = builder.getKnownElements();
             for (int i = 0; i < knownElements.length; i++) {
                 registeredBuilders.put(knownElements[i], builder);
@@ -100,7 +100,7 @@ public class AssertionBuilderFactoryImpl implements AssertionBuilderFactory {
      */
     public Assertion build(Object element) {
         loadDynamic();
-        AssertionBuilder builder;
+        AssertionBuilder<?> builder;
 
         QName qname = converters.findQName(element);
         builder = registeredBuilders.get(qname);
@@ -117,24 +117,26 @@ public class AssertionBuilderFactoryImpl implements AssertionBuilderFactory {
      * @param qname
      * @return a AssertionBuilder to use for the element.
      */
-    protected AssertionBuilder handleNoRegisteredBuilder(QName qname) {
+    protected AssertionBuilder<?> handleNoRegisteredBuilder(QName qname) {
          // if we can't locate an appropriate AssertionBuilder, we always use the
          // XMLPrimitiveAssertionBuilder
         return defaultBuilder;
     }
 
-    @SuppressWarnings("unchecked")
-    private Assertion invokeBuilder(Object element, AssertionBuilder builder) {
+    private Assertion invokeBuilder(Object element, AssertionBuilder<?> builder) {
         Class<?> type = findAssertionBuilderTarget(builder.getClass());
-        return builder.build(converters.convert(element, type), this);
+        Object o = converters.convert(element, type);
+        @SuppressWarnings("unchecked")
+        AssertionBuilder<Object> b = (AssertionBuilder<Object>)builder;
+        return b.build(o, this);
     }
 
     private Class<?> findAssertionBuilderTarget(Class<?> c) {
-        Class interfaces[] = c.getInterfaces();
+        Class<?> interfaces[] = c.getInterfaces();
         for (int x = 0; x < interfaces.length; x++) {
             if (interfaces[x] == AssertionBuilder.class) {
                 ParameterizedType pt = (ParameterizedType)c.getGenericInterfaces()[x];
-                return (Class)pt.getActualTypeArguments()[0];
+                return (Class<?>)pt.getActualTypeArguments()[0];
             }
         }
         if (c.getClass().getSuperclass() != null) {

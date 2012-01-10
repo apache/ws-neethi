@@ -29,7 +29,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.w3c.dom.Element;
 
 import org.apache.neethi.builders.AssertionBuilder;
-import org.apache.neethi.builders.converters.ConverterRegistry;
 
 /**
  * PolicyBuilder provides set of methods to create a Policy object from an
@@ -64,7 +63,7 @@ public class PolicyBuilder {
      *            the AssertionBuilder that can build assertions that of 'qname'
      *            type
      */
-    public void registerBuilder(QName qname, AssertionBuilder builder) {
+    public void registerBuilder(QName qname, AssertionBuilder<?> builder) {
         factory.registerBuilder(qname, builder);
     }
     
@@ -198,7 +197,7 @@ public class PolicyBuilder {
             }
         }
 
-        for (Iterator iterator = factory.getConverterRegistry().getChildElements(operationElement); 
+        for (Iterator<?> iterator = factory.getConverterRegistry().getChildElements(operationElement); 
             iterator.hasNext();) {
             
             Object childElement = iterator.next();

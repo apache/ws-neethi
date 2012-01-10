@@ -195,19 +195,12 @@ public class Policy extends All {
             writer.writeNamespace(wspPrefix, nspace);
         }
 
-        String prefiX;
 
-        for (Iterator iterator = prefix2ns.keySet().iterator(); iterator
-                .hasNext();) {
-            prefiX = (String) iterator.next();
-            writer.writeNamespace(prefiX, (String) prefix2ns.get(prefiX));
+        for (String pfx :prefix2ns.keySet()) {
+            writer.writeNamespace(pfx, prefix2ns.get(pfx));
         }
 
-        PolicyComponent policyComponent;
-
-        for (Iterator iterator = getPolicyComponents().iterator(); iterator
-                .hasNext();) {
-            policyComponent = (PolicyComponent) iterator.next();
+        for (PolicyComponent policyComponent : getPolicyComponents()) {
             policyComponent.serialize(writer);
         }
 

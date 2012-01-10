@@ -22,9 +22,7 @@ package org.apache.neethi;
 import org.apache.axiom.om.OMElement;
 import org.apache.neethi.builders.AssertionBuilder;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
 import java.io.InputStream;
-import java.util.Iterator;
 
 /**
  * PolicyEngine provides set of static methods to create a Policy object from an
@@ -65,7 +63,7 @@ public class PolicyEngine {
      *            the AssertionBuilder that can build assertions that of 'qname'
      *            type
      */
-    public static void registerBuilder(QName qname, AssertionBuilder builder) {
+    public static void registerBuilder(QName qname, AssertionBuilder<?> builder) {
         getBuilder().getAssertionBuilderFactory().registerBuilder(qname, builder);
     }
 

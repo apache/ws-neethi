@@ -39,7 +39,7 @@ public class ConverterRegistry {
     private static class ConverterKey {
         Class<?> src;
         Class<?> target;
-        Converter converter;
+        Converter<?, ?> converter;
     }
 
     private List<ConverterKey> registeredConverters = new CopyOnWriteArrayList<ConverterKey>();
@@ -64,7 +64,7 @@ public class ConverterRegistry {
 
     private void registerConverter(String name) {
         try {
-            Converter c = (Converter)Class.forName(name, true,
+            Converter<?, ?> c = (Converter<?, ?>)Class.forName(name, true,
                                                    Converter.class.getClassLoader()).newInstance();
             registerConverter(c);
         } catch (Throwable e) {
@@ -75,13 +75,13 @@ public class ConverterRegistry {
     }
     
     private static ConverterKey createConverterKey(Converter<?, ?> converter, Class<?> c) {
-        Class interfaces[] = c.getInterfaces();
+        Class<?> interfaces[] = c.getInterfaces();
         for (int x = 0; x < interfaces.length; x++) {
             if (interfaces[x] == Converter.class) {
                 ParameterizedType pt = (ParameterizedType)c.getGenericInterfaces()[x];
                 ConverterKey key = new ConverterKey();
-                key.src = (Class)pt.getActualTypeArguments()[0];
-                key.target = (Class)pt.getActualTypeArguments()[1];
+                key.src = (Class<?>)pt.getActualTypeArguments()[0];
+                key.target = (Class<?>)pt.getActualTypeArguments()[1];
                 key.converter = converter;
                 return key;
             }
@@ -135,11 +135,12 @@ public class ConverterRegistry {
         }
     } 
     
-    @SuppressWarnings("unchecked")
-    public Object convert(Object src, Class<?> target) {
+    public <S, T> T convert(S src, Class<T> target) {
         for (ConverterKey ent : registeredConverters) {
             if (ent.src.isInstance(src) && ent.target.isAssignableFrom(target)) {
-                return ent.converter.convert(src);
+                @SuppressWarnings("unchecked")
+                Converter<S, T> cv = (Converter<S, T>)ent.converter;
+                return cv.convert(src);
             }
         }
         throw new RuntimeException("Could not find a converter to convert from " 

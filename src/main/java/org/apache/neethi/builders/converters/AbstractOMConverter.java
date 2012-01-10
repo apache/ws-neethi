@@ -41,7 +41,7 @@ public abstract class AbstractOMConverter {
     }
     public Map<QName, String> getAttributes(OMElement s) {
         Map<QName, String> mp = new HashMap<QName, String>();
-        Iterator it = s.getAllAttributes();
+        Iterator<?> it = s.getAllAttributes();
         while (it.hasNext()) {
             OMAttribute attr = (OMAttribute)it.next();
             if (attr.getNamespace() == null) {

@@ -22,8 +22,6 @@ package org.apache.neethi;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -41,7 +39,6 @@ import org.xml.sax.SAXException;
 import org.apache.neethi.builders.PrimitiveAssertion;
 import org.apache.neethi.builders.xml.XMLPrimitiveAssertionBuilder;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 /**

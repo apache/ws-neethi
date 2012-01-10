@@ -215,11 +215,11 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         All currentAll1;
         All currentAll2;
 
-        for (Iterator iter1 = exactlyOne1.getPolicyComponents().iterator(); iter1.hasNext();) {
-            currentAll1 = (All) iter1.next();
+        for (PolicyComponent pc : exactlyOne1.getPolicyComponents()) {
+            currentAll1 = (All)pc;
 
-            for (Iterator iter2 = exactlyOne2.getPolicyComponents().iterator(); iter2.hasNext();) {
-                currentAll2 = (All) iter2.next();
+            for (PolicyComponent pc2 : exactlyOne2.getPolicyComponents()) {
+                currentAll2 = (All)pc2;
                 crossProductAll = new All();
                 crossProductAll.addPolicyComponents(currentAll1.getPolicyComponents());
                 crossProductAll.addPolicyComponents(currentAll2.getPolicyComponents());

@@ -19,8 +19,6 @@
 
 package org.apache.neethi;
 
-import java.util.Iterator;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -52,11 +50,7 @@ public class ExactlyOne extends AbstractPolicyOperator {
                     Constants.ELEM_EXACTLYONE);
         }
 
-        PolicyComponent policyComponent;
-
-        for (Iterator iterator = getPolicyComponents().iterator(); iterator
-                .hasNext();) {
-            policyComponent = (PolicyComponent) iterator.next();
+        for (PolicyComponent policyComponent : getPolicyComponents()) {
             policyComponent.serialize(writer);
         }
 

@@ -30,7 +30,6 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.neethi.All;
 import org.apache.neethi.Assertion;
-import org.apache.neethi.Constants;
 import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyComponent;

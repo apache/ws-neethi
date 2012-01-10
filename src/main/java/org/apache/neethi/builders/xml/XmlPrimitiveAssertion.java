@@ -175,7 +175,7 @@ public class XmlPrimitiveAssertion extends PrimitiveAssertion implements Asserti
                 QName n = se.getName();
                 writer.writeStartElement(n.getPrefix(), n.getLocalPart(),
                                           n.getNamespaceURI());
-                Iterator it = se.getNamespaces();
+                Iterator<?> it = se.getNamespaces();
                 while (it.hasNext()) {
                     Namespace ns = (Namespace) it.next();
                     writer.writeNamespace(ns.getPrefix(), ns.getNamespaceURI());
