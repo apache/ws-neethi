@@ -36,6 +36,17 @@ import javax.xml.namespace.QName;
  * from those format to/from OMElements.
  */
 public class ConverterRegistry {
+    private static final boolean HAS_AXIOM;
+    static {
+        boolean hasAxiom = true;
+        try {
+            Class.forName("org.apache.axiom.om.OMElement", true, Converter.class.getClassLoader());
+        } catch (Throwable e) {
+            hasAxiom = false;
+        }
+        HAS_AXIOM = hasAxiom;
+    }
+    
     private static class ConverterKey {
         Class<?> src;
         Class<?> target;
@@ -49,17 +60,22 @@ public class ConverterRegistry {
         // if the supplied element implements both the DOM and Axiom APIs.
         registerConverter(new DOMToDOMConverter());
         registerConverter(new StaxToStaxConverter());
-        registerConverter("org.apache.neethi.builders.converters.OMToOMConverter");
+        if (HAS_AXIOM) {
+            //requires Axiom
+            registerConverter("org.apache.neethi.builders.converters.OMToOMConverter");
+        }
         
         //built into JDK stuff, should have no problem
         registerConverter(new StaxToDOMConverter());
         registerConverter(new DOMToStaxConverter());
 
-        //requires Axiom, may have an issue
-        registerConverter("org.apache.neethi.builders.converters.DOMToOMConverter");
-        registerConverter("org.apache.neethi.builders.converters.OMToDOMConverter");
-        registerConverter("org.apache.neethi.builders.converters.StaxToOMConverter");
-        registerConverter("org.apache.neethi.builders.converters.OMToStaxConverter");
+        if (HAS_AXIOM) {
+            //requires Axiom
+            registerConverter("org.apache.neethi.builders.converters.DOMToOMConverter");
+            registerConverter("org.apache.neethi.builders.converters.OMToDOMConverter");
+            registerConverter("org.apache.neethi.builders.converters.StaxToOMConverter");
+            registerConverter("org.apache.neethi.builders.converters.OMToStaxConverter");
+        }
     }
 
     private void registerConverter(String name) {
@@ -70,7 +86,7 @@ public class ConverterRegistry {
         } catch (Throwable e) {
             //likely due to Axiom not available, we're OK with that.  There
             //won't be any builders registered that require Axiom if
-            //axiom isn't avilable anyway
+            //axiom isn't available anyway
         }
     }
     

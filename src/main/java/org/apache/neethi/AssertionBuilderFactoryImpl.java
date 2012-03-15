@@ -46,7 +46,14 @@ public class AssertionBuilderFactoryImpl implements AssertionBuilderFactory {
     protected PolicyBuilder engine;
     
     public AssertionBuilderFactoryImpl(PolicyBuilder eng) {
+        this(eng, new ConverterRegistry());
+    }
+    public AssertionBuilderFactoryImpl(PolicyBuilder eng, ConverterRegistry reg) {
         engine = eng;
+        if (reg == null) {
+            throw new IllegalArgumentException("ConverterRegistry must not be null");
+        }
+        converters = reg;
 
         for (AssertionBuilder<?> builder : Service.providers(AssertionBuilder.class)) {
             QName[] knownElements = builder.getKnownElements();
