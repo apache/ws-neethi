@@ -39,7 +39,7 @@ import org.apache.neethi.builders.AssertionBuilder;
  */
 public class PolicyBuilder {
 
-    protected AssertionBuilderFactory factory = new AssertionBuilderFactoryImpl(this);
+    protected AssertionBuilderFactory factory;
     protected PolicyRegistry defaultPolicyRegistry;
     
     public PolicyBuilder() {
