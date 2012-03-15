@@ -42,7 +42,7 @@ public class AssertionBuilderFactoryImpl implements AssertionBuilderFactory {
         = new ConcurrentHashMap<QName, AssertionBuilder<?>>();
     
     protected AssertionBuilder<?> defaultBuilder;
-    protected ConverterRegistry converters = new ConverterRegistry();
+    protected ConverterRegistry converters;
     protected PolicyBuilder engine;
     
     public AssertionBuilderFactoryImpl(PolicyBuilder eng) {
