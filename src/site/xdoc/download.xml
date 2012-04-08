@@ -33,7 +33,7 @@
     <section>
             <h2>Releases</h2>
             <div align="left">
-                <p>Please select the Apache Neethi version you want to download. Latest release is 3.0.1. You can download both the binary distribution and the source distribution.  All the releases are available for download as source or binary. For more information,
+                <p>Please select the Apache Neethi version you want to download. Latest release is 3.0.2. You can download both the binary distribution and the source distribution.  All the releases are available for download as source or binary. For more information,
                     please see
                     <a href="http://www.apache.org/dev/release.html">Apache Release FAQ</a>
                 </p>
@@ -52,21 +52,21 @@
 						</tr>
 						<tr class="b">
 							<td>
-								<a name="3_0_1"></a>3.0.1</td>
+								<a name="3_0_2"></a>3.0.2</td>
 							<td>Release</td>
-							<td>Source Distribution <a href="[preferred]/ws/neethi/3.0.1/neethi-3.0.1-source-release.zip">zip</a>
+							<td>Source Distribution <a href="[preferred]/ws/neethi/3.0.2/neethi-3.0.2-source-release.zip">zip</a>
 								
-								<a href="http://www.apache.org/dist/ws/neethi/3.0.1/neethi-3.0.1-source-release.zip.md5">MD5</a>
-								<a href="http://www.apache.org/dist/ws/neethi/3.0.1/neethi-3.0.1-source-release.zip.asc">PGP</a>
+								<a href="http://www.apache.org/dist/ws/neethi/3.0.2/neethi-3.0.2-source-release.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/neethi/3.0.2/neethi-3.0.2-source-release.zip.asc">PGP</a>
 								<br></br>
-								Binary Distribution <a href="[preferred]/ws/neethi/3.0.1/neethi-3.0.1-bin.zip">zip</a>
-								<a href="http://www.apache.org/dist/ws/neethi/3.0.1/neethi-3.0.1-bin.zip.md5">MD5</a>
-								<a href="http://www.apache.org/dist/ws/neethi/3.0.1/neethi-3.0.1-bin.zip.asc">PGP</a>
+								Binary Distribution <a href="[preferred]/ws/neethi/3.0.2/neethi-3.0.2-bin.zip">zip</a>
+								<a href="http://www.apache.org/dist/ws/neethi/3.0.2/neethi-3.0.2-bin.zip.md5">MD5</a>
+								<a href="http://www.apache.org/dist/ws/neethi/3.0.2/neethi-3.0.2-bin.zip.asc">PGP</a>
 								
 								<br></br>
 							</td>
-                            <td>18 - July - 2011</td>
-                            <td>3.0.1 Release (Mirrored)</td>
+                            <td>11 - April - 2012</td>
+                            <td>3.0.2 Release (Mirrored)</td>
 						</tr>
 						<tr class="b">
 							<td>
@@ -86,6 +86,24 @@
 							<td>06 - Apr - 2011</td>
 							<td>2.0.5 Release (Mirrored)</td>
 						</tr>
+                        <tr class="b">
+                            <td>
+                                <a name="3_0_1"></a>3.0.1</td>
+                            <td>Release</td>
+                            <td>Source Distribution <a href="http://archive.apache.org/ws/neethi/3.0.1/neethi-3.0.1-source-release.zip">zip</a>
+
+                                <a href="http://archive.apache.org/dist/ws/neethi/3.0.1/neethi-3.0.1-source-release.zip.md5">MD5</a>
+                                <a href="http://archive.apache.org/dist/ws/neethi/3.0.1/neethi-3.0.1-source-release.zip.asc">PGP</a>
+                                <br></br>
+                                Binary Distribution <a href="http://archive.apache.org/ws/neethi/3.0.1/neethi-3.0.1-bin.zip">zip</a>
+                                <a href="http://archive.apache.org/dist/ws/neethi/3.0.1/neethi-3.0.1-bin.zip.md5">MD5</a>
+                                <a href="http://archive.apache.org/dist/ws/neethi/3.0.1/neethi-3.0.1-bin.zip.asc">PGP</a>
+
+                                <br></br>
+                            </td>
+                            <td>18 - July - 2011</td>
+                            <td>3.0.1 Release (Archived)</td>
+                        </tr>
                         <tr class="b">
                             <td>
                                 <a name="3_0_0"></a>3.0.0</td>
