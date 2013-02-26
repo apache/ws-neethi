@@ -335,7 +335,7 @@
         </site>
     </distributionManagement>
     <properties>
-        <axiom.version>1.2.14-SNAPSHOT</axiom.version>
+        <axiom.version>1.2.15-SNAPSHOT</axiom.version>
         <neethi.osgi.version>${project.version}</neethi.osgi.version>
         <bundle.plugin.version>2.3.7</bundle.plugin.version>
         <failIfNoTests>false</failIfNoTests>
