@@ -97,9 +97,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/webservices/commons/trunk/modules/neethi</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/commons/trunk/modules/neethi</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/webservices/commons/trunk/modules/neethi</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/webservices/neethi/trunk</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/neethi/trunk</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/webservices/neethi/trunk</url>
     </scm>
     <organization>
         <name>The Apache Software Foundation</name>
@@ -125,12 +125,6 @@
                     <includes>
                         <include>**/*Test*.java</include>
                     </includes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <tagBase>https://svn.apache.org/repos/asf/webservices/commons/tags/neethi</tagBase>
                 </configuration>
             </plugin>
             <plugin>
