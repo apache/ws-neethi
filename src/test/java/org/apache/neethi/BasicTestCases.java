@@ -27,7 +27,9 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.w3c.dom.Element;
@@ -173,4 +175,20 @@ public class BasicTestCases extends PolicyTestCase {
         first.normalize(true);
         
     }
+
+    @Test
+    public void testPolicyWritingNamespaces() throws Exception {
+        for (int x = 0; x < 4; x++) {
+            Policy p = getPolicy("bugs/neethi15/input/Policy1.xml", x);
+            StringWriter sw = new StringWriter();
+            XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(sw);
+            p.serialize(writer);
+            writer.flush();
+            XMLStreamReader r = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(sw.toString()));
+            while (r.hasNext()) {
+                r.next();
+            }
+        }
+    }
+
 }

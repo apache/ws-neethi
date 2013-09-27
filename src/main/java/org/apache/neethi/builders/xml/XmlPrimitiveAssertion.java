@@ -187,6 +187,9 @@ public class XmlPrimitiveAssertion extends PrimitiveAssertion implements Asserti
                     writer.writeAttribute(name.getPrefix(), name.getNamespaceURI(),
                                            name.getLocalPart(), attr.getValue());
                 }
+                if (!n.getNamespaceURI().equals(writer.getNamespaceContext().getNamespaceURI(n.getPrefix()))) {
+                    writer.writeNamespace(n.getPrefix(), n.getNamespaceURI());
+                }
                 break;
             }
            
