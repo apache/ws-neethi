@@ -18,7 +18,8 @@
   -->
 <wsp:Policy
 xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
-xmlns:sp="http://schemas.xmlsoap.org/ws/2002/12/secext" >
+xmlns:sp="http://schemas.xmlsoap.org/ws/2002/12/secext"
+xmlns="http://example.com" >
   <wsp:ExactlyOne>
     <wsp:All>
       <sp:SecurityToken>

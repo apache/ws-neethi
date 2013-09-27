@@ -22,10 +22,8 @@ package org.apache.neethi;
 import java.io.File;
 import java.io.StringWriter;
 
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.dom.DOMSource;
 
 import org.apache.neethi.util.PolicyComparator;
 

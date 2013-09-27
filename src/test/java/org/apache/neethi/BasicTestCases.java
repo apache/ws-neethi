@@ -184,6 +184,8 @@ public class BasicTestCases extends PolicyTestCase {
             XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(sw);
             p.serialize(writer);
             writer.flush();
+            //System.out.println("\n  " + x);
+            //System.out.println(sw.toString());
             XMLStreamReader r = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(sw.toString()));
             while (r.hasNext()) {
                 r.next();

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -48,6 +49,14 @@ public abstract class AbstractStaxConverter {
             mp.put(new QName(s.getAttributeNamespace(x),
                              s.getAttributeLocalName(x)),
                    s.getAttributeValue(x));
+        }
+        for (int x = 0; x < s.getNamespaceCount(); x++) {
+            String pfx = s.getNamespacePrefix(x);
+            if (pfx == null) {
+                mp.put(new QName(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, "xmlns"), s.getNamespaceURI(x));
+            } else {
+                mp.put(new QName(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, pfx, "xmlns"), s.getNamespaceURI(x));
+            }
         }
         return mp;
     }
