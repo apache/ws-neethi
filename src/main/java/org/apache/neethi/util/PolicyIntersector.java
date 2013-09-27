@@ -174,10 +174,9 @@ public class PolicyIntersector {
                 if (compatibleAlternatives(alt1, alt2)) {
                     return true;                    
                 }
-            }             
-            return false;
+            }
         }        
-        return true;
+        return false;
     }
     
     public Policy intersect(Policy p1, Policy p2) {

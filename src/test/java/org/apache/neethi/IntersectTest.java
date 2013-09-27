@@ -20,6 +20,12 @@
 package org.apache.neethi;
 
 import java.io.File;
+import java.io.StringWriter;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.dom.DOMSource;
 
 import org.apache.neethi.util.PolicyComparator;
 
@@ -29,6 +35,10 @@ public class IntersectTest extends PolicyTestCase {
     int failCount;
     
     public IntersectTest() {
+    }
+    @Test
+    public void testNeethi15() throws Exception {
+        doTest("bugs/neethi15/input", "bugs/neethi15", 1);
     }
     
     @Test
@@ -77,6 +87,9 @@ public class IntersectTest extends PolicyTestCase {
             if (f.startsWith(".")) {
                 continue;
             }
+            if (files[i].isDirectory()) {
+                continue;
+            }
 
             
             boolean strict = !f.contains("lax");
@@ -112,12 +125,19 @@ public class IntersectTest extends PolicyTestCase {
         // result
         Policy p4 = (Policy)p1.intersect(p2, strict);
 
+        
         if (p4 == null || !PolicyComparator.compare(p4, p3)) {
             /*
              System.out.println(++failCount + " Fail: " + base + File.separator + "Policy" 
                                + f1 + ".intersect(Policy" + f2 + ", "
                                + strict +")");
             */
+            StringWriter swriter = new StringWriter();
+            XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(swriter);
+            p4.serialize(writer);;
+            writer.flush();
+            System.out.println(swriter.toString());
+            
             fail(base + File.separator + " Policy" + f1 + ".intersect(Policy" 
                  + f2 + ", " + strict + ") FAILED");
             /*
