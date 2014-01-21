@@ -1,13 +1,10 @@
 
-Apache Neethi-3.0.2 Release Notes:
-3.0.2 is a maintenence release that fixes 2 issues that were found in 3.0.1:
+Apache Neethi-3.0.3 Release Notes:
+3.0.3 is a maintenence release that fixes 2 issues that were found in 3.0.1:
 
 ** Bug
-    * [NEETHI-13] - If attribute on a DOM is created with createAttribute instead of createAttributeNS, an exception is thrown
-
-** Improvement
-    * [NEETHI-14] - AssertionBuilderFactory is created twice in PolicyBuilder initialization
-
+    * [NEETHI-15] - Problem in policy intersection caused by error in PolicyIntersector.compatiblePolicies method
+    * [NEETHI-16] - Writing a policy can miss namespace declarations
 
 
 Apache Neethi-3.0.0 Release Notes:
