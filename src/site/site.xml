@@ -30,15 +30,15 @@
 
     <menu name="Apache Neethi">
       <item name="About" href="index.html"/>
-      <item name="Downloads">
+      <item name="Downloads" href="">
         <item name="Releases" href="download.cgi"/>
         <item name="Source Code" href="/source-repository.html"/>
       </item>
-      <item name="Documentation">
+      <item name="Documentation" href="">
         <item name="Javadocs" href="/apidocs/index.html"/>
         <item name="Migration Guide" href="/migration.html"/>
       </item>
-      <item name="Project Information">
+      <item name="Project Information" href="">
         <item name="Mailing Lists" href="/mail-lists.html"/>
         <item name="Project Team" href="/team-list.html"/>
         <item name="Issue Tracking" href="issue-tracking.html"/>
