@@ -16,12 +16,26 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<project name="Neethi">
+<project xmlns="http://maven.apache.org/DECORATION/1.3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd"
+    name="Neethi">
+    <custom>
+        <fluidoSkin>
+            <googleSearch>
+                <sitesearch>ws.apache.org</sitesearch>
+            </googleSearch>
+        </fluidoSkin>
+    </custom>
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.3.0</version>
+    </skin>
   <bannerLeft>
     <name>Apache Neethi</name>
     <src>http://ws.apache.org/images/project-logo.jpg</src>
     <href>http://ws.apache.org/neethi/</href>
   </bannerLeft>
+  <version position="none" />
   <body>
     <links>
       <item name="Apache" href="http://www.apache.org/" />
@@ -30,19 +44,21 @@
 
     <menu name="Apache Neethi">
       <item name="About" href="index.html"/>
-      <item name="Downloads" href="">
-        <item name="Releases" href="download.cgi"/>
-        <item name="Source Code" href="/source-repository.html"/>
-      </item>
-      <item name="Documentation" href="">
-        <item name="Javadocs" href="/apidocs/index.html"/>
-        <item name="Migration Guide" href="/migration.html"/>
-      </item>
-      <item name="Project Information" href="">
-        <item name="Mailing Lists" href="/mail-lists.html"/>
-        <item name="Project Team" href="/team-list.html"/>
-        <item name="Issue Tracking" href="issue-tracking.html"/>
-      </item>
+    </menu>
+    <menu name="Downloads">
+      <item name="Releases" href="download.cgi"/>
+      <item name="Source Code" href="/source-repository.html"/>
+    </menu>
+    <menu name="Documentation">
+      <item name="Javadocs" href="/apidocs/index.html"/>
+      <item name="Migration Guide" href="/migration.html"/>
+    </menu>
+    <menu name="Project Information">
+      <item name="Mailing Lists" href="/mail-lists.html"/>
+      <item name="Project Team" href="/team-list.html"/>
+      <item name="Issue Tracking" href="issue-tracking.html"/>
+    </menu>
+    <menu name="Apache">
       <item name="License" href="http://www.apache.org/licenses/"/>
       <item name="Sponsorship" href="http://www.apache.org/foundation/sponsorship.html"/>
       <item name="Thanks" href="http://www.apache.org/foundation/thanks.html"/>
