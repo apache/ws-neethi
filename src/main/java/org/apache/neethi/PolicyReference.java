@@ -81,6 +81,7 @@ public class PolicyReference implements PolicyComponent {
      * Throws an UnsupportedOperationException since PolicyReference.normalize()
      * can't resolve the Policy that it refers to unless a PolicyRegistry is
      * provided.
+     * @return The normalized PolicyComponent
      */
     public PolicyComponent normalize() {
         throw new UnsupportedOperationException("PolicyReference.normalize() is meaningless");

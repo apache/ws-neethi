@@ -121,7 +121,7 @@ public class AssertionBuilderFactoryImpl implements AssertionBuilderFactory {
      * A subclass may want to log when an unknown assertion is encountered
      * or possibly throw an exception or similar.  Another option is to
      * provide a unique AssertionBuilder specific for that QName.
-     * @param qname
+     * @param qname The name of the assertion that was unknown
      * @return a AssertionBuilder to use for the element.
      */
     protected AssertionBuilder<?> handleNoRegisteredBuilder(QName qname) {

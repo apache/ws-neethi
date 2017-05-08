@@ -39,7 +39,7 @@ public interface Converter<S, T> {
 
     /**
      * 
-     * @param s
+     * @param s The source object
      * @return the result of the conversion; may not be <code>null</code>
      * @throws ConverterException
      *             if the conversion fails; note that to indicate a failure, the method may throw

@@ -70,8 +70,7 @@ public class XmlPrimitiveAssertion extends PrimitiveAssertion implements Asserti
     /**
      * Sets the wrapped Element.
      * 
-     * @param element
-     *            the Element to be set as wrapped
+     * @param el the Element to be set as wrapped
      */
     public void setValue(Element el) {
         this.element = el;

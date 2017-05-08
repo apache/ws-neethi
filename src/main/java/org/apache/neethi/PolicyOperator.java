@@ -32,7 +32,7 @@ public interface PolicyOperator extends PolicyComponent {
     /**
      * Add a PolicyComponent to the PolicyOperator.
      * 
-     * @param component
+     * @param component Component to add to the operator
      */
     void addPolicyComponent(PolicyComponent component);
 

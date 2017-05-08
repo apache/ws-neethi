@@ -222,7 +222,7 @@ public class Policy extends All {
      * <tt>iterator.hasNext()</tt> will indicates whether there is another
      * Policy alternative.
      * 
-     * @return
+     * @return An iterator over the list of alternatives
      */
     public Iterator<List<Assertion>> getAlternatives() {
         return new PolicyIterator(this, registry);

@@ -34,7 +34,7 @@ public interface AssertionBuilderFactory {
 
     /**
      * Returns the PolicyEngine associated with this factory
-     * @return
+     * @return the PolicyEngine
      */
     PolicyBuilder getPolicyEngine();
 
@@ -42,7 +42,7 @@ public interface AssertionBuilderFactory {
      * Returns the ConverterRegistry that the builder 
      * uses for converting the object to the types
      * needed for the AssertionBuilders
-     * @return
+     * @return the ConverterRegistry
      */
     ConverterRegistry getConverterRegistry();
 
