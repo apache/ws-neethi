@@ -104,6 +104,25 @@ public class PolicyContainingPrimitiveAssertion
         return getPolicy().equal(other.getPolicy());
     }
     
+    @Override
+    public boolean equals(Object obj) {
+      if (!(obj instanceof PolicyContainingPrimitiveAssertion)) {
+          return false;
+      }
+      
+      PolicyContainingPrimitiveAssertion pa = (PolicyContainingPrimitiveAssertion) obj;
+      
+      if (!super.equals(obj)) {
+          return false;
+      }
+      
+      if (!getPolicy().equal(pa.getPolicy())) {
+          return false;
+      }
+      
+      return true;
+    }
+    
     public void setPolicy(Policy n) {
         nested = n;
     }

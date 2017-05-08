@@ -20,6 +20,7 @@
 package org.apache.neethi.builders;
 
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,6 +81,15 @@ public class PrimitiveAssertion implements Assertion {
         }
         return null;
     }
+
+    public Map<QName, String> getAttributes() {
+        if (attributes != null) {
+            return new HashMap<QName, String>(attributes);
+        } else {
+            return Collections.emptyMap();
+        }
+    }
+
     public synchronized void addAttribute(QName n, String value) {
         if (attributes == null) {
             attributes = new HashMap<QName, String>();
@@ -111,6 +121,61 @@ public class PrimitiveAssertion implements Assertion {
             return false;
         }
         return getName().equals(((Assertion)policyComponent).getName());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (!(obj instanceof PrimitiveAssertion)) {
+          return false;
+      }
+      
+      PrimitiveAssertion pa = (PrimitiveAssertion) obj;
+      
+      if ((pa.getName() != null) && (!pa.getName().equals(this.getName()))) {
+          return false;
+      }
+      
+      if ((this.getName() != null) && (!this.getName().equals(pa.getName()))) {
+          return false;
+      }
+
+      if ((pa.isOptional() ^ this.isOptional()) || (pa.isIgnorable() ^ this.isIgnorable())) {
+          return false;
+      }
+
+      if ( (pa.getTextValue() != null) && (!pa.getTextValue().equals(this.getTextValue()))) {
+          return false;
+      }
+
+      if ( (this.getTextValue() != null) && (!this.getTextValue().equals(pa.getTextValue()))) {
+          return false;
+      }
+      
+      Map<QName, String> attrs1 = getAttributes();
+      Map<QName, String> attrs2 = pa.getAttributes();
+      for (QName key : attrs1.keySet()) {
+          if ((!attrs2.containsKey(key)) || (!attrs1.get(key).equals(attrs2.get(key)))) {
+              return false;
+          } else {
+              attrs2.remove(key);
+          }
+      }
+      if (!attrs2.isEmpty()) {
+          return false;
+      }
+      
+      return true;
+    }
+    
+
+    @Override
+    public int hashCode() {
+        int hash = 17;
+        hash = 31 * hash + (name != null ? name.hashCode() : 0);
+        hash = 31 * hash + ((optional) ? 1 : 0);
+        hash = 31 * hash + ((ignorable) ? 1 : 0);
+        hash = 31 * hash + (textValue != null ? textValue.hashCode() : 0);
+        return hash;
     }
 
     public short getType() {
