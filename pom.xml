@@ -28,7 +28,7 @@
     <groupId>org.apache.neethi</groupId>
     <artifactId>neethi</artifactId>
     <name>Apache Neethi</name>
-    <version>3.1.0</version>
+    <version>3.1.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <description>Apache Neethi provides general framework for the programmers to use WS Policy. It is compliant with latest WS Policy specification which was published in March 2006. This framework is specifically written to enable the Apache Web services stack to use WS Policy as a way of expressing it's requirements and capabilities.</description>
     <url>http://ws.apache.org/neethi/</url>
@@ -99,9 +99,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/webservices/neethi/tags/neethi-3.1.0</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/neethi/tags/neethi-3.1.0</developerConnection>
-        <url>http://svn.apache.org/viewcvs.cgi/webservices/neethi/tags/neethi-3.1.0</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/webservices/neethi/trunk</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/neethi/trunk</developerConnection>
+        <url>http://svn.apache.org/viewcvs.cgi/webservices/neethi/trunk</url>
     </scm>
     <organization>
         <name>The Apache Software Foundation</name>
