@@ -1,11 +1,10 @@
 
-Apache Neethi-3.0.3 Release Notes:
-3.0.3 is a maintenence release that fixes 2 issues that were found in 3.0.1:
+Apache Neethi-3.1.0 Release Notes:
 
-** Bug
-    * [NEETHI-15] - Problem in policy intersection caused by error in PolicyIntersector.compatiblePolicies method
-    * [NEETHI-16] - Writing a policy can miss namespace declarations
-
+3.1.0 is a minor update to 3.0.x.  The main difference in this vesion is
+that equals and hashCode methods have been added to the base assertion
+types.  Code that relied on the "system" equals/hashCode implementation
+may need to be updated.
 
 Apache Neethi-3.0.0 Release Notes:
 
