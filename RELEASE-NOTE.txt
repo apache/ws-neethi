@@ -6,6 +6,8 @@ that equals and hashCode methods have been added to the base assertion
 types.  Code that relied on the "system" equals/hashCode implementation
 may need to be updated.
 
+3.1.0 also requires Java 7 or newer.  It no longer will work with Java 5/6.
+
 Apache Neethi-3.0.0 Release Notes:
 
 This is a "major" upgrade to Neethi that completely revamps the Neethi 
