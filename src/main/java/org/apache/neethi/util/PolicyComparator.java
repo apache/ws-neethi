@@ -51,10 +51,7 @@ public final class PolicyComparator {
         // check Name attributes of each policies
         if (arg1.getName() != null) {
             
-            if (arg2.getName() != null) {
-                arg1.getName().equals(arg2.getName());
-                
-            } else {
+            if ((arg2.getName() == null) || !arg1.getName().equals(arg2.getName())) {
                 return false;
             }
             
@@ -63,6 +60,7 @@ public final class PolicyComparator {
                 return false;                
             }
         }
+        // check the namespaces
         if (arg1.getNamespace() != null
             && !arg1.getNamespace().equals(arg2.getNamespace())) {
             return false;
@@ -70,10 +68,7 @@ public final class PolicyComparator {
         // check Id attributes of each policies
         if (arg1.getId() != null) {
             
-            if (arg2.getId() != null) {
-                arg1.getId().equals(arg2.getId());
-                
-            } else {
+            if ((arg2.getId() == null) || !arg1.getId().equals(arg2.getId())) {
                 return false;
             }
             
