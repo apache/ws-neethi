@@ -21,6 +21,7 @@ package org.apache.neethi.builders.converters;
 
 import java.util.Stack;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamConstants;
@@ -40,7 +41,11 @@ public class StaxToDOMConverter extends AbstractStaxConverter
 
     public Element convert(XMLStreamReader reader) {
         try {
-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
+            dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+
+            Document doc = dbf.newDocumentBuilder().newDocument();
             readDocElements(doc, doc, reader);
             return doc.getDocumentElement();
         } catch (ParserConfigurationException ex) {
