@@ -19,7 +19,8 @@
 
 package org.apache.neethi.builders.converters;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -59,7 +60,7 @@ public class StaxToDOMConverter extends AbstractStaxConverter
                                        XMLStreamReader reader)
         throws XMLStreamException {
         
-        Stack<Node> stack = new Stack<Node>();
+        Deque<Node> stack = new ArrayDeque<Node>();
         int event = reader.getEventType();
         while (reader.hasNext()) {
             switch (event) {
