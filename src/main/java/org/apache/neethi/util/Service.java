@@ -21,10 +21,10 @@ package org.apache.neethi.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -45,11 +45,11 @@ public final class Service {
 
     // Remember providers we have looked up before.
     static Map<String, List<?>> instanceMap = new HashMap<String, List<?>>();
-    
+
     private Service() {
         //not constructed
     }
-    
+
     @SuppressWarnings("unchecked")
     private static <T> List<T> cast(List<?> p) {
         return (List<T>)p;
@@ -106,14 +106,9 @@ public final class Service {
         }
 
         while (e.hasMoreElements()) {
-            InputStream is = null;
-            try {
-                URL u = e.nextElement();
-
-                is = u.openStream();
-                
-                Reader         r  = new InputStreamReader(is, "UTF-8");
-                BufferedReader br = new BufferedReader(r);
+            URL u = e.nextElement();
+            try (Reader r  = new InputStreamReader(u.openStream(), StandardCharsets.UTF_8);
+                BufferedReader br = new BufferedReader(r)) {
 
                 String line = br.readLine();
                 while (line != null) {
@@ -133,7 +128,7 @@ public final class Service {
                             continue;
                         }
 
-                        // Try and load the class 
+                        // Try and load the class
                         Object obj = cl.loadClass(line).newInstance();
                         // stick it into our vector...
                         l.add(cls.cast(obj));
@@ -146,17 +141,9 @@ public final class Service {
                 // Just try the next file...
             } catch (LinkageError le) {
                 // Just try the next file...
-            } finally {
-                try {
-                    if (is != null) {
-                        is.close();
-                    }
-                } catch (IOException ex) {
-                    //ignore
-                }
             }
         }
         return l;
     }
-    
+
 }
