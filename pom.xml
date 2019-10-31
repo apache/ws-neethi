@@ -35,9 +35,7 @@
     <issueManagement>
         <url>https://issues.apache.org/jira/browse/NEETHI</url>
     </issueManagement>
-    <prerequisites>
-        <maven>3.0</maven>
-    </prerequisites>
+
     <mailingLists>
         <mailingList>
             <name>WS Developers</name>
@@ -99,9 +97,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:https://svn.apache.org/repos/asf/webservices/neethi/trunk</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/neethi/trunk</developerConnection>
-        <url>https://svn.apache.org/viewcvs.cgi/webservices/neethi/trunk</url>
+        <connection>scm:git:https://gitbox.apache.org/repos/asf/ws-neethi.git</connection>
+        <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/ws-neethi.git</developerConnection>
+        <url>https://gitbox.apache.org/repos/asf?p=ws-neethi.git;a=summary</url>
     </scm>
     <organization>
         <name>The Apache Software Foundation</name>
@@ -241,15 +239,6 @@
 	</pluginManagement>
     </build>
     <profiles>
-      <profile>
-	<id>maven-3</id>
-	<activation>
-	  <file>
-	    <!-- This employs that the basedir expression is only recognized by Maven 3.x (see MNG-2363) -->
-	    <exists>${basedir}</exists>
-	  </file>
-	</activation>
-      </profile>
         <profile>
             <id>release</id>
             <activation>
