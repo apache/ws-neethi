@@ -28,7 +28,7 @@
     <groupId>org.apache.neethi</groupId>
     <artifactId>neethi</artifactId>
     <name>Apache Neethi</name>
-    <version>3.1.2-SNAPSHOT</version>
+    <version>3.2.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <description>Apache Neethi provides general framework for the programmers to use WS Policy. It is compliant with latest WS Policy specification which was published in March 2006. This framework is specifically written to enable the Apache Web services stack to use WS Policy as a way of expressing it's requirements and capabilities.</description>
     <url>https://ws.apache.org/neethi/</url>
@@ -130,8 +130,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
