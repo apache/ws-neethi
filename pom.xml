@@ -214,6 +214,7 @@
                         <exclude>.gitignore</exclude>
                         <exclude>.git/**</exclude>
                         <exclude>.pmd/**</exclude>
+                        <exclude>.repository/**</exclude>
                         <exclude>.checkstyle/**</exclude>
                         <!-- RAT doesn't recognize this one as notes file -->
                         <exclude>RELEASE-NOTE.txt</exclude>
