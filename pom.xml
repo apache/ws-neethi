@@ -314,9 +314,9 @@
                 <reportSets>
                     <reportSet>
                         <reports>
-                            <report>issue-tracking</report>
-                            <report>mailing-list</report>
-                            <report>project-team</report>
+                            <report>issue-management</report>
+                            <report>mailing-lists</report>
+                            <report>team</report>
                             <report>scm</report>
                         </reports>
                     </reportSet>
