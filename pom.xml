@@ -312,11 +312,6 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.woodstox</groupId>
-            <artifactId>woodstox-core-asl</artifactId>
-            <version>4.4.1</version>
-        </dependency>
     </dependencies>
     <reporting>
         <plugins>
