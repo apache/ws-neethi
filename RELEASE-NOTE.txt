@@ -1,4 +1,18 @@
 
+Apache Neethi-3.2.0 Release Notes:
+
+3.2.0 is a minor update to 3.1.x.  The main updates are:
+
+1) Support Java 7 has been dropped, but support for Java 17 has been
+added.  3.1.0 now required Java8 or newer.
+
+2) Source control for Neethi has also moved from Subversion to GIT:
+https://gitbox.apache.org/repos/asf/ws-neethi.git
+
+3) XML parsing now enables the FEATURE_SECURE_PROCESSING flag
+
+
+
 Apache Neethi-3.1.1 Release Notes:
 3.1.1 is a minor patch release to fix problems comparing policy name
 attributes (Neethi-19)
