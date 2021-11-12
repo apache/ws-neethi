@@ -146,7 +146,7 @@ public class AssertionBuilderFactoryImpl implements AssertionBuilderFactory {
                 return (Class<?>)pt.getActualTypeArguments()[0];
             }
         }
-        if (c.getClass().getSuperclass() != null) {
+        if (c.getSuperclass() != null) {
             return findAssertionBuilderTarget(c.getSuperclass());
         }
         return null;
