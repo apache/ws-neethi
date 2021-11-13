@@ -68,8 +68,8 @@ public class Policy extends All {
     }
 
     /**
-     * Returns a Normalized version of self. If <tt>deep</tt> is set
-     * <tt>false</tt> then the assertions are not normalized and it returns a
+     * Returns a Normalized version of self. If {@code deep} is set
+     * {@code false} then the assertions are not normalized and it returns a
      * partially normalized version of self.
      * 
      * @param deep
@@ -81,8 +81,8 @@ public class Policy extends All {
     }
 
     /**
-     * Returns a normalized version of self.If <tt>deep</tt> is set
-     * <tt>false</tt> then the assertions are not normalized and it returns a
+     * Returns a normalized version of self.If {@code deep} is set
+     * {@code false} then the assertions are not normalized and it returns a
      * partially normalized version of self.
      * 
      * @param reg
@@ -217,9 +217,9 @@ public class Policy extends All {
 
     /**
      * Returns an Iterator that will return a list of assertions correspond to a
-     * Policy alternative if any. The <tt>iterator.next()</tt> will return a
+     * Policy alternative if any. The {@code iterator.next()} will return a
      * list of assertions correspond to a Policy alternative if any and
-     * <tt>iterator.hasNext()</tt> will indicates whether there is another
+     * {@code iterator.hasNext()} will indicates whether there is another
      * Policy alternative.
      * 
      * @return An iterator over the list of alternatives
@@ -276,7 +276,7 @@ public class Policy extends All {
 
     /**
      * Returns the value of the attribute specified by the QName. Returns
-     * <tt>null</tt> if not present.
+     * {@code null} if not present.
      * 
      * @param name
      *            the QName of the attribute
@@ -287,7 +287,7 @@ public class Policy extends All {
     }
 
     /**
-     * Returns a <tt>Map</tt> of all attributes of self.
+     * Returns a {@link Map} of all attributes of self.
      * 
      * @return a Map of all attributes of self
      */
@@ -296,7 +296,7 @@ public class Policy extends All {
     }
 
     /**
-     * Sets the <tt>Name</tt> attribute of self.
+     * Sets the {@code Name} attribute of self.
      * 
      * @param name
      *            the Name attribute of self
@@ -306,7 +306,7 @@ public class Policy extends All {
     }
 
     /**
-     * Returns the <tt>Name</tt> attribute of self.
+     * Returns the {@code Name} attribute of self.
      * 
      * @return the Name attribute of self
      */

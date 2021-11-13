@@ -38,13 +38,13 @@ public final class PolicyComparator {
     }
 
     /**
-     * Returns <tt>true</tt> if the two policies have the same semantics
+     * Returns {@code true} if the two policies have the same semantics
      * 
      * @param arg1
      *            a Policy
      * @param arg2
      *            an another Policy
-     * @return <tt>true</tt> if both policies have the same semantics
+     * @return {@code true} if both policies have the same semantics
      */
     public static boolean compare(Policy arg1, Policy arg2) {
         
@@ -83,14 +83,14 @@ public final class PolicyComparator {
     }
 
     /**
-     * Returns <tt>true</tt> if the two PolicyComponents have the same
+     * Returns {@code true} if the two PolicyComponents have the same
      * semantics.
      * 
      * @param arg1
      *            a PolicyComponent
      * @param arg2
      *            an another PolicyComponent
-     * @return <tt>true</tt> if both PolicyComponents have the same semantics
+     * @return {@code true} if both PolicyComponents have the same semantics
      */
     public static boolean compare(PolicyComponent arg1, PolicyComponent arg2) {
         if (!arg1.getClass().equals(arg2.getClass())) {

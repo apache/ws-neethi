@@ -89,7 +89,7 @@ public class PolicyReference implements PolicyComponent {
     
     /**
      * Returns normalized version of the Policy that is referred by self. The specified 
-     * PolicyRegistry is used to lookup for the Policy that is referred and <tt>deep</tt> 
+     * PolicyRegistry is used to lookup for the Policy that is referred and {@code deep} 
      * indicates the level of normalization for the returning Policy.
      * 
      * @param reg the PolicyRegistry that is used to resolved the Policy referred by self

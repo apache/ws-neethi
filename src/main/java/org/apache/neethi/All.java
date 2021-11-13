@@ -46,7 +46,7 @@ public class All extends AbstractPolicyOperator {
     }
 
     /**
-     * Returns a <tt>List</tt> of it's PolicyComponents.
+     * Returns a {@link List} of it's PolicyComponents.
      * 
      * @return a List of it's PolicyComponents
      */
