@@ -125,7 +125,7 @@ public class StaxToDOMConverter extends AbstractStaxConverter
                 parent.appendChild(doc.createProcessingInstruction(reader.getPITarget(), reader.getPIData()));
                 break;
             case XMLStreamConstants.ENTITY_REFERENCE:
-                parent.appendChild(doc.createProcessingInstruction(reader.getPITarget(), reader.getPIData()));
+                parent.appendChild(doc.createEntityReference(reader.getLocalName()));
                 break;
             default:
                 break;
