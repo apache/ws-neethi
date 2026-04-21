@@ -162,4 +162,53 @@ public class PolicyReferenceTest extends PolicyTestCase {
                 e.getMessage().contains("Unsupported URI scheme"));
         }
     }
+
+    /**
+     * Test two policies that mutually reference each other cause unbounded recursion in
+     * AbstractPolicyOperator.normalizeOperator() when normalize(true) is called.
+     *
+     * Policy A contains a PolicyReference to "B".
+     * Policy B contains a PolicyReference to "A".
+     * Both are registered in the PolicyRegistry before normalization begins.
+     *
+     * normalizeOperator() resolves each PolicyReference via reg.lookup() and
+     * recurses into the resolved policy's components with no cycle detection,
+     * ultimately throwing StackOverflowError.
+     */
+    @Test
+    public void testCircularPolicyReferenceThrowsStackOverflow() {
+        // Build Policy A: ExactlyOne > All > PolicyReference("B")
+        PolicyReference refToB = new PolicyReference();
+        refToB.setURI("B");
+        All allA = new All();
+        allA.addPolicyComponent(refToB);
+        ExactlyOne eoA = new ExactlyOne();
+        eoA.addPolicyComponent(allA);
+        Policy policyA = new Policy(registry);
+        policyA.setId("A");
+        policyA.addPolicyComponent(eoA);
+
+        // Build Policy B: ExactlyOne > All > PolicyReference("A")
+        PolicyReference refToA = new PolicyReference();
+        refToA.setURI("A");
+        All allB = new All();
+        allB.addPolicyComponent(refToA);
+        ExactlyOne eoB = new ExactlyOne();
+        eoB.addPolicyComponent(allB);
+        Policy policyB = new Policy(registry);
+        policyB.setId("B");
+        policyB.addPolicyComponent(eoB);
+
+        registry.register("A", policyA);
+        registry.register("B", policyB);
+
+        try {
+            policyA.normalize(registry, true);
+            fail("Expected StackOverflowError or RuntimeException due to circular reference");
+        } catch (RuntimeException e) {
+            assertTrue(
+                "Expected a cycle-detection message but got: " + e.getMessage(),
+                e.getMessage() != null && e.getMessage().toLowerCase().contains("circular"));
+        }
+    }
 }
