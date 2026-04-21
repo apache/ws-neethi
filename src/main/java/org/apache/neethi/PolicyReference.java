@@ -21,9 +21,11 @@ package org.apache.neethi;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -146,6 +148,22 @@ public class PolicyReference implements PolicyComponent {
         String scheme = url.getProtocol();
         if (!"http".equalsIgnoreCase(scheme) && !"https".equalsIgnoreCase(scheme)) {
             throw new RuntimeException("Unsupported URI scheme: only http and https are permitted.");
+        }
+
+        // Resolve the host to an IP and reject addresses that can never serve a policy document:
+        //   - link-local  (169.254.x.x / fe80::/10) — cloud IMDS, auto-configuration
+        //   - multicast   (224.0.0.0/4 / ff00::/8)  — no HTTP server listens at a multicast address
+        //   - any-local   (0.0.0.0 / ::)             — unspecified/wildcard, not a valid destination
+        // Loopback (127.x.x.x / ::1) and site-local (RFC-1918) addresses are permitted
+        // so that policies on localhost or an internal network can be resolved.
+        try {
+            InetAddress addr = InetAddress.getByName(url.getHost());
+            if (addr.isLinkLocalAddress() || addr.isMulticastAddress() || addr.isAnyLocalAddress()) {
+                throw new RuntimeException(
+                    "PolicyReference URI resolves to a forbidden address (link-local, multicast, or wildcard).");
+            }
+        } catch (UnknownHostException e) {
+            throw new RuntimeException("PolicyReference URI host could not be resolved.");
         }
 
         try {
