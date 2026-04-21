@@ -136,9 +136,19 @@ public class PolicyReference implements PolicyComponent {
     }
     
     public Policy getRemoteReferencedPolicy(String u) {
+        URL url;
         try {
-            //create java.net URL pointing to remote resource
-            URL url = new URL(u);
+            url = new URL(u);
+        } catch (MalformedURLException mue) {
+            throw new RuntimeException("Malformed uri.");
+        }
+
+        String scheme = url.getProtocol();
+        if (!"http".equalsIgnoreCase(scheme) && !"https".equalsIgnoreCase(scheme)) {
+            throw new RuntimeException("Unsupported URI scheme: only http and https are permitted.");
+        }
+
+        try {
             URLConnection connection = url.openConnection();
             connection.setDoInput(true);
 
@@ -152,10 +162,8 @@ public class PolicyReference implements PolicyComponent {
             } finally {
                 in.close();
             }
-        } catch (MalformedURLException mue) {
-            throw new RuntimeException("Malformed uri: " + u);
-        } catch (IOException ioe) {        
-            throw new RuntimeException("Cannot reach remote resource: " + u);
+        } catch (IOException ioe) {
+            throw new RuntimeException("Cannot reach remote policy reference.");
         }
     }
 }
