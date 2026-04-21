@@ -34,7 +34,10 @@ public class DOMToStaxConverter extends AbstractDOMConverter
 
     public XMLStreamReader convert(Element s) {
         try {
-            return XMLInputFactory.newInstance().createXMLStreamReader(new DOMSource(s));
+            XMLInputFactory xif = XMLInputFactory.newInstance();
+            xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+            xif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
+            return xif.createXMLStreamReader(new DOMSource(s));
         } catch (XMLStreamException ex) {
             throw new ConverterException(ex);
         }

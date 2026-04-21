@@ -158,7 +158,7 @@ public class PolicyReference implements PolicyComponent {
                 if (pe == null) {
                     pe = new PolicyBuilder();
                 }
-                return pe.getPolicy(connection.getInputStream());
+                return pe.getPolicy(in);
             } finally {
                 in.close();
             }

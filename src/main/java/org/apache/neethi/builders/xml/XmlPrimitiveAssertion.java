@@ -120,7 +120,10 @@ public class XmlPrimitiveAssertion extends PrimitiveAssertion implements Asserti
 
     public void serialize(XMLStreamWriter writer) throws XMLStreamException {
         if (element != null) {
-            copyEvents(XMLInputFactory.newInstance().createXMLEventReader(new DOMSource(element)), writer);
+            XMLInputFactory xif = XMLInputFactory.newInstance();
+            xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+            xif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
+            copyEvents(xif.createXMLEventReader(new DOMSource(element)), writer);
         } else {
             throw new RuntimeException("Wrapped Element is not set");
         }
