@@ -44,6 +44,7 @@ public class StaxToDOMConverterTest {
 
     private static XMLStreamReader readerFor(String xml) throws Exception {
         XMLInputFactory xif = XMLInputFactory.newInstance();
+        xif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
         xif.setProperty(XMLInputFactory.IS_COALESCING, Boolean.FALSE);
         return xif.createXMLStreamReader(new StringReader(xml));
     }

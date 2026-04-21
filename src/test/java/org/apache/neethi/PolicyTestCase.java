@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -81,6 +82,8 @@ public abstract class PolicyTestCase extends Assert {
         throws ParserConfigurationException, SAXException, IOException {
         InputStream in = getResource(name);
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 
         dbf.setValidating(false);
         dbf.setIgnoringComments(false);
@@ -100,14 +103,18 @@ public abstract class PolicyTestCase extends Assert {
     public XMLStreamReader getResourceAsStax(String name) 
         throws XMLStreamException, FactoryConfigurationError, FileNotFoundException {
         InputStream in = getResource(name);
-        return XMLInputFactory.newInstance().createXMLStreamReader(in);
+        XMLInputFactory xif = XMLInputFactory.newInstance();
+        xif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
+        return xif.createXMLStreamReader(in);
     }    
     public OMElement getResourceAsElement(String name) 
         throws XMLStreamException, FactoryConfigurationError, FileNotFoundException {
         InputStream in = getResource(name);
+        XMLInputFactory xif = XMLInputFactory.newInstance();
+        xif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
         OMElement element = OMXMLBuilderFactory.createStAXOMBuilder(
                 OMAbstractFactory.getOMFactory(),
-                XMLInputFactory.newInstance().createXMLStreamReader(in)).getDocumentElement();
+                xif.createXMLStreamReader(in)).getDocumentElement();
         return element;
     }
 }
