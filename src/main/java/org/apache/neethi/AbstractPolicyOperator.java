@@ -33,6 +33,15 @@ import org.apache.neethi.util.PolicyComparator;
  */
 public abstract class AbstractPolicyOperator implements PolicyOperator {
     protected List<PolicyComponent> policyComponents = new ArrayList<PolicyComponent>();
+
+    /**
+     * Maximum number of normalised alternatives (All nodes inside the outermost
+     * ExactlyOne) that policy normalization is permitted to produce.  Crafted
+     * WS-Policy documents can trigger an exponential Cartesian cross-product that
+     * exhausts the JVM heap; this cap converts that unbounded allocation into a
+     * fast, predictable RuntimeException.
+     */
+    private static final int MAX_ALTERNATIVES = 10_000;
     
     public AbstractPolicyOperator() {
         
@@ -233,6 +242,13 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                 crossProductAll.addPolicyComponents(currentAll1.getPolicyComponents());
                 crossProductAll.addPolicyComponents(currentAll2.getPolicyComponents());
                 crossProduct.addPolicyComponent(crossProductAll);
+
+                if (crossProduct.getPolicyComponents().size() > MAX_ALTERNATIVES) {
+                    throw new RuntimeException(
+                        "Policy normalization exceeded the maximum number of alternatives ("
+                        + MAX_ALTERNATIVES + "). The policy may be crafted to cause "
+                        + "Algorithmic Complexity DoS via exponential cross-product expansion.");
+                }
             }
         }
 
