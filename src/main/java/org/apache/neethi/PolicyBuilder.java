@@ -136,7 +136,10 @@ public class PolicyBuilder {
      */
     public PolicyReference getPolicyReference(InputStream inputStream) {
         try {
-            XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
+            XMLInputFactory xif = XMLInputFactory.newInstance();
+            xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+            xif.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
+            XMLStreamReader reader = xif.createXMLStreamReader(inputStream);
             return getPolicyReference(reader);
         } catch (RuntimeException ex) {
             throw ex;
