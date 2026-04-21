@@ -21,6 +21,7 @@ package org.apache.neethi;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -171,6 +172,7 @@ public class PolicyReference implements PolicyComponent {
             connection.setDoInput(true);
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(10000);
+            ((HttpURLConnection) connection).setInstanceFollowRedirects(false);
 
             InputStream in = connection.getInputStream();
             try {
