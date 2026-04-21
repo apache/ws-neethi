@@ -43,6 +43,7 @@ public class StaxToDOMConverter extends AbstractStaxConverter
     public Element convert(XMLStreamReader reader) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setNamespaceAware(true);
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, Boolean.TRUE);
             dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 

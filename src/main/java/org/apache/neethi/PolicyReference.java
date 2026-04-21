@@ -151,6 +151,8 @@ public class PolicyReference implements PolicyComponent {
         try {
             URLConnection connection = url.openConnection();
             connection.setDoInput(true);
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(10000);
 
             InputStream in = connection.getInputStream();
             try {
