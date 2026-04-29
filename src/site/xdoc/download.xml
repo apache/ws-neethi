@@ -30,8 +30,7 @@
 
     <body>
 
-    <section>
-            <h2>Releases</h2>
+    <section name="Releases">
             <div align="left">
                 <p>Please select the Apache Neethi version you want to download. Latest release is 3.2.1. You can download both the binary distribution and the source distribution.  All the releases are available for download as source or binary. For more information,
                     please see
