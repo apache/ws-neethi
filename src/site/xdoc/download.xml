@@ -111,7 +111,7 @@
                     <strong>Note:</strong>
                     when downloading from a mirror please check the
                     <a
-                            href="http://www.apache.org/dev/release-signing#md5">md5sum</a>
+                            href="https://infra.apache.org/release-signing.html#sha-checksum">checksum</a>
                     and verify
                     the
                     <a href="http://www.apache.org/dev/release-signing#openpgp">OpenPGP</a>
