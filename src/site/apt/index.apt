@@ -32,6 +32,7 @@ Latest Release
 
   \[{{{http://ws.apache.org/neethi/download.cgi}Download Neethi 3.2.2}}\]
 
+  Note that this release fixes three CVEs, please see {{{./security.html}Security Advisories (CVEs)}}.
 
 Key Features
 

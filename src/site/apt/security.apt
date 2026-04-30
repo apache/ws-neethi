@@ -1,0 +1,75 @@
+~~ Licensed to the Apache Software Foundation (ASF) under one
+~~ or more contributor license agreements. See the NOTICE file
+~~ distributed with this work for additional information
+~~ regarding copyright ownership. The ASF licenses this file
+~~ to you under the Apache License, Version 2.0 (the
+~~ "License"); you may not use this file except in compliance
+~~ with the License. You may obtain a copy of the License at
+~~
+~~ http://www.apache.org/licenses/LICENSE-2.0
+~~
+~~ Unless required by applicable law or agreed to in writing,
+~~ software distributed under the License is distributed on an
+~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~~ KIND, either express or implied. See the License for the
+~~ specific language governing permissions and limitations
+~~ under the License.
+
+           ------------------------
+           Apache Neethi - Security
+           ------------------------
+
+Security and CVE Tracking
+
+  This page tracks known vulnerabilities (CVEs) for Apache Neethi.
+
+  For reporting a new vulnerability, see
+  {{{https://www.apache.org/security/}Apache Security Team}}.
+
+Apache Neethi CVEs
+
+  * {{{https://www.cve.org/CVERecord?id=CVE-2026-42404}CVE-2026-42404}}:
+    Apache Neethi: Unrestricted HTTP Redirect Following in Policy References
+
+    * Severity: Medium
+
+    * Description:
+
+      Apache Neethi does not impose restrictions on URIs when manually
+      fetching remote policy references through the PolicyReference API.
+      When an application explicitly calls this API to retrieve a policy
+      from a remote URI, an outbound request may be made for arbitrary
+      protocols and internal IP addresses.
+
+      From 3.2.2, only http or https URIs are allowed, and link-local,
+      multicast, and any-local addresses are forbidden.
+
+    * Recommendation:
+
+      Users should upgrade to Apache Neethi 3.2.2 or later.
+
+  * {{{https://www.cve.org/CVERecord?id=CVE-2026-42403}CVE-2026-42403}}:
+    Apache Neethi: Circular Policy Reference Infinite Loop 
+
+    * Severity: High
+
+    * Description:
+
+      Apache Neethi does not properly detect circular references in policy definitions. When a WS-Policy document contains circular policy references (where Policy A references Policy B which references Policy A), the policy normalization process can enter an infinite loop or cause excessive recursion, leading to a stack overflow or application hang. An attacker can craft malicious policy documents with circular references to cause a Denial of Service condition
+
+    * Recommendation:
+
+      Users should upgrade to Apache Neethi 3.2.2 or later.
+
+  * {{{https://www.cve.org/CVERecord?id=CVE-2026-42402}CVE-2026-42402}}:
+    Apache Neethi: Policy Normalization Unbounded Resource Allocation DoS  
+
+    * Severity: High
+
+    * Description:
+
+      Apache Neethi is vulnerable to a Denial of Service attack through algorithmic complexity in policy normalization. Specially crafted WS-Policy documents can trigger an exponential Cartesian cross-product expansion during the normalization process, causing unbounded memory allocation that exhausts the JVM heap. This occurs when the normalization process generates an excessive number of policy alternatives without bounds, leading to runtime memory exhaustion.
+
+    * Recommendation:
+
+      Users should upgrade to 3.2.2 which limits the maximum number of normalized policy alternatives.

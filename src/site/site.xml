@@ -51,6 +51,7 @@
     <menu name="Documentation">
       <item name="Javadocs" href="apidocs/index.html"/>
       <item name="Migration Guide" href="migration.html"/>
+      <item name="Security" href="security.html"/>
     </menu>
     <menu name="Project Information">
       <item name="Mailing Lists" href="mailing-lists.html"/>
