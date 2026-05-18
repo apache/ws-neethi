@@ -183,6 +183,7 @@
                         <exclude>.gitignore</exclude>
                         <exclude>.git/**</exclude>
                         <exclude>.pmd/**</exclude>
+                        <exclude>.asf.yaml</exclude>
                         <exclude>.repository/**</exclude>
                         <exclude>.checkstyle/**</exclude>
                         <!-- RAT doesn't recognize this one as notes file -->
