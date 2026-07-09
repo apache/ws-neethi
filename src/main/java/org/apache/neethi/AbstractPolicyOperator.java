@@ -138,6 +138,9 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                 }
             } else if (policyComponent.getType() == Constants.TYPE_POLICY_REF) {
                 String uri = ((PolicyReference) policyComponent).getURI();
+                if (uri == null || uri.length() == 0) {
+                    throw new RuntimeException("PolicyReference URI is null or empty");
+                }
                 policyComponent = reg == null ? null : reg.lookup(uri);
                 if (policyComponent == null && uri.charAt(0) == '#') {
                     String id = uri.substring(1);
@@ -155,14 +158,17 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                     throw new RuntimeException(uri + " can't be resolved");
                 }
                 String resolvedId = ((Policy) policyComponent).getId();
-                if (resolvedId != null && !resolving.add(resolvedId)) {
-                    throw new RuntimeException("Circular PolicyReference detected: " + resolvedId);
+                String resolvingToken = resolvedId != null && resolvedId.length() > 0
+                    ? "id:" + resolvedId : "uri:" + uri;
+                if (!resolving.add(resolvingToken)) {
+                    throw new RuntimeException("Circular PolicyReference detected: " + resolvingToken);
                 }
-                All all = new All();
-                all.addPolicyComponents(((Policy) policyComponent).getPolicyComponents());
-                childComponentsList.add(AbstractPolicyOperator.normalizeOperator(policy, all, reg, deep, resolving));
-                if (resolvedId != null) {
-                    resolving.remove(resolvedId);
+                try {
+                    All all = new All();
+                    all.addPolicyComponents(((Policy) policyComponent).getPolicyComponents());
+                    childComponentsList.add(AbstractPolicyOperator.normalizeOperator(policy, all, reg, deep, resolving));
+                } finally {
+                    resolving.remove(resolvingToken);
                 }
          
             } else if (policyComponent.getType() == Constants.TYPE_POLICY) {

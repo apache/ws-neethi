@@ -164,19 +164,10 @@ public class PolicyReferenceTest extends PolicyTestCase {
     }
 
     /**
-     * Test two policies that mutually reference each other cause unbounded recursion in
-     * AbstractPolicyOperator.normalizeOperator() when normalize(true) is called.
-     *
-     * Policy A contains a PolicyReference to "B".
-     * Policy B contains a PolicyReference to "A".
-     * Both are registered in the PolicyRegistry before normalization begins.
-     *
-     * normalizeOperator() resolves each PolicyReference via reg.lookup() and
-     * recurses into the resolved policy's components with no cycle detection,
-     * ultimately throwing StackOverflowError.
+     * Ensures circular references are detected for policies with explicit Id values.
      */
     @Test
-    public void testCircularPolicyReferenceThrowsStackOverflow() {
+    public void testCircularPolicyReferenceWithIdsIsDetected() {
         // Build Policy A: ExactlyOne > All > PolicyReference("B")
         PolicyReference refToB = new PolicyReference();
         refToB.setURI("B");
@@ -204,7 +195,48 @@ public class PolicyReferenceTest extends PolicyTestCase {
 
         try {
             policyA.normalize(registry, true);
-            fail("Expected StackOverflowError or RuntimeException due to circular reference");
+            fail("Expected RuntimeException due to circular reference");
+        } catch (RuntimeException e) {
+            assertTrue(
+                "Expected a cycle-detection message but got: " + e.getMessage(),
+                e.getMessage() != null && e.getMessage().toLowerCase().contains("circular"));
+        }
+    }
+
+    /**
+     * Ensures circular references are detected even when referenced policies have no Id.
+     *
+     * Cycle detection must use a stable non-null resolution token so that
+     * no-Id references cannot bypass the resolving set.
+     */
+    @Test
+    public void testCircularPolicyReferenceWithoutIdsIsDetected() {
+        // Policy A references registry key "B" but has no policy Id.
+        PolicyReference refToB = new PolicyReference();
+        refToB.setURI("B");
+        All allA = new All();
+        allA.addPolicyComponent(refToB);
+        ExactlyOne eoA = new ExactlyOne();
+        eoA.addPolicyComponent(allA);
+        Policy policyA = new Policy(registry);
+        policyA.addPolicyComponent(eoA);
+
+        // Policy B references registry key "A" and also has no policy Id.
+        PolicyReference refToA = new PolicyReference();
+        refToA.setURI("A");
+        All allB = new All();
+        allB.addPolicyComponent(refToA);
+        ExactlyOne eoB = new ExactlyOne();
+        eoB.addPolicyComponent(allB);
+        Policy policyB = new Policy(registry);
+        policyB.addPolicyComponent(eoB);
+
+        registry.register("A", policyA);
+        registry.register("B", policyB);
+
+        try {
+            policyA.normalize(registry, true);
+            fail("Expected RuntimeException due to circular reference");
         } catch (RuntimeException e) {
             assertTrue(
                 "Expected a cycle-detection message but got: " + e.getMessage(),
