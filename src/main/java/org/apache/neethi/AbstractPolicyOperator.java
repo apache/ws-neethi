@@ -192,9 +192,13 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         ExactlyOne exactlyOne = new ExactlyOne();
         
         if (componentType == Constants.TYPE_EXACTLYONE) {            
+            long alternativesSoFar = 0;
             for (PolicyComponent comp : normalizedInnerComponets) {
                 ExactlyOne innerExactlyOne = (ExactlyOne)comp;
+                int alternativesToAdd = innerExactlyOne.getPolicyComponents().size();
+                checkAlternativeBudget(alternativesSoFar + alternativesToAdd);
                 exactlyOne.addPolicyComponents(innerExactlyOne.getPolicyComponents());
+                alternativesSoFar += alternativesToAdd;
             }
             
         } else if ((componentType == Constants.TYPE_POLICY) || (componentType == Constants.TYPE_ALL)) {
@@ -228,6 +232,8 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                 exactlyOne = (ExactlyOne) normalizedInnerComponets.get(0);
             }
         }
+
+        checkAlternativeBudget(exactlyOne.getPolicyComponents().size());
         
         return exactlyOne;
     }
@@ -243,21 +249,26 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
             currentAll1 = (All)pc;
 
             for (PolicyComponent pc2 : exactlyOne2.getPolicyComponents()) {
+                long nextSize = (long)crossProduct.getPolicyComponents().size() + 1;
+                checkAlternativeBudget(nextSize);
+
                 currentAll2 = (All)pc2;
                 crossProductAll = new All();
                 crossProductAll.addPolicyComponents(currentAll1.getPolicyComponents());
                 crossProductAll.addPolicyComponents(currentAll2.getPolicyComponents());
                 crossProduct.addPolicyComponent(crossProductAll);
-
-                if (crossProduct.getPolicyComponents().size() > MAX_ALTERNATIVES) {
-                    throw new RuntimeException(
-                        "Policy normalization exceeded the maximum number of alternatives ("
-                        + MAX_ALTERNATIVES + "). The policy may be crafted to cause "
-                        + "Algorithmic Complexity DoS via exponential cross-product expansion.");
-                }
             }
         }
 
         return crossProduct;
+    }
+
+    private static void checkAlternativeBudget(long alternativesCount) {
+        if (alternativesCount > MAX_ALTERNATIVES) {
+            throw new RuntimeException(
+                "Policy normalization exceeded the maximum number of alternatives ("
+                + MAX_ALTERNATIVES + "). The policy may be crafted to cause "
+                + "Algorithmic Complexity DoS via exponential expansion.");
+        }
     }
 }
