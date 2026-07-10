@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.neethi.AbstractPolicyOperator;
 import org.apache.neethi.All;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.ExactlyOne;
@@ -185,9 +186,6 @@ public class PolicyIntersector {
     public Policy intersect(Policy p1, Policy p2, boolean allowDups) {
         Policy compatible = new Policy(p1.getPolicyRegistry(), p1.getNamespace());
         ExactlyOne eo = new ExactlyOne(compatible);
-        if (!compatiblePolicies(p1, p2)) {
-            return compatible;
-        }
         Iterator<List<Assertion>> i1 = p1.getAlternatives();
         while (i1.hasNext()) {
             List<Assertion> alt1 = i1.next();
@@ -196,6 +194,8 @@ public class PolicyIntersector {
                 List<Assertion> alt2 = i2.next();
                 All all = createCompatibleAlternatives(alt1, alt2, !allowDups);
                 if (all != null) {
+                    long nextSize = (long)eo.getPolicyComponents().size() + 1;
+                    AbstractPolicyOperator.checkMaximumAlternativeCount(nextSize, "intersection");
                     eo.addPolicyComponent(all);
                 }
             }            
