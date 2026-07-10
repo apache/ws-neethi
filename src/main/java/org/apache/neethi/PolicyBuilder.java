@@ -39,9 +39,9 @@ import org.apache.neethi.builders.AssertionBuilder;
  */
 public class PolicyBuilder {
 
-    private static final String MAX_DEPTH_PROPERTY = "org.apache.neethi.parser.maxDepth";
-    private static final String MAX_ELEMENTS_PROPERTY = "org.apache.neethi.parser.maxElements";
-    private static final String MAX_ATTRIBUTES_PROPERTY = "org.apache.neethi.parser.maxAttributes";
+    public static final String MAX_DEPTH_PROPERTY = "org.apache.neethi.parser.maxDepth";
+    public static final String MAX_ELEMENTS_PROPERTY = "org.apache.neethi.parser.maxElements";
+    public static final String MAX_ATTRIBUTES_PROPERTY = "org.apache.neethi.parser.maxAttributes";
 
     private static final int DEFAULT_MAX_DEPTH = 256;
     private static final int DEFAULT_MAX_ELEMENTS = 100000;
