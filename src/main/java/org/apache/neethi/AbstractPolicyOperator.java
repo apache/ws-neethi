@@ -263,12 +263,16 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         return crossProduct;
     }
 
-    private static void checkAlternativeBudget(long alternativesCount) {
+    public static void checkMaximumAlternativeCount(long alternativesCount, String operation) {
         if (alternativesCount > MAX_ALTERNATIVES) {
             throw new RuntimeException(
-                "Policy normalization exceeded the maximum number of alternatives ("
+                "Policy " + operation + " exceeded the maximum number of alternatives ("
                 + MAX_ALTERNATIVES + "). The policy may be crafted to cause "
                 + "Algorithmic Complexity DoS via exponential expansion.");
         }
+    }
+
+    private static void checkAlternativeBudget(long alternativesCount) {
+        checkMaximumAlternativeCount(alternativesCount, "normalization");
     }
 }
