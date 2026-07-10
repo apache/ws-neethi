@@ -40,6 +40,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import org.apache.neethi.builders.PrimitiveAssertion;
+import org.apache.neethi.builders.PolicyContainingPrimitiveAssertion;
 import org.apache.neethi.builders.xml.XMLPrimitiveAssertionBuilder;
 
 import org.junit.Test;
@@ -127,6 +128,21 @@ public class BasicTestCases extends PolicyTestCase {
         assertEquals("Body", el.getLocalName());
         el = (Element)el.getNextSibling();
         assertEquals("Header", el.getLocalName());
+    }
+
+    @Test
+    public void testPolicyContainingPrimitiveAssertionPreservesAttributes() throws Exception {
+        String text = "<p:Wrapper FooAtt=\"blah\" xmlns:p=\"urn:test\" "
+            + "xmlns:wsp=\"http://www.w3.org/ns/ws-policy\">"
+            + "<wsp:Policy><wsp:ExactlyOne><wsp:All/></wsp:ExactlyOne></wsp:Policy>"
+            + "</p:Wrapper>";
+
+        Assertion as = new XMLPrimitiveAssertionBuilder().build(getElementFromString(text),
+                                                                policyEngine.getAssertionBuilderFactory());
+        assertNotNull(as);
+        assertTrue(as instanceof PolicyContainingPrimitiveAssertion);
+
+        assertEquals("blah", ((PolicyContainingPrimitiveAssertion)as).getAttribute(new QName("FooAtt")));
     }
 
     

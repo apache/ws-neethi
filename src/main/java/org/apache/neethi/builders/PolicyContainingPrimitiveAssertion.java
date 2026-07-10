@@ -29,6 +29,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.neethi.All;
+import org.apache.neethi.AbstractPolicyOperator;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.Policy;
@@ -72,6 +73,7 @@ public class PolicyContainingPrimitiveAssertion
         if (isOptional()) {
             ea.addPolicyComponent(new All());
         }
+        long alternativesSoFar = ea.getPolicyComponents().size();
         // for all alternatives in normalized nested policy
         Iterator<List<Assertion>> alternatives = normalisedNested.getAlternatives();
         while (alternatives.hasNext()) {
@@ -85,7 +87,9 @@ public class PolicyContainingPrimitiveAssertion
             nea.addPolicyComponent(na);
             na.addPolicyComponents(alternative);
             all.addPolicyComponent(a);
+            AbstractPolicyOperator.checkMaximumAlternativeCount(alternativesSoFar + 1, "normalization");
             ea.addPolicyComponent(all);            
+            alternativesSoFar++;
         } 
         return p;      
     } 

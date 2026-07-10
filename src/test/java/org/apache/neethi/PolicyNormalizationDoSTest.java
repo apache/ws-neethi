@@ -19,6 +19,10 @@
 
 package org.apache.neethi;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
 import javax.xml.namespace.QName;
 
 import org.apache.neethi.builders.PrimitiveAssertion;
@@ -100,6 +104,18 @@ public class PolicyNormalizationDoSTest extends PolicyTestCase {
         }
     }
 
+    @Test
+    public void testUnknownPolicyContainingAssertionEnforcesGlobalAlternativeLimit() {
+        Policy policy = policyEngine.getPolicy(xmlStream(buildUnknownWrapperAggregationBypassPolicyXml(2, 13)));
+
+        try {
+            policy.normalize(registry, true);
+            fail("Expected RuntimeException due to global alternative limit");
+        } catch (RuntimeException ex) {
+            assertTrue(ex.getMessage().contains("maximum number of alternatives"));
+        }
+    }
+
     // -----------------------------------------------------------------------
     // Helpers
     // -----------------------------------------------------------------------
@@ -164,6 +180,35 @@ public class PolicyNormalizationDoSTest extends PolicyTestCase {
 
         policy.addPolicyComponent(outerExactlyOne);
         return policy;
+    }
+
+    private static InputStream xmlStream(String xml) {
+        return new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static String buildUnknownWrapperAggregationBypassPolicyXml(int branchCount, int branchDepth) {
+        StringBuilder xml = new StringBuilder(4096);
+        xml.append("<wsp:Policy xmlns:wsp=\"http://www.w3.org/ns/ws-policy\" xmlns:p=\"urn:poc\">")
+           .append("<p:Wrapper>")
+           .append("<wsp:Policy>")
+           .append("<wsp:ExactlyOne>");
+
+        for (int branch = 0; branch < branchCount; branch++) {
+            xml.append("<wsp:All>");
+            for (int depth = 0; depth < branchDepth; depth++) {
+                xml.append("<wsp:ExactlyOne>")
+                   .append("<wsp:All><p:A").append(branch).append('_').append(depth).append("/></wsp:All>")
+                   .append("<wsp:All><p:B").append(branch).append('_').append(depth).append("/></wsp:All>")
+                   .append("</wsp:ExactlyOne>");
+            }
+            xml.append("</wsp:All>");
+        }
+
+        xml.append("</wsp:ExactlyOne>")
+           .append("</wsp:Policy>")
+           .append("</p:Wrapper>")
+           .append("</wsp:Policy>");
+        return xml.toString();
     }
 
 }
