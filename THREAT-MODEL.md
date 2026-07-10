@@ -17,7 +17,7 @@
   under the License.
 -->
 
-# Apache Neethi Security Threat Model (draft)
+# Apache Neethi Security Threat Model
 
 ## §1 Header
 
@@ -28,29 +28,29 @@
   and an extension model for serialization and de-serialization of
   domain-specific Assertions"* *(documented: `README.txt`)*.
 - **Repository**: `apache/ws-neethi`.
-- **Version / commit**: this model is drafted against the default branch
+- **Version / commit**: this model is based on the default branch
   at clone time. A report against project release *N* should be triaged
   against the model as it stood at *N*, not at HEAD. Latest release
   documented in `RELEASE-NOTE.txt`.
-- **Date**: 2026-05-30.
-- **Authors**: ASF Security team draft, awaiting Neethi / Webservices
+- **Date**: 2026-07-10.
+- **Authors**: ASF Security team, with Neethi / Webservices
   PMC review.
-- **Status**: draft — under maintainer review.
+- **Status**: maintainer review in progress.
 - **Reporting**: vulnerabilities that fall under §8 (claimed
   properties) should be reported per the Apache Security Team disclosure
   channel (<https://www.apache.org/security/>); reports that fall under
   §3 (out of scope) or §9 (properties not provided) will be closed by
   Neethi triagers citing this document. The project does not ship an
-  in-repo `SECURITY.md` at draft time *(inferred — §14 Q1)*.
+  in-repo `SECURITY.md` at publication time *(inferred — §14 Q1)*.
 - **Provenance legend** —
   *(documented)* = drawn from in-repo docs / source comments / project
   website with citation;
   *(maintainer)* = stated by a Neethi maintainer in response to this
-  draft;
+  model;
   *(inferred)* = synthesized by the producer from code structure or
   domain knowledge, awaiting PMC ratification (every *(inferred)* tag has
   a matching §14 question).
-- **Draft confidence**: 18 documented / 0 maintainer / 22 inferred.
+- **Confidence**: 23 documented / 0 maintainer / 19 inferred.
 
 Neethi is a small Java library — a few dozen classes under
 `org.apache.neethi` — that builds an in-memory tree of WS-Policy /
@@ -222,6 +222,11 @@ feature toggles**. The runtime security envelope is shaped by:
 | `PolicyReference.getRemoteReferencedPolicy` — read timeout | `10000` ms *(documented: `PolicyReference.java` line 174)* | hardened-by-default | bound on per-fetch read time |
 | `PolicyReference.getRemoteReferencedPolicy` — redirects | follow disabled (`setInstanceFollowRedirects(false)`) *(documented: `PolicyReference.java` line 175)* | hardened-by-default | prevents redirect-based filter bypass |
 | `PolicyReference.getRemoteReferencedPolicy` — supported schemes | `http`, `https` only — others rejected *(documented: `PolicyReference.java` lines 149-152)* | hardened-by-default | blocks `file:`, `jar:`, `ftp:`, etc. |
+| `org.apache.neethi.parser.maxDepth` | `256` *(documented: `README.txt`)* | hardened-by-default | bounds maximum parser nesting depth |
+| `org.apache.neethi.parser.maxElements` | `100000` *(documented: `README.txt`)* | hardened-by-default | bounds maximum number of parsed elements |
+| `org.apache.neethi.parser.maxAttributes` | `10000` *(documented: `README.txt`)* | hardened-by-default | bounds maximum number of parsed attributes |
+| `org.apache.neethi.remote.maxPolicyBytes` | `67108864` bytes (`64 MiB`) *(documented: `README.txt`)* | hardened-by-default | bounds bytes read for remotely dereferenced policies |
+| Policy normalization alternatives cap | `10000` alternatives *(documented: `README.txt`)* | hardened-by-default | blocks exponential policy-alternative expansion during normalization/intersection |
 | `META-INF/services/.../AssertionBuilder` | classpath-discovered | classpath is the trust gate | adds domain-specific assertion vocabularies |
 
 ### The insecure-default case
@@ -264,7 +269,16 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
 
 ### Size / shape / rate
 
-- No documented bound on policy-document size *(inferred — §14 Q7)*.
+- Documented parser bounds (with fallback to defaults when unset/invalid):
+  `org.apache.neethi.parser.maxDepth=256`,
+  `org.apache.neethi.parser.maxElements=100000`,
+  `org.apache.neethi.parser.maxAttributes=10000` *(documented:
+  `README.txt`)*.
+- Documented bound on remotely fetched policy size:
+  `org.apache.neethi.remote.maxPolicyBytes=67108864` bytes (`64 MiB`)
+  *(documented: `README.txt`)*.
+- Documented hard cap of `10000` normalized policy alternatives during
+  normalization/intersection *(documented: `README.txt`)*.
 - No documented bound on the number of `PolicyReference` URIs in a
   single policy or in a transitive resolution chain
   *(inferred — §14 Q7)*.
@@ -305,7 +319,53 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
 - *(documented: `PolicyBuilder.java` lines 99-100 (`getPolicy`),
   140-141 (`getPolicyReference`))*
 
-### P2 — Address-class-filtered remote `PolicyReference` resolution
+### P2 — Parser nesting-depth budget is enforced
+
+- **Condition**: policy parsing occurs through Neethi's parser path.
+- **Violation symptom**: parser accepts policy nesting depth beyond
+  configured/default `org.apache.neethi.parser.maxDepth`.
+- **Severity**: **availability-relevant**, `VALID` per §13.
+- *(documented: `README.txt` — `org.apache.neethi.parser.maxDepth`,
+  default `256`)*
+
+### P3 — Parsed-element-count budget is enforced
+
+- **Condition**: policy parsing occurs through Neethi's parser path.
+- **Violation symptom**: parser accepts more than configured/default
+  `org.apache.neethi.parser.maxElements` elements.
+- **Severity**: **availability-relevant**, `VALID` per §13.
+- *(documented: `README.txt` — `org.apache.neethi.parser.maxElements`,
+  default `100000`)*
+
+### P4 — Parsed-attribute-count budget is enforced
+
+- **Condition**: policy parsing occurs through Neethi's parser path.
+- **Violation symptom**: parser accepts more than configured/default
+  `org.apache.neethi.parser.maxAttributes` attributes.
+- **Severity**: **availability-relevant**, `VALID` per §13.
+- *(documented: `README.txt` — `org.apache.neethi.parser.maxAttributes`,
+  default `10000`)*
+
+### P5 — Remote policy fetch byte budget is enforced
+
+- **Condition**: `PolicyReference` dereference reaches remote fetch path.
+- **Violation symptom**: a dereferenced remote policy exceeds
+  configured/default `org.apache.neethi.remote.maxPolicyBytes` without
+  rejection.
+- **Severity**: **availability-relevant**, `VALID` per §13.
+- *(documented: `README.txt` —
+  `org.apache.neethi.remote.maxPolicyBytes`, default `67108864`
+  (`64 MiB`))*
+
+### P6 — Normalization/intersection alternative explosion is capped
+
+- **Condition**: policy normalization and/or intersection is invoked.
+- **Violation symptom**: more than `10000` normalized alternatives are
+  produced without rejection.
+- **Severity**: **availability-relevant**, `VALID` per §13.
+- *(documented: `README.txt` — hard cap of `10000` alternatives)*
+
+### P7 — Address-class-filtered remote `PolicyReference` resolution
 
 - **Condition**: a policy contains an absolute `<wsp:PolicyReference URI='…'/>`;
   `Policy.normalize(...)` is called; the registry does not satisfy
@@ -318,18 +378,18 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
   (`169.254.169.254`), `VALID` per §13.
 - *(documented: `PolicyReference.java` lines 149-168)*
 
-### P3 — Scheme restriction on remote `PolicyReference` URIs
+### P8 — Scheme restriction on remote `PolicyReference` URIs
 
-- **Condition**: same as P2.
+- **Condition**: same as P7.
 - **Violation symptom**: a non-`http` / non-`https` URI (`file:`,
   `jar:`, `ftp:`, `data:`, etc.) is dereferenced.
 - **Severity**: **security-critical**, `VALID` per §13.
 - *(documented: `PolicyReference.java` lines 149-152 — "Unsupported
   URI scheme: only http and https are permitted")*
 
-### P4 — Redirects not followed on remote `PolicyReference` resolution
+### P9 — Redirects not followed on remote `PolicyReference` resolution
 
-- **Condition**: same as P2; HTTP server returns 3xx redirect.
+- **Condition**: same as P7; HTTP server returns 3xx redirect.
 - **Violation symptom**: Neethi follows the redirect to a host the
   filter would have rejected.
 - **Severity**: **security-critical** (filter-bypass primitive),
@@ -337,9 +397,9 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
 - *(documented: `PolicyReference.java` line 175 —
   `setInstanceFollowRedirects(false)`)*
 
-### P5 — Per-fetch connect-timeout and read-timeout on remote `PolicyReference` resolution
+### P10 — Per-fetch connect-timeout and read-timeout on remote `PolicyReference` resolution
 
-- **Condition**: same as P2; the named server hangs or stalls.
+- **Condition**: same as P7; the named server hangs or stalls.
 - **Violation symptom**: `Policy.normalize(...)` blocks for more than
   ~15 seconds per reference.
 - **Severity**: **availability-relevant**; `VALID-HARDENING`
@@ -347,7 +407,7 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
   *number* of references resolved per policy.
 - *(documented: `PolicyReference.java` lines 173-174)*
 
-### P6 — Policy intersection / equivalence is total: any two well-formed `Policy` objects can be compared
+### P11 — Policy intersection / equivalence is total: any two well-formed `Policy` objects can be compared
 
 - **Condition**: both `Policy` objects are well-formed.
 - **Violation symptom**: `PolicyIntersector.intersect(p1, p2)` throws
@@ -464,9 +524,16 @@ The embedding Java application **must**:
    `PolicyRegistry` that always satisfies references locally **or**
    filter policy bytes for absolute-URI `PolicyReference` elements
    before handing them to Neethi.
-4. Cap the policy-document size and the number of `PolicyReference`
-   URIs at the *caller* layer. Neethi imposes no such bound
-   *(inferred — §14 Q7)*.
+4. Keep parser and normalization budgets at secure values using the
+  documented system properties:
+  `org.apache.neethi.parser.maxDepth`,
+  `org.apache.neethi.parser.maxElements`,
+  `org.apache.neethi.parser.maxAttributes`,
+  `org.apache.neethi.remote.maxPolicyBytes`; and avoid setting them to
+  overly large values. Neethi falls back to safe defaults when values
+  are unset/invalid *(documented: `README.txt`)*. Still cap the number
+  of `PolicyReference` URIs at the caller layer — Neethi does not
+  document a per-normalize fetch-count bound *(inferred — §14 Q7)*.
 5. Prefer `https://` policy URIs for any references that survive into
    the remote-fetch path. The address-class filter does not enforce
    scheme-vs-host pairing.
@@ -629,11 +696,11 @@ be resolved". Is this:
 Proposed answer: **(b)**, with a §10 item that documents the
 expectation. *(maps to §5a, §7, §9, §10 items 2-3, §11, §11a, §13)*
 
-**Q7.** No documented bound on policy-document size or on the number
-of `PolicyReference` URIs per policy or per resolution chain
-(proposed: confirm "no bound; caller imposes"). Should a future release
-add a maximum-fetches-per-normalize counter? *(maps to §6, §9, §10
-item 4, §11)*
+**Q7.** The README now documents parser/normalization/remote-byte
+bounds, but there is still no documented bound on the number of
+`PolicyReference` URIs per policy or per resolution chain.
+Should a future release add a maximum-fetches-per-normalize counter?
+*(maps to §6, §9, §10 item 4, §11)*
 
 **Q8.** DNS rebinding between the filter check
 (`InetAddress.getByName(host)`) and the JDK `URLConnection.connect()`:
@@ -648,7 +715,7 @@ scope (proposed)? *(maps to §7)*
 
 **Q10.** Policy intersection / equivalence: are the documented
 semantics commutative / associative / total? Proposed: total but
-no algebraic-law guarantee. *(maps to §8 P6, §11)*
+no algebraic-law guarantee. *(maps to §8 P11, §11)*
 
 **Q11.** Transitive `PolicyReference` resolution chain: is there a
 maximum depth in code, or could a malicious policy at remote-host-A
@@ -688,15 +755,16 @@ source comments. The project website is
 | Source | Claim | Lands in |
 | --- | --- | --- |
 | `README.txt` | "implementation of WS-Policy Specification (September, 2007)"; "It provides a convenient model and an API to process policy information at runtime and an extension model for serialization and de-serialization of domain-specific Assertions" | §1, §2 intended use |
+| `README.txt` | documented security budgets: `org.apache.neethi.parser.maxDepth=256`, `org.apache.neethi.parser.maxElements=100000`, `org.apache.neethi.parser.maxAttributes=10000`, `org.apache.neethi.remote.maxPolicyBytes=67108864`, and normalization/intersection cap `10000` alternatives; invalid/unset values fall back to defaults | §5a, §6, §8 P2-P6, §10 item 4 |
 | `src/main/java/org/apache/neethi/PolicyBuilder.java` lines 99-100 (`getPolicy(InputStream)`) | `xif.setProperty(IS_SUPPORTING_EXTERNAL_ENTITIES, FALSE); xif.setProperty(SUPPORT_DTD, FALSE)` | §8 P1, §11a |
 | `PolicyBuilder.java` lines 140-141 (`getPolicyReference(InputStream)`) | same XXE/DTD hardening on the PolicyReference parse path | §8 P1, §11a |
-| `PolicyReference.java` lines 141-190 (`getRemoteReferencedPolicy(String u)`) | the remote-policy fetcher | §1 (deployment shape), §4 B5, §5 network, §5a, §8 P2-P5, §9 first three bullets, §10 items 2-3, §11 |
-| `PolicyReference.java` lines 149-152 | "Unsupported URI scheme: only http and https are permitted" | §8 P3, §11a |
-| `PolicyReference.java` lines 154-159 | "Resolve the host to an IP and reject addresses that can never serve a policy document: link-local … multicast … any-local … Loopback (127.x.x.x / ::1) and site-local (RFC-1918) addresses are permitted so that policies on localhost or an internal network can be resolved" | §5a (insecure-default case), §8 P2, §9, §14 Q6 |
-| `PolicyReference.java` lines 160-168 | `InetAddress.getByName(...)` address-class check | §8 P2, §11a, §14 Q8 |
-| `PolicyReference.java` lines 173-175 | `connectTimeout=5000`, `readTimeout=10000`, `setInstanceFollowRedirects(false)` | §5a, §8 P4-P5 |
+| `PolicyReference.java` lines 141-190 (`getRemoteReferencedPolicy(String u)`) | the remote-policy fetcher | §1 (deployment shape), §4 B5, §5 network, §5a, §8 P7-P10, §9 first three bullets, §10 items 2-3, §11 |
+| `PolicyReference.java` lines 149-152 | "Unsupported URI scheme: only http and https are permitted" | §8 P8, §11a |
+| `PolicyReference.java` lines 154-159 | "Resolve the host to an IP and reject addresses that can never serve a policy document: link-local … multicast … any-local … Loopback (127.x.x.x / ::1) and site-local (RFC-1918) addresses are permitted so that policies on localhost or an internal network can be resolved" | §5a (insecure-default case), §8 P7, §9, §14 Q6 |
+| `PolicyReference.java` lines 160-168 | `InetAddress.getByName(...)` address-class check | §8 P7, §11a, §14 Q8 |
+| `PolicyReference.java` lines 173-175 | `connectTimeout=5000`, `readTimeout=10000`, `setInstanceFollowRedirects(false)` | §5a, §8 P9-P10 |
 | `PolicyEngine.java` lines 45-52 | "static synchronized PolicyBuilder" facade | §9 false-friend, §11 |
 | `AssertionBuilderFactoryImpl.java`, `util.Service` | ServiceLoader-style discovery of `AssertionBuilder` via `META-INF/services/` | §5, §10 item 6 |
 | `Policy.java`, `All.java`, `ExactlyOne.java`, `AbstractPolicyOperator.java` | `normalize(reg, deep)` triggers `PolicyReference.normalize(reg, deep)` recursively | §4 B4-B5, §11 |
-| `util.PolicyIntersector`, `util.PolicyComparator` | policy-algebra utilities | §8 P6, §14 Q10 |
+| `util.PolicyIntersector`, `util.PolicyComparator` | policy-algebra utilities | §8 P11, §14 Q10 |
 | `RELEASE-NOTE.txt` | release notes per version | §1 supported branches |
