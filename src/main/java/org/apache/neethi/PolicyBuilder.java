@@ -39,15 +39,32 @@ import org.apache.neethi.builders.AssertionBuilder;
  */
 public class PolicyBuilder {
 
+    private static final String MAX_DEPTH_PROPERTY = "org.apache.neethi.parser.maxDepth";
+    private static final String MAX_ELEMENTS_PROPERTY = "org.apache.neethi.parser.maxElements";
+    private static final String MAX_ATTRIBUTES_PROPERTY = "org.apache.neethi.parser.maxAttributes";
+
+    private static final int DEFAULT_MAX_DEPTH = 256;
+    private static final int DEFAULT_MAX_ELEMENTS = 100000;
+    private static final int DEFAULT_MAX_ATTRIBUTES = 10000;
+
     protected AssertionBuilderFactory factory;
     protected PolicyRegistry defaultPolicyRegistry;
+    private final int maxDepth;
+    private final int maxElements;
+    private final int maxAttributes;
     
     public PolicyBuilder() {
         factory = new AssertionBuilderFactoryImpl(this);
+        maxDepth = readConfiguredLimit(MAX_DEPTH_PROPERTY, DEFAULT_MAX_DEPTH);
+        maxElements = readConfiguredLimit(MAX_ELEMENTS_PROPERTY, DEFAULT_MAX_ELEMENTS);
+        maxAttributes = readConfiguredLimit(MAX_ATTRIBUTES_PROPERTY, DEFAULT_MAX_ATTRIBUTES);
     }
     
     public PolicyBuilder(AssertionBuilderFactory factory) {
         this.factory = factory;
+        maxDepth = readConfiguredLimit(MAX_DEPTH_PROPERTY, DEFAULT_MAX_DEPTH);
+        maxElements = readConfiguredLimit(MAX_ELEMENTS_PROPERTY, DEFAULT_MAX_ELEMENTS);
+        maxAttributes = readConfiguredLimit(MAX_ATTRIBUTES_PROPERTY, DEFAULT_MAX_ATTRIBUTES);
     }
     
     
@@ -108,12 +125,14 @@ public class PolicyBuilder {
     }
 
     public Policy getPolicy(Element el) {
-        return getPolicyOperator(el);
+        ParseBudgetContext context = new ParseBudgetContext(maxDepth, maxElements, maxAttributes);
+        return getPolicyOperator(el, context, 1);
     }
     
     
     public Policy getPolicy(XMLStreamReader reader) {
-        return getPolicyOperator(reader);
+        ParseBudgetContext context = new ParseBudgetContext(maxDepth, maxElements, maxAttributes);
+        return getPolicyOperator(reader, context, 1);
     }
 
     /**
@@ -124,7 +143,8 @@ public class PolicyBuilder {
      * @return a Policy object of the Policy element
      */
     public Policy getPolicy(Object element) {
-        return getPolicyOperator(element);
+        ParseBudgetContext context = new ParseBudgetContext(maxDepth, maxElements, maxAttributes);
+        return getPolicyOperator(element, context, 1);
     }
 
     /**
@@ -156,6 +176,14 @@ public class PolicyBuilder {
      * @return a PolicyReference object of the PolicyReference element
      */
     public PolicyReference getPolicyReference(Object element) {
+        ParseBudgetContext context = new ParseBudgetContext(maxDepth, maxElements, maxAttributes);
+        return getPolicyReference(element, context, 1);
+    }
+
+    private PolicyReference getPolicyReference(Object element, ParseBudgetContext context, int depth) {
+        context.checkDepth(depth);
+        context.incrementElementCount();
+
         QName qn = factory.getConverterRegistry().findQName(element);
 
         if (!Constants.isPolicyRef(qn)) {
@@ -166,37 +194,48 @@ public class PolicyBuilder {
         PolicyReference reference = new PolicyReference(this);
 
         Map<QName, String> attributes = factory.getConverterRegistry().getAttributes(element);
+        context.incrementAttributeCount(attributes.size());
 
         // setting the URI value
         reference.setURI(attributes.get(new QName("URI")));
         return reference;
     }
 
-    private Policy getPolicyOperator(Object element) {
+    private Policy getPolicyOperator(Object element, ParseBudgetContext context, int depth) {
+        context.checkDepth(depth);
+        context.incrementElementCount();
+
         QName qn = factory.getConverterRegistry().findQName(element);
         
         if (Constants.isPolicyElement(qn)) {
             String ns = qn.getNamespaceURI();
-            return (Policy) processOperationElement(element, new Policy(defaultPolicyRegistry, ns));
+            return (Policy) processOperationElement(element, new Policy(defaultPolicyRegistry, ns), context, depth);
         }
         throw new IllegalArgumentException(qn + " is not a <wsp:Policy> element."); 
     }
 
-    private ExactlyOne getExactlyOneOperator(Object element) {
-        return (ExactlyOne) processOperationElement(element, new ExactlyOne());
+    private ExactlyOne getExactlyOneOperator(Object element, ParseBudgetContext context, int depth) {
+        context.checkDepth(depth);
+        context.incrementElementCount();
+        return (ExactlyOne) processOperationElement(element, new ExactlyOne(), context, depth);
     }
 
-    private All getAllOperator(Object element) {
-        return (All) processOperationElement(element, new All());
+    private All getAllOperator(Object element, ParseBudgetContext context, int depth) {
+        context.checkDepth(depth);
+        context.incrementElementCount();
+        return (All) processOperationElement(element, new All(), context, depth);
     }
 
     private PolicyOperator processOperationElement(Object operationElement,
-                                                   PolicyOperator operator) {
+                                                   PolicyOperator operator,
+                                                   ParseBudgetContext context,
+                                                   int depth) {
 
         if (Constants.TYPE_POLICY == operator.getType()) {
             Policy policyOperator = (Policy) operator;
 
             Map<QName, String> attributes = factory.getConverterRegistry().getAttributes(operationElement);
+            context.incrementAttributeCount(attributes.size());
             
             for (Map.Entry<QName, String> ent : attributes.entrySet()) {
                 policyOperator.addAttribute(ent.getKey(), ent.getValue());
@@ -216,13 +255,13 @@ public class PolicyBuilder {
                 
             } else if (Constants.isInPolicyNS(qn)) {
                 if (Constants.ELEM_POLICY.equals(qn.getLocalPart())) {
-                    operator.addPolicyComponent(getPolicyOperator(childElement));
+                    operator.addPolicyComponent(getPolicyOperator(childElement, context, depth + 1));
                 } else if (Constants.ELEM_EXACTLYONE.equals(qn.getLocalPart())) {
-                    operator.addPolicyComponent(getExactlyOneOperator(childElement));
+                    operator.addPolicyComponent(getExactlyOneOperator(childElement, context, depth + 1));
                 } else if (Constants.ELEM_ALL.equals(qn.getLocalPart())) {
-                    operator.addPolicyComponent(getAllOperator(childElement));
+                    operator.addPolicyComponent(getAllOperator(childElement, context, depth + 1));
                 } else if (Constants.ELEM_POLICY_REF.equals(qn.getLocalPart())) {
-                    operator.addPolicyComponent(getPolicyReference(childElement));
+                    operator.addPolicyComponent(getPolicyReference(childElement, context, depth + 1));
                 } else {
                     operator.addPolicyComponent(factory.build(childElement));
                 }
@@ -232,6 +271,62 @@ public class PolicyBuilder {
         }
         return operator;
     } 
+
+    private static int readConfiguredLimit(String key, int defaultValue) {
+        String value = System.getProperty(key);
+        if (value == null || value.trim().length() == 0) {
+            return defaultValue;
+        }
+        try {
+            int parsed = Integer.parseInt(value.trim());
+            return parsed > 0 ? parsed : defaultValue;
+        } catch (NumberFormatException ex) {
+            return defaultValue;
+        }
+    }
+
+    private static final class ParseBudgetContext {
+        private final int maxDepth;
+        private final int maxElements;
+        private final int maxAttributes;
+        private int elementCount;
+        private int attributeCount;
+
+        ParseBudgetContext(int maxDepth, int maxElements, int maxAttributes) {
+            this.maxDepth = maxDepth;
+            this.maxElements = maxElements;
+            this.maxAttributes = maxAttributes;
+        }
+
+        void checkDepth(int depth) {
+            if (depth > maxDepth) {
+                throw new RuntimeException(
+                    "Policy parsing exceeded the maximum policy nesting depth ("
+                    + maxDepth + ").");
+            }
+        }
+
+        void incrementElementCount() {
+            elementCount++;
+            if (elementCount > maxElements) {
+                throw new RuntimeException(
+                    "Policy parsing exceeded the maximum number of elements ("
+                    + maxElements + ").");
+            }
+        }
+
+        void incrementAttributeCount(int delta) {
+            if (delta <= 0) {
+                return;
+            }
+            attributeCount += delta;
+            if (attributeCount > maxAttributes) {
+                throw new RuntimeException(
+                    "Policy parsing exceeded the maximum number of attributes ("
+                    + maxAttributes + ").");
+            }
+        }
+    }
     
     protected void notifyUnknownPolicyElement(Object childElement) {
         //NO-Op - subclass could log or throw exception or something
