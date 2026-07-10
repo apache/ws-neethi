@@ -90,6 +90,7 @@ public class XMLPrimitiveAssertionBuilder implements AssertionBuilder<Element> {
     public Assertion newPolicyContainingAssertion(Element element, Map<QName, String> atts, Policy policy) {
         return new PolicyContainingPrimitiveAssertion(getQName(element),
                                       isOptional(element), isIgnorable(element),
+                                      atts,
                                       policy);
     }
     
