@@ -77,6 +77,29 @@ public class PolicyNormalizationDoSTest extends PolicyTestCase {
         policy.normalize(registry, true);
     }
 
+    /**
+     * Asserts that the alternative budget is enforced globally even when the final
+     * count is reached through ExactlyOne aggregation, not cross-product generation.
+     *
+     * <pre>
+     * Policy
+     *   ExactlyOne
+     *     All -> (13 binary ExactlyOne nodes) => 8192 alternatives
+     *     All -> (13 binary ExactlyOne nodes) => 8192 alternatives
+     * </pre>
+     */
+    @Test
+    public void testExactlyOneAggregationEnforcesGlobalAlternativeLimit() {
+        Policy policy = buildExactlyOneAggregationBypassPolicy(2, 13);
+
+        try {
+            policy.normalize(registry, true);
+            fail("Expected RuntimeException due to global alternative limit");
+        } catch (RuntimeException ex) {
+            assertTrue(ex.getMessage().contains("maximum number of alternatives"));
+        }
+    }
+
     // -----------------------------------------------------------------------
     // Helpers
     // -----------------------------------------------------------------------
@@ -110,6 +133,36 @@ public class PolicyNormalizationDoSTest extends PolicyTestCase {
             eo.addPolicyComponent(branchB);
             policy.addPolicyComponent(eo);
         }
+        return policy;
+    }
+
+    private static Policy buildExactlyOneAggregationBypassPolicy(int branchCount, int branchDepth) {
+        Policy policy = new Policy();
+        ExactlyOne outerExactlyOne = new ExactlyOne();
+
+        for (int branch = 0; branch < branchCount; branch++) {
+            All outerBranch = new All();
+
+            for (int depth = 0; depth < branchDepth; depth++) {
+                ExactlyOne binaryChoice = new ExactlyOne();
+
+                All branchA = new All();
+                branchA.addPolicyComponent(
+                    new PrimitiveAssertion(new QName("urn:test", "branch" + branch + "a" + depth)));
+
+                All branchB = new All();
+                branchB.addPolicyComponent(
+                    new PrimitiveAssertion(new QName("urn:test", "branch" + branch + "b" + depth)));
+
+                binaryChoice.addPolicyComponent(branchA);
+                binaryChoice.addPolicyComponent(branchB);
+                outerBranch.addPolicyComponent(binaryChoice);
+            }
+
+            outerExactlyOne.addPolicyComponent(outerBranch);
+        }
+
+        policy.addPolicyComponent(outerExactlyOne);
         return policy;
     }
 
