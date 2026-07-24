@@ -28,9 +28,9 @@ Welcome to Apache Neethi
   capabilities.
 
 Latest Release
-  <<April 2026 - Apache Neethi Version 3.2.2 Released!>>
+  <<July 2026 - Apache Neethi Version 3.2.3 Released!>>
 
-  \[{{{http://ws.apache.org/neethi/download.cgi}Download Neethi 3.2.2}}\]
+  \[{{{http://ws.apache.org/neethi/download.cgi}Download Neethi 3.2.3}}\]
 
   Note that this release fixes three CVEs, please see {{{./security.html}Security Advisories (CVEs)}}.
 

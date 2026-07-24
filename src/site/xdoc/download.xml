@@ -32,7 +32,7 @@
 
     <section name="Releases">
             <div align="left">
-                <p>Please select the Apache Neethi version you want to download. Latest release is 3.2.2. You can download both the binary distribution and the source distribution.  All the releases are available for download as source or binary. For more information,
+                <p>Please select the Apache Neethi version you want to download. Latest release is 3.2.3. You can download both the binary distribution and the source distribution.  All the releases are available for download as source or binary. For more information,
                     please see
                     <a href="https://www.apache.org/dev/release.html">Apache Release FAQ</a>
                 </p>
@@ -51,21 +51,21 @@
 						</tr>
 						<tr class="b">
                             <td>
-                                <a name="3_2_2"></a>3.2.2</td>
+                                <a name="3_2_3"></a>3.2.3</td>
                             <td>Release</td>
-                            <td>Source Distribution <a href="[preferred]/ws/neethi/3.2.2/neethi-3.2.2-source-release.zip">zip</a>
+                            <td>Source Distribution <a href="[preferred]/ws/neethi/3.2.3/neethi-3.2.3-source-release.zip">zip</a>
 
-                                <a href="https://downloads.apache.org/ws/neethi/3.2.2/neethi-3.2.2-source-release.zip.sha256">SHA-256</a>
-                                <a href="https://downloads.apache.org/ws/neethi/3.2.2/neethi-3.2.2-source-release.zip.asc">PGP</a>
+                                <a href="https://downloads.apache.org/ws/neethi/3.2.3/neethi-3.2.3-source-release.zip.sha256">SHA-256</a>
+                                <a href="https://downloads.apache.org/ws/neethi/3.2.3/neethi-3.2.3-source-release.zip.asc">PGP</a>
                                 <br></br>
-                                Binary Distribution <a href="[preferred]/ws/neethi/3.2.2/neethi-3.2.2-bin.zip">zip</a>
-                                <a href="https://downloads.apache.org/ws/neethi/3.2.2/neethi-3.2.2-bin.zip.sha256">SHA-256</a>
-                                <a href="https://downloads.apache.org/ws/neethi/3.2.2/neethi-3.2.2-bin.zip.asc">PGP</a>
+                                Binary Distribution <a href="[preferred]/ws/neethi/3.2.3/neethi-3.2.3-bin.zip">zip</a>
+                                <a href="https://downloads.apache.org/ws/neethi/3.2.3/neethi-3.2.3-bin.zip.sha256">SHA-256</a>
+                                <a href="https://downloads.apache.org/ws/neethi/3.2.3/neethi-3.2.3-bin.zip.asc">PGP</a>
 
                                 <br></br>
                             </td>
                             <td>April - 2026</td>
-                            <td>3.2.2 Release (Mirrored)</td>
+                            <td>3.2.3 Release (Mirrored)</td>
                         </tr>
 					</tbody>
 				</table>
