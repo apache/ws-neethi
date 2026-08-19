@@ -52,6 +52,18 @@ public class PolicyBuilder {
     private final int maxDepth;
     private final int maxElements;
     private final int maxAttributes;
+
+    /**
+     * Budget of the policy parse in progress on the current thread. Assertion
+     * builders may re-enter the public getPolicy overloads for nested
+     * wsp:Policy elements (see XMLPrimitiveAssertionBuilder); such re-entrant
+     * parses must inherit the ambient budget rather than mint a fresh one,
+     * otherwise every assertion/wsp:Policy nesting layer resets the
+     * maxDepth/maxElements/maxAttributes budgets and the mutual recursion is
+     * unbounded.
+     */
+    private static final ThreadLocal<ParseBudgetContext> CURRENT_BUDGET =
+        new ThreadLocal<ParseBudgetContext>();
     
     public PolicyBuilder() {
         factory = new AssertionBuilderFactoryImpl(this);
@@ -125,14 +137,12 @@ public class PolicyBuilder {
     }
 
     public Policy getPolicy(Element el) {
-        ParseBudgetContext context = new ParseBudgetContext(maxDepth, maxElements, maxAttributes);
-        return getPolicyOperator(el, context, 1);
+        return parseWithBudget(el);
     }
     
     
     public Policy getPolicy(XMLStreamReader reader) {
-        ParseBudgetContext context = new ParseBudgetContext(maxDepth, maxElements, maxAttributes);
-        return getPolicyOperator(reader, context, 1);
+        return parseWithBudget(reader);
     }
 
     /**
@@ -143,8 +153,24 @@ public class PolicyBuilder {
      * @return a Policy object of the Policy element
      */
     public Policy getPolicy(Object element) {
+        return parseWithBudget(element);
+    }
+
+    private Policy parseWithBudget(Object element) {
+        ParseBudgetContext ambient = CURRENT_BUDGET.get();
+        if (ambient != null) {
+            // Re-entrant parse: an assertion builder called back into the
+            // engine for a nested wsp:Policy element. Continue the enclosing
+            // parse's budget and depth instead of starting a fresh one.
+            return getPolicyOperator(element, ambient, ambient.getReentryDepth());
+        }
         ParseBudgetContext context = new ParseBudgetContext(maxDepth, maxElements, maxAttributes);
-        return getPolicyOperator(element, context, 1);
+        CURRENT_BUDGET.set(context);
+        try {
+            return getPolicyOperator(element, context, 1);
+        } finally {
+            CURRENT_BUDGET.remove();
+        }
     }
 
     /**
@@ -263,9 +289,13 @@ public class PolicyBuilder {
                 } else if (Constants.ELEM_POLICY_REF.equals(qn.getLocalPart())) {
                     operator.addPolicyComponent(getPolicyReference(childElement, context, depth + 1));
                 } else {
+                    // a nested wsp:Policy inside this assertion re-enters
+                    // getPolicy below the assertion element itself
+                    context.recordReentryDepth(depth + 2);
                     operator.addPolicyComponent(factory.build(childElement));
                 }
             } else {
+                context.recordReentryDepth(depth + 2);
                 operator.addPolicyComponent(factory.build(childElement));
             }
         }
@@ -291,11 +321,22 @@ public class PolicyBuilder {
         private final int maxAttributes;
         private int elementCount;
         private int attributeCount;
+        // depth at which a re-entrant getPolicy call (from an assertion
+        // builder) resumes; recorded just before each factory.build call
+        private int reentryDepth = 2;
 
         ParseBudgetContext(int maxDepth, int maxElements, int maxAttributes) {
             this.maxDepth = maxDepth;
             this.maxElements = maxElements;
             this.maxAttributes = maxAttributes;
+        }
+
+        void recordReentryDepth(int depth) {
+            reentryDepth = depth;
+        }
+
+        int getReentryDepth() {
+            return reentryDepth;
         }
 
         void checkDepth(int depth) {
