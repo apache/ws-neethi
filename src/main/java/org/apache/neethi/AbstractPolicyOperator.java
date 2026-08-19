@@ -42,6 +42,18 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
      * fast, predictable RuntimeException.
      */
     private static final int MAX_ALTERNATIVES = 10_000;
+
+    /**
+     * Maximum number of PolicyReference expansions a single normalization
+     * pass may perform.  The alternative-count cap alone cannot see reference
+     * re-expansion: a reference DAG in which every level holds two sibling
+     * references to the next level normalizes to a single alternative at each
+     * step while the expansion work doubles per level (2^d work from O(d)
+     * parsed elements, because the on-path cycle token is removed once each
+     * expansion completes).  Budgeting expansions converts that unbounded
+     * work into a fast, predictable RuntimeException.
+     */
+    private static final int MAX_REFERENCE_EXPANSIONS = 100_000;
     
     public AbstractPolicyOperator() {
         
@@ -95,7 +107,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         }
         
         
-        result.addPolicyComponent(normalizeOperator(policy, policy, reg, deep, new HashSet<String>()));
+        result.addPolicyComponent(normalizeOperator(policy, policy, reg, deep, new NormalizeBudget()));
         return result;
     }
     
@@ -103,7 +115,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                                                      PolicyOperator operator, 
                                                      PolicyRegistry reg,
                                                      boolean deep,
-                                                     Set<String> resolving) {
+                                                     NormalizeBudget budget) {
                         
         short type = operator.getType();
                 
@@ -160,26 +172,24 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                 String resolvedId = ((Policy) policyComponent).getId();
                 String resolvingToken = resolvedId != null && resolvedId.length() > 0
                     ? "id:" + resolvedId : "uri:" + uri;
-                if (!resolving.add(resolvingToken)) {
-                    throw new RuntimeException("Circular PolicyReference detected: " + resolvingToken);
-                }
+                budget.enterReference(resolvingToken);
                 try {
                     All all = new All();
                     all.addPolicyComponents(((Policy) policyComponent).getPolicyComponents());
-                    childComponentsList.add(AbstractPolicyOperator.normalizeOperator(policy, all, reg, deep, resolving));
+                    childComponentsList.add(AbstractPolicyOperator.normalizeOperator(policy, all, reg, deep, budget));
                 } finally {
-                    resolving.remove(resolvingToken);
+                    budget.exitReference(resolvingToken);
                 }
          
             } else if (policyComponent.getType() == Constants.TYPE_POLICY) {
                 All all = new All();
                 all.addPolicyComponents(((Policy) policyComponent).getPolicyComponents());
-                childComponentsList.add(AbstractPolicyOperator.normalizeOperator(policy, all, reg, deep, resolving));
+                childComponentsList.add(AbstractPolicyOperator.normalizeOperator(policy, all, reg, deep, budget));
                 
             } else {
                 childComponentsList.add(AbstractPolicyOperator
                                             .normalizeOperator(policy,
-                                                               (PolicyOperator)policyComponent, reg, deep, resolving));
+                                                               (PolicyOperator)policyComponent, reg, deep, budget));
             }            
         }
         
@@ -261,6 +271,34 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         }
 
         return crossProduct;
+    }
+
+    /**
+     * Per-normalization-pass accounting: the on-path cycle set plus the
+     * budget that bounds total reference-expansion work.
+     */
+    private static final class NormalizeBudget {
+        private final Set<String> resolving = new HashSet<String>();
+        private long referenceExpansions;
+
+        void enterReference(String token) {
+            if (!resolving.add(token)) {
+                throw new RuntimeException("Circular PolicyReference detected: " + token);
+            }
+            referenceExpansions++;
+            if (referenceExpansions > MAX_REFERENCE_EXPANSIONS) {
+                resolving.remove(token);
+                throw new RuntimeException(
+                    "Policy normalization exceeded the maximum number of PolicyReference"
+                    + " expansions (" + MAX_REFERENCE_EXPANSIONS + "). The policy may be"
+                    + " crafted to cause Algorithmic Complexity DoS via reference"
+                    + " re-expansion.");
+            }
+        }
+
+        void exitReference(String token) {
+            resolving.remove(token);
+        }
     }
 
     public static void checkMaximumAlternativeCount(long alternativesCount, String operation) {
