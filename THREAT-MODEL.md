@@ -50,7 +50,8 @@
   *(inferred)* = synthesized by the producer from code structure or
   domain knowledge, awaiting PMC ratification (every *(inferred)* tag has
   a matching §14 question).
-- **Confidence**: 23 documented / 0 maintainer / 19 inferred.
+- **Confidence**: 47 documented / 0 maintainer / 32 inferred
+  (tag occurrences in this document, legend entries excluded).
 
 Neethi is a small Java library — a few dozen classes under
 `org.apache.neethi` — that builds an in-memory tree of WS-Policy /
@@ -87,16 +88,21 @@ is the policy-document parser and the policy-algebra evaluator.
 
 Neethi is an in-process Java library. The threat model is therefore
 that of an **XML-parsing library** with one prominent additional
-characteristic: **`PolicyReference.normalize()` issues a synchronous
-HTTP(S) GET to dereference policy references that are not already
-registered locally** *(documented:
-`src/main/java/org/apache/neethi/PolicyReference.java` lines 141-190)*.
+characteristic: **a direct embedder call to
+`PolicyReference.normalize(reg, deep)` (or
+`getRemoteReferencedPolicy`) issues a synchronous HTTP(S) GET to
+dereference a policy reference that is not already registered
+locally** *(documented: `src/main/java/org/apache/neethi/PolicyReference.java`)*.
+`Policy.normalize(...)` itself never falls through to the network:
+`normalizeOperator` resolves references via the registry and a local
+`#id` search only, and **throws** (`uri + " can't be resolved"`) on a
+miss *(source-confirmed: `AbstractPolicyOperator.normalizeOperator`)*.
 
 ### Caller roles
 
 | Role | Trust level | Notes |
 | --- | --- | --- |
-| **Embedding Java application / SOAP stack** | trusted | Constructs `PolicyBuilder`, supplies the policy bytes, holds the `PolicyRegistry`, drives `Policy.normalize(...)` (which may trigger `PolicyReference.getRemoteReferencedPolicy(...)`). |
+| **Embedding Java application / SOAP stack** | trusted | Constructs `PolicyBuilder`, supplies the policy bytes, holds the `PolicyRegistry`, drives `Policy.normalize(...)`. Remote dereference happens only if the embedder calls `PolicyReference.normalize(reg, deep)` or `getRemoteReferencedPolicy(...)` directly; `Policy.normalize(...)` fails closed on unresolved references. |
 | **`AssertionBuilder` implementation** | trusted | Registered against a `QName`; converts an `OMElement` / `Element` / `XMLStreamReader` into a domain-specific `Assertion`. A hostile builder can return whatever model object it wants. |
 | **`PolicyRegistry` implementation** | trusted | The lookup table consulted by `PolicyReference.normalize(...)` before any network fetch is attempted. |
 | **Producer of the policy bytes** | **variable** — see §6 trust table | `InputStream`, `XMLStreamReader`, `OMElement`, `Element`. Some entry points harden the parser; others trust the caller. |
@@ -109,7 +115,7 @@ registered locally** *(documented:
 | --- | --- | --- | --- |
 | Policy parser (`PolicyEngine`, `PolicyBuilder`) | `PolicyEngine.getPolicy(InputStream)` | **no** for in-memory model; **yes** when a `PolicyReference` is normalized | **yes** |
 | Policy normalizer / intersector / comparator (`Policy`, `All`, `ExactlyOne`, `PolicyOperator`, `util.PolicyIntersector`, `util.PolicyComparator`) | `Policy.normalize(reg, deep)`, `intersect(Policy)`, `equals(Object)` | **no** | **yes** |
-| Remote `PolicyReference` resolver (`PolicyReference.getRemoteReferencedPolicy`) | implicit via `Policy.normalize(reg, deep)` when a `PolicyReference` is unresolved in the registry | **yes — HTTP/HTTPS GET** | **yes** |
+| Remote `PolicyReference` resolver (`PolicyReference.getRemoteReferencedPolicy`) | direct embedder call to `PolicyReference.normalize(reg, deep)` or `getRemoteReferencedPolicy(...)`; `Policy.normalize(...)` never falls through to it | **yes — HTTP/HTTPS GET** | **yes** |
 | Assertion builders — `builders/`, `builders/converters/`, `builders/xml/XmlPrimitiveAssertion` | `AssertionBuilder.build(element, factory)` | **no** | **yes** |
 | Service loader — `org.apache.neethi.util.Service` reads `META-INF/services/...` | reads classpath at startup | filesystem (classpath) | **yes** |
 | `etc/`, `src/test/` | resource files / unit tests | n/a | **out of model** *(§3)* |
@@ -150,8 +156,8 @@ A finding is in-model only if it reaches a row marked **yes**.
 | B1 | Caller → `PolicyEngine.getPolicy(InputStream)` / `PolicyBuilder.getPolicy(InputStream)` | none | none |
 | B2 | Caller → `PolicyEngine.getPolicy(OMElement | Object)` / `PolicyBuilder.getPolicy(Element)` / `.getPolicy(XMLStreamReader)` | none | none |
 | B3 | Parser → `XMLInputFactory` configured by Neethi (sets `IS_SUPPORTING_EXTERNAL_ENTITIES=false`, `SUPPORT_DTD=false`) — for the `InputStream` overload only *(documented: `PolicyBuilder.java` lines 99-100, 140-141)* | none | DTD/entity gate applies on the `InputStream` overload only |
-| B4 | `Policy.normalize(PolicyRegistry, deep)` → `PolicyReference.normalize(reg, deep)` → `PolicyRegistry.lookup(URI)` | none | registry is trusted |
-| B5 | `PolicyReference.normalize(...)` (lookup miss) → `PolicyReference.getRemoteReferencedPolicy(uri)` → `new URL(uri)` → `URLConnection.openConnection()` → HTTP/HTTPS GET → recursive `getPolicy(in)` | none | **address-class filter**: rejects link-local, multicast, any-local; permits loopback + RFC-1918 / site-local + public *(documented: `PolicyReference.java` lines 149-168)* |
+| B4 | `Policy.normalize(PolicyRegistry, deep)` → `normalizeOperator` → `PolicyRegistry.lookup(URI)`, then local `#id` search, then **throws on a miss**; it never invokes `PolicyReference.normalize(...)` or the network | none | registry is trusted; fail-closed on unresolved references |
+| B5 | **Embedder direct call** → `PolicyReference.normalize(reg, deep)` (lookup miss) → `PolicyReference.getRemoteReferencedPolicy(uri)`, or direct `getRemoteReferencedPolicy(uri)` call → `new URL(uri)` → `URLConnection.openConnection()` → HTTP/HTTPS GET → recursive `getPolicy(in)`; the fetched policy is re-normalized through the registry-only path | none | **address-class filter**: rejects link-local, multicast, any-local; permits loopback + RFC-1918 / site-local + public *(documented: `PolicyReference.java` lines 149-168)* |
 | B6 | `AssertionBuilderFactoryImpl` → `META-INF/services/org.apache.neethi.builders.AssertionBuilder` (via `util.Service.loadServiceClass(...)`) | trusted classpath | startup-time class loading |
 
 ### Reachability preconditions per family
@@ -164,10 +170,14 @@ A finding is in-model only if it reaches a row marked **yes**.
 - **`PolicyBuilder.getPolicy(Element)`, `getPolicy(XMLStreamReader)`,
   `getPolicy(Object)` (Axiom `OMElement` overload)**: out-of-model for
   XXE — caller provided the parsed input.
-- **`Policy.normalize(reg, deep)` issuing a remote fetch**: in-model
-  when the original policy bytes were attacker-controllable and contain
-  an unresolved `<wsp:PolicyReference URI="…"/>`. The SSRF filter is
-  the §7 boundary.
+- **Remote fetch via `PolicyReference.normalize(reg, deep)` /
+  `getRemoteReferencedPolicy`**: in-model when the original policy
+  bytes were attacker-controllable, contain an unresolved
+  `<wsp:PolicyReference URI="…"/>`, and the embedder directly invokes
+  one of those methods. `Policy.normalize(reg, deep)` itself never
+  reaches the fetch path; it throws on unresolved references (§4 B4).
+  The SSRF filter is the §7 boundary. A direct
+  `getRemoteReferencedPolicy(...)` call bypasses the registry entirely.
 - **`AssertionBuilder` plug-ins**: in-model insofar as the registered
   builder is part of this repo (none ship for security-sensitive
   domains in `apache/ws-neethi`); for downstream builders (WSS4J's
@@ -263,7 +273,7 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
 | `PolicyEngine.getPolicy(OMElement)` / `PolicyBuilder.getPolicy(Object)` (Axiom `OMElement`) | OM | **yes if from untrusted bytes** | Axiom's `StAXParserConfiguration` is the gate (see Axiom threat model) |
 | `PolicyEngine.getPolicyReferene(InputStream)` (sic — typo in upstream) / `PolicyBuilder.getPolicyReference(InputStream)` | bytes | **yes** | same as `getPolicy(InputStream)` |
 | `Policy.normalize(PolicyRegistry registry, boolean deep)` | the policy + the registry | as untrusted as the policy bytes; registry is trusted | none |
-| `PolicyReference.normalize(registry, deep)` | URI inside the reference | **yes** — attacker-controllable URI in the policy bytes | **NO** — Neethi does the SSRF filter; *but the filter permits loopback + RFC-1918*, so operators that consider those addresses untrusted **must** install a restricting `PolicyRegistry` that resolves all references locally and refuses to fall through to `getRemoteReferencedPolicy` |
+| `PolicyReference.normalize(registry, deep)` | URI inside the reference | **yes** — attacker-controllable URI in the policy bytes | **NO** — Neethi does the SSRF filter; *but the filter permits loopback + RFC-1918*. This path is reached only by a direct embedder call; operators that consider those addresses untrusted should register expected references locally or avoid calling it on untrusted references. A direct `getRemoteReferencedPolicy(...)` call bypasses the registry and must be controlled separately. |
 | `AssertionBuilder.build(element, factory)` (caller-registered) | element | as untrusted as input | builder author's responsibility |
 | `PolicyBuilder` ctor with `AssertionBuilderFactory` | factory | trusted | caller's choice |
 
@@ -280,13 +290,17 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
 - Documented hard cap of `10000` normalized policy alternatives during
   normalization/intersection *(documented: `README.txt`)*.
 - No documented bound on the number of `PolicyReference` URIs in a
-  single policy or in a transitive resolution chain
-  *(inferred — §14 Q7)*.
-- No rate limit on `getRemoteReferencedPolicy` fetches — each
-  unresolved `PolicyReference` triggers an HTTP GET on the spot.
+  single policy *(inferred — §14 Q7)*. Transitive fetch chains cannot
+  occur inside one normalization call: a fetched policy is
+  re-normalized through the registry-only path, which throws on any
+  further unresolved absolute reference *(inferred — §14 Q11)*.
+- No rate limit on `getRemoteReferencedPolicy` fetches — each direct
+  embedder call to `PolicyReference.normalize(reg, deep)` on an
+  unresolved reference triggers one HTTP GET; `Policy.normalize(...)`
+  itself issues no fetches and throws on an unresolved reference.
 - Connect-timeout (5 s) and read-timeout (10 s) bound the wall-clock
-  per fetch, but a malicious policy with many distinct unresolved
-  references can multiply the latency *(inferred — §14 Q7)*.
+  per fetch, but an embedder that directly dereferences many distinct
+  unresolved references can multiply the latency *(inferred — §14 Q7)*.
 
 ## §7 Adversary model
 
@@ -368,9 +382,10 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
 ### P7 — Address-class-filtered remote `PolicyReference` resolution
 
 - **Condition**: a policy contains an absolute `<wsp:PolicyReference URI='…'/>`;
-  `Policy.normalize(...)` is called; the registry does not satisfy
-  the reference; `PolicyReference.getRemoteReferencedPolicy(uri)` is
-  reached.
+  the embedder directly calls `PolicyReference.normalize(reg, deep)` or
+  `getRemoteReferencedPolicy(uri)`; and, for the former path, the
+  registry does not satisfy the reference. `Policy.normalize(...)`
+  never reaches the remote fetch path and throws on a miss.
 - **Violation symptom**: an HTTP fetch to a *link-local* (e.g.
   `169.254.0.0/16`, `fe80::/10`), *multicast*, or *any-local* (`0.0.0.0`,
   `::`) address is reached. The published filter rejects these.
@@ -400,11 +415,12 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
 ### P10 — Per-fetch connect-timeout and read-timeout on remote `PolicyReference` resolution
 
 - **Condition**: same as P7; the named server hangs or stalls.
-- **Violation symptom**: `Policy.normalize(...)` blocks for more than
-  ~15 seconds per reference.
+- **Violation symptom**: `PolicyReference.normalize(...)` or
+  `getRemoteReferencedPolicy(...)` blocks for more than ~15 seconds
+  per reference.
 - **Severity**: **availability-relevant**; `VALID-HARDENING`
   *(inferred — §14 Q7)* — wall-clock bound but no bound on the
-  *number* of references resolved per policy.
+  *number* of references an embedder dereferences directly.
 - *(documented: `PolicyReference.java` lines 173-174)*
 
 ### P11 — Policy intersection / equivalence is total: any two well-formed `Policy` objects can be compared
@@ -438,16 +454,22 @@ matching disclaimer.
   JDK connect call.** The filter resolves the host once; the JDK's
   `URLConnection.connect` may resolve it again *(inferred —
   §14 Q8)*.
-- **No bound on the number of `PolicyReference` URIs Neethi will fetch
-  during a single `Policy.normalize(...)` call.** A policy with 1000
-  unresolved references will issue 1000 sequential HTTP GETs,
-  bounded only by the per-fetch timeouts (5+10 s each).
+- **No bound on the number of `PolicyReference` URIs an embedder can
+  drive Neethi to fetch.** A single `Policy.normalize(...)` call issues
+  no fetches at all — it throws on the first unresolved reference
+  (§4 B4). Each direct `PolicyReference.normalize(...)` or
+  `getRemoteReferencedPolicy(...)` call can fetch one URI, so an
+  embedder that directly dereferences each of a policy's 1000
+  unresolved references can issue 1000 sequential HTTP GETs, bounded
+  only by the per-fetch timeouts (5+10 s each).
 - **No defense against an attacker who controls a remote policy
   endpoint** (within the address-class filter): the bytes returned
   are parsed as a Policy. Once parsed, that Policy can itself have a
-  `PolicyReference` to yet another URL, leading to a transitive fetch
-  chain. There is **no documented limit on fetch chain depth**
-  *(inferred — §14 Q11)*.
+  `PolicyReference` to yet another URL, but Neethi does not follow it
+  during re-normalization: the registry-only path throws on an
+  unresolved reference. A transitive chain therefore requires the
+  embedder to issue further direct dereference calls, for which Neethi
+  imposes no aggregate bound *(inferred — §14 Q11)*.
 - **No data-at-rest protection.** Serialized policies are XML on the
   sink the caller provided.
 - **No protection of the `PolicyRegistry` contents.** A registry
@@ -513,12 +535,15 @@ The embedding Java application **must**:
        and external entities to false.
      - For `XMLInputFactory`: set `SUPPORT_DTD=false` and
        `IS_SUPPORTING_EXTERNAL_ENTITIES=false`.
-2. For *any* deployment where the policy bytes may originate from an
-   untrusted peer (e.g. a WS-Policy advertised by a service the
-   embedder consumes), **populate the `PolicyRegistry` ahead of time
-   with all expected policy references**, so that
-   `PolicyReference.normalize(registry, deep)` resolves locally and
-   the remote-fetch path is never reached.
+2. If the embedder directly calls `PolicyReference.normalize(registry,
+  deep)` on references from an untrusted peer (e.g. a WS-Policy
+  advertised by a service the embedder consumes), **populate the
+  `PolicyRegistry` ahead of time with all expected policy references**
+  so that this direct path resolves locally and the remote-fetch path
+  is never reached. This precaution is not needed to prevent remote
+  fetches from `Policy.normalize(...)`, which fails on unresolved
+  references; a direct `getRemoteReferencedPolicy(...)` call bypasses
+  the registry and must be controlled separately.
 3. If the deployment's threat model treats loopback or RFC-1918 as
    untrusted (e.g. multi-tenant cloud), install a custom
    `PolicyRegistry` that always satisfies references locally **or**
@@ -549,10 +574,12 @@ The embedding Java application **must**:
   `getPolicy(OMElement)` without an XXE-hardened upstream parser.**
 - **Treating the address-class filter as a complete SSRF defense.**
   Loopback and RFC-1918 are reachable by design.
-- **Calling `Policy.normalize(registry, deep)` on a policy parsed
-  from untrusted bytes without a fully-populated registry.** The
-  fall-through path to `getRemoteReferencedPolicy` is the attack
-  surface.
+- **Calling `PolicyReference.normalize(registry, deep)` on a reference
+  parsed from untrusted bytes without a fully-populated registry.**
+  The fallback to `getRemoteReferencedPolicy` is the attack surface.
+  Calling `Policy.normalize(registry, deep)` instead fails closed on an
+  unresolved reference; calling `getRemoteReferencedPolicy(...)`
+  directly bypasses the registry.
 - **Registering `AssertionBuilder` instances on the `PolicyEngine`
   static facade in a multi-tenant JVM.** Registration persists.
 - **Using `http://` for policy references in production.** A network
@@ -621,8 +648,9 @@ Revise this document when any of the following lands:
   `PolicyEngine`.
 - A new public API for fetching a `Policy` from a network source other
   than via `PolicyReference`.
-- A bound on the maximum number of `PolicyReference` URIs resolved per
-  `Policy.normalize(...)`.
+- A rate limit or budget on direct `PolicyReference.normalize(reg, deep)`
+  / `getRemoteReferencedPolicy(...)` dereferences, or a change to
+  `Policy.normalize(...)`'s fail-closed behavior.
 - A change in the `AssertionBuilder` discovery mechanism (e.g. JDK
   ServiceLoader instead of `util.Service`).
 - A vulnerability report that cannot be cleanly routed to one of the
@@ -696,11 +724,17 @@ be resolved". Is this:
 Proposed answer: **(b)**, with a §10 item that documents the
 expectation. *(maps to §5a, §7, §9, §10 items 2-3, §11, §11a, §13)*
 
-**Q7.** The README now documents parser/normalization/remote-byte
-bounds, but there is still no documented bound on the number of
-`PolicyReference` URIs per policy or per resolution chain.
-Should a future release add a maximum-fetches-per-normalize counter?
-*(maps to §6, §9, §10 item 4, §11)*
+**Q7.** Rate limiting of direct dereference calls.
+`Policy.normalize(...)` issues no fetches (it throws on unresolved
+references) and each direct `PolicyReference.normalize(reg, deep)`
+call fetches at most one URI *(inferred — §14 Q11)*, but there is
+still no documented bound on the number of `PolicyReference` URIs a
+single policy may carry, and Neethi imposes no rate limit or budget
+across the direct `PolicyReference.normalize(reg, deep)` /
+`getRemoteReferencedPolicy(...)` calls an embedder makes. Should a
+future release add a per-embedder-call rate limit or fetch budget for
+direct dereferences? Until then the cap is the caller's responsibility
+(§10 item 4). *(maps to §6, §9, §10 item 4, §11)*
 
 **Q8.** DNS rebinding between the filter check
 (`InetAddress.getByName(host)`) and the JDK `URLConnection.connect()`:
@@ -717,11 +751,17 @@ scope (proposed)? *(maps to §7)*
 semantics commutative / associative / total? Proposed: total but
 no algebraic-law guarantee. *(maps to §8 P11, §11)*
 
-**Q11.** Transitive `PolicyReference` resolution chain: is there a
-maximum depth in code, or could a malicious policy at remote-host-A
-include a reference to remote-host-B which references remote-host-A
-again? Proposed: no bound; cycle detection is the caller's
-responsibility. *(maps to §9, §11)*
+**Q11.** *(inferred — §14 Q11)* Transitive `PolicyReference`
+resolution chain: verified answer is that fetch-chain depth is
+structurally one per embedder call. `Policy.normalize(...)` resolves
+references through the registry and local `#id` search only, throws on
+a miss, and carries its own circular-reference detection. A fetched
+policy is therefore not remotely dereferenced again during its
+re-normalization. A remote-host-A → remote-host-B chain requires the
+embedder to dereference each hop with further direct
+`PolicyReference.normalize(...)` calls; Neethi imposes no bound on
+those embedder-driven hops, and cycle detection across them remains
+the caller's responsibility. *(maps to §9, §11)*
 
 **Q12.** Threading model: confirm `PolicyBuilder` instances are
 not thread-safe; concurrent calls to `getPolicy(...)` on the same
@@ -765,6 +805,6 @@ source comments. The project website is
 | `PolicyReference.java` lines 173-175 | `connectTimeout=5000`, `readTimeout=10000`, `setInstanceFollowRedirects(false)` | §5a, §8 P9-P10 |
 | `PolicyEngine.java` lines 45-52 | "static synchronized PolicyBuilder" facade | §9 false-friend, §11 |
 | `AssertionBuilderFactoryImpl.java`, `util.Service` | ServiceLoader-style discovery of `AssertionBuilder` via `META-INF/services/` | §5, §10 item 6 |
-| `Policy.java`, `All.java`, `ExactlyOne.java`, `AbstractPolicyOperator.java` | `normalize(reg, deep)` triggers `PolicyReference.normalize(reg, deep)` recursively | §4 B4-B5, §11 |
+| `Policy.java`, `All.java`, `ExactlyOne.java`, `AbstractPolicyOperator.java` | `normalize(reg, deep)` resolves references via registry/local `#id` only and throws on a miss; remote fetch requires a direct embedder call to `PolicyReference.normalize(reg, deep)` or `getRemoteReferencedPolicy(...)` | §4 B4-B5, §11 |
 | `util.PolicyIntersector`, `util.PolicyComparator` | policy-algebra utilities | §8 P11, §14 Q10 |
 | `RELEASE-NOTE.txt` | release notes per version | §1 supported branches |
