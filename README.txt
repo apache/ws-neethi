@@ -31,7 +31,24 @@ back to the default shown below.
   referenced policy document fetched through `PolicyReference`.
   Default: `67108864` bytes (`64 MiB`).
 
-Policy normalization also enforces a hard cap of `10000` policy alternatives.
-This limit applies to the number of normalized alternatives produced by policy
-normalization and intersection, and helps prevent crafted policies from
-triggering exponential expansion.
+Policy normalization also enforces several hard caps:
+
+- `MAX_ALTERNATIVES` - maximum number of normalized policy alternatives
+  produced by policy normalization and intersection.
+  Default: `10000`. Helps prevent crafted policies from triggering exponential
+  expansion through Cartesian cross-products.
+
+- `MAX_REFERENCE_EXPANSIONS` - maximum number of PolicyReference expansions a
+  single normalization pass may perform.
+  Default: `100000`. Prevents exponential work from reference-DAG re-expansion:
+  a DAG with sibling references can materialize 2^d work from O(d) parsed
+  elements when the on-path cycle token is removed and siblings re-expand.
+
+- `MAX_NORMALIZED_COMPONENTS` - maximum total number of component references
+  normalization may materialize while building cross-product alternatives.
+  Default: `5000000`. The alternative-count cap alone cannot bound memory
+  consumption: every cross-product alternative copies the component lists of
+  both parents, so a policy staying under all parse budgets and under
+  MAX_ALTERNATIVES can still materialize hundreds of millions of references
+  (alternatives × parent widths). This cap ensures a fast RuntimeException
+  instead of OutOfMemoryError.

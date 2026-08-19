@@ -54,6 +54,18 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
      * work into a fast, predictable RuntimeException.
      */
     private static final int MAX_REFERENCE_EXPANSIONS = 100_000;
+
+    /**
+     * Maximum total number of component references normalization may
+     * materialize while building cross-product alternatives.  The
+     * alternative-count cap bounds how many alternatives exist but not their
+     * width: every produced alternative copies the component lists of both
+     * parents, so a policy that stays under every parse budget and under the
+     * 10000-alternatives cap can still materialize hundreds of millions of
+     * references (alternatives x parent widths).  This cap keeps the promise
+     * of a fast, predictable RuntimeException instead of an OutOfMemoryError.
+     */
+    private static final long MAX_NORMALIZED_COMPONENTS = 5_000_000L;
     
     public AbstractPolicyOperator() {
         
@@ -193,11 +205,12 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
             }            
         }
         
-        return computeResultantComponent(childComponentsList, type);
+        return computeResultantComponent(childComponentsList, type, budget);
     }
     
     private static PolicyComponent computeResultantComponent(List<PolicyComponent> normalizedInnerComponets, 
-                                                             short componentType) {
+                                                             short componentType,
+                                                             NormalizeBudget budget) {
         
         ExactlyOne exactlyOne = new ExactlyOne();
         
@@ -230,7 +243,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                             exactlyOne = currentExactlyOne;
                             break;
                         } else {
-                            exactlyOne = getCrossProduct(exactlyOne, currentExactlyOne);
+                            exactlyOne = getCrossProduct(exactlyOne, currentExactlyOne, budget);
                         }
                     }
 
@@ -248,7 +261,8 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
         return exactlyOne;
     }
     
-    private static ExactlyOne getCrossProduct(ExactlyOne exactlyOne1, ExactlyOne exactlyOne2) {
+    private static ExactlyOne getCrossProduct(ExactlyOne exactlyOne1, ExactlyOne exactlyOne2,
+                                              NormalizeBudget budget) {
         ExactlyOne crossProduct = new ExactlyOne();
         All crossProductAll;
 
@@ -263,6 +277,8 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
                 checkAlternativeBudget(nextSize);
 
                 currentAll2 = (All)pc2;
+                budget.chargeComponents(currentAll1.getPolicyComponents().size()
+                                        + (long)currentAll2.getPolicyComponents().size());
                 crossProductAll = new All();
                 crossProductAll.addPolicyComponents(currentAll1.getPolicyComponents());
                 crossProductAll.addPolicyComponents(currentAll2.getPolicyComponents());
@@ -280,6 +296,7 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
     private static final class NormalizeBudget {
         private final Set<String> resolving = new HashSet<String>();
         private long referenceExpansions;
+        private long materializedComponents;
 
         void enterReference(String token) {
             if (!resolving.add(token)) {
@@ -298,6 +315,17 @@ public abstract class AbstractPolicyOperator implements PolicyOperator {
 
         void exitReference(String token) {
             resolving.remove(token);
+        }
+
+        void chargeComponents(long count) {
+            materializedComponents += count;
+            if (materializedComponents > MAX_NORMALIZED_COMPONENTS) {
+                throw new RuntimeException(
+                    "Policy normalization exceeded the maximum number of materialized"
+                    + " components (" + MAX_NORMALIZED_COMPONENTS + "). The policy may"
+                    + " be crafted to cause memory-exhaustion DoS via wide"
+                    + " cross-product alternatives.");
+            }
         }
     }
 
