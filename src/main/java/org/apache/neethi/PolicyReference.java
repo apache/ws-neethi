@@ -39,21 +39,28 @@ import javax.xml.stream.XMLStreamWriter;
 public class PolicyReference implements PolicyComponent {
 
     public static final String MAX_REMOTE_POLICY_BYTES_PROPERTY = "org.apache.neethi.remote.maxPolicyBytes";
+    public static final String MAX_REMOTE_FETCH_MILLIS_PROPERTY = "org.apache.neethi.remote.maxFetchMillis";
     private static final long DEFAULT_MAX_REMOTE_POLICY_BYTES = 64L * 1024L * 1024L;
+    private static final long DEFAULT_MAX_REMOTE_FETCH_MILLIS = 30L * 1000L;
 
     private String uri;
     private PolicyBuilder engine;
     private final long maxRemotePolicyBytes;
+    private final long maxRemoteFetchMillis;
 
     public PolicyReference() {
         maxRemotePolicyBytes = readConfiguredLimit(MAX_REMOTE_POLICY_BYTES_PROPERTY,
                                                    DEFAULT_MAX_REMOTE_POLICY_BYTES);
+        maxRemoteFetchMillis = readConfiguredLimit(MAX_REMOTE_FETCH_MILLIS_PROPERTY,
+                                                   DEFAULT_MAX_REMOTE_FETCH_MILLIS);
     }
     
     public PolicyReference(PolicyBuilder p) {
         engine = p;
         maxRemotePolicyBytes = readConfiguredLimit(MAX_REMOTE_POLICY_BYTES_PROPERTY,
                                                    DEFAULT_MAX_REMOTE_POLICY_BYTES);
+        maxRemoteFetchMillis = readConfiguredLimit(MAX_REMOTE_FETCH_MILLIS_PROPERTY,
+                               DEFAULT_MAX_REMOTE_FETCH_MILLIS);
     }
     
     /**
@@ -191,9 +198,14 @@ public class PolicyReference implements PolicyComponent {
                     + maxRemotePolicyBytes + " bytes).");
             }
 
+            // total wall-clock deadline for the whole fetch: the JDK read
+            // timeout below applies to each blocking read individually, so a
+            // server trickling one byte per interval would otherwise hold the
+            // resolving thread forever
+            long deadlineNanos = System.nanoTime() + maxRemoteFetchMillis * 1_000_000L;
             InputStream in = connection.getInputStream();
             try {
-                byte[] payload = readBounded(in, maxRemotePolicyBytes);
+                byte[] payload = readBounded(in, maxRemotePolicyBytes, deadlineNanos, maxRemoteFetchMillis);
                 PolicyBuilder pe = engine;
                 if (pe == null) {
                     pe = new PolicyBuilder();
@@ -207,12 +219,19 @@ public class PolicyReference implements PolicyComponent {
         }
     }
 
-    private static byte[] readBounded(InputStream input, long maxBytes) throws IOException {
+    // package-private for tests
+    static byte[] readBounded(InputStream input, long maxBytes,
+                              long deadlineNanos, long maxMillis) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] buffer = new byte[8192];
         long total = 0;
 
         while (true) {
+            if (System.nanoTime() - deadlineNanos >= 0) {
+                throw new RuntimeException(
+                    "Remote policy fetch exceeded the maximum total fetch time ("
+                    + maxMillis + " ms).");
+            }
             int read = input.read(buffer);
             if (read == -1) {
                 break;
