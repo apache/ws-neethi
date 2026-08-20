@@ -284,25 +284,33 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
   `org.apache.neethi.parser.maxDepth=256`,
   `org.apache.neethi.parser.maxElements=100000`,
   `org.apache.neethi.parser.maxAttributes=10000` *(documented:
-  `README.txt`)*.
+  `README.txt` — implemented in `PolicyBuilder.java`, enforced
+  operator-walk and Stax-to-DOM materialization phases)*.
 - Documented bound on remotely fetched policy size:
   `org.apache.neethi.remote.maxPolicyBytes=67108864` bytes (`64 MiB`)
-  *(documented: `README.txt`)*.
+  *(documented: `README.txt` — bounds total bytes read, not element
+  budget; assertion subtrees from remote policies are still charged
+  against `maxElements` / `maxAttributes`)*.
 - Documented hard cap of `10000` normalized policy alternatives during
   normalization/intersection *(documented: `README.txt`)*.
 - Documented hard cap of `1000000` assertion-pair intersection attempts
   per top-level `PolicyIntersector.intersect(...)` /
   `PolicyIntersector.compatiblePolicies(...)` call *(documented:
   `README.txt`)*.
-- No documented bound on the number of `PolicyReference` URIs in a
-  single policy *(inferred — §14 Q7)*. Transitive fetch chains cannot
+- **No documented bound on the number of `PolicyReference` URIs in a
+  single policy** *(inferred — §14 Q7)*. Transitive fetch chains cannot
   occur inside one normalization call: a fetched policy is
   re-normalized through the registry-only path, which throws on any
-  further unresolved absolute reference *(inferred — §14 Q11)*.
-- No rate limit on `getRemoteReferencedPolicy` fetches — each direct
+  further unresolved absolute reference *(inferred — §14 Q11)*. Note:
+  the element/attribute budgets (P3, P4) apply to all fetched policies
+  as well as local policies, so an embedded attacker cannot bypass them
+  via chained remote references.
+- **No rate limit on `getRemoteReferencedPolicy` fetches** — each direct
   embedder call to `PolicyReference.normalize(reg, deep)` on an
   unresolved reference triggers one HTTP GET; `Policy.normalize(...)`
   itself issues no fetches and throws on an unresolved reference.
+  Multiple fetches can amplify wall-clock latency but cannot amplify
+  memory consumption beyond `maxElements` / `maxAttributes`.
 - Connect-timeout (5 s) and read-timeout (10 s) bound the wall-clock
   per fetch, but an embedder that directly dereferences many distinct
   unresolved references can multiply the latency *(inferred — §14 Q7)*.
@@ -347,23 +355,32 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
 - *(documented: `README.txt` — `org.apache.neethi.parser.maxDepth`,
   default `256`)*
 
-### P3 — Parsed-element-count budget is enforced
+### P3 — Parsed-element-count budget is enforced on all materialized elements
 
 - **Condition**: policy parsing occurs through Neethi's parser path.
+  This includes the operator walk over `wsp:*` elements **and** the
+  Stax-to-DOM conversion of assertion subtrees (`StaxToDOMConverter`),
+  which materializes XML stream events into DOM nodes.
 - **Violation symptom**: parser accepts more than configured/default
-  `org.apache.neethi.parser.maxElements` elements.
+  `org.apache.neethi.parser.maxElements` elements from *any* materialization
+  phase (operator walk or Stax conversion).
 - **Severity**: **availability-relevant**, `VALID` per §13.
 - *(documented: `README.txt` — `org.apache.neethi.parser.maxElements`,
-  default `100000`)*
+  default `100000`; implemented in `PolicyBuilder.java`,
+  `StaxToDOMConverter.java`)*
 
-### P4 — Parsed-attribute-count budget is enforced
+### P4 — Parsed-attribute-count budget is enforced on all materialized attributes
 
 - **Condition**: policy parsing occurs through Neethi's parser path.
+  This includes attributes on `wsp:*` operators **and** attributes on
+  assertion elements materialized by Stax-to-DOM conversion.
 - **Violation symptom**: parser accepts more than configured/default
-  `org.apache.neethi.parser.maxAttributes` attributes.
+  `org.apache.neethi.parser.maxAttributes` attributes from *any* materialization
+  phase (operator attributes or Stax-to-DOM conversion).
 - **Severity**: **availability-relevant**, `VALID` per §13.
 - *(documented: `README.txt` — `org.apache.neethi.parser.maxAttributes`,
-  default `10000`)*
+  default `10000`; implemented in `PolicyBuilder.java`,
+  `StaxToDOMConverter.java`)*
 
 ### P5 — Remote policy fetch byte budget is enforced
 
