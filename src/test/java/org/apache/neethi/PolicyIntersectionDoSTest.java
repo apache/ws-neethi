@@ -21,13 +21,16 @@ package org.apache.neethi;
 
 import javax.xml.namespace.QName;
 
+import org.apache.neethi.builders.PolicyContainingPrimitiveAssertion;
 import org.apache.neethi.builders.PrimitiveAssertion;
+import org.apache.neethi.util.PolicyIntersector;
 import org.junit.Test;
 
 public class PolicyIntersectionDoSTest extends PolicyTestCase {
 
     private static final int ALTERNATIVES_PER_POLICY = 101;
     private static final int SAFE_ALTERNATIVES_PER_POLICY = 100;
+    private static final int LARGE_CANDIDATE_SET = 1500;
 
     @Test
     public void testIntersectionRejectsCartesianProductBeyondAlternativeBudget() {
@@ -68,6 +71,19 @@ public class PolicyIntersectionDoSTest extends PolicyTestCase {
         assertTrue(((ExactlyOne)intersection.getFirstPolicyComponent()).getPolicyComponents().isEmpty());
     }
 
+    @Test
+    public void testRecursiveCandidateSearchRequiresIntersectionStepBudget() {
+        Policy left = buildLateMatchNestedPolicy(LARGE_CANDIDATE_SET, false);
+        Policy right = buildLateMatchNestedPolicy(LARGE_CANDIDATE_SET, true);
+
+        try {
+            new PolicyIntersector(true).intersect(left, right, true);
+            fail("Expected RuntimeException due to intersection step budget");
+        } catch (RuntimeException ex) {
+            assertTrue(ex.getMessage().contains("intersection steps"));
+        }
+    }
+
     private static Policy buildPolicyWithEmptyAlternatives(int alternatives) {
         Policy policy = new Policy();
         ExactlyOne exactlyOne = new ExactlyOne();
@@ -89,6 +105,34 @@ public class PolicyIntersectionDoSTest extends PolicyTestCase {
         exactlyOne.addPolicyComponent(all);
         policy.addPolicyComponent(exactlyOne);
 
+        return policy;
+    }
+
+    /**
+     * Builds one policy alternative containing many same-QName
+     * policy-containing assertions. The nested policy leaf names are unique;
+     * reversing order on the second operand forces late unordered matches and
+     * maximizes recursive candidate search work.
+     */
+    private static Policy buildLateMatchNestedPolicy(int size, boolean reversed) {
+        Policy policy = new Policy();
+        ExactlyOne exactlyOne = new ExactlyOne();
+        All all = new All();
+
+        for (int i = 0; i < size; i++) {
+            int idx = reversed ? size - 1 - i : i;
+            Policy nested = new Policy();
+            nested.addPolicyComponent(new PrimitiveAssertion(new QName("urn:test", "leaf" + idx)));
+
+            all.addPolicyComponent(new PolicyContainingPrimitiveAssertion(
+                new QName("urn:test", "n"),
+                false,
+                false,
+                nested));
+        }
+
+        exactlyOne.addPolicyComponent(all);
+        policy.addPolicyComponent(exactlyOne);
         return policy;
     }
 }
