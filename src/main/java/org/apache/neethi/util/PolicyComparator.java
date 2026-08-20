@@ -38,6 +38,25 @@ public final class PolicyComparator {
     }
 
     /**
+     * Maximum number of pairwise component comparisons a single top-level
+     * compare call may perform. The list comparison is unordered nested
+     * matching with no memoization, so mismatched operand orderings cost
+     * O(n1 * n2) comparisons, converting an engineered quadratic comparison
+     * into a fast, predictable RuntimeException instead of pinned CPU.
+     */
+    private static final long MAX_COMPARISONS = 10_000_000L;
+
+    private static void chargeComparison(long[] budget) {
+        if (++budget[0] > MAX_COMPARISONS) {
+            throw new RuntimeException(
+                "Policy comparison exceeded the maximum number of component"
+                + " comparisons (" + MAX_COMPARISONS + "). The operands may be"
+                + " crafted to cause Algorithmic Complexity DoS via unordered"
+                + " matching.");
+        }
+    }
+
+    /**
      * Returns {@code true} if the two policies have the same semantics
      * 
      * @param arg1
@@ -47,6 +66,10 @@ public final class PolicyComparator {
      * @return {@code true} if both policies have the same semantics
      */
     public static boolean compare(Policy arg1, Policy arg2) {
+        return compare(arg1, arg2, new long[1]);
+    }
+
+    private static boolean compare(Policy arg1, Policy arg2, long[] budget) {
         
         // check Name attributes of each policies
         if (arg1.getName() != null) {
@@ -79,7 +102,7 @@ public final class PolicyComparator {
             }
         }
         
-        return compare(arg1.getPolicyComponents(), arg2.getPolicyComponents());
+        return compare(arg1.getPolicyComponents(), arg2.getPolicyComponents(), budget);
     }
 
     /**
@@ -93,18 +116,23 @@ public final class PolicyComparator {
      * @return {@code true} if both PolicyComponents have the same semantics
      */
     public static boolean compare(PolicyComponent arg1, PolicyComponent arg2) {
+        return compare(arg1, arg2, new long[1]);
+    }
+
+    private static boolean compare(PolicyComponent arg1, PolicyComponent arg2, long[] budget) {
+        chargeComparison(budget);
         if (!arg1.getClass().equals(arg2.getClass())) {
             return false;
         }
 
         if (arg1 instanceof Policy) {
-            return compare((Policy) arg1, (Policy) arg2);
+            return compare((Policy) arg1, (Policy) arg2, budget);
 
         } else if (arg1 instanceof All) {
-            return compare((All) arg1, (All) arg2);
+            return compare((All) arg1, (All) arg2, budget);
 
         } else if (arg1 instanceof ExactlyOne) {
-            return compare((ExactlyOne) arg1, (ExactlyOne) arg2);
+            return compare((ExactlyOne) arg1, (ExactlyOne) arg2, budget);
 
         } else if (arg1 instanceof Assertion) {
             return compare((Assertion) arg1, (Assertion) arg2);
@@ -117,11 +145,19 @@ public final class PolicyComparator {
     }
 
     public static boolean compare(All arg1, All arg2) {
-        return compare(arg1.getPolicyComponents(), arg2.getPolicyComponents());
+        return compare(arg1, arg2, new long[1]);
+    }
+
+    private static boolean compare(All arg1, All arg2, long[] budget) {
+        return compare(arg1.getPolicyComponents(), arg2.getPolicyComponents(), budget);
     }
 
     public static boolean compare(ExactlyOne arg1, ExactlyOne arg2) {
-        return compare(arg1.getPolicyComponents(), arg2.getPolicyComponents());
+        return compare(arg1, arg2, new long[1]);
+    }
+
+    private static boolean compare(ExactlyOne arg1, ExactlyOne arg2, long[] budget) {
+        return compare(arg1.getPolicyComponents(), arg2.getPolicyComponents(), budget);
     }
 
     public static boolean compare(Assertion arg1, Assertion arg2) {
@@ -131,7 +167,8 @@ public final class PolicyComparator {
         return true;
     }
 
-    private static boolean compare(List<PolicyComponent> arg1, List<PolicyComponent> arg2) {
+    private static boolean compare(List<PolicyComponent> arg1, List<PolicyComponent> arg2,
+                                    long[] budget) {
         if (arg1.size() != arg2.size()) {
             return false;
         }
@@ -140,7 +177,7 @@ public final class PolicyComparator {
         for (PolicyComponent assertion1 : arg1) {
             boolean match = false;
             for (PolicyComponent assertion2 : arg2) {
-                if (compare(assertion1, assertion2)) {
+                if (compare(assertion1, assertion2, budget)) {
                     match = true;
                     break;
                 }

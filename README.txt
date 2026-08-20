@@ -52,3 +52,12 @@ Policy normalization also enforces several hard caps:
   MAX_ALTERNATIVES can still materialize hundreds of millions of references
   (alternatives × parent widths). This cap ensures a fast RuntimeException
   instead of OutOfMemoryError.
+
+`PolicyComparator` also enforces a comparison budget:
+
+- `MAX_COMPARISONS` - maximum number of pairwise component comparisons a
+  single top-level `compare(...)` call may perform.
+  Default: `10000000`. `PolicyComparator`'s list matching is unordered and
+  unmemoized, so mismatched operand orderings cost O(n1 * n2) comparisons.
+  This cap turns an engineered quadratic comparison into a fast, predictable
+  RuntimeException instead of pinned CPU.
