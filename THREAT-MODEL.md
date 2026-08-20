@@ -432,6 +432,22 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
   divergence is security-meaningful downstream.
 - *(inferred — §14 Q10)*
 
+### P12 — `PolicyComparator` pairwise-comparison budget is enforced
+
+- **Condition**: `PolicyComparator.compare(...)` (directly, or
+  transitively via `Policy.equals` / `AbstractPolicyOperator.equal` /
+  `PolicyContainingPrimitiveAssertion.equal`) is invoked on two
+  well-formed `PolicyComponent` trees.
+- **Violation symptom**: the unordered, unmemoized list-matching in
+  `compare(List, List)` completes more than `MAX_COMPARISONS` pairwise
+  component comparisons without rejection — an adversarial operand
+  ordering costs O(n1 * n2) comparisons with no cap, up to minutes of
+  pinned CPU at the parser budgets.
+- **Severity**: **availability-relevant** (quadratic, not exponential —
+  bounded even unpatched), `VALID` per §13.
+- *(documented: `README.txt` — `MAX_COMPARISONS`, default `10000000`;
+  `src/main/java/org/apache/neethi/util/PolicyComparator.java`)*
+
 ## §9 Security properties the project does *not* provide
 
 State each plainly so a triager can route an inbound report to the
@@ -796,6 +812,7 @@ source comments. The project website is
 | --- | --- | --- |
 | `README.txt` | "implementation of WS-Policy Specification (September, 2007)"; "It provides a convenient model and an API to process policy information at runtime and an extension model for serialization and de-serialization of domain-specific Assertions" | §1, §2 intended use |
 | `README.txt` | documented security budgets: `org.apache.neethi.parser.maxDepth=256`, `org.apache.neethi.parser.maxElements=100000`, `org.apache.neethi.parser.maxAttributes=10000`, `org.apache.neethi.remote.maxPolicyBytes=67108864`, and normalization/intersection cap `10000` alternatives; invalid/unset values fall back to defaults | §5a, §6, §8 P2-P6, §10 item 4 |
+| `README.txt` | `PolicyComparator` comparison budget: `MAX_COMPARISONS=10000000` pairwise component comparisons per top-level `compare(...)` call; throws `RuntimeException` on exhaustion | §8 P12 |
 | `src/main/java/org/apache/neethi/PolicyBuilder.java` lines 99-100 (`getPolicy(InputStream)`) | `xif.setProperty(IS_SUPPORTING_EXTERNAL_ENTITIES, FALSE); xif.setProperty(SUPPORT_DTD, FALSE)` | §8 P1, §11a |
 | `PolicyBuilder.java` lines 140-141 (`getPolicyReference(InputStream)`) | same XXE/DTD hardening on the PolicyReference parse path | §8 P1, §11a |
 | `PolicyReference.java` lines 141-190 (`getRemoteReferencedPolicy(String u)`) | the remote-policy fetcher | §1 (deployment shape), §4 B5, §5 network, §5a, §8 P7-P10, §9 first three bullets, §10 items 2-3, §11 |
@@ -806,5 +823,5 @@ source comments. The project website is
 | `PolicyEngine.java` lines 45-52 | "static synchronized PolicyBuilder" facade | §9 false-friend, §11 |
 | `AssertionBuilderFactoryImpl.java`, `util.Service` | ServiceLoader-style discovery of `AssertionBuilder` via `META-INF/services/` | §5, §10 item 6 |
 | `Policy.java`, `All.java`, `ExactlyOne.java`, `AbstractPolicyOperator.java` | `normalize(reg, deep)` resolves references via registry/local `#id` only and throws on a miss; remote fetch requires a direct embedder call to `PolicyReference.normalize(reg, deep)` or `getRemoteReferencedPolicy(...)` | §4 B4-B5, §11 |
-| `util.PolicyIntersector`, `util.PolicyComparator` | policy-algebra utilities | §8 P11, §14 Q10 |
+| `util.PolicyIntersector`, `util.PolicyComparator` | policy-algebra utilities | §8 P11-P12, §14 Q10 |
 | `RELEASE-NOTE.txt` | release notes per version | §1 supported branches |
