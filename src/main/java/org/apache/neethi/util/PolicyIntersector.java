@@ -40,6 +40,33 @@ import org.apache.neethi.PolicyContainingAssertion;
  * See Section 4.5 in http://www.w3.org/TR/2006/WD-ws-policy-20061117.
  */
 public class PolicyIntersector {
+
+    /**
+     * Maximum number of assertion-pair intersection attempts a single
+     * top-level intersect/compatiblePolicies call may perform, including the
+     * recursion into nested policies of PolicyContainingAssertions.  The
+     * output-alternative cap bounds what is emitted but not the search work,
+     * which otherwise grows with the product of the alternative sizes at
+     * every nesting level.  The budget converts an engineered exponential
+     * search into a fast, predictable RuntimeException.
+     */
+    private static final long MAX_INTERSECT_STEPS = 1_000_000L;
+
+    /** Work accounting shared across one top-level intersection. */
+    private static final class WorkBudget {
+        private long steps;
+
+        void step() {
+            steps++;
+            if (steps > MAX_INTERSECT_STEPS) {
+                throw new RuntimeException(
+                    "Policy intersection exceeded the maximum number of assertion"
+                    + " intersection steps (" + MAX_INTERSECT_STEPS + "). The policies"
+                    + " may be crafted to cause Algorithmic Complexity DoS via"
+                    + " recursive candidate search.");
+            }
+        }
+    }
     
     private boolean strict;
     
@@ -58,7 +85,8 @@ public class PolicyIntersector {
         strict = s;
     }
 
-    private Assertion intersect(Assertion a1, Assertion a2) {
+    private Assertion intersect(Assertion a1, Assertion a2, WorkBudget budget) {
+        budget.step();
         if (a1 instanceof IntersectableAssertion) {
             if (!((IntersectableAssertion)a1).isCompatible(a2, strict)) {
                 return null;
@@ -74,8 +102,7 @@ public class PolicyIntersector {
                 PolicyContainingAssertion pc2 = (PolicyContainingAssertion)a2;
                 Policy p1 = pc1.getPolicy();
                 Policy p2 = pc2.getPolicy();
-                PolicyIntersector pi = new PolicyIntersector(strict);
-                if (pi.compatiblePolicies(p1, p2)) {
+                if (compatiblePolicies(p1, p2, budget)) {
                     return a1;
                 }
             } else {
@@ -86,12 +113,13 @@ public class PolicyIntersector {
     }
     private Assertion findCompatibleAssertion(Assertion assertion, 
                                               Collection<? extends PolicyComponent> alt,
-                                              boolean remove) {
+                                              boolean remove,
+                                              WorkBudget budget) {
         Iterator<? extends PolicyComponent> iterator = alt.iterator();
         while (iterator.hasNext()) {
             PolicyComponent a = iterator.next();
             if (a instanceof Assertion) {
-                Assertion compatible = intersect(assertion, (Assertion)a);
+                Assertion compatible = intersect(assertion, (Assertion)a, budget);
                 if (null != compatible) {
                     if (remove) {
                         iterator.remove();
@@ -106,11 +134,17 @@ public class PolicyIntersector {
     
     boolean compatibleAlternatives(Collection<? extends PolicyComponent> alt1, 
                                    Collection<? extends PolicyComponent> alt2) {
+        return compatibleAlternatives(alt1, alt2, new WorkBudget());
+    }
+
+    private boolean compatibleAlternatives(Collection<? extends PolicyComponent> alt1,
+                                           Collection<? extends PolicyComponent> alt2,
+                                           WorkBudget budget) {
         if (alt1.isEmpty() && alt2.isEmpty()) {
             return true;
         }
         
-        All all = createCompatibleAlternatives(alt1, alt2, true);
+        All all = createCompatibleAlternatives(alt1, alt2, true, budget);
         if (all == null) {
             return false;
         }
@@ -120,6 +154,13 @@ public class PolicyIntersector {
     All createCompatibleAlternatives(Collection<? extends PolicyComponent> alt1, 
                                      Collection<? extends PolicyComponent> alt2,
                                      boolean remove) {
+        return createCompatibleAlternatives(alt1, alt2, remove, new WorkBudget());
+    }
+
+    private All createCompatibleAlternatives(Collection<? extends PolicyComponent> alt1,
+                                             Collection<? extends PolicyComponent> alt2,
+                                             boolean remove,
+                                             WorkBudget budget) {
         All all = new All();
         if (alt1.isEmpty() && alt2.isEmpty()) {
             return all;
@@ -132,7 +173,7 @@ public class PolicyIntersector {
         while (iterator.hasNext()) {
             PolicyComponent a1 = iterator.next();
             if (a1 instanceof Assertion) {
-                Assertion assertion = findCompatibleAssertion((Assertion)a1, alt2, remove);
+                Assertion assertion = findCompatibleAssertion((Assertion)a1, alt2, remove, budget);
                 if (assertion != null) {
                     if (remove) {
                         iterator.remove();
@@ -149,7 +190,7 @@ public class PolicyIntersector {
         while (iterator.hasNext()) {
             PolicyComponent a2 = iterator.next();
             if (a2 instanceof Assertion) {
-                Assertion assertion = findCompatibleAssertion((Assertion)a2, alt1, remove);
+                Assertion assertion = findCompatibleAssertion((Assertion)a2, alt1, remove, budget);
                 if (assertion != null) { 
                     all.addPolicyComponent(assertion);
                 } else if (!strict && ((Assertion)a2).isIgnorable()) {
@@ -163,16 +204,23 @@ public class PolicyIntersector {
     }
     
     public boolean compatiblePolicies(Policy p1, Policy p2) {       
+        return compatiblePolicies(p1, p2, new WorkBudget());
+    }
+
+    private boolean compatiblePolicies(Policy p1, Policy p2, WorkBudget budget) {
+        // normalize p2 exactly once: Policy.getAlternatives() re-runs a full
+        // normalization on every call, so it must not sit inside the p1 loop
+        List<List<Assertion>> alternatives2 = materializeAlternatives(p2);
         Iterator<List<Assertion>> i1 = p1.getAlternatives();
         while (i1.hasNext()) {
             List<Assertion> alt1 = i1.next();
-            Iterator<List<Assertion>> i2 = p2.getAlternatives();
+            Iterator<List<Assertion>> i2 = alternatives2.iterator();
             if (!i2.hasNext() && alt1.isEmpty()) {
                 return true;
             }
             while (i2.hasNext()) {                
                 List<Assertion> alt2 = i2.next();
-                if (compatibleAlternatives(alt1, alt2)) {
+                if (compatibleAlternatives(alt1, alt2, budget)) {
                     return true;                    
                 }
             }
@@ -184,15 +232,18 @@ public class PolicyIntersector {
         return intersect(p1, p2, false);
     }
     public Policy intersect(Policy p1, Policy p2, boolean allowDups) {
+        WorkBudget budget = new WorkBudget();
         Policy compatible = new Policy(p1.getPolicyRegistry(), p1.getNamespace());
         ExactlyOne eo = new ExactlyOne(compatible);
+        // normalize p2 exactly once (see compatiblePolicies)
+        List<List<Assertion>> alternatives2 = materializeAlternatives(p2);
         Iterator<List<Assertion>> i1 = p1.getAlternatives();
         while (i1.hasNext()) {
             List<Assertion> alt1 = i1.next();
-            Iterator<List<Assertion>> i2 = p2.getAlternatives();
+            Iterator<List<Assertion>> i2 = alternatives2.iterator();
             while (i2.hasNext()) {                
                 List<Assertion> alt2 = i2.next();
-                All all = createCompatibleAlternatives(alt1, alt2, !allowDups);
+                All all = createCompatibleAlternatives(alt1, alt2, !allowDups, budget);
                 if (all != null) {
                     long nextSize = (long)eo.getPolicyComponents().size() + 1;
                     AbstractPolicyOperator.checkMaximumAlternativeCount(nextSize, "intersection");
@@ -202,6 +253,14 @@ public class PolicyIntersector {
         }
         
         return compatible;
+    }
+
+    private static List<List<Assertion>> materializeAlternatives(Policy policy) {
+        List<List<Assertion>> alternatives = new ArrayList<List<Assertion>>();
+        for (Iterator<List<Assertion>> it = policy.getAlternatives(); it.hasNext();) {
+            alternatives.add(it.next());
+        }
+        return alternatives;
     }
     
 }

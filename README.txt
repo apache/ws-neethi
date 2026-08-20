@@ -61,3 +61,15 @@ Policy normalization also enforces several hard caps:
   unmemoized, so mismatched operand orderings cost O(n1 * n2) comparisons.
   This cap turns an engineered quadratic comparison into a fast, predictable
   RuntimeException instead of pinned CPU.
+
+`PolicyIntersector` also enforces an intersection work budget:
+
+- `MAX_INTERSECT_STEPS` - maximum number of assertion-pair intersection
+  attempts a single top-level `intersect(...)` or `compatiblePolicies(...)`
+  call may perform, including recursion into nested policies of
+  `PolicyContainingAssertion` values.
+  Default: `1000000`. The alternatives-output cap bounds what is emitted, but
+  not all candidate-search work; recursive same-QName fan-out can otherwise
+  trigger algorithmic-complexity DoS through exponential search effort.
+  This cap turns that engineered search into a fast, predictable
+  RuntimeException instead of pinned CPU.
