@@ -198,8 +198,12 @@ A finding is in-model only if it reaches a row marked **yes**.
 - **Network**: `PolicyReference.getRemoteReferencedPolicy` opens an
   HTTP/HTTPS connection via the JDK URL handler with documented
   timeouts (`connectTimeout=5000`, `readTimeout=10000`,
-  `setInstanceFollowRedirects(false)`) *(documented:
-  `PolicyReference.java` lines 170-175)*.
+  `setInstanceFollowRedirects(false)`) and a configurable total fetch
+  deadline (`org.apache.neethi.remote.maxFetchMillis`, default `30000` ms)
+  *(documented: `PolicyReference.java` and `README.txt`)*. The read timeout
+  is an inactivity timeout for an individual read; the total deadline is
+  checked between reads, so a blocking read can extend the practical bound
+  by up to the read timeout.
 - **DNS**: the remote-policy fetcher calls `InetAddress.getByName(host)`
   to perform the address-class check *(documented:
   `PolicyReference.java` line 161)*. Compromised DNS can spoof the
@@ -230,6 +234,7 @@ feature toggles**. The runtime security envelope is shaped by:
 | `PolicyReference.getRemoteReferencedPolicy` — address-class filter | rejects link-local, multicast, any-local; **permits** loopback, RFC-1918 / site-local, public *(documented: `PolicyReference.java` lines 149-168)* | **maintainer ruling required** — see §14 Q6 | controls whether SSRF against loopback (e.g. localhost IMDS proxy) or RFC-1918 (internal microservices) is possible |
 | `PolicyReference.getRemoteReferencedPolicy` — connect timeout | `5000` ms *(documented: `PolicyReference.java` line 173)* | hardened-by-default | bound on per-fetch connect time |
 | `PolicyReference.getRemoteReferencedPolicy` — read timeout | `10000` ms *(documented: `PolicyReference.java` line 174)* | hardened-by-default | bound on per-fetch read time |
+| `org.apache.neethi.remote.maxFetchMillis` | `30000` ms (`30 s`) *(documented: `README.txt`)* | hardened-by-default | bounds total remote-policy response-fetch time; checked between reads |
 | `PolicyReference.getRemoteReferencedPolicy` — redirects | follow disabled (`setInstanceFollowRedirects(false)`) *(documented: `PolicyReference.java` line 175)* | hardened-by-default | prevents redirect-based filter bypass |
 | `PolicyReference.getRemoteReferencedPolicy` — supported schemes | `http`, `https` only — others rejected *(documented: `PolicyReference.java` lines 149-152)* | hardened-by-default | blocks `file:`, `jar:`, `ftp:`, etc. |
 | `org.apache.neethi.parser.maxDepth` | `256` *(documented: `README.txt`)* | hardened-by-default | bounds maximum parser nesting depth |
@@ -311,9 +316,12 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
   itself issues no fetches and throws on an unresolved reference.
   Multiple fetches can amplify wall-clock latency but cannot amplify
   memory consumption beyond `maxElements` / `maxAttributes`.
-- Connect-timeout (5 s) and read-timeout (10 s) bound the wall-clock
-  per fetch, but an embedder that directly dereferences many distinct
-  unresolved references can multiply the latency *(inferred — §14 Q7)*.
+- Connect-timeout (5 s), read inactivity-timeout (10 s), and the default
+  total fetch deadline (30 s) bound each direct fetch. Because the total
+  deadline is checked between reads, a blocking read can extend the
+  practical bound by up to the read timeout. An embedder that directly
+  dereferences many distinct unresolved references can multiply the latency
+  *(inferred — §14 Q7)*.
 
 ## §7 Adversary model
 
@@ -434,16 +442,17 @@ overload disables both. The pre-parsed-`Element` / `XMLStreamReader` /
 - *(documented: `PolicyReference.java` line 175 —
   `setInstanceFollowRedirects(false)`)*
 
-### P10 — Per-fetch connect-timeout and read-timeout on remote `PolicyReference` resolution
+### P10 — Total and per-read timing bounds on remote `PolicyReference` resolution
 
 - **Condition**: same as P7; the named server hangs or stalls.
 - **Violation symptom**: `PolicyReference.normalize(...)` or
-  `getRemoteReferencedPolicy(...)` blocks for more than ~15 seconds
-  per reference.
+  `getRemoteReferencedPolicy(...)` remains blocked beyond the configured
+  total fetch deadline plus the maximum individual read timeout, or a
+  silent connection is not rejected by the connect/read timeouts.
 - **Severity**: **availability-relevant**; `VALID-HARDENING`
   *(inferred — §14 Q7)* — wall-clock bound but no bound on the
   *number* of references an embedder dereferences directly.
-- *(documented: `PolicyReference.java` lines 173-174)*
+- *(documented: `PolicyReference.java`, `README.txt`)*
 
 ### P11 — Policy intersection / equivalence is total: any two well-formed `Policy` objects can be compared
 
@@ -846,7 +855,7 @@ source comments. The project website is
 | Source | Claim | Lands in |
 | --- | --- | --- |
 | `README.txt` | "implementation of WS-Policy Specification (September, 2007)"; "It provides a convenient model and an API to process policy information at runtime and an extension model for serialization and de-serialization of domain-specific Assertions" | §1, §2 intended use |
-| `README.txt` | documented security budgets: `org.apache.neethi.parser.maxDepth=256`, `org.apache.neethi.parser.maxElements=100000`, `org.apache.neethi.parser.maxAttributes=10000`, `org.apache.neethi.remote.maxPolicyBytes=67108864`, normalization/intersection output cap `10000` alternatives, and `PolicyIntersector` work budget `MAX_INTERSECT_STEPS=1000000`; invalid/unset values fall back to defaults | §5a, §6, §8 P2-P6/P13, §10 item 4 |
+| `README.txt` | documented security budgets: `org.apache.neethi.parser.maxDepth=256`, `org.apache.neethi.parser.maxElements=100000`, `org.apache.neethi.parser.maxAttributes=10000`, `org.apache.neethi.remote.maxPolicyBytes=67108864`, `org.apache.neethi.remote.maxFetchMillis=30000`, normalization/intersection output cap `10000` alternatives, and `PolicyIntersector` work budget `MAX_INTERSECT_STEPS=1000000`; invalid/unset values fall back to defaults | §5a, §6, §8 P2-P6/P10/P13, §10 item 4 |
 | `README.txt` | `PolicyComparator` comparison budget: `MAX_COMPARISONS=10000000` pairwise component comparisons per top-level `compare(...)` call; throws `RuntimeException` on exhaustion | §8 P12 |
 | `src/main/java/org/apache/neethi/PolicyBuilder.java` lines 99-100 (`getPolicy(InputStream)`) | `xif.setProperty(IS_SUPPORTING_EXTERNAL_ENTITIES, FALSE); xif.setProperty(SUPPORT_DTD, FALSE)` | §8 P1, §11a |
 | `PolicyBuilder.java` lines 140-141 (`getPolicyReference(InputStream)`) | same XXE/DTD hardening on the PolicyReference parse path | §8 P1, §11a |
@@ -854,7 +863,7 @@ source comments. The project website is
 | `PolicyReference.java` lines 149-152 | "Unsupported URI scheme: only http and https are permitted" | §8 P8, §11a |
 | `PolicyReference.java` lines 154-159 | "Resolve the host to an IP and reject addresses that can never serve a policy document: link-local … multicast … any-local … Loopback (127.x.x.x / ::1) and site-local (RFC-1918) addresses are permitted so that policies on localhost or an internal network can be resolved" | §5a (insecure-default case), §8 P7, §9, §14 Q6 |
 | `PolicyReference.java` lines 160-168 | `InetAddress.getByName(...)` address-class check | §8 P7, §11a, §14 Q8 |
-| `PolicyReference.java` lines 173-175 | `connectTimeout=5000`, `readTimeout=10000`, `setInstanceFollowRedirects(false)` | §5a, §8 P9-P10 |
+| `PolicyReference.java` lines 173-175 | `connectTimeout=5000`, `readTimeout=10000`, `setInstanceFollowRedirects(false)`, plus the total fetch deadline configured by `org.apache.neethi.remote.maxFetchMillis` | §5a, §8 P9-P10 |
 | `PolicyEngine.java` lines 45-52 | "static synchronized PolicyBuilder" facade | §9 false-friend, §11 |
 | `AssertionBuilderFactoryImpl.java`, `util.Service` | ServiceLoader-style discovery of `AssertionBuilder` via `META-INF/services/` | §5, §10 item 6 |
 | `Policy.java`, `All.java`, `ExactlyOne.java`, `AbstractPolicyOperator.java` | `normalize(reg, deep)` resolves references via registry/local `#id` only and throws on a miss; remote fetch requires a direct embedder call to `PolicyReference.normalize(reg, deep)` or `getRemoteReferencedPolicy(...)` | §4 B4-B5, §11 |
