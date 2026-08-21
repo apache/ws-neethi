@@ -19,6 +19,7 @@
 
 package org.apache.neethi;
 
+import java.net.Inet6Address;
 import java.net.InetAddress;
 
 import org.junit.Test;
@@ -67,5 +68,51 @@ public class PolicyReferenceAddressFilterTest extends PolicyTestCase {
         // encoding of the IMDS address classifies as link-local and is caught
         assertTrue(PolicyReference.isForbiddenAddress(
             InetAddress.getByName("::ffff:169.254.169.254")));
+    }
+
+    @Test
+    public void testUniqueLocalIsForbidden() throws Exception {
+        assertTrue(PolicyReference.isForbiddenAddress(InetAddress.getByName("fd00:ec2::254")));
+        assertTrue(PolicyReference.isForbiddenAddress(InetAddress.getByName("fc00::1")));
+        assertTrue(PolicyReference.isForbiddenAddress(InetAddress.getByName("fdff::1")));
+    }
+
+    @Test
+    public void testNat64EmbeddedForbiddenIpv4IsForbidden() throws Exception {
+        assertTrue(PolicyReference.isForbiddenAddress(
+            InetAddress.getByName("64:ff9b::169.254.169.254")));
+        assertTrue(PolicyReference.isForbiddenAddress(
+            InetAddress.getByName("64:ff9b::0.0.0.0")));
+    }
+
+    @Test
+    public void testNat64EmbeddedPermittedIpv4StaysPermitted() throws Exception {
+        // NAT64 form of a public IPv4 address — permitted, like the address itself
+        assertFalse(PolicyReference.isForbiddenAddress(
+            InetAddress.getByName("64:ff9b::93.184.216.34")));
+        // NAT64 form of RFC-1918 — permitted by documented intent (Q6)
+        assertFalse(PolicyReference.isForbiddenAddress(
+            InetAddress.getByName("64:ff9b::10.0.0.5")));
+    }
+
+    @Test
+    public void testMappedFormKeptAsInet6IsClassifiedByEmbeddedAddress() throws Exception {
+        // getByName normalizes mapped forms to Inet4Address; guard the raw
+        // Inet6Address representation as well (e.g. from a custom resolver)
+        byte[] mappedLinkLocal = new byte[16];
+        mappedLinkLocal[10] = (byte) 0xff;
+        mappedLinkLocal[11] = (byte) 0xff;
+        mappedLinkLocal[12] = (byte) 169;
+        mappedLinkLocal[13] = (byte) 254;
+        mappedLinkLocal[14] = (byte) 169;
+        mappedLinkLocal[15] = (byte) 254;
+
+        assertTrue(PolicyReference.isForbiddenAddress(
+            Inet6Address.getByAddress(null, mappedLinkLocal, 0)));
+    }
+
+    @Test
+    public void testGlobalIpv6StaysPermitted() throws Exception {
+        assertFalse(PolicyReference.isForbiddenAddress(InetAddress.getByName("2001:db8::1")));
     }
 }
