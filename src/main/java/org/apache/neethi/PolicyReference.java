@@ -40,6 +40,13 @@ public class PolicyReference implements PolicyComponent {
 
     public static final String MAX_REMOTE_POLICY_BYTES_PROPERTY = "org.apache.neethi.remote.maxPolicyBytes";
     public static final String MAX_REMOTE_FETCH_MILLIS_PROPERTY = "org.apache.neethi.remote.maxFetchMillis";
+    /**
+     * Set to "false" to disable rewriting http URLs to the vetted literal
+     * address (see getRemoteReferencedPolicy). Pinning is on by default; the
+     * opt-out exists for deployments that rely on name-based virtual hosting
+     * for http policy endpoints and accept the DNS-rebinding residual risk.
+     */
+    public static final String PIN_ADDRESS_PROPERTY = "org.apache.neethi.remote.pinAddress";
     private static final long DEFAULT_MAX_REMOTE_POLICY_BYTES = 64L * 1024L * 1024L;
     private static final long DEFAULT_MAX_REMOTE_FETCH_MILLIS = 30L * 1000L;
 
@@ -168,24 +175,49 @@ public class PolicyReference implements PolicyComponent {
             throw new RuntimeException("Unsupported URI scheme: only http and https are permitted.");
         }
 
-        // Resolve the host to an IP and reject addresses that can never serve a policy document:
+        // Resolve the host and reject addresses that can never serve a policy document:
         //   - link-local  (169.254.x.x / fe80::/10) — cloud IMDS, auto-configuration
         //   - multicast   (224.0.0.0/4 / ff00::/8)  — no HTTP server listens at a multicast address
         //   - any-local   (0.0.0.0 / ::)             — unspecified/wildcard, not a valid destination
         // Loopback (127.x.x.x / ::1) and site-local (RFC-1918) addresses are permitted
         // so that policies on localhost or an internal network can be resolved.
+        // EVERY address the host resolves to is vetted, so a multi-record DNS
+        // answer cannot smuggle a forbidden address past the filter.
+        InetAddress[] addresses;
         try {
-            InetAddress addr = InetAddress.getByName(url.getHost());
-            if (addr.isLinkLocalAddress() || addr.isMulticastAddress() || addr.isAnyLocalAddress()) {
-                throw new RuntimeException(
-                    "PolicyReference URI resolves to a forbidden address (link-local, multicast, or wildcard).");
-            }
+            addresses = InetAddress.getAllByName(url.getHost());
         } catch (UnknownHostException e) {
             throw new RuntimeException("PolicyReference URI host could not be resolved.");
         }
+        for (InetAddress addr : addresses) {
+            if (isForbiddenAddress(addr)) {
+                throw new RuntimeException(
+                    "PolicyReference URI resolves to a forbidden address (link-local, multicast, or wildcard).");
+            }
+        }
+
+        // Pin the connection to an address that was actually vetted:
+        // URLConnection re-resolves the hostname at connect time, which opens
+        // a DNS-rebinding TOCTOU window between the check above and the
+        // connect. For http the URL host is rewritten to the vetted literal
+        // address (note: the JDK will send that literal in the Host header -
+        // see PIN_ADDRESS_PROPERTY to opt out for name-based virtual
+        // hosting). For https the hostname is kept: TLS certificate
+        // verification against the original hostname binds the peer identity,
+        // and a literal-address URL would break it.
+        URL connectionUrl = url;
+        if ("http".equalsIgnoreCase(scheme)
+            && !"false".equalsIgnoreCase(System.getProperty(PIN_ADDRESS_PROPERTY))) {
+            try {
+                connectionUrl = new URL(url.getProtocol(), toUrlHost(addresses[0]),
+                                        url.getPort(), url.getFile());
+            } catch (MalformedURLException mue) {
+                throw new RuntimeException("Malformed uri.");
+            }
+        }
 
         try {
-            URLConnection connection = url.openConnection();
+            URLConnection connection = connectionUrl.openConnection();
             connection.setDoInput(true);
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(10000);
@@ -248,6 +280,24 @@ public class PolicyReference implements PolicyComponent {
         }
 
         return out.toByteArray();
+    }
+
+    /**
+     * Returns whether the resolved address belongs to a class the reference
+     * fetcher must never connect to. Package-private for tests.
+     */
+    static boolean isForbiddenAddress(InetAddress addr) {
+        return addr.isLinkLocalAddress() || addr.isMulticastAddress() || addr.isAnyLocalAddress();
+    }
+
+    private static String toUrlHost(InetAddress addr) {
+        String literal = addr.getHostAddress();
+        int scope = literal.indexOf('%');
+        if (scope >= 0) {
+            // an IPv6 scope id is not valid in a URL host
+            literal = literal.substring(0, scope);
+        }
+        return literal.indexOf(':') >= 0 ? "[" + literal + "]" : literal;
     }
 
     private static long readConfiguredLimit(String key, long defaultValue) {
