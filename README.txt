@@ -30,6 +30,9 @@ back to the default shown below.
 - `org.apache.neethi.remote.maxPolicyBytes` - maximum size of a remotely
   referenced policy document fetched through `PolicyReference`.
   Default: `67108864` bytes (`64 MiB`).
+- `org.apache.neethi.remote.maxFetchMillis` - maximum total time allowed to
+  fetch a remote policy document through `PolicyReference`.
+  Default: `30000` milliseconds (`30 seconds`).
 
 Policy normalization also enforces several hard caps:
 
