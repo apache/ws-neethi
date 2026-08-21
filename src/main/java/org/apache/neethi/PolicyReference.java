@@ -141,7 +141,15 @@ public class PolicyReference implements PolicyComponent {
             if (policy == null) {
                 throw new RuntimeException(key + " can't be resolved");
             }
-            reg.register(key, policy);
+            // Make the fetched policy resolvable during the recursive
+            // normalization below (a self-reference inside it must hit the
+            // cycle detection instead of re-fetching) WITHOUT silently
+            // registering remote-origin, unvetted content into the caller's
+            // registry: the caller decides what its registry trusts and may
+            // register the returned policy itself after vetting it.
+            PolicyRegistryImpl scoped = new PolicyRegistryImpl(reg);
+            scoped.register(key, policy);
+            return policy.normalize(scoped, deep);
         }
         
         return policy.normalize(reg, deep);
