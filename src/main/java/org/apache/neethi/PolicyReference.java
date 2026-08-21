@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -179,6 +180,10 @@ public class PolicyReference implements PolicyComponent {
         //   - link-local  (169.254.x.x / fe80::/10) — cloud IMDS, auto-configuration
         //   - multicast   (224.0.0.0/4 / ff00::/8)  — no HTTP server listens at a multicast address
         //   - any-local   (0.0.0.0 / ::)             — unspecified/wildcard, not a valid destination
+        //   - IPv6 unique-local (fd00::/7)          - includes cloud IMDS IPv6 endpoints
+        //     (e.g. AWS fd00:ec2::254), the same class the link-local rejection targets
+        //   - IPv4 embedded in IPv6 (64:ff9b::/96 NAT64, ::ffff:0:0/96 mapped) whenever
+        //     the embedded IPv4 address would itself be rejected
         // Loopback (127.x.x.x / ::1) and site-local (RFC-1918) addresses are permitted
         // so that policies on localhost or an internal network can be resolved.
         // EVERY address the host resolves to is vetted, so a multi-record DNS
@@ -192,7 +197,8 @@ public class PolicyReference implements PolicyComponent {
         for (InetAddress addr : addresses) {
             if (isForbiddenAddress(addr)) {
                 throw new RuntimeException(
-                    "PolicyReference URI resolves to a forbidden address (link-local, multicast, or wildcard).");
+                    "PolicyReference URI resolves to a forbidden address (link-local, multicast,"
+                    + " wildcard, IPv6 unique-local, or an IPv6 form embedding one).");
             }
         }
 
@@ -287,7 +293,54 @@ public class PolicyReference implements PolicyComponent {
      * fetcher must never connect to. Package-private for tests.
      */
     static boolean isForbiddenAddress(InetAddress addr) {
-        return addr.isLinkLocalAddress() || addr.isMulticastAddress() || addr.isAnyLocalAddress();
+        if (addr.isLinkLocalAddress() || addr.isMulticastAddress() || addr.isAnyLocalAddress()) {
+            return true;
+        }
+        if (addr instanceof Inet6Address) {
+            byte[] bytes = addr.getAddress();
+            // IPv6 unique-local (fd00::/7, RFC 4193): none of the JDK
+            // predicates above match it, yet it includes cloud metadata
+            // endpoints such as the AWS IMDS IPv6 endpoint fd00:ec2::254 -
+            // exactly the class the link-local rejection exists to block.
+            if ((bytes[0] & 0xfe) == 0xfc) {
+                return true;
+            }
+            // IPv4 embedded in IPv6 (NAT64 well-known prefix 64:ff9b::/96,
+            // RFC 6052, and IPv4-mapped ::ffff:0:0/96): classify by the
+            // embedded IPv4 address the gateway would deliver to.
+            InetAddress embedded = extractEmbeddedIpv4(bytes);
+            if (embedded != null && isForbiddenAddress(embedded)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static InetAddress extractEmbeddedIpv4(byte[] bytes) {
+        if (bytes.length != 16) {
+            return null;
+        }
+        boolean nat64 = bytes[0] == 0x00 && bytes[1] == 0x64
+            && bytes[2] == (byte) 0xff && bytes[3] == (byte) 0x9b;
+        for (int i = 4; nat64 && i < 12; i++) {
+            nat64 = bytes[i] == 0x00;
+        }
+        boolean mapped = true;
+        for (int i = 0; mapped && i < 10; i++) {
+            mapped = bytes[i] == 0x00;
+        }
+        mapped = mapped && bytes[10] == (byte) 0xff && bytes[11] == (byte) 0xff;
+        if (!nat64 && !mapped) {
+            return null;
+        }
+        try {
+            return InetAddress.getByAddress(
+                new byte[] {bytes[12], bytes[13], bytes[14], bytes[15]});
+        } catch (UnknownHostException e) {
+            // cannot happen for a 4-byte address; fail closed if it ever does
+            throw new RuntimeException(
+                "PolicyReference URI resolves to an address that could not be classified.");
+        }
     }
 
     private static String toUrlHost(InetAddress addr) {
