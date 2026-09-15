@@ -380,6 +380,16 @@ public class PolicyBuilder {
     }
     
     /**
+     * Returns whether a policy parse is in progress on the current thread, i.e.
+     * whether an ambient budget is active. The converter layer uses this to
+     * decide whether an assertion-subtree materialization must be charged
+     * against the parse's maxElements/maxAttributes budget.
+     */
+    public static boolean hasAmbientParseBudget() {
+        return CURRENT_BUDGET.get() != null;
+    }
+
+    /**
      * Charges one materialized element against the budget of the policy parse
      * in progress on the current thread, if any. Called by the converter
      * layer when it copies an assertion subtree into a new representation, so

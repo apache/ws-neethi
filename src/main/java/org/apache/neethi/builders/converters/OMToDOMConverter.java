@@ -26,13 +26,26 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMXMLBuilderFactory;
 
+import org.apache.neethi.PolicyBuilder;
+
 /**
- * 
+ *
  */
 public class OMToDOMConverter extends AbstractOMConverter implements Converter<OMElement, Element> {
 
     public Element convert(OMElement s) {
-        
+        // When a policy parse is in progress, route through StaxToDOMConverter:
+        // it materializes the assertion subtree while streaming and charges
+        // every node against the parse budget (chargeAmbientElement /
+        // chargeAmbientAttributes), throwing as soon as maxElements /
+        // maxAttributes is exceeded. The DOOM builder below does no budget
+        // accounting, so an assertion subtree supplied as an Axiom OMElement
+        // would otherwise bypass those budgets entirely. Outside a parse (no
+        // ambient budget) the faster DOOM path is kept unchanged.
+        if (PolicyBuilder.hasAmbientParseBudget()) {
+            return new StaxToDOMConverter().convert(s.getXMLStreamReader());
+        }
+
         try {
             return (Element) OMXMLBuilderFactory.createStAXOMBuilder(
                     OMAbstractFactory.getMetaFactory(OMAbstractFactory.FEATURE_DOM).getOMFactory(),
