@@ -28,6 +28,119 @@ Security and CVE Tracking
 
 Apache Neethi CVEs
 
+  * {{{https://www.cve.org/CVERecord?id=CVE-2026-91863}CVE-2026-91863}}:
+    Apache Neethi: Uncontrolled recursion while parsing crafted WS-Policy
+    documents allows denial of service
+
+    * Severity: Moderate
+
+    * Affected versions:
+
+      - Apache Neethi (org.apache.neethi:neethi) before 3.2.4
+
+    * Description:
+
+      A specially crafted WS-Policy document with deeply nested policy
+      elements can bypass Neethi's nesting-depth limit and exhaust the thread
+      stack, crashing the parser (denial of service). Users are recommended
+      to upgrade to version 3.2.4, which fixes this issue.
+
+    * Credit:
+
+      This issue was found using Claude agents to study the security of
+      open-source projects (finder)
+
+  * {{{https://www.cve.org/CVERecord?id=CVE-2026-91864}CVE-2026-91864}}:
+    Apache Neethi: Crafted WS-Policy documents bypass element/attribute
+    limits causing memory exhaustion
+
+    * Severity: Moderate
+
+    * Affected versions:
+
+      - Apache Neethi (org.apache.neethi:neethi) before 3.2.4
+
+    * Description:
+
+      A specially crafted WS-Policy document can pack unlimited content
+      inside a policy assertion, which Neethi copies into memory without
+      counting it against its size limits, exhausting the heap (denial of
+      service). Users are recommended to upgrade to version 3.2.4, which
+      fixes this issue.
+
+    * Credit:
+
+      This issue was found using Claude agents to study the security of
+      open-source projects (finder)
+
+  * {{{https://www.cve.org/CVERecord?id=CVE-2026-91865}CVE-2026-91865}}:
+    Apache Neethi: Crafted policy references cause exponential expansion
+    during normalization leading to denial of service
+
+    * Severity: Moderate
+
+    * Affected versions:
+
+      - Apache Neethi (org.apache.neethi:neethi) before 3.2.4
+
+    * Description:
+
+      A small WS-Policy document using repeated policy references can force
+      Neethi to re-expand the same references exponentially during
+      normalization, consuming huge amounts of CPU and memory (denial of
+      service). Users are recommended to upgrade to version 3.2.4, which
+      fixes this issue.
+
+    * Credit:
+
+      This issue was found using Claude agents to study the security of
+      open-source projects (finder)
+
+  * {{{https://www.cve.org/CVERecord?id=CVE-2026-91866}CVE-2026-91866}}:
+    Apache Neethi: Crafted policies cause unbounded work during intersection
+    leading to denial of service
+
+    * Severity: Moderate
+
+    * Affected versions:
+
+      - Apache Neethi (org.apache.neethi:neethi) before 3.2.4
+
+    * Description:
+
+      A specially crafted pair of WS-Policy documents can force Neethi's
+      policy-intersection to do exponential amounts of work, pinning the CPU
+      for a long time (denial of service). Users are recommended to upgrade
+      to version 3.2.4, which fixes this issue.
+
+    * Credit:
+
+      This issue was found using Claude agents to study the security of
+      open-source projects (finder)
+
+  * {{{https://www.cve.org/CVERecord?id=CVE-2026-91867}CVE-2026-91867}}:
+    Apache Neethi: Remote policy fetch lacks a total timeout, allowing a slow
+    server to hang the request indefinitely
+
+    * Severity: Moderate
+
+    * Affected versions:
+
+      - Apache Neethi (org.apache.neethi:neethi) before 3.2.4
+
+    * Description:
+
+      When Neethi fetches a remote policy reference, it only limits the time
+      per read, not the whole transfer, so a server that trickles bytes slowly
+      can keep the fetch alive indefinitely and tie up the calling thread
+      (denial of service). Users are recommended to upgrade to version 3.2.4,
+      which fixes this issue.
+
+    * Credit:
+
+      This issue was found using Claude agents to study the security of
+      open-source projects (finder)
+
   * {{{https://www.cve.org/CVERecord?id=CVE-2026-66144}CVE-2026-66144}}:
     Apache Neethi: Remote PolicyReference fetch lacks resource bounds
 
