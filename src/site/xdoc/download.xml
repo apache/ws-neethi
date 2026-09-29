@@ -9,7 +9,7 @@
   ~ "License"); you may not use this file except in compliance
   ~ with the License. You may obtain a copy of the License at
   ~
-  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~ https://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing,
   ~ software distributed under the License is distributed on an
@@ -102,7 +102,7 @@
                 </form>
 
                 <p>You may also consult the
-                    <a href="http://www.apache.org/mirrors/">complete
+                    <a href="https://www.apache.org/mirrors/">complete
                         list of mirrors</a>
                     .
                 </p>
@@ -114,7 +114,7 @@
                             href="https://infra.apache.org/release-signing.html#sha-checksum">checksum</a>
                     and verify
                     the
-                    <a href="http://www.apache.org/dev/release-signing#openpgp">OpenPGP</a>
+                    <a href="https://www.apache.org/dev/release-signing#openpgp">OpenPGP</a>
                     compatible signature from the main Apache site. These can be downloaded by
                     following the links above. This
                     <a
@@ -122,7 +122,7 @@
                     file contains the
                     public keys used for signing release. It is recommended that (when possible)
                     a
-                    <a href="http://www.apache.org/dev/release-signing#web-of-trust">web of
+                    <a href="https://www.apache.org/dev/release-signing#web-of-trust">web of
                         trust</a>
                     is used to confirm the identity of these keys.
                 </p>
