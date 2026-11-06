@@ -122,7 +122,7 @@ public class PolicyReference implements PolicyComponent {
      * 
      * @param reg the PolicyRegistry that is used to resolved the Policy referred by self
      * @param deep the flag to indicate whether returning Policy should be fully normalized
-     * @return the normalized version for the Policy refered by self
+     * @return the normalized version for the Policy referred by self
      */
     public PolicyComponent normalize(PolicyRegistry reg, boolean deep) {
         String key = getURI();
